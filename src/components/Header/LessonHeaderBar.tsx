@@ -290,7 +290,7 @@ const LessonHeaderBar = ({
 
         <Modal open={leaveModalVisible}>
           <Result
-            status="warning"
+            status={'success'}
             title={
               isLesson
                 ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
@@ -300,21 +300,26 @@ const LessonHeaderBar = ({
             }
             extra={[
               <Buttons
+                size="middle"
+                className="w-full mb-2"
+                variant="dashed"
+                onClick={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
+                label={
+                  isLesson
+                    ? 'Leave in classroom'
+                    : 'I am going to keep working on my responses'
+                }
+              />,
+              <Buttons
                 onClick={handleNotebookSave}
+                size="middle"
+                className="w-full"
                 label={
                   isLesson
                     ? 'I completed this lesson. \n Move my work to my notebook.'
                     : !isLesson
                     ? 'I am happy with my responses and want to close the survey'
                     : 'Saving your data...'
-                }
-              />,
-              <Buttons
-                onClick={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
-                label={
-                  isLesson
-                    ? 'Leave in classroom'
-                    : 'I am going to keep working on my responses'
                 }
               />
             ]}

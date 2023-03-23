@@ -451,7 +451,7 @@ const NotesBlock = ({
           </div>
         </ThemeModal>
 
-        <div className="relative flex flex-col items-start">
+        <div className="relative flex flex-col items-start w-full">
           {isInLesson && isStudent && (
             <div className="w-auto flex items-center  justify-center theme-border border-0 rounded-full mb-4 gap-x-4 p-2">
               {defaultNotes.length > 0 &&

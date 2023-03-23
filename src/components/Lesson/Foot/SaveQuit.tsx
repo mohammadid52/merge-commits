@@ -100,20 +100,19 @@ const SaveQuit = ({invokeRequiredField}: SaveQuitProps) => {
 
   return (
     <>
-      <div className={'w-auto'}>
-        <Buttons
-          dataCy="save-lesson"
-          // disabled={!canContinue}
-          label={
-            waiting
-              ? 'Saving your data...'
-              : lessonState.lessonData.type === 'survey'
-              ? 'Survey Completed'
-              : 'Lesson Completed'
-          }
-          Icon={BiSave}
-          onClick={handleManualSave}></Buttons>
-      </div>
+      <Buttons
+        dataCy="save-lesson"
+        // disabled={!canContinue}
+        size="middle"
+        label={
+          waiting
+            ? 'Saving your data...'
+            : lessonState.lessonData.type === 'survey'
+            ? 'Survey Completed'
+            : 'Lesson Completed'
+        }
+        Icon={BiSave}
+        onClick={handleManualSave}></Buttons>
     </>
   );
 };

@@ -3,7 +3,11 @@ import {Warning} from '@components/Atoms/Alerts/Info';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import {handleLessonMutationRating, logError, updatePageState} from '@graphql/functions';
 import {reorderSyllabus, setPageTitle, withZoiqFilter} from '@utilities/functions';
-import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {
+  getLocalStorageData,
+  removeLocalStorageData,
+  setLocalStorageData
+} from '@utilities/localStorage';
 import {Divider} from 'antd';
 import {TeachingStyle, UserPageState} from 'API';
 import {getAsset} from 'assets';
@@ -112,14 +116,24 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const [syllabusData, setSyllabusData] = useState<any>({});
   const [lessonData, setLessonData] = useState<Array<any>>([]);
 
-  const [settingLessons, setSettingLessons] = useState<boolean>(true);
+  const [settingLessons, setSettingLessons] = useState<boolean>(false);
 
-  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(true);
-  const [lessonLoading, setLessonLoading] = useState<boolean>(true);
+  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
+
+  const [lessonLoading, setLessonLoading] = useState<boolean>(false);
 
   const [curriculumId, setCurriculumId] = useState<string>('');
+
   const [curriculumObj, setCurriculumObj] = useState<any>({});
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>({});
+
+  const room_info = getLocalStorageData('room_info', '{}');
+
+  useEffect(() => {
+    if (room_info && isEmpty(activeRoomInfo)) {
+      setActiveRoomInfo(room_info);
+    }
+  }, [activeRoomInfo]);
 
   /******************************************
    * 2.1 LIST TEACHER ROOMS                 *
@@ -175,11 +189,26 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     }
   };
 
+  const listRoomStudents = () => {
+    const room_list = homeData.map((d: {class: {room: any}}) => d?.class?.room);
+    dispatch({
+      type: 'UPDATE_ROOM',
+      payload: {
+        property: 'rooms',
+        data: room_list
+      }
+    });
+  };
+
   useEffect(() => {
     if (isTeacher) {
       listRoomTeacher(authId);
+    } else {
+      if (homeData && homeData.length > 0) {
+        listRoomStudents();
+      }
     }
-  }, [isTeacher]);
+  }, [isTeacher, homeData]);
 
   /**********************************
    * 3. LIST CURRICULUMS BY ROOM ID *
@@ -189,7 +218,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       const roomCurriculumsFetch = await API.graphql(
         graphqlOperation(customQueries.listRoomCurriculums, {
           filter: {
-            roomID: {eq: activeRoom}
+            roomID: {eq: activeRoom || activeRoomInfo?.id}
           }
         })
       );
@@ -209,10 +238,10 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   };
 
   useEffect(() => {
-    if (roomData?.rooms?.length > 0 && Boolean(activeRoom)) {
+    if (roomData?.rooms?.length > 0 && Boolean(activeRoom || activeRoomInfo?.id)) {
       listRoomCurriculums();
     }
-  }, [roomData?.rooms, activeRoom]);
+  }, [roomData?.rooms, activeRoom, activeRoomInfo?.id]);
 
   const [loadingRoomInfo, setLoadingRoomInfo] = useState(true);
 
@@ -517,7 +546,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
           },
-          limit: 500
+          limit: 2000
         })
       );
 
