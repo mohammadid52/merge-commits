@@ -281,7 +281,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             <div className="my-6">
               <TeacherRows
                 loading={Boolean(roomsLoading)}
-                title={`Your Students`}
+                title={`Your Co-Teachers`}
                 coTeachersList={coTeachersList}
                 teachersList={teacherList}
               />

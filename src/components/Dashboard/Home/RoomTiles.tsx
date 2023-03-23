@@ -94,7 +94,7 @@ const RoomTiles = (props: {
 
   const [showMore, setShowMore] = useState(false);
 
-  const [classList, setClassList] = useState<any[]>([]);
+  const [classList, setClassList] = useState<any[]>([...classes]);
 
   const animateOnShowMore = () => {
     if (showMore) {

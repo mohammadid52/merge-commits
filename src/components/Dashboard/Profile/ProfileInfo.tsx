@@ -9,6 +9,7 @@ import useDictionary from 'customHooks/dictionary';
 import {getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './Profile';
+import useAuth from '@customHooks/useAuth';
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -56,6 +57,9 @@ const ProfileInfo = (props: UserInfoProps) => {
 
   const history = useHistory();
   const match = useRouteMatch();
+
+  const {isStudent} = useAuth();
+
   if (status !== 'done') {
     return <LessonLoading />;
   }
@@ -77,16 +81,19 @@ const ProfileInfo = (props: UserInfoProps) => {
                     history.push(`${match.url}/password`);
                   }}
                 />
-                <Buttons
-                  tooltip="Change your journal passcode"
-                  onClick={() => {
-                    history.push(`${match.url}/passcode`);
-                  }}
-                  Icon={LockOutlined}
-                  label={PersonalInfoDict['PASSCODE']}
-                  size="small"
-                  variant="dashed"
-                />
+
+                {isStudent && (
+                  <Buttons
+                    tooltip="Change your journal passcode"
+                    onClick={() => {
+                      history.push(`${match.url}/passcode`);
+                    }}
+                    Icon={LockOutlined}
+                    label={PersonalInfoDict['PASSCODE']}
+                    size="small"
+                    variant="dashed"
+                  />
+                )}
               </div>
             }
             title={PersonalInfoDict['TITLE']}>
