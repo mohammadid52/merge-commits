@@ -20,7 +20,7 @@ interface ModalProps {
   customTitle?: React.ReactNode;
   outerCloseBtn?: boolean;
   position?: 'absolute' | 'relative' | 'fixed';
-  width?: string;
+  width?: string | number;
   className?: string;
   modalCloseId?: string;
   maxWidth?: string;
@@ -32,7 +32,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const {
     title,
-
+    width,
     children,
 
     closeAction,
@@ -44,6 +44,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
 
   return (
     <AntdModal
+      width={width}
       open={open}
       onCancel={closeAction}
       title={title || customTitle}

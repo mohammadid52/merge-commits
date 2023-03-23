@@ -1,10 +1,10 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
-import PageWrapper from '@components/Atoms/PageWrapper';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
+import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
 import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -77,14 +77,14 @@ const StudentsTiles = (props: {
   );
 
   return (
-    <PageWrapper>
+    <>
       <SectionTitleV3
         title={title}
-        extraContainerClass="px-4"
+        extraContainerClass="lg:max-w-192 md:max-w-none px-6 2xl:max-w-256 "
         fontSize="xl"
         fontStyle="semibold"
         borderBottom
-        shadowOff
+        extraClass="leading-6  text-gray-900"
         withButton={
           <div className={`flex items-center w-auto justify-end`}>
             {isTeacher && (
@@ -114,7 +114,7 @@ const StudentsTiles = (props: {
           </div>
         }
       />
-      <>
+      <ContentCard hasBackground={false}>
         <div className="py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
             {finalList?.length ? (
@@ -184,8 +184,8 @@ const StudentsTiles = (props: {
             )}
           </div>
         </div>
-      </>
-    </PageWrapper>
+      </ContentCard>
+    </>
   );
 };
 
