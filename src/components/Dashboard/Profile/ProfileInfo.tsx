@@ -3,7 +3,7 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {LockOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
-import {Descriptions} from 'antd';
+import {Card, Descriptions} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {getUserRoleString} from 'utilities/strings';
@@ -63,7 +63,7 @@ const ProfileInfo = (props: UserInfoProps) => {
   {
     return (
       <div className="w-full md:px-4 pt-4">
-        <div className="">
+        <Card>
           <Descriptions
             extra={
               <div className="flex gap-4 items-center justify-center">
@@ -109,7 +109,7 @@ const ProfileInfo = (props: UserInfoProps) => {
               {user.email}
             </Descriptions.Item>
           </Descriptions>
-        </div>
+        </Card>
 
         {stdCheckpoints?.length > 0 ? (
           <Fragment>

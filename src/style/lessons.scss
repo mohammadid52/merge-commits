@@ -207,6 +207,9 @@
     background-color: $lesson-form-block-bg;
     color: $lesson-form-block-color;
     border-color: $lesson-form-block-border;
+    &::placeholder {
+      color: $gray-500;
+    }
   }
   label {
     color: $lesson-form-block-label;

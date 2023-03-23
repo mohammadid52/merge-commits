@@ -67,7 +67,7 @@ const SyllabusSwitch = ({
             className="w-full mb-4"
             onClick={() =>
               history.push(
-                `/dashboard/manage-institutions/institution?id=${institutionId}&tab=curricular`
+                `/dashboard/manage-institutions/institution/${institutionId}/courses`
               )
             }
           />

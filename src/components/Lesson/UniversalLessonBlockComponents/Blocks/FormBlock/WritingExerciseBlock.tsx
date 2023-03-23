@@ -4,6 +4,7 @@ import {FormControlProps} from '../FormBlock';
 import EditingBlock from '../PoemBlock/EditingBlock';
 import useStudentDataValue from '@customHooks/studentDataValue';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import FormInput from '@components/Atoms/Form/FormInput';
 
 interface WritingExerciseProps extends FormControlProps {
   onChange: (e: any) => void;
@@ -38,14 +39,14 @@ const WritingExerciseBlock = ({
         <>
           {label && (
             <>
-              <input
+              <FormInput
                 id={inputID}
                 disabled={disabled}
-                className={`w-full py-2 px-4  mt-2 rounded-xl bg-gray-100 dark:bg-darker-gray placeholder-gray-500 dark:placeholder-gray-700`}
                 name={'text'}
                 type={'text'}
+                className="lesson-form-block w-full placeholder:text-gray-500"
                 onChange={onChange}
-                placeholder={label}
+                placeHolder={label}
                 value={initialValue}
               />
             </>

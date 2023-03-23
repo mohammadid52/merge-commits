@@ -41,7 +41,7 @@ const BottomBar = (props: LessonCardProps) => {
     <div>
       <div
         // style={{borderTop: '1px solid rgba(237, 242, 247,1)'}}
-        className={`bg-transparent relative flex justify-between`}>
+        className={`bg-transparent py-2 relative flex justify-between`}>
         {/* TIME */}
         <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
           <div className="w-auto text-gray-500">
