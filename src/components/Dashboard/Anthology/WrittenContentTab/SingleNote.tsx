@@ -153,11 +153,11 @@ const SingleNote = (props: any) => {
                   }}
                   label={anthologyDict[userLanguage].ACTIONS.CANCEL}
                   transparent
-                  size="small"
+                  size="middle"
                 />
 
                 <Buttons
-                  size="small"
+                  size="middle"
                   onClick={() =>
                     handleEditToggle('save', contentObj.id, 0, contentObj?.recordID)
                   }
@@ -167,13 +167,13 @@ const SingleNote = (props: any) => {
             ) : (
               <div className="flex items-center justify-between">
                 <div className="w-auto flex gap-2 items-center justify-start">
-                  <div
-                    className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                  <Buttons
+                    size="middle"
                     onClick={() =>
                       handleEditToggle('edit', contentObj.id, 0, contentObj?.recordID)
-                    }>
-                    {anthologyDict[userLanguage].ACTIONS.EDIT}
-                  </div>
+                    }
+                    label={anthologyDict[userLanguage].ACTIONS.EDIT}
+                  />
 
                   {/* CONDITIONAL SHOW OF DELETE AND DELETE CONFIRM BTNS */}
                   {subSection !== 'Work' && subSection !== 'Notes' ? (
@@ -182,12 +182,12 @@ const SingleNote = (props: any) => {
                     viewEditMode.dataID === contentObj.id ? (
                       <>
                         <Buttons
-                          size="small"
+                          size="middle"
                           onClick={() => handleEditToggle('delete', contentObj.id, 1)}
                           label={anthologyDict[userLanguage].ACTIONS.CONFIRM}
                         />
                         <Buttons
-                          size="small"
+                          size="middle"
                           variant="default"
                           onClick={() => handleEditToggle('', '', 0, '')}
                           label={anthologyDict[userLanguage].ACTIONS.CANCEL}
@@ -195,7 +195,7 @@ const SingleNote = (props: any) => {
                       </>
                     ) : (
                       <Buttons
-                        size="small"
+                        size="middle"
                         redBtn
                         onClick={() => handleEditToggle('delete', contentObj.id, 0)}
                         label={anthologyDict[userLanguage].ACTIONS.DELETE}
@@ -223,7 +223,7 @@ const SingleNote = (props: any) => {
                       !showComments && refetch();
                       setShowComments(!showComments);
                     }}
-                    size="small"
+                    size="middle"
                     disabled={isLoading}
                     label={
                       isLoading
