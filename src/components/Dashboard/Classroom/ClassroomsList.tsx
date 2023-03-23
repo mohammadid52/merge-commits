@@ -107,15 +107,13 @@ const ClassroomsList: React.FC<LessonProps> = ({
   return (
     <>
       {lessonLoading ? (
-        Array(3)
-          .fill(' ')
-          .map((_: any) => (
-            <Fragment key={_}>
-              <div className="mb-5">
-                <Skeleton active paragraph={{rows: 4}} />
-              </div>
-            </Fragment>
-          ))
+        Array.from({length: 3}).map((_: any) => (
+          <Fragment key={_}>
+            <div className="mb-5">
+              <Skeleton active paragraph={{rows: 4}} />
+            </div>
+          </Fragment>
+        ))
       ) : lessonsBySession?.length ? (
         <>
           <SectionTitleV3
@@ -143,8 +141,8 @@ const ClassroomsList: React.FC<LessonProps> = ({
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {lessonsBySession.map((session: any) => (
-              <Fragment key={session.sessionHeading}>
+            {lessonsBySession.map((session: any, index: number) => (
+              <Fragment key={`${session.sessionHeading}_${index}_${index}`}>
                 {isNumber(session.sessionHeading) && (
                   <div className="relative mb-2">
                     <div

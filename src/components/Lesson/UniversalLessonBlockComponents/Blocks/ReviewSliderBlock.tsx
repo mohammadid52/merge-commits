@@ -36,6 +36,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
     disabled,
     id,
     onChange,
+    inputID,
 
     classString = `1-5 || gray-700 || gray-800 || dark-gray || rounded-lg`,
     label
@@ -57,7 +58,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
           max={max}
           onChange={(sliderValue) => {
             setSliderValue(sliderValue);
-            onChange({target: {id, value: sliderValue}});
+            onChange({target: {id: inputID, value: sliderValue.toString()}});
           }}
           value={Number(sliderValue)}
         />

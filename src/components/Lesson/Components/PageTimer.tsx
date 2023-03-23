@@ -81,7 +81,7 @@ const PageTimer = ({startTime}: {startTime: any}) => {
   };
 
   return (
-    <div className="page_timer absolute right-[150px] z-100  w-auto ">
+    <div className="page_timer fixed top-8 right-8 z-100  w-auto ">
       <div
         className={`${getBackgroundColor()} transition-all px-2 py-1 rounded-full text-xs`}>
         {timeRemaining === 0 ? (

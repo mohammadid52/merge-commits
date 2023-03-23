@@ -8,6 +8,7 @@ const _tabs = [
 export interface ITab {
   name: string;
   current: boolean;
+  disabled?: boolean;
 }
 
 export const useTabs = (tabs: ITab[] = _tabs) => {

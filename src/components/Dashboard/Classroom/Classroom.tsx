@@ -197,10 +197,6 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       const response = roomCurriculumsFetch;
       // @ts-ignore
       const arrayOfResponseObjects = response?.data?.listRoomCurricula?.items;
-      console.log(
-        '🚀 ~ file: Classroom.tsx:293 ~ listRoomCurriculums ~ arrayOfResponseObjects:',
-        arrayOfResponseObjects
-      );
 
       if (arrayOfResponseObjects.length > 0) {
         setCurriculumId(arrayOfResponseObjects[0]?.curriculumID);

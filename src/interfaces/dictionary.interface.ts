@@ -1725,6 +1725,8 @@ interface UserInformationDictCommon {
   LOCATION: string;
   SUPER_ADMIN: string;
   RESET_PASSWORD: string;
+  DELETE_USER: string;
+  CLASSROOM_LOCATION: string;
   RESETTING_PASSWORD: string;
   MESSAGE: {
     RESET_PASSWORD_SUCCESS: string;

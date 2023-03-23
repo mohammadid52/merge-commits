@@ -242,18 +242,8 @@ const ProfileFrame = ({
             showHeaderBorder={false}
             showFooter={false}
             scrollHidden={true}
-            closeAction={() => setRightView({view: 'lesson', option: ''})}
-            position={'absolute'}>
-            <div
-              className={`${
-                breakpoint === '2xl'
-                  ? 'h-96 w-192'
-                  : breakpoint === 'xl'
-                  ? 'h-88 w-176'
-                  : breakpoint === 'lg'
-                  ? 'h-80 w-160'
-                  : 'h-64 w-128'
-              }`}>
+            closeAction={() => setRightView({view: 'lesson', option: ''})}>
+            <div>
               <UserTabs
                 tabs={tabs}
                 currentTab={openTab?.name}

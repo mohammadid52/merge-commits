@@ -5,7 +5,6 @@ import {useEffect, useRef, useState} from 'react';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 
 import Modal from 'atoms/Modal';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import AttendanceList from './AttendanceFrame/AttendanceList';
 
 const pad = (num: any) => {
@@ -170,19 +169,13 @@ const Attendance = ({
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
-  const {breakpoint} = useTailwindBreakpoint();
 
   const name = user?.firstName
     ? `${user?.firstName} ${user?.lastName}`
     : user?.preferredName || '';
 
   return (
-    <div
-      ref={frameRef}
-      style={{
-        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
-      }}
-      className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
+    <div ref={frameRef} className={``}>
       <Modal
         open={Boolean(visible)}
         customTitle={user ? `Attendance for ${name}` : 'Attendance'}
@@ -190,8 +183,7 @@ const Attendance = ({
         showHeaderBorder={false}
         showFooter={false}
         scrollHidden={true}
-        closeAction={() => setRightView({view: 'lesson', option: ''})}
-        position={'absolute'}>
+        closeAction={() => setRightView({view: 'lesson', option: ''})}>
         <AttendanceList
           loading={loading}
           attendanceList={attendanceList}

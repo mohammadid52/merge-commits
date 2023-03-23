@@ -74,7 +74,8 @@ const CoreUniversalLesson = ({
         }
       }
     } else {
-      goNext();
+      if (!forward) goBack();
+      else goNext();
     }
   };
 
@@ -90,7 +91,7 @@ const CoreUniversalLesson = ({
     <div
       className={`${
         !isInLesson ? 'h-full overflow-hidden overflow-y-scroll' : ''
-      }  relative sm:max-w-132 max-w-80 xs:max-w-96  md:max-w-200 2xl:max-w-256 mx-auto`}>
+      } px-4 pb-4 relative mx-auto max-w-100 sm:max-w-[35rem] lg:max-w-[55rem] 2xl:max-w-[60rem] `}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <ErrorBoundary

@@ -1,18 +1,41 @@
-import {getAsset} from 'assets';
+import {
+  Tabs3,
+  useTabs
+} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import useAuth from '@customHooks/useAuth';
+import {Card, Descriptions} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import Status from 'atoms/Status';
+import {API, graphqlOperation} from 'aws-amplify';
 import axios from 'axios';
-import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import LessonLoading from 'lesson/Loading/ComponentLoading';
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
-import {IoLockClosed} from 'react-icons/io5';
 import {requestResetPassword} from 'utilities/urls';
 import {UserInfo} from './User';
 import UserRole from './UserRole';
+import {Status} from './UserStatus';
+import * as queries from 'graphql/queries';
+
+const fetchQuery = async (authId: string, query: string, filterKey: string) => {
+  try {
+    const res: any = await API.graphql(
+      // @ts-ignore
+      graphqlOperation(queries[query], {
+        filter: {
+          [filterKey]: {
+            eq: authId
+          }
+        }
+      })
+    );
+
+    return res?.data?.[query]?.items || [];
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const statusDate = (dateValue: string) => {
   const date = new Date(dateValue);
@@ -27,16 +50,8 @@ interface UserInfoProps {
   setTab: Function;
 }
 
-const UserInformation = ({
-  user,
-  status,
-  checkpoints,
-  questionData,
-  tab,
-  setTab
-}: UserInfoProps) => {
-  const {theme, userLanguage, clientKey} = useGlobalContext();
-  const {UserInformationDict} = useDictionary();
+const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProps) => {
+  const {UserInformationDict, userLanguage} = useDictionary();
   const [loading, setLoading] = useState(false);
   const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
     show: false,
@@ -72,12 +87,6 @@ const UserInformation = ({
     }
   };
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const getColor = (condition: boolean) => ({
-    borderColor: condition ? `${theme.iconColor[themeColor]}` : 'transparent',
-    color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280'
-  });
-
   const resetPassword = async () => {
     try {
       setLoading(true);
@@ -103,153 +112,179 @@ const UserInformation = ({
     });
   };
 
+  const {authId: authId_auth} = useAuth();
+
+  const dict = UserInformationDict[userLanguage];
+
+  const isStudent = user.role === 'ST';
+
+  const tabsData = [
+    {
+      name: dict['heading'],
+      current: true
+    },
+    isStudent && {
+      name: dict['demographics'],
+      current: false
+    },
+    isStudent && {
+      name: dict['private'],
+      current: false
+    }
+  ].filter(Boolean) as any[];
+
+  const {curTab, setCurTab, helpers} = useTabs(tabsData);
+
+  const [onPersonal] = helpers;
+
+  const hideDeleteBtn = user.authId === authId_auth;
+
+  // first check if the user is connected in any other tables
+  // if yes, then show the warning message
+  // if no, then show the delete button
+
+  // figure out what tables are attached to the user
+  // look for these tables
+  // 1. Staff (don't look if its a student)
+  // 2. Room (look only if teacher or fellow)
+  // 3. ClassroomGroupStudents (don't look if its a not student)
+  // 4. RoomCoTeachers (look only if teacher or fellow)
+  // 5. ClassStudent (don't look if its not a student)
+
+  // theses are the tables that might be connected to the user
+
+  const checkAllTables = async () => {
+    try {
+      if (isStudent) {
+        const classGroupItems = await fetchQuery(
+          user.authId,
+          'listClassroomGroupStudents',
+          'studentAuthId'
+        );
+        const classStudentsItems = await fetchQuery(
+          user.authId,
+          'listClassStudents',
+          'studentAuthID'
+        );
+        return [classGroupItems, classStudentsItems];
+      } else {
+        const roomItems = await fetchQuery(user.authId, 'listRooms', 'teacherAuthID');
+        const roomCoTeachersItems = await fetchQuery(
+          user.authId,
+          'listRoomCoTeachers',
+          'teacherAuthID'
+        );
+        return [roomItems, roomCoTeachersItems];
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const checkIfUserIsConnected = async () => {
+    try {
+      const allTables = await checkAllTables();
+
+      // filter empty arrays or null
+      const filteredTables = allTables?.filter(
+        (item) => Boolean(item) && item?.length > 0
+      );
+
+      if (filteredTables && filteredTables.length > 0) {
+        setCanDeleteUser(false);
+      } else {
+        setCanDeleteUser(true);
+      }
+    } catch (error) {
+      console.error(error);
+      setCanDeleteUser(false);
+    }
+  };
+
+  const [canDeleteUser, setCanDeleteUser] = useState(false);
+
+  useEffect(() => {
+    if (user && user?.authId) {
+      checkIfUserIsConnected();
+    }
+  }, [user]);
+
   if (status !== 'done') {
     return <LessonLoading />;
   } else {
     return (
       <div className="w-3/4 md:px-2 pt-2">
-        <div className="mb-4">
-          {/* TABS */}
-          <div className="border-b-0 border-gray-200">
-            <nav
-              className="-mb-px flex space-x-8 overflow-x-auto custom-scrollbar"
-              aria-label="Tabs">
-              <a
-                onClick={() => setTab('p')}
-                key="personal_information"
-                style={{...getColor(tab === 'p')}}
-                className={classNames(
-                  'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                  'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                )}>
-                {UserInformationDict[userLanguage]['heading']}
-              </a>
-              {user?.role === 'ST' && (
-                <>
-                  <a
-                    onClick={() => setTab('demographics')}
-                    key="demographics"
-                    style={{...getColor(tab === 'demographics')}}
-                    className={classNames(
-                      'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                      'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                    )}>
-                    {UserInformationDict[userLanguage]['demographics']}
-                  </a>
-                  <a
-                    onClick={() => setTab('private')}
-                    key="private"
-                    style={{...getColor(tab === 'private')}}
-                    className={classNames(
-                      'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
-                      'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
-                    )}>
-                    {UserInformationDict[userLanguage]['private']}
-
-                    <IoLockClosed
-                      size={'0.8rem'}
-                      color={getColor(tab === 'private').color}
-                      className="group-hover:text-gray-500 ml-2 h-5 w-5"
-                    />
-                  </a>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
+        <Tabs3 tabs={tabsData} curTab={curTab} setCurTab={setCurTab} />
 
         {/* USER INFO FIRST TAB */}
-        {tab === 'p' && (
-          <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6">
-              <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['fullname']}
-                  </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">{`${user.firstName} ${user.lastName}`}</dd>
-                </div>
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['nickname']}
-                  </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">
-                    {`${user.preferredName ? user.preferredName : 'not set'}`}
-                  </dd>
-                </div>
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['role']}
-                  </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">
-                    <UserRole role={user.role} />
-                  </dd>
-                </div>
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['status']}
-                  </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">
-                    <Status status={user.status} />{' '}
-                    {Boolean(user.inactiveStatusDate) && (
-                      <span
-                        className="text-xs"
-                        title={`Status changed to inactive on ${statusDate(
-                          user?.inactiveStatusDate || ''
-                        )}`}>
-                        ({statusDate(user?.inactiveStatusDate || '')})
-                      </span>
-                    )}
-                  </dd>
-                </div>
-
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['email']}
-                  </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">{`${user.email}`}</dd>
-                </div>
-
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['account']}
-                  </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">{created()}</dd>
-                </div>
-                {/*----ON DEMAND TOGGLE----*/}
-                {user.role === 'ST' && (
-                  <div className="sm:col-span-1 p-2">
-                    <dt className="text-sm leading-5 font-regular text-gray-600">
-                      {UserInformationDict[userLanguage]['ondemand']}
-                    </dt>
-                    <dd
-                      data-cy="self-paced-text"
-                      className="mt-2 text-base leading-5 text-gray-900">
-                      <Status status={user?.onDemand ? 'YES' : 'NO'} />
-                    </dd>
-                  </div>
-                )}
-                <div className="sm:col-span-1 p-2 flex items-centers">
+        {onPersonal && (
+          <Card>
+            <Descriptions
+              extra={
+                <div className="flex gap-4 items-center justify-center">
                   <Buttons
                     dataCy="reset-password-button"
-                    label={
-                      loading
-                        ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']
-                        : UserInformationDict[userLanguage]['RESET_PASSWORD']
-                    }
+                    label={dict[loading ? 'RESETTING_PASSWORD' : 'RESET_PASSWORD']}
                     variant="dashed"
                     size="small"
                     onClick={resetPassword}
                     disabled={loading}
                   />
+                  {!hideDeleteBtn && (
+                    <Buttons
+                      dataCy="reset-password-button"
+                      label={dict['DELETE_USER']}
+                      redBtn
+                      tooltip={
+                        !canDeleteUser
+                          ? `${user.firstName} is currently contributing to other services `
+                          : ''
+                      }
+                      size="small"
+                      variant="dashed"
+                      onClick={() => {}}
+                      disabled={!canDeleteUser}
+                    />
+                  )}
                 </div>
-              </dl>
-            </div>
-          </div>
+              }
+              title={'User Information'}>
+              <Descriptions.Item label={dict['fullname']}>
+                {user.firstName} {user.lastName}
+              </Descriptions.Item>
+
+              <Descriptions.Item label={dict['nickname']}>
+                {user?.preferredName || ''}
+              </Descriptions.Item>
+              <Descriptions.Item label={dict['role']}>
+                <UserRole role={user.role} />
+              </Descriptions.Item>
+              <Descriptions.Item label={dict['status']}>
+                <Status useDefault status={user.status} />{' '}
+                {Boolean(user.inactiveStatusDate) && (
+                  <span
+                    className="text-xs"
+                    title={`Status changed to inactive on ${statusDate(
+                      user?.inactiveStatusDate || ''
+                    )}`}>
+                    ({statusDate(user?.inactiveStatusDate || '')})
+                  </span>
+                )}
+              </Descriptions.Item>
+              <Descriptions.Item span={2} label={dict['email']}>
+                {user.email}
+              </Descriptions.Item>
+              <Descriptions.Item label={dict['account']}>{created()}</Descriptions.Item>
+              <Descriptions.Item label={dict['ondemand']}>
+                <Status status={user?.onDemand ? 'YES' : 'NO'} />
+              </Descriptions.Item>
+            </Descriptions>
+          </Card>
         )}
 
         {/* CHECKPOINTS AND DEMOGRAPHIC QUESTIONS */}
-        {tab !== 'p' && checkpoints.length > 0 && (
+        {!onPersonal && checkpoints.length > 0 && (
           <Fragment>
             {checkpoints.map((checkpoint: any) => (
               <Fragment key={`checkpoint_${checkpoint.id}`}>

@@ -3088,11 +3088,12 @@ const UserInformationDict: UserInformationDictInterface = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'Self-Paced',
-
+    CLASSROOM_LOCATION: 'Classroom Location',
     LOCATION: 'Location',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',
+    DELETE_USER: 'Delete user',
     MESSAGE: {
       RESET_PASSWORD_SUCCESS: 'Password reset successfully',
       RESET_PASSWORD_FAILURE: 'Password reset failed'
@@ -3110,11 +3111,12 @@ const UserInformationDict: UserInformationDictInterface = {
     email: 'Correo electrónico',
     account: 'Cuenta Creada',
     ondemand: 'Autoestudio',
-
+    CLASSROOM_LOCATION: 'Ubicación de la clase',
     LOCATION: 'Ubicación',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Restablecer contraseña',
     RESETTING_PASSWORD: 'Restableciendo contraseña',
+    DELETE_USER: 'Eliminar usuario',
     MESSAGE: {
       RESET_PASSWORD_SUCCESS: 'Contraseña restablecida correctamente',
       RESET_PASSWORD_FAILURE: 'Error al restablecer la contraseña'

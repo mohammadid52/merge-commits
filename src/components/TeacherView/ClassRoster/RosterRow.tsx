@@ -235,7 +235,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   return (
     <>
       {/* <div className="" /> */}
-      <div className="roster-row">
+      <div className="roster-row w-full">
         <div
           draggable={false}
           className={`w-full px-4 flex py-2 transition-all duration-300 items-center ${
@@ -293,14 +293,14 @@ const RosterRow: React.FC<RosterRowProps> = ({
             )}
           </div>
 
-          <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} flex items-center`}>
+          <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} gap-2 flex items-center`}>
             <Buttons
               disabled={!hot}
               variant={
                 studentIsShared()
                   ? 'primary'
                   : studentIsInLesson() && !studentIsViewed()
-                  ? 'default'
+                  ? 'dashed'
                   : 'primary'
               }
               transparent={!hot}

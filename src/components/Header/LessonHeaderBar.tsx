@@ -39,7 +39,7 @@ const LessonHeaderBar = ({
   const match = useRouteMatch();
 
   // don't remove this line or we are screwed
-  useStudentTimer();
+  const timer = useStudentTimer();
   const isLesson = lessonState?.lessonData.type === 'lesson';
 
   // ##################################################################### //

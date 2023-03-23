@@ -46,7 +46,7 @@ const LessonTopMenu = ({
   return (
     <>
       <div
-        className={`dark-blue  shadow-1 w-full flex  items-center justify-center py-2 px-6`}>
+        className={`dark-blue  shadow-1 w-full flex  items-center justify-center py-4 px-6`}>
         <div className="w-full flex flex-row items-center justify-center">
           <div className="flex flex-row justify-center w-full items-center">
             {/* BACK BUTTON */}

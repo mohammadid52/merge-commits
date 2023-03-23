@@ -22,7 +22,8 @@ const SelectMany = ({
     const {text, id} = item;
     return {
       label: text,
-      value: id
+      value: id,
+      id: id
     };
   });
 
@@ -54,7 +55,9 @@ const SelectOne = ({
         const {text, id} = item;
         return (
           <Radio
+            className="text-lg"
             key={id}
+            id={id}
             onChange={(e) => {
               onChange(e);
             }}
@@ -114,11 +117,7 @@ const OptionBlock = (props: IOptionProps) => {
         const {id} = e.target;
         if (isInLesson) {
           if (selectMany) {
-            if (selectedOptionList.includes(id)) {
-              selectedOptionList = selectedOptionList.filter((d) => d !== id);
-            } else {
-              selectedOptionList.push(id);
-            }
+            selectedOptionList = [...e];
           } else {
             selectedOptionList[0] = id;
           }
@@ -127,7 +126,7 @@ const OptionBlock = (props: IOptionProps) => {
         }
       };
       return (
-        <div>
+        <div className="mt-2">
           {selectMany ? (
             <SelectMany
               classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${

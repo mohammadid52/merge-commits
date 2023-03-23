@@ -138,6 +138,7 @@
     min-height: calc(100% - 110px);
   }
 }
+
 .white-text-on-hover {
   &:hover {
     color: #fff !important;
@@ -244,3 +245,12 @@
 // .review-icon-wrapper .anticon:last-child {
 //   right: 0;
 // }
+
+@keyframes pageAnimate {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

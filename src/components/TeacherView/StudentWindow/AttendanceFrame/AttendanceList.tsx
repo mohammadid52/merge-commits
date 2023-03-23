@@ -1,8 +1,6 @@
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import moment from 'moment';
-import React from 'react';
 
 interface IAttendanceListProps {
   loading: boolean;
@@ -32,7 +30,6 @@ const AttendanceList = ({
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
-  const {breakpoint} = useTailwindBreakpoint();
 
   return (
     <div className="rounded shadow-5">
@@ -92,16 +89,7 @@ const AttendanceList = ({
       </div>
 
       {/* BODY */}
-      <div
-        className={`${
-          breakpoint === '2xl'
-            ? 'h-96 w-192'
-            : breakpoint === 'xl'
-            ? 'h-88 w-176'
-            : breakpoint === 'lg'
-            ? 'h-80 w-160'
-            : 'h-64 w-128'
-        } relative flex flex-col flex-1 overflow-y-scroll overflow-x-hidden rounded border-0 border-gray-400`}>
+      <div>
         {loading && !attendanceList.length ? (
           <div>
             <div className="py-3">

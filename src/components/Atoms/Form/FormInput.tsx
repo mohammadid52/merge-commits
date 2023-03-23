@@ -29,6 +29,7 @@ interface FormInputProps {
   tooltip?: string;
   Icon?: any;
   suffix?: React.ReactNode;
+  inputClassName?: string;
 }
 
 const {Password, TextArea} = Input;
@@ -47,6 +48,7 @@ const FormInput: React.FC<FormInputProps> = ({
   textarea = false,
   rows = 1,
   className,
+  inputClassName,
   maxLength = 99999,
   showCharacterUsage = false,
   suffix,
@@ -64,7 +66,7 @@ const FormInput: React.FC<FormInputProps> = ({
     maxLength,
     minLength: min,
     size: 'large' as SizeType,
-    // className: className,
+    className: inputClassName,
     placeholder: placeHolder,
     status: error ? 'error' : '',
     prefix: error ? <BiErrorCircle /> : Icon ? <Icon /> : undefined,

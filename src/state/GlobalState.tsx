@@ -52,7 +52,7 @@ export const globalState: GlobalStateType = {
   roomData: {
     id: '',
     name: '',
-    teachingStyle: undefined,
+    teachingStyle: TeachingStyle.ACADEMIC,
     widgets: [],
     curriculum: {},
     rooms: [],
@@ -108,7 +108,7 @@ export const globalState: GlobalStateType = {
 export const standardTheme = {
   iconoclast: '#667eea',
   curate: '#0081cb',
-  bg: 'bg-dark-gray',
+  bg: 'bg-dark-blue',
   underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
   gradient: {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue'

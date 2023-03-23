@@ -14,7 +14,7 @@ const CustomVideoBlock = (props: ImageBlockProps) => {
 
   const {
     value: url,
-    width = '',
+    width = '100%',
     height = '',
     caption = ''
   } = Array.isArray(value) && value?.length ? value[0] : value;
@@ -76,7 +76,7 @@ const CustomVideoBlock = (props: ImageBlockProps) => {
         ref={videoRef}
         height={height}
         controls
-        className="rounded-lg"
+        className="rounded-lg w-full"
         src={getImageFromS3Static(url)}>
         <source />
         Your browser does not support the video tag.

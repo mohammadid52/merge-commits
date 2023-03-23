@@ -43,6 +43,7 @@ const TextBlock = (props: TextBlockProps) => {
   return (
     <FormInput
       key={id}
+      inputClassName="mt-2"
       textarea={textarea}
       tooltip={mode === 'building' ? 'Disabled in building mode' : undefined}
       rows={textarea ? 4 : undefined}

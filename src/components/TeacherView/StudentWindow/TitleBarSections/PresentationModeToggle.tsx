@@ -75,14 +75,13 @@ const PresentationModeToggle = ({
   }, [isPresenting, currentPage]);
 
   return (
-    <div className="w-1/3 flex justify-end h-8 align-middle leading-8 ">
-      <Buttons
-        Icon={CgScreen}
-        transparent={isPresenting}
-        label={isPresenting ? 'Stop Presenting' : 'Start Presenting'}
-        onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
-      />
-    </div>
+    <Buttons
+      Icon={CgScreen}
+      size="middle"
+      transparent={isPresenting}
+      label={isPresenting ? 'Stop Presenting' : 'Start Presenting'}
+      onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
+    />
   );
 };
 

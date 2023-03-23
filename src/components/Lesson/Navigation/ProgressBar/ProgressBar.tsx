@@ -1,11 +1,14 @@
+import Buttons from '@components/Atoms/Buttons';
+import {useQuery} from '@customHooks/urlParam';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {Breadcrumb} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 
 import React, {useEffect} from 'react';
 import {AiOutlineHome} from 'react-icons/ai';
-import {useRouteMatch} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
 import StageIcon from './StageIcon';
 
@@ -38,6 +41,7 @@ const ProgressBar = ({
 }: IProgressBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
 
   const user = gContext.state.user;
 
@@ -113,64 +117,83 @@ const ProgressBar = ({
     }
   }, [isClosed, isClosedLocalStorage]);
 
+  const isNotClickable = (pageIdx: number, page: any) =>
+    pageIdx === 0 ||
+    isOnDemand ||
+    ((nextRequiredIdx !== null ? pageIdx <= nextRequiredIdx : true) &&
+      page.open !== false);
+
+  const items = pages?.map((page: UniversalLessonPage, key: number) => ({
+    title: page.label,
+    url: `/lesson/${lessonId}/${key}`,
+    disabled: !isNotClickable(key, page),
+    index: key
+  }));
+
+  // add item at the end of the array
+  items?.push({title: 'Exit', url: '/home', disabled: false, index: items.length + 1});
+
+  const params = useQuery(location.search);
+
+  const scrollUp = () => {
+    const domID = {
+      lesson: 'lesson-app-container',
+      survey: 'survey-app-container'
+    } as any;
+    const container = document.getElementById(domID[lessonState.lessonData.type]);
+
+    if (container) {
+      container.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  };
+
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const lessonProgress = lessonState.lessonProgress;
+  const handleLink = (pageNr: number) => {
+    const isNotMovingForward = pageNr < lessonProgress;
+    if (canContinue || isNotMovingForward) {
+      scrollUp();
+      const sId = params.get('sId');
+      const sEmail = params.get('sId');
+
+      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+      history.push(`${match.url}/${pageNr}${dynamicQuery}`);
+
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+
+      updatePageInLocalStorage?.(pageNr);
+    } else {
+      handleRequiredNotification && handleRequiredNotification();
+    }
+  };
+
   return (
-    <nav
-      className="h-12 flex bg-gray-600 bg-opacity-20 border-0 border-gray-100 border-opacity-20 rounded-lg"
-      aria-label="Breadcrumb">
-      {isTeacherPresenting && !isOnDemand && <Disabled />}
-      {isClosed && isClosedLocalStorage && <Disabled />}
-      <ol className="max-w-screen-xl mb-0 w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
-        {/* 1 */}
-        {pages &&
-          pages.map((page: UniversalLessonPage, key: number) => {
-            let shouldHide =
-              (breakpoint === 'xs' || breakpoint === 'sm') &&
-              key !== lessonState.currentPage;
-            return (
-              // @ts-ignore
-              <StageIcon
-                key={`${page.id}_progressIcon`}
-                pageNr={key}
-                updatePageInLocalStorage={updatePageInLocalStorage}
-                id={page?.id || ''}
-                enabled={page.disabled !== true || isOnDemand}
-                open={page.open !== false || isOnDemand}
-                active={key === currentPage}
-                label={page.label}
-                canContinue={canContinue}
-                handleRequiredNotification={handleRequiredNotification}
-                clickable={
-                  key === 0 ||
-                  isOnDemand ||
-                  ((nextRequiredIdx !== null ? key <= nextRequiredIdx : true) &&
-                    page.open !== false)
-                }
-                hidden={shouldHide}
-              />
-            );
-          })}
-        {/* 2 */}
-        {(breakpoint === 'xs' || breakpoint === 'sm') &&
-          miniPageCounter(lessonState?.currentPage, pages)}
-        {/* 3 */}
-        {breakpoint !== 'xs' && breakpoint !== 'sm' && (
-          <li className="flex w-auto">
-            <div onClick={handleHome} className="flex items-center w-auto group">
-              <span className="text-gray-500">/</span>
-              <a
-                // href="#"
-                className="flex flex-row text-red-500 cursor-pointer transform hover:scale-110 transition-transform duration-150   ml-4">
-                <span className="">Exit</span>
-                <AiOutlineHome
-                  className="flex-shrink-0 h-5 w-5 ml-1"
-                  aria-hidden="true"
-                />
-              </a>
-            </div>
-          </li>
-        )}
-      </ol>
-    </nav>
+    <div className="flex">
+      <Breadcrumb
+        className="lesson-progress-breadcrumb"
+        itemRender={(route: any) => {
+          const active = route.index === currentPage;
+          const another = lessonProgress >= route.index;
+          const isExitBtn = route.title === 'Exit';
+          return (
+            <span
+              onClick={() => (isExitBtn ? handleHome?.() : handleLink(route.index))}
+              className={`${isExitBtn ? '!text-red-500' : ''} ${
+                another ? '!text-gray-600' : ''
+              } ${!active ? '!text-gray-500' : 'theme-text:400'} ${
+                route.disabled
+                  ? '!text-gray-600 pointer-events-none cursor-not-allowed'
+                  : '!text-gray-500 cursor-pointer'
+              }`}>
+              {route.title}
+            </span>
+          );
+        }}
+        items={items}
+      />
+    </div>
   );
 };
 

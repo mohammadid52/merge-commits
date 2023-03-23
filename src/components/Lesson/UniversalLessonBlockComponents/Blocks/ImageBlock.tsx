@@ -31,8 +31,8 @@ export const ImageBlock = (props: ImageBlockProps) => {
   }, [value]);
 
   const styleAttribute = {
-    width: imageState.width === 'auto' ? 'auto' : `${imageState.width}px`,
-    height: imageState.height === 'auto' ? 'auto' : `${imageState.height}px`
+    width: imageState.width === 'auto' ? '100%' : `${imageState.width}px`,
+    height: imageState.height === 'auto' ? '100%' : `${imageState.height}px`
   };
 
   return (

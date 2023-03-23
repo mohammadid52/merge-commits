@@ -163,7 +163,7 @@ const LessonRowComposer = () => {
   }, []);
 
   return (
-    <div>
+    <div className="page-animate">
       {removeDownloadablesFromlist &&
         removeDownloadablesFromlist.map((pagePart: PagePart, idx: number): any => (
           <div key={`row_pagepart_${idx}`} className="relative">
@@ -186,9 +186,7 @@ const LessonRowComposer = () => {
                           key={`row_pagepart_${idx}_${idx2}`}
                           className={`${paddingForHeader(content.type)}`}>
                           <div
-                            className={`${
-                              content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
-                            } ${paddingForDarkBg(content.type)} `}
+                            className={` ${paddingForDarkBg(content.type)} `}
                             id={`${content.type === 'notes-form' ? '' : content.id}`}>
                             <SingleContentRow
                               content={content}

@@ -1,4 +1,5 @@
 import Label from '@components/Atoms/Form/Label';
+import {Modal} from 'antd';
 import {UniversalLesson} from 'API';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
@@ -7,7 +8,6 @@ import {
 } from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import map from 'lodash/map';
 import Table, {ITableProps} from 'molecules/Table';
-import ThemeModal from 'molecules/ThemeModal';
 import {lazy, useState} from 'react';
 
 const EvidenceTab = lazy(() => import('@components/Lesson/Components/EvidenceTab'));
@@ -83,14 +83,15 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   };
 
   return (
-    <ThemeModal
-      dark={Boolean(
-        currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true
-      )}
-      subHeader={currentLesson?.summary || ''}
-      header={`${currentLesson?.title} - Overview`}
+    <Modal
+      footer={null}
+      // dark={Boolean(
+      //   currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true
+      // )}
+      // subHeader={currentLesson?.summary || ''}
+      title={`${currentLesson?.title} - Overview`}
       open={open}
-      setOpen={setOpen}>
+      onCancel={() => setOpen(false)}>
       <div>
         <div className="my-2 border-b-0 border-gray-700 py-4 min-h-56">
           <Tabs3
@@ -146,7 +147,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
           <Table {...lessonPlanTableConfig} />
         </div>
       </div>
-    </ThemeModal>
+    </Modal>
   );
 };
 

@@ -1853,3 +1853,13 @@ $translation-fab-width: 50px;
 .ant-card-meta-title {
   color: rgba(0, 0, 0, 0.88) !important;
 }
+
+.lesson-progress-breadcrumb .ant-breadcrumb-separator {
+  color: $gray-500 !important;
+}
+
+.ant-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
