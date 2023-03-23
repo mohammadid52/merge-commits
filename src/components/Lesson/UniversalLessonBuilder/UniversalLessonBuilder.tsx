@@ -469,8 +469,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         </Sider>
         <Layout className="site-layout">
           <Header
-            className="flex items-center justify-between"
-            style={{padding: 0, background: 'white'}}>
+            className="flex items-center justify-between dark-blue"
+            style={{padding: 0}}>
             <div className="flex">
               <Tooltip
                 placement="right"
@@ -478,7 +478,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
                 {React.createElement(
                   builderMenuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
                   {
-                    className: 'ml-4',
+                    className: 'ml-4 text-white',
                     onClick: () => setBuilderMenuCollapsed(!builderMenuCollapsed)
                   }
                 )}
@@ -501,7 +501,6 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
           </Header>
           <Content
             style={{
-              margin: '24px 16px',
               padding: 24,
               minHeight: 280
             }}

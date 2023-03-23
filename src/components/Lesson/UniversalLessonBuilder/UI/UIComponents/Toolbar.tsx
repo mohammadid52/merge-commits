@@ -22,51 +22,40 @@ const Toolbar = ({
 
   return (
     <>
-      <nav className="flex">
+      <nav className="flex mr-4">
         <div className="flex items-center">
           <div className="flex gap-2 items-center w-auto">
-            <Tooltip title={'same sfdf'}>
-              <Buttons
-                onClick={() => {
-                  if (!newLessonPlanShow) {
-                    setShowDataForCopyClone(true);
-                  }
-                }}
-                variant="default"
-                size="middle"
-                Icon={AiOutlineCopy}
-              />
-            </Tooltip>
-            <Tooltip title={'same sfdf'}>
-              <Buttons
-                variant="default"
-                size="middle"
-                onClick={() => {
-                  setNewLessonPlanShow(true);
-                  setEditMode(false);
-                  setFields({
-                    title: '',
-                    label: '',
-                    instructions: '',
-                    instructionsHtml: '',
-                    description: '', // ignore this field
-                    interactionType: [],
-                    tags: [],
-                    estTime: '1 min',
-                    classwork: true
-                  });
-                }}
-                Icon={AiOutlineFileAdd}
-              />
-            </Tooltip>
+            <Buttons
+              onClick={() => {
+                if (!newLessonPlanShow) {
+                  setShowDataForCopyClone(true);
+                }
+              }}
+              size="middle"
+              Icon={AiOutlineCopy}
+            />
 
             <Buttons
-              variant="default"
               size="middle"
-              redBtn
-              Icon={AiOutlineDelete}
-              onClick={deleteLesson}
+              onClick={() => {
+                setNewLessonPlanShow(true);
+                setEditMode(false);
+                setFields({
+                  title: '',
+                  label: '',
+                  instructions: '',
+                  instructionsHtml: '',
+                  description: '', // ignore this field
+                  interactionType: [],
+                  tags: [],
+                  estTime: '1 min',
+                  classwork: true
+                });
+              }}
+              Icon={AiOutlineFileAdd}
             />
+
+            <Buttons size="middle" redBtn Icon={AiOutlineDelete} onClick={deleteLesson} />
           </div>
         </div>
       </nav>

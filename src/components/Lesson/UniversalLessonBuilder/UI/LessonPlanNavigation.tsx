@@ -164,8 +164,8 @@ const LessonPlanNavigation = ({
                             href={page.href}
                             className={` ${
                               selectedPageID === page.id
-                                ? 'border-b- theme-border:400 theme-text:600 hover:theme-text:700'
-                                : 'text-gray-600 hover:text-gray-700'
+                                ? 'border-b- theme-border:400 theme-text hover:theme-text:600'
+                                : 'text-gray-500 hover:text-gray-600'
                             }   ml-4 cursor-pointer w-auto text-sm 2xl:text-base font-light transition-transform duration-150`}>
                             {page.label}
                           </a>
