@@ -85,6 +85,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   return (
     <Modal
       footer={null}
+      width={1000}
       // dark={Boolean(
       //   currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true
       // )}
