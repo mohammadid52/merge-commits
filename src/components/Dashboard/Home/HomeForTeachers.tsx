@@ -261,13 +261,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 </span>
                 . What do you want to teach today?
               </p>
-              <div className="absolute z-100 w-6 top-0 right-1">
+              {/* <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
                   onClick={() => setOpenWalkThroughModal(true)}>
                   <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
                 </span>
-              </div>
+              </div> */}
             </HeaderTextBar>
           )}
           <div className="px-5">
