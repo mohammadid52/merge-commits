@@ -122,7 +122,7 @@ else
 
     
 
-    check_api_key_exists
+    # check_api_key_exists
     
 
     echo ${GREEN}"<---Successfully pulled... now copying content from api.schema.graphql to schema.graphql--->"${NONE}
