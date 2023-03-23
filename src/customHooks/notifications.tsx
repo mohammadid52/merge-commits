@@ -245,6 +245,7 @@ const useLessonNotifications = () => {
 
   const getSharedStudenName = (authID: string) => {
     const studentList = getLocalStorageData('student_list');
+
     const findStudent =
       studentList &&
       studentList.reduce((acc: any, studentObj: any) => {
@@ -254,6 +255,7 @@ const useLessonNotifications = () => {
           return acc;
         }
       }, {});
+
     if (findStudent && authID) {
       return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
@@ -280,6 +282,8 @@ const useLessonNotifications = () => {
   const goToDashboard = () => {
     history.push('/dashboard');
   };
+
+  const studentAuthID = lessonState.displayData[0].studentAuthID;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList: NotificationListItem[] = [
@@ -318,7 +322,9 @@ const useLessonNotifications = () => {
       check: anyPageIsShared && !iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing a page',
-        message: ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
+        message: studentAuthID
+          ? ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`
+          : '',
         type: 'alert',
         cta: 'Go There Now'
       },
@@ -330,7 +336,9 @@ const useLessonNotifications = () => {
       check: iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing your page',
-        message: `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`,
+        message: studentAuthID
+          ? `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`
+          : '',
         type: 'alert',
         cta: 'Go There Now'
       },
@@ -375,7 +383,9 @@ const useLessonNotifications = () => {
       check: thisPageIsShared && !iAmShared && !teacherIsPresenting,
       notification: {
         label: 'You are viewing this page',
-        message: `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
+        message: studentAuthID
+          ? `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`
+          : '',
         type: 'info',
         cta: ''
       },

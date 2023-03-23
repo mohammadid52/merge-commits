@@ -1,7 +1,6 @@
 import Highlighted from '@components/Atoms/Highlighted';
 import Loader from '@components/Atoms/Loader';
 import useAuth from '@customHooks/useAuth';
-import useSearch from '@customHooks/useSearch';
 import {Empty} from 'antd';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
@@ -11,7 +10,6 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {orderBy} from 'lodash';
 import {useEffect, useState} from 'react';
 import {DashboardProps} from '../Dashboard';
 
@@ -138,7 +136,6 @@ const RoomTiles = (props: {
   // }, [classes]);
 
   let finalList = classList || classes || [];
-  console.log('🚀 ~ file: RoomTiles.tsx:142 ~ finalList:', finalList);
 
   const [fetchAgain, setFetchAgain] = useState(false);
 
@@ -155,8 +152,8 @@ const RoomTiles = (props: {
         extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
         title={DashboardDict[userLanguage]['YOUR_CLASSROOMS']}
         withButton={
-          classList &&
-          classList.length > 3 && (
+          finalList &&
+          finalList.length > 3 && (
             <div className="flex w-auto gap-x-4 justify-end">
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}

@@ -43,6 +43,13 @@ const UnderlinedTabs = (props: TabsProps) => {
                 changeActiveTab(tab.index);
               }}
               id={tab.id}
+              style={
+                activeTab === tab.index
+                  ? {
+                      borderBottom: '1px solid'
+                    }
+                  : {}
+              }
               className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center ${
                 tab.disabled
                   ? 'cursor-not-allowed opacity-50 bg-gray-500 text-gray-200 border'
