@@ -355,7 +355,6 @@ const EmojiFeedback = () => {
       title={'How are you today?'}
       scrollHidden
       intenseOpacity
-      width={'w-auto'}
       modalCloseId="sentiment-modal-close"
       closeAction={onCancel}
       closeOnBackdrop={false}

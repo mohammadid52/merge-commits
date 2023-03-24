@@ -13,7 +13,7 @@ import {nanoid} from 'nanoid';
 import {FaTrashAlt} from 'react-icons/fa';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
-interface KeywordModalDialog extends IContentTypeComponentProps {
+interface KeywordModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
 }
@@ -38,7 +38,7 @@ const KeywordModalDialog = ({
   askBeforeClose,
   setUnsavedChanges,
   updateBlockContentULBHandler
-}: KeywordModalDialog) => {
+}: KeywordModalDialogProps) => {
   const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 

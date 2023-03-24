@@ -52,7 +52,7 @@ const DownloadCsvButtons = ({
             className={`${!isCSVDownloadReady ? ' pointer-events-none' : ''} w-auto ml-2`}
             id="csv-download-button"
             headers={mappedHeaders}
-            filename={`${selectedClassRoom?.name}_${
+            filename={`${selectedClassRoom?.label}_${
               selectedSurvey?.name
             }_${getTodayDate()}.csv`}>
             Download Survey Results

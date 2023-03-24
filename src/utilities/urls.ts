@@ -47,7 +47,14 @@ const getCorrectUrl = (clientKey: string) => {
       };
 
     default:
-      return null;
+      return {
+        createUserUrl:
+          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user',
+        requestResetPassword:
+          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password',
+        tableCleanupUrl:
+          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson'
+      };
   }
 };
 
@@ -84,6 +91,6 @@ const getBackendKey = (input: any) => {
 // ############################### OUTPUT ############################## //
 // ##################################################################### //
 const getUrls = getCorrectUrl(getBackendKey(awsconfig2));
-export const createUserUrl = getUrls?.createUserUrl;
-export const requestResetPassword = getUrls?.requestResetPassword;
-export const tableCleanupUrl = getUrls?.tableCleanupUrl;
+export const createUserUrl = getUrls.createUserUrl;
+export const requestResetPassword = getUrls.requestResetPassword;
+export const tableCleanupUrl = getUrls.tableCleanupUrl;

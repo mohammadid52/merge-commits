@@ -2,8 +2,6 @@ import {getUserRoleString} from '@utilities/strings';
 import {Tag} from 'antd';
 import {Role} from 'API';
 
-// type Role = 'ADM' | 'BLD' | 'FLW' |  'TR' | 'ST';
-
 type RoleProps = {
   role: Role | string;
 };

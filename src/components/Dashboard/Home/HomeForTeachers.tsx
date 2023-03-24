@@ -1,13 +1,11 @@
 import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {setLocalStorageData} from 'utilities/localStorage';
 
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-// import InformationalWalkThrough from "components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough";
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
 import {ClassroomControlProps} from '../Dashboard';
@@ -75,7 +73,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const {state, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
+
   const {firstName} = useAuth();
 
   const user = !isEmpty(state) ? {firstName: firstName, preferredName: firstName} : null;
@@ -255,6 +253,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     });
 
     setClassList(modifiedClassList);
+    return modifiedClassList;
   };
 
   const refetchHomeData = () => {

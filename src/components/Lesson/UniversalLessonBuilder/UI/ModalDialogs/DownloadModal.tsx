@@ -90,7 +90,6 @@ const File = ({
     }
   };
 
-  // const getFile = async () => await getImageFromS3(imgId);
   const imageUrl = file
     ? URL.createObjectURL(file)
     : getImageFromS3Static(`${UPLOAD_KEY}${fileKey}`);

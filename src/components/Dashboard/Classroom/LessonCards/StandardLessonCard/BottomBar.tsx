@@ -1,8 +1,8 @@
 import Placeholder from '@components/Atoms/Placeholder';
 import {LessonCardProps} from '@interfaces/ClassroomInterface';
 import {getImageFromS3Static} from '@utilities/services';
+import {MinutesToHHMM} from '@utilities/time';
 import {AiOutlineClockCircle} from 'react-icons/ai';
-import {MinutesToHHMM} from 'utilities/time';
 
 import Start from '../../Start';
 
@@ -44,7 +44,7 @@ const BottomBar = (props: LessonCardProps) => {
         className={`bg-transparent py-2 relative flex justify-around items-center px-4 `}>
         {/* TIME */}
         <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
-          <div className="w-auto text-gray-500">
+          <div className="flex items-center text-gray-500">
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div

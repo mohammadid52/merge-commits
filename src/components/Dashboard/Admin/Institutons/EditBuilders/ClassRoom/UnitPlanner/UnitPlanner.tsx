@@ -5,7 +5,6 @@ import moment, {Moment} from 'moment';
 import * as customQueries from 'customGraphql/customQueries';
 
 import Buttons from 'atoms/Buttons';
-// import DatePickerInput from 'atoms/Form/DatePickerInput';
 import Loader from 'atoms/Loader';
 import {IImpactLog} from '../ClassRoomHolidays';
 import {frequencyMapping} from '@utilities/staticData';
@@ -176,11 +175,13 @@ const UnitPlanner = ({
         }
       }))
     );
-    // saveRoomDetails();
+
     setLogsChanged(false);
   };
 
-  const validateAllRequiredFields = (_: () => void) => {};
+  const validateAllRequiredFields = (_: () => void) => {
+    // do something
+  };
 
   return (
     <div className="py-8">

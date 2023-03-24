@@ -108,8 +108,6 @@ const ImageFormComponent = ({
   };
 
   const addToDB = async (list: any) => {
-    // closeAction();
-
     const input = {
       id: list.id,
       lessonPlan: [...list.lessonPlan]

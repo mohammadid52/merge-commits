@@ -1,16 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {CgNotes} from 'react-icons/cg';
-import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
-import {IoIosCalendar} from 'react-icons/io';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {CgNotes} from 'react-icons/cg';
 import {FaCalendarDay} from 'react-icons/fa';
+import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
 
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutation from 'graphql/mutations';
 
 import Buttons from 'atoms/Buttons';
-import DatePickerInput from 'atoms/Form/DatePickerInput';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -21,6 +19,7 @@ import {awsFormatDate, dateString, timeIntervals} from 'utilities/time';
 import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 
+import {DatePicker} from 'antd';
 import Modal from 'atoms/Modal';
 
 interface ICourseScheduleProps {
@@ -43,7 +42,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {userLanguage} = useGlobalContext();
   const {CourseScheduleDict} = useDictionary();
 
-  const [startDateFocus, setStartDateFocus] = useState(false);
+  const [_, setStartDateFocus] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [logsChanged, setLogsChanged] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -165,10 +164,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     setUnsavedChanges(true);
   };
 
-  const handleDateChange = (date: Date | null, fieldName: string) => {
+  const handleDateChange = (dateString: any, fieldName: string) => {
     setScheduleData((prevData) => ({
       ...prevData,
-      [fieldName]: date
+      [fieldName]: dateString
     }));
     setUnsavedChanges(true);
   };
@@ -254,30 +253,28 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           </div>
           <div className="mt-8">
             <div className="flex mt-4">
-              <span className="w-auto inline-flex items-center">
-                <IoIosCalendar className="w-6 h-6 mr-2" />
-              </span>
-              <div className="mr-2 w-64 relative">
-                <DatePickerInput
-                  date={scheduleData.startDate}
-                  placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
-                  onChange={(date: Date | null) => handleDateChange(date, 'startDate')}
-                  focus={startDateFocus}
-                />
-                <div className="text-xs 2xl:text-base text-red-500">
-                  {errors.startDate}
-                </div>
-              </div>
+              <DatePicker
+                // @ts-ignore
+                defaultValue={moment(scheduleData.startDate)}
+                placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
+                onChange={(_, dateString: string) =>
+                  handleDateChange(dateString, 'startDate')
+                }
+              />
+
+              <div className="text-xs 2xl:text-base text-red-500">{errors.startDate}</div>
+
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
-              <div className="mr-2 w-64 relative">
-                <DatePickerInput
-                  date={scheduleData.endDate}
-                  placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_DATE}
-                  minDate={scheduleData.startDate || new Date()}
-                  onChange={(date: Date | null) => handleDateChange(date, 'endDate')}
-                />
-                <div className="text-xs 2xl:text-base text-red-500">{errors.endDate}</div>
-              </div>
+
+              <DatePicker
+                // @ts-ignore
+                defaultValue={moment(scheduleData.endDate)}
+                placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_DATE}
+                onChange={(_, dateString: string) =>
+                  handleDateChange(dateString, 'startDate')
+                }
+              />
+              <div className="text-xs 2xl:text-base text-red-500">{errors.endDate}</div>
             </div>
             <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">

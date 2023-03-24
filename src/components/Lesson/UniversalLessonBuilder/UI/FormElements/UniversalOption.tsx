@@ -1,5 +1,3 @@
-import {isEmpty} from 'lodash';
-
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {Checkbox} from 'antd';
 import {getAsset} from 'assets';
@@ -7,7 +5,7 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {filter, map, remove, update} from 'lodash';
+import {filter, map, remove, isEmpty, update} from 'lodash';
 import {useEffect, useState} from 'react';
 import {optionResponses} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
@@ -45,7 +43,7 @@ const InputContainer = ({
         <div className="mb-2">
           <FormInput
             onChange={(e) => onChange(e, idx)}
-            label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+            label={`${numbered ? idx + 1 : ''}Label`}
             isRequired
             value={input.label}
             id={`formField_${input.id}`}
@@ -116,20 +114,6 @@ const InputContainer = ({
                           : 'Add'}{' '}
                         none of the above option
                       </p>
-                      {/* <p
-                        onClick={() => {
-                          if (input.options.find((item: any) => item.label === 'other')) {
-                            removeExtraOption(idx, 'other');
-                          } else {
-                            addExtraOption(idx, 'other', 'Other');
-                          }
-                        }}
-                        className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
-                        {input.options.find((item: any) => item.label === 'other')
-                          ? 'Remove'
-                          : 'Add'}{' '}
-                        'other' option
-                      </p> */}
                     </div>
                   )}
                 </div>

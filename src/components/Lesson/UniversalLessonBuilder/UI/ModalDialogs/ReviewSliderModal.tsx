@@ -98,7 +98,6 @@ const ReviewSliderModal = ({
       isValid = false;
       errors.label = 'Please add a label';
     } else {
-      isValid = true;
       errors.label = '';
     }
     setErrors({...errors});

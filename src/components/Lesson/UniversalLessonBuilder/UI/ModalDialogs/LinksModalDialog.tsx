@@ -98,7 +98,7 @@ const LinksModalDialog = ({
   const onChange = (e: React.FormEvent, idx: number) => {
     setUnsavedChanges(true);
     const {value, name} = e.target as HTMLFormElement;
-    // validateUrl(value, idx);
+
     handleUpdateInputFields(value, name, idx);
   };
 

@@ -504,11 +504,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                 <SectionTitleV3
                   fontSize="2xl"
                   fontStyle="medium"
-                  title={`${
-                    Boolean(state.roomData?.syllabus?.length)
-                      ? `${classRoomDict[userLanguage]['STEP']} 1:`
-                      : ''
-                  } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
+                  title={` ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
                     !syllabusLoading
                       ? `for ${state.roomData?.curriculum?.name || ''}`
                       : ''

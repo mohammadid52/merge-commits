@@ -1,20 +1,19 @@
 import Label from '@components/Atoms/Form/Label';
-import {Checkbox, Radio} from 'antd';
+import {Checkbox, Radio, Space} from 'antd';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 
 const SelectMany = ({
   onChange,
-
+  shouldBeVertical,
   value
 }: {
   onChange: (e: any) => void;
 
   getCheckValue: (id: string) => boolean;
-  classString: string;
+  shouldBeVertical: boolean;
   value: any;
 }) => {
   // map id into value and text as label and return new array
@@ -28,45 +27,39 @@ const SelectMany = ({
   });
 
   return (
-    <Checkbox.Group
-      options={mappedOptions}
-      defaultValue={['Apple']}
-      onChange={onChange}
-    />
+    <Checkbox.Group options={mappedOptions} defaultValue={['']} onChange={onChange} />
   );
 };
 
 const SelectOne = ({
   onChange,
   getCheckValue,
-
+  shouldBeVertical,
   value
 }: {
   onChange: (e: any) => void;
   getCheckValue: (id: string) => boolean;
-  isStudent: boolean;
-  isInLesson: boolean;
-  classString: string;
+  shouldBeVertical: boolean;
   value: any;
 }) => {
   return (
-    <Radio.Group>
-      {value.map((item: {text: any; id: any}) => {
-        const {text, id} = item;
-        return (
-          <Radio
-            className="text-lg"
-            key={id}
-            id={id}
-            onChange={(e) => {
-              onChange(e);
-            }}
-            checked={getCheckValue(id)}
-            value={id}>
-            {text}
-          </Radio>
-        );
-      })}
+    <Radio.Group className="">
+      <Space direction={shouldBeVertical ? 'vertical' : 'horizontal'} className="w-full">
+        {value.map((item: {text: any; id: any}) => {
+          const {text, id} = item;
+          return (
+            <Radio
+              className="text-lg"
+              key={id}
+              id={id}
+              onChange={onChange}
+              checked={getCheckValue(id)}
+              value={id}>
+              {text}
+            </Radio>
+          );
+        })}
+      </Space>
     </Radio.Group>
   );
 };
@@ -81,20 +74,13 @@ const OptionBlock = (props: IOptionProps) => {
     required = false,
 
     label,
-
-    classString = '',
+    classString,
 
     type,
     options,
     inputID = '',
     isStudent
   } = props;
-
-  const gContext = useGlobalContext();
-
-  const gState = gContext.state;
-  const {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}} =
-    gState;
 
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
@@ -104,8 +90,7 @@ const OptionBlock = (props: IOptionProps) => {
   const generateCheckbox = (
     values: {label: string; text: string; id: string}[],
     selectMany: boolean,
-    inputID: string,
-    classString: string
+    inputID: string
   ) => {
     if (values && Array.isArray(values)) {
       const studentDataValue = getDataValue(inputID) || [];
@@ -125,28 +110,23 @@ const OptionBlock = (props: IOptionProps) => {
           setDataValue(inputID, [...selectedOptionList]);
         }
       };
+      const shouldBeVertical = Boolean(classString?.includes('flex-row'));
       return (
         <div className="mt-2">
           {selectMany ? (
             <SelectMany
-              classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
-                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-              } px-4 rounded-xl ${classString}`}
               onChange={isStudent && isInLesson ? onChange : () => {}}
               key={`question_${id}`}
               getCheckValue={getCheckValue}
               value={values}
+              shouldBeVertical={shouldBeVertical}
             />
           ) : (
             <SelectOne
-              classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
-                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-              } px-4 rounded-xl ${classString}`}
               onChange={isStudent && isInLesson ? onChange : () => {}}
               key={`question_${id}`}
-              isStudent={Boolean(isStudent)}
               getCheckValue={getCheckValue}
-              isInLesson={isInLesson}
+              shouldBeVertical={shouldBeVertical}
               value={values}
             />
           )}
@@ -163,12 +143,7 @@ const OptionBlock = (props: IOptionProps) => {
       className={`questionItemChild lesson-form-block`}>
       {label && <Label isRequired={required} label={label} />}
 
-      {generateCheckbox(
-        options,
-        type === FORM_TYPES.MULTIPLE ? true : false,
-        inputID,
-        classString
-      )}
+      {generateCheckbox(options, type === FORM_TYPES.MULTIPLE ? true : false, inputID)}
     </div>
   );
 };

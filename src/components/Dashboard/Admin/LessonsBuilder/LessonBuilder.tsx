@@ -467,28 +467,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       const curriculums = list?.data?.listCurricula?.items || [];
 
       setCurriculumList(curriculums);
-
-      const institutionRooms: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionsForCurricula)
-      );
-
-      const curriculumIds: any[] = [];
-
-      institutionRooms?.data?.listInstitutions?.items.forEach((item: any) => {
-        item?.rooms?.items?.forEach((item2: any) => {
-          item2?.curricula?.items?.forEach((item3: any) => {
-            curriculumIds.push({
-              teacher: item2?.teacher,
-              institutionId: item?.id,
-              institutionName: item?.name,
-              curriculumId: item3?.curriculum?.id,
-              curriculumName: item3?.curriculum?.name,
-              roomName: item2.name,
-              roomId: item2.id
-            });
-          });
-        });
-      });
     } catch (error) {
       console.error(error);
     }

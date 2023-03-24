@@ -178,6 +178,7 @@ const Start: React.FC<StartProps> = ({
   const goBackUrl = `/lesson-control/${lessonKey}`;
 
   const handleLink = async () => {
+    const url = `/lesson/${lessonKey}/${lessonProgress}`;
     if (!isTeacher && accessible && open) {
       if (!isCompleted) {
         try {
@@ -185,13 +186,16 @@ const Start: React.FC<StartProps> = ({
             await recordAttendance(lessonProps);
           }
 
-          const url = `/lesson/${lessonKey}/${lessonProgress}`;
           history.push(url);
         } catch (error) {
           setLoading(false);
         }
       } else {
-        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        if (user.role === 'ST') {
+          history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        } else {
+          history.push(url);
+        }
       }
     } else if (isTeacher) {
       if (isActive) {
@@ -294,7 +298,7 @@ const Start: React.FC<StartProps> = ({
           return classRoomDict[userLanguage]['BOTTOM_BAR']['UPCOMING'];
         }
       } else {
-        if (isCompleted) {
+        if (isCompleted && user.role === 'ST') {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK'];
         } else if (isActive) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
@@ -359,7 +363,9 @@ const Start: React.FC<StartProps> = ({
       case 'START LESSON':
         return 'GO TO LESSON';
       case 'Lesson Completed':
-        return classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK'];
+        return user.role === 'ST'
+          ? classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK']
+          : 'GO TO LESSON';
 
       default:
         return buttonText;

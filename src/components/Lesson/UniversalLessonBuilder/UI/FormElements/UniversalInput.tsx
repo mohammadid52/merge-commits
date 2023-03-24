@@ -132,7 +132,7 @@ const UniversalInput = (props: any) => {
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+                    label={`${numbered ? idx + 1 : ''}Label`}
                     isRequired
                     value={input.label}
                     id={`formFieldInput_${input.id}`}

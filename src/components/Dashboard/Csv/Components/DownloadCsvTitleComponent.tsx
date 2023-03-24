@@ -202,10 +202,14 @@ const DownloadCsvTitleComponent = ({
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
       units = units.filter((d: any) => d.unit !== null);
 
-      units = units.map((syl: any) => {
-        let unitData = syl.unit;
-        return {id: unitData.id, label: unitData.name, value: unitData.name};
-      });
+      units = units
+        .map((syl: any) => {
+          let unitData = syl.unit;
+          return unitData
+            ? {id: unitData.id, label: unitData.name, value: unitData.name}
+            : null;
+        })
+        .filter(Boolean);
       // console.log('units', units)
       setUnits(units);
       let curriculumData: any = await API.graphql(

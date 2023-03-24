@@ -336,16 +336,6 @@ const CreateQuestion = ({
             />
           </div>
         </div>
-        {/* <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-          <div className=" flex items-center">
-            <CheckBox
-              value={isRequired}
-              onChange={() => toggleCheckBoxState('isRequired', isRequired)}
-              name="isRequired"
-              label={AddNewQuestionDict[userLanguage]['MAKEQUESTION']}
-            />
-          </div>
-        </div> */}
 
         {(type.value === 'selectOne' || type.value === 'selectMany') && (
           <div className="p-6">
@@ -355,9 +345,11 @@ const CreateQuestion = ({
               </p>
 
               {/* Options input fields */}
-              {options?.length &&
+              {Boolean(options?.length) &&
                 options.map((item, index) => (
-                  <div className="flex justify-center items-center mx-auto mt-4">
+                  <div
+                    key={item.text}
+                    className="flex justify-center items-center mx-auto mt-4">
                     <div className="w-72">
                       <FormInput
                         value={item.text}

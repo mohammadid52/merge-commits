@@ -2,13 +2,14 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
 
 import Buttons from 'atoms/Buttons';
-import DatePickerInput from 'atoms/Form/DatePickerInput';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
+import {DatePicker} from 'antd';
 import * as mutation from 'graphql/mutations';
+import moment from 'moment';
 import {awsFormatDate, dateString} from 'utilities/time';
 
 const durationOptions = [
@@ -168,10 +169,12 @@ const HolidayFormComponent = ({
               <label className={'text-gray-700 block text-xs font-semibold leading-5'}>
                 Date<span className="text-red-500">*</span>
               </label>
-              <DatePickerInput
-                date={formValues.impactDate}
+              <DatePicker
+                // @ts-ignore
+                defaultValue={moment(formValues.impactDate)}
                 placeholder={'Date'}
-                onChange={(date: Date | null) => handleDateChange(date)}
+                // @ts-ignore
+                onChange={(value) => handleDateChange(value?.$d)}
               />
               <div className="text-red-500">{errors.impactDate}</div>
             </div>

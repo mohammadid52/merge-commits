@@ -786,7 +786,7 @@ const classRoomDict: ClassroomDictInterface = {
     ASSESSMENT_TITLE: 'Surveys & Assessments',
     STEP: 'Step',
     UNIT_TITLE: 'Select Unit',
-    UNIT_SUB_TITLE: 'Select unit for list of corresponding lessons',
+    UNIT_SUB_TITLE: 'This will display the lessons your students see on the app',
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     LESSON_SUB_TITLE_ASYNC:
@@ -828,7 +828,8 @@ const classRoomDict: ClassroomDictInterface = {
     ASSESSMENT_TITLE: 'Encuestas y Evaluaciones',
     STEP: 'Paso',
     UNIT_TITLE: 'Seleccionar Unidad',
-    UNIT_SUB_TITLE: 'Seleccionar unidad para ver lista de lecciones correspondientes',
+    UNIT_SUB_TITLE:
+      'Esto mostrará las lecciones que tus estudiantes ven en la aplicación',
     LESSON_TITLE: 'Seleccionar Lección',
     LESSON_SUB_TITLE: 'Haz clic en la lección que deseas enseñar',
     LESSON_SUB_TITLE_ASYNC:

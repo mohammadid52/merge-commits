@@ -37,7 +37,7 @@ import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
 import {Modal} from 'antd';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
-// import Modal from 'atoms/Modal';
+
 import ActivityModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
 import DocsModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal';
 import {useOverlayContext} from 'contexts/OverlayContext';
@@ -90,8 +90,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setSavingStatus
   } = useULBContext();
 
-  // const isNewPage = params.get('isNewPage');
-  // const lessonId = params.get('lessonId');
   const route: any = useRouteMatch();
 
   const lessonId = route.params.lessonId;
@@ -155,15 +153,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       targetId,
       isEditingMode: false
     });
-    // Toggle Which Dialog is Shown
-    // if (currentModalDialog !== dialogToToggle) {
-    //   setCurrentModalDialog(dialogToToggle);
-    // }
   };
 
   const handleEditBlockContent = (
     type: string,
-    section: string = 'pageContent',
+    section: string,
     inputObj: any,
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
     indexToUpdate: number,
@@ -184,12 +178,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputObj,
       isEditingMode: true
     });
-    // if (type !== 'video' && type !== 'image') {
-    //   setInputFields((prevInputFields: any) => ({
-    //     ...prevInputFields,
-    //     [type]: inputObj && inputObj.length ? inputObj[0] : ""
-    //   }));
-    // }
   };
 
   const handleTagModalOpen = (targetId: string, inputObj: any) => {
@@ -217,9 +205,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setShowLocationIcon(false);
 
     if (showPopup) {
-      // setNavState('home');
       setActiveContentItem(null);
-      // setActionMode('init');
 
       wait(700).then(() => {
         setSavingStatus('loading');
@@ -374,8 +360,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
                 ? INPUT_WITH_EMOJI
                 : type === FORM_TYPES.DATE_PICKER
                 ? DATE_PICKER
-                : type === FORM_TYPES.TEXT
-                ? INPUT
                 : INPUT
             }
           />
@@ -469,18 +453,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         universalLessonDetails={universalLessonDetails}
       /> */}
 
-      {/* {modalPopVisible && (
-        <Modal
-          showHeader
-          showFooter={false}
-          showHeaderBorder
-          title={getTitleByType(currentModalDialog)}
-          closeOnBackdrop
-          closeAction={hideAllModals}>
-          <div className="min-w-256">{modalDialogSwitch(currentModalDialog)}</div>
-        </Modal>
-      )} */}
-
       <Modal
         title={getComponentTitle(addContentModal.type)}
         onCancel={() => closeAction(false)}
@@ -507,6 +479,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           <div className="max-h-132 overflow-y-scroll overflow-x-hidden">
             {suggestionModal.data.map((item: any) => (
               <Accordion
+                key={item.title}
                 overrideBool={optionsCollapse}
                 onResponseSelect={(r: any) => {
                   setOptionsCollapse(true);

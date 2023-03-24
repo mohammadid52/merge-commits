@@ -1,4 +1,3 @@
-import React, {Fragment, useEffect, useState} from 'react';
 import CheckBox from '@components/Atoms/Form/CheckBox';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {PersonStatus} from 'API';
@@ -12,11 +11,11 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import moment from 'moment';
+import React, {Fragment, useEffect, useState} from 'react';
 import {IoLockClosed} from 'react-icons/io5';
 import {useHistory} from 'react-router-dom';
 import {convertArrayIntoObj, getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
 
 function classNames(...classes: any[]) {
@@ -412,11 +411,11 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
-  const handleChangeOnDemand = (item: {name: string; code: boolean}) => {
+  const handleChangeOnDemand = (item: {label: string; value: boolean}) => {
     setEditUser(() => {
       return {
         ...editUser,
-        onDemand: item.code
+        onDemand: item.value
       };
     });
   };
@@ -467,12 +466,12 @@ const UserEdit = (props: UserInfoProps) => {
 
   const OnDemand = [
     {
-      code: false,
-      name: 'No'
+      value: false,
+      label: 'No'
     },
     {
-      code: true,
-      name: 'Yes'
+      value: true,
+      label: 'Yes'
     }
   ];
 
@@ -680,17 +679,14 @@ const UserEdit = (props: UserInfoProps) => {
 
                   {superEdit && user.role === 'ST' && (
                     <div className="sm:col-span-3 p-2">
-                      <DropdownForm
-                        dataCy="ondemand"
-                        value=""
-                        style={false}
-                        // @ts-ignore
-                        handleChange={handleChangeOnDemand}
-                        userInfo={editUser?.onDemand ? 'Yes' : 'No'}
-                        label={UserEditDict[userLanguage]['ondemand']}
-                        id="ondemand"
+                      <Selector
+                        placeholder="Select on demand"
+                        selectedItem={editUser?.onDemand ? 'Yes' : 'No'}
+                        onChange={(_: string, option: any) =>
+                          handleChangeOnDemand(option)
+                        }
                         isRequired
-                        items={OnDemand}
+                        list={OnDemand}
                       />
                     </div>
                   )}

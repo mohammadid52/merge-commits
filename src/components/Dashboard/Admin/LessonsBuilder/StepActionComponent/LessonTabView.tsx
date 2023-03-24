@@ -112,7 +112,6 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   };
 
   const updateTab = (tab: number) => {
-    // setActiveTab(tab);
     history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
   };
 

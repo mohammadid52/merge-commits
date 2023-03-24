@@ -154,10 +154,11 @@ const LoginInner = ({
           'Temporary password has expired and must be reset by an administrator.'
         ) {
           try {
-            await axios.post(createUserUrl, {
-              email: username,
-              status: 'temporary'
-            });
+            createUserUrl &&
+              (await axios.post(createUserUrl, {
+                email: username,
+                status: 'temporary'
+              }));
             setMessage({
               show: true,
               type: 'success',
@@ -170,10 +171,11 @@ const LoginInner = ({
         }
       } else if (error.code === 'UserNotConfirmedException') {
         try {
-          await axios.post(createUserUrl, {
-            email: username,
-            status: 'unconfirmed'
-          });
+          createUserUrl &&
+            (await axios.post(createUserUrl, {
+              email: username,
+              status: 'unconfirmed'
+            }));
           setMessage({
             show: true,
             type: 'success',

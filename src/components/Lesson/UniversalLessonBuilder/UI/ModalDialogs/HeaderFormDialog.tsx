@@ -17,7 +17,7 @@ import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-// import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
+
 import {Form, Switch} from 'antd';
 import {useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
@@ -142,14 +142,10 @@ const HeaderModalComponent = ({
         sizeName = 'smallest';
       } else if (classString.includes('text-lg')) {
         sizeName = 'small';
-      } else if (classString.includes('text-xl')) {
-        sizeName = 'medium';
       } else if (classString.includes('text-2xl')) {
         sizeName = 'large';
       } else if (classString.includes('text-3xl')) {
         sizeName = 'largest';
-      } else {
-        sizeName = 'medium';
       }
     }
     return sizeName;
@@ -175,7 +171,6 @@ const HeaderModalComponent = ({
 
   const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
 
-  // const borderColorCLass: string = selectedValues.color;
   const classValue = `${generateBorderCSS()} ${fontSizeClass}`;
 
   const onHeaderCreate = async () => {
@@ -253,7 +248,6 @@ const HeaderModalComponent = ({
       isValid = false;
     } else {
       errors.title = '';
-      isValid = true;
     }
 
     setErrors({...errors});

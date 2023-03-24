@@ -7,7 +7,7 @@ import Label from './Label';
 type Item = {
   label: string;
   id?: string | number;
-  value?: string;
+  value?: string | boolean;
 };
 
 interface SelectorProps {

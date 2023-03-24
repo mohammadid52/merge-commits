@@ -101,7 +101,7 @@ const TextInput = ({
                 <div className="mb-2 ">
                   <FormInput
                     onChange={(e) => onChange(e, idx, false)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+                    label={`${numbered ? idx + 1 : ''}Label`}
                     isRequired
                     value={input.title}
                     id={`formFieldInput_${input.id}`}

@@ -3,7 +3,7 @@ import {UniversalLesson} from 'API';
 
 import findIndex from 'lodash/findIndex';
 import update from 'lodash/update';
-import {createContext, useContext, useState} from 'react';
+import {createContext, useContext, useMemo, useState} from 'react';
 import {useHistory} from 'react-router';
 
 const UniversalLessonBuilderContext = createContext<any>(null);
@@ -170,46 +170,87 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     'initial' | 'loaded' | 'loading' | 'failed'
   >('initial');
 
+  const value = useMemo(
+    () => ({
+      previewMode,
+      setPreviewMode,
+
+      suggestionModal,
+      setSuggestionModal,
+      editMode,
+      toolbarOnTop,
+      setToolbarOnTop,
+      selID,
+      pushUserToThisId,
+      setSelID,
+      setEditMode,
+      savingStatus,
+      setSavingStatus,
+      newBlockSeqId,
+      setNewBlockSeqId,
+      universalLessonDetails,
+      selectedPageID,
+      lessonPlanFields,
+      selIDForHover,
+      setSelIDForHover,
+      setLessonPlanFields,
+      activeTab,
+      setActiveTab,
+      setSelectedPageID,
+      getCurrentPage,
+      newLessonPlanShow,
+      blockConfig, // move this to Builder wrapper
+      setBlockConfig, // move this to Builder wrapper
+      setNewLessonPlanShow,
+      setUniversalLessonDetails,
+      addNewPageHandler,
+      updateMovableList,
+
+      fetchingLessonDetails,
+      setFetchingLessonDetails
+    }),
+    [
+      previewMode,
+      setPreviewMode,
+
+      suggestionModal,
+      setSuggestionModal,
+      editMode,
+      toolbarOnTop,
+      setToolbarOnTop,
+      selID,
+      pushUserToThisId,
+      setSelID,
+      setEditMode,
+      savingStatus,
+      setSavingStatus,
+      newBlockSeqId,
+      setNewBlockSeqId,
+      universalLessonDetails,
+      selectedPageID,
+      lessonPlanFields,
+      selIDForHover,
+      setSelIDForHover,
+      setLessonPlanFields,
+      activeTab,
+      setActiveTab,
+      setSelectedPageID,
+      getCurrentPage,
+      newLessonPlanShow,
+      blockConfig, // move this to Builder wrapper
+      setBlockConfig, // move this to Builder wrapper
+      setNewLessonPlanShow,
+      setUniversalLessonDetails,
+      addNewPageHandler,
+      updateMovableList,
+
+      fetchingLessonDetails,
+      setFetchingLessonDetails
+    ]
+  );
+
   return (
-    <UniversalLessonBuilderContext.Provider
-      value={{
-        previewMode,
-        setPreviewMode,
-
-        suggestionModal,
-        setSuggestionModal,
-        editMode,
-        toolbarOnTop,
-        setToolbarOnTop,
-        selID,
-        pushUserToThisId,
-        setSelID,
-        setEditMode,
-        savingStatus,
-        setSavingStatus,
-        newBlockSeqId,
-        setNewBlockSeqId,
-        universalLessonDetails,
-        selectedPageID,
-        lessonPlanFields,
-        selIDForHover,
-        setSelIDForHover,
-        setLessonPlanFields,
-        activeTab,
-        setActiveTab,
-        setSelectedPageID,
-        getCurrentPage,
-        newLessonPlanShow,
-        blockConfig, // move this to Builder wrapper
-        setBlockConfig, // move this to Builder wrapper
-        setNewLessonPlanShow,
-        setUniversalLessonDetails,
-        addNewPageHandler,
-        updateMovableList,
-
-        fetchingLessonDetails,
-        setFetchingLessonDetails
-      }}>
+    <UniversalLessonBuilderContext.Provider value={value}>
       {children}
     </UniversalLessonBuilderContext.Provider>
   );

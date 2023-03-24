@@ -10,7 +10,7 @@ import {getLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../../../Error/ErrorBoundary';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
-
+import {scrollUp} from '@utilities/functions';
 const CoreUniversalLesson = ({
   invokeRequiredField,
   canContinue,
@@ -46,7 +46,10 @@ const CoreUniversalLesson = ({
   const history = useHistory();
   const match = useRouteMatch();
 
+  const lessonType = lessonState.lessonData?.lessonType;
+
   const goNext = () => {
+    scrollUp(lessonType);
     history.push(`${match.url}/${currentPage + 1}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
@@ -80,6 +83,7 @@ const CoreUniversalLesson = ({
   };
 
   const goBack = () => {
+    scrollUp(lessonType);
     history.push(`${match.url}/${currentPage - 1}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',

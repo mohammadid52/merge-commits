@@ -1,6 +1,7 @@
 import Buttons from '@components/Atoms/Buttons';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useStudentTimer from '@customHooks/timer';
+import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {Result} from 'antd';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
@@ -66,14 +67,16 @@ const LessonHeaderBar = ({
     UniversalLessonStudentData
   >('updatePersonLessonsData');
 
+  const {isStudent} = useAuth();
+
   const handleNotebookSave = () => {
     console.log('handleNotebookSave');
-    createJournalData?.();
+    isStudent && createJournalData?.();
 
     if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
 
-      if (saveJournalData?.current) {
+      if (saveJournalData?.current && isStudent) {
         saveJournalData?.current();
       }
     }
@@ -82,16 +85,18 @@ const LessonHeaderBar = ({
     console.log(`\x1b[33m Updating lesson completion... \x1b[0m`);
 
     if (id) {
-      updatePersonLessonsDataMutation
-        .mutate({input: {id, isCompleted: true}})
-        .then(() => {
-          setPersonLessonData?.(null);
-          goToClassRoom();
-          console.log('Successfully completed ' + lessonState?.lessonData?.type);
-        })
-        .catch((err) => {
-          console.error('Error updating current lesson/survey complete status', err);
-        });
+      isStudent
+        ? updatePersonLessonsDataMutation
+            .mutate({input: {id, isCompleted: true}})
+            .then(() => {
+              setPersonLessonData?.(null);
+              goToClassRoom();
+              console.log('Successfully completed ' + lessonState?.lessonData?.type);
+            })
+            .catch((err) => {
+              console.error('Error updating current lesson/survey complete status', err);
+            })
+        : goToClassRoom();
     }
   };
 
@@ -325,40 +330,6 @@ const LessonHeaderBar = ({
             ]}
           />
         </Modal>
-
-        {/* <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
-          <PositiveAlert
-            closeAction={() => setLeaveModalVisible(false)}
-            alert={leaveModalVisible}
-            button1Color={
-              'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
-            }
-            header={
-              isLesson
-                ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
-                : !isLesson
-                ? `Thank you for completing ${lessonState.lessonData.title}`
-                : 'This will take you out of the lesson.  Did you want to continue?'
-            }
-            button1={`${
-              isLesson
-                ? 'I completed this lesson. \n Move my work to my notebook.'
-                : !isLesson
-                ? 'I am happy with my responses and want to close the survey'
-                : 'Saving your data...'
-            }`}
-            button2={
-              isLesson
-                ? 'Leave in classroom'
-                : 'I am going to keep working on my responses'
-            }
-            svg="question"
-            handleButton1={handleNotebookSave}
-            handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
-            theme="dark"
-            fill="screen"
-          />
-        </div> */}
 
         {/* VIDEO POPUP */}
 

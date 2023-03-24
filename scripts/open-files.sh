@@ -1,6 +1,13 @@
 #!/bin/bash
 
-# change the path to your folder
+# Change the path to your folder 
 path=src
 
-find $path -type f -name "*" -print0 | xargs -0 code
+# Find all files in the given path
+files=$(find $path -type f -name "*.tsx")
+
+# Loop through all files and open each one, with a delay of 5 seconds between each file
+for file in $files; do
+   code $file
+   sleep 5
+done

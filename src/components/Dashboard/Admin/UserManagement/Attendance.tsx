@@ -1,43 +1,19 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import moment from 'moment';
-import {forwardRef, useEffect, useState} from 'react';
-import DatePicker from 'react-datepicker';
-import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
+import {useEffect, useState} from 'react';
 
-import {useGlobalContext} from 'contexts/GlobalContext';
+import {IoMdArrowBack} from 'react-icons/io';
+
 import * as customQueries from 'customGraphql/customQueries';
 
 import Buttons from 'atoms/Buttons';
 
 import Table, {ITableProps} from '@components/Molecules/Table';
+import type {DatePickerProps} from 'antd';
+import {DatePicker} from 'antd';
 import {map} from 'lodash';
-import 'react-datepicker/dist/react-datepicker.css';
 
-const pad = (num: any) => {
-  return `0${num}`.slice(-2);
-};
-
-const DateCustomInput = forwardRef(({value, onClick, ...rest}: any) => {
-  const {theme} = useGlobalContext();
-  return (
-    <div
-      className={`flex w-auto py-2 px-4 focus:theme-border:500 transition-all rounded-full  ${theme.formSelect} ${theme.outlineNone}`}
-      onClick={onClick}>
-      <span className="w-6 mr-4 cursor-pointer">
-        <IoIosCalendar className="theme-text" size="1.5rem" />
-      </span>
-      <input
-        placeholder={'Search by date...'}
-        id="searchInput"
-        className={`text-sm ${theme.outlineNone}`}
-        value={value}
-        {...rest}
-      />
-    </div>
-  );
-});
-
-const limit: number = 10;
+const limit: number = 500;
 
 interface IAttendanceProps {
   id: string;
@@ -49,7 +25,7 @@ interface IAttendanceProps {
 const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
-  const [date, setDate] = useState<null | Date>(null);
+  const [date, setDate] = useState<any>(null);
 
   const [nextToken, setNextToken] = useState<string>('');
 
@@ -80,10 +56,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     }
   };
 
-  const fetchAttendance = async (
-    date?: Date | null,
-    fetchNewRecords: boolean = false
-  ) => {
+  const fetchAttendance = async (date?: string, fetchNewRecords: boolean = false) => {
     try {
       setLoading(true);
       let payload: any = {
@@ -99,14 +72,11 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         payload.filter = {roomID: {eq: selectedRoomId}};
       }
       if (date) {
-        const dayNumber = date.getDate();
-        const monthNumber = date.getMonth();
-        const year = date.getFullYear();
-
         payload.date = {
-          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`
+          eq: date
         };
       }
+
       const list: any = await API.graphql(
         graphqlOperation(customQueries.attendanceByStudent, payload)
       );
@@ -129,13 +99,18 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     }
   };
 
+  //
+
   const onLoadMore = () => {
     fetchAttendance(date);
   };
 
-  const handleDateChange = (date: Date | null) => {
-    setDate(date);
-    fetchAttendance(date, true);
+  const handleDateChange: DatePickerProps['onChange'] = (_, dateString) => {
+    if (!dateString) fetchAttendance();
+    else {
+      setDate(dateString);
+      fetchAttendance(dateString, true);
+    }
   };
 
   return (
@@ -154,16 +129,12 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
             <span>Back to course list</span>
           </div>
         )}
-        <div className="w-56 relative ulb-datepicker">
-          <DatePicker
-            dateFormat={'dd/MM/yyyy'}
-            selected={date}
-            placeholderText={'Search by date'}
-            onChange={handleDateChange}
-            customInput={<DateCustomInput />}
-            isClearable={true}
-          />
-        </div>
+
+        <DatePicker
+          placeholder="Search by date"
+          onChange={handleDateChange}
+          placement="bottomRight"
+        />
       </div>
 
       <Table {...tableConfig} />

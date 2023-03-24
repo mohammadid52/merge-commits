@@ -1,5 +1,4 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import {getLocalStorageData} from '@utilities/localStorage';
@@ -188,8 +187,7 @@ export const FormBlock = ({
     switch (type) {
       case FORM_TYPES.TEXT:
         return <TextBlock {...formBlockProps} />;
-      case FORM_TYPES.DATE_PICKER:
-        return <DatePicker {...formBlockProps} />;
+
       case FORM_TYPES.TEXTAREA:
         return <TextBlock textarea {...formBlockProps} />;
       case FORM_TYPES.RADIO:

@@ -178,9 +178,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
       const result = await getAllClassStudentByClassId(classFilter, undefined, []);
 
-      // const selectedStudentsIds: any = [];
       const selectedStudents = result?.map((stu: any) => {
-        // selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
           group: {name: stu.group, id: ''},
@@ -348,49 +346,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       });
     }
   };
-
-  // const onDelete = (id: any) => {
-  //   const onDrop = async () => {
-  //     setDeleting(true);
-  //     await API.graphql(
-  //       graphqlOperation(customMutations.deleteClassStudent, {
-  //         input: {id}
-  //       })
-  //     );
-  //     const deletedStudentData = classStudents.find((item) => item.id === id);
-  //     setAllStudents((prevStudent) => [
-  //       ...prevStudent,
-  //       {
-  //         id: deletedStudentData.id,
-  //         name: `${deletedStudentData.student?.firstName || ''} ${
-  //           deletedStudentData.student?.lastName || ''
-  //         }`,
-  //         value: `${deletedStudentData.student?.firstName || ''} ${
-  //           deletedStudentData.student?.lastName || ''
-  //         }`,
-  //         avatar: deletedStudentData.student?.image
-  //           ? getImageFromS3(deletedStudentData.student?.image)
-  //           : '',
-  //         status: deletedStudentData.status || 'Inactive',
-  //         email: deletedStudentData.student?.email || '',
-  //         authId: deletedStudentData.studentAuthID || ''
-  //       }
-  //     ]);
-  //     setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
-  //     closeDeleteModal();
-  //     setDeleting(false);
-  //     setNotification({
-  //       title: `Student removed from classroom - ${deletedStudentData.student?.email}`,
-  //       type: 'success',
-  //       show: true
-  //     });
-  //   };
-  //   setWarnModal2({
-  //     show: true,
-  //     message: `Are you sure you want to remove this student from class?`,
-  //     action: onDrop
-  //   });
-  // };
 
   useEffect(() => {
     if (withbackupClassId) {

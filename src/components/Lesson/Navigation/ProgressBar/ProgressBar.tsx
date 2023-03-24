@@ -1,5 +1,6 @@
 import {useQuery} from '@customHooks/urlParam';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {scrollUp} from '@utilities/functions';
 import {Breadcrumb} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
@@ -113,17 +114,7 @@ const ProgressBar = ({
 
   const params = useQuery(location.search);
 
-  const scrollUp = () => {
-    const domID = {
-      lesson: 'lesson-app-container',
-      survey: 'survey-app-container'
-    } as any;
-    const container = document.getElementById(domID[lessonState.lessonData.type]);
-
-    if (container) {
-      container.scrollTo({top: 0, behavior: 'smooth'});
-    }
-  };
+  const lessonType = lessonState.lessonData.type;
 
   const history = useHistory();
   const match = useRouteMatch();
@@ -132,7 +123,7 @@ const ProgressBar = ({
   const handleLink = (pageNr: number) => {
     const isNotMovingForward = pageNr < lessonProgress;
     if (canContinue || isNotMovingForward) {
-      scrollUp();
+      scrollUp(lessonType);
       const sId = params.get('sId');
       const sEmail = params.get('sId');
 

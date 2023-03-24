@@ -47,6 +47,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
           {tabsData.map((menu: any) =>
             menu.type === 'dropdown' ? (
               <Dropdown
+                key={menu.label}
                 arrow={{pointAtCenter: false}}
                 placement="top"
                 menu={{items: menu.children}}>

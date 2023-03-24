@@ -120,33 +120,6 @@ const LinestarterModalDialog = ({
 
     await updateLessonPageToDB(input);
   };
-  // const onLineCreate = async () => {
-  //   if (isEditingMode) {
-  //     const updatedList = updateBlockContentULBHandler(
-  //       '',
-  //       '',
-  //       FORM_TYPES.POEM,
-  //       enable.lineStarter ? inputFieldsArray : [{}],
-  //       0,
-  //       enable.title ? fields.title : ''
-  //     );
-  //     await addToDB(updatedList);
-  //   } else {
-  //     const updatedList = createNewBlockULBHandler(
-  //       '',
-  //       '',
-  //       FORM_TYPES.POEM,
-  //       enable.lineStarter ? inputFieldsArray : [{}],
-  //       0,
-  //       enable.title ? fields.title : ''
-  //     );
-  //     await addToDB(updatedList);
-  //   }
-
-  //   // clear fields
-  //   setInputFieldsArray(initialInputFieldsState);
-  //   setUnsavedChanges(false);
-  // };
 
   const onLineCreate = async () => {
     const lineStarterObject = {

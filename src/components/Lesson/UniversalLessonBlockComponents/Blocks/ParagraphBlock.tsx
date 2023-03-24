@@ -33,7 +33,6 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
         value.length > 0 &&
         value.map((v: any, i: number) => (
           <React.Fragment key={`paragraphBlock_${i}`}>
-            {/* {composeParagraph(id, v, type)} */}
             <Paragraph inputID={id} inputValue={v} />
           </React.Fragment>
         ))}

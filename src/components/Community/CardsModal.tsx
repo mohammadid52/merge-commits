@@ -146,6 +146,7 @@ const CardsModal = ({
     <ErrorBoundary componentName="CardsModal">
       <div style={{zIndex: 99999}}>
         <Modal
+          width={800}
           open={showCardsModal}
           showHeader
           closeAction={onCancel}

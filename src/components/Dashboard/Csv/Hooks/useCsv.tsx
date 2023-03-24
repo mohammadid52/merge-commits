@@ -112,7 +112,7 @@ const useCsv = ({
         let universalSurveyStudentID = '';
         let demographicsDataID = '';
 
-        SCQAnswers[0].map(
+        SCQAnswers[0].forEach(
           (answerArray: {
             studentID: any;
             id: string;

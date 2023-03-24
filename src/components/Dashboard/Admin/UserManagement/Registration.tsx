@@ -218,6 +218,7 @@ const Registration = ({
     let username = values.email;
     try {
       setIsLoading(true);
+
       const response = await axios.post(createUserUrl, {email: username});
       const user = response.data.User;
 

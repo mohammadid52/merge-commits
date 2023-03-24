@@ -128,13 +128,6 @@ const RoomTiles = (props: {
 
   const isInactive = user?.status === 'INACTIVE';
 
-  // useEffect(() => {
-  //   if (classes.length > 0) {
-  //     const orderedList = orderBy(classes, ['curriculumName'], 'asc');
-  //     setClassList([...orderedList]);
-  //   }
-  // }, [classes]);
-
   let finalList = classList || classes || [];
 
   const [fetchAgain, setFetchAgain] = useState(false);

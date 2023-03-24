@@ -51,7 +51,9 @@ export const MinutesToHHMM = (minutes: number, separator?: string) => {
   let h = (minutes - m) / 60;
   return separator === ':'
     ? `${h.toString()}:${m < 10 ? '0' : ''} ${m.toString()}`
-    : `${h ? `${h.toString()} hrs` : ''} ${m.toString()} minutes`;
+    : m > 0
+    ? `${h ? `${h.toString()} ${h > 1 ? 'hrs' : 'hr'}` : ''} ${m.toString()} minutes`
+    : `${h.toString()} ${h > 1 ? 'hrs' : 'hr'}`;
 };
 
 /**

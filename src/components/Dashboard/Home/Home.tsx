@@ -59,9 +59,6 @@ const Home = (props: ClassroomControlProps) => {
 
   useEffect(() => {
     if (state.user.role === 'ST') {
-      if (state.currentPage !== 'home') {
-        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-      }
       if (state.activeRoom && state.activeRoom.length > 0) {
         dispatch({
           type: 'UPDATE_ACTIVEROOM',
@@ -89,7 +86,6 @@ const Home = (props: ClassroomControlProps) => {
       ? homeData.reduce((acc: any[], dataObj: any) => {
           if (dataObj?.class?.room) {
             const teacherObj = dataObj?.class?.room?.teacher;
-            // const allRooms = homeData[0]?.class?.rooms?.items;
 
             const teacherIsPresent = acc?.find(
               (teacher: any) =>
