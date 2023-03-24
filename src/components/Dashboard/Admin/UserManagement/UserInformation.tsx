@@ -206,7 +206,7 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
 
   useEffect(() => {
     if (user && user?.authId) {
-      checkIfUserIsConnected();
+      // checkIfUserIsConnected();
     }
   }, [user]);
 
@@ -231,7 +231,7 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
                     onClick={resetPassword}
                     disabled={loading}
                   />
-                  {!hideDeleteBtn && (
+                  {/* {!hideDeleteBtn && (
                     <Buttons
                       dataCy="reset-password-button"
                       label={dict['DELETE_USER']}
@@ -246,7 +246,7 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
                       onClick={() => {}}
                       disabled={!canDeleteUser}
                     />
-                  )}
+                  )} */}
                 </div>
               }
               title={'User Information'}>
