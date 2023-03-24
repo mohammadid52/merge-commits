@@ -245,6 +245,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         } catch (e) {
           console.error('getDashboardDataForTeachers -> ', e);
         } finally {
+          // do somthing s
         }
       }
       if (isTeacher || isBuilder || isAdmin) {
@@ -400,10 +401,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   useEffect(() => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
-
-  // if (status !== 'done') {
-  // return <LessonLoading />;
-  // }
 
   const getClassListForSelector = () => {
     return classList.map((item: any, idx) => {

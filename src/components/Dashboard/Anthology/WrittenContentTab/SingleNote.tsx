@@ -1,6 +1,5 @@
 import Loader from '@components/Atoms/Loader';
 import {AnthologyComment, ListAnthologyCommentsQueryVariables} from 'API';
-import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -29,8 +28,7 @@ const SingleNote = (props: any) => {
     setAllUniversalJournalData
   } = props;
 
-  const {theme, clientKey, userLanguage} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {userLanguage} = useGlobalContext();
 
   // ##################################################################### //
   // ########################### FEEDBACK-LOGIC ########################## //

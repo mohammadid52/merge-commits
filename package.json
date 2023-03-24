@@ -13,6 +13,7 @@
     "push": "sh ./scripts/push.sh",
     "pull:uat": "sh ./scripts/pull-uat.sh",
     "sync-aws": "sh ./scripts/sync-aws.sh",
+    "open-files": "sh ./scripts/open-files.sh",
     "find-deadcode": "ts-prune -i 'src/API.ts|src/graphql'"
   },
   "main": "autoVerifyUser.js",
@@ -28,6 +29,7 @@
     "@tailwindcss/ui": "^0.7.2",
     "antd": "^5.3.1",
     "aws-amplify": "^5.0.19",
+    "chart.js": "^4.2.1",
     "cypress": "^12.7.0",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
@@ -42,6 +44,7 @@
     "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
+    "react-chartjs-2": "^5.2.0",
     "react-click-away-listener": "^2.2.3",
     "react-cookie": "^4.1.1",
     "react-csv": "^2.2.2",
