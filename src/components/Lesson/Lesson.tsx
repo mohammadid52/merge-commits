@@ -4,7 +4,6 @@ import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import Noticebar from 'components/Noticebar/Noticebar';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
@@ -640,8 +639,8 @@ const Lesson = () => {
     handleMutationOnPageChange
   };
 
-  const _inputNotifications = inputNotifications || [];
-  const _notifications = notifications || [];
+  // const _inputNotifications = inputNotifications || [];
+  // const _notifications = notifications || [];
   return (
     <>
       {/* <Noticebar notifications={[..._inputNotifications, ..._notifications]} /> */}

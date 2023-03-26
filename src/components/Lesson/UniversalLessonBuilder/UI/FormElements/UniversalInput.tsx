@@ -156,7 +156,7 @@ const UniversalInput = (props: any) => {
                       {selectedForm === INPUT && (
                         <>
                           <ToggleForModal
-                            label="One line answer"
+                            label="long answer"
                             checked={input.textArea}
                             onClick={() => changeCheckboxValue(idx, input.textArea)}
                           />
@@ -184,7 +184,7 @@ const UniversalInput = (props: any) => {
                     {selectedForm === INPUT && (
                       <>
                         <ToggleForModal
-                          label="One line answer"
+                          label="long answer"
                           checked={input.textArea}
                           onClick={() => changeCheckboxValue(idx, input.textArea)}
                         />

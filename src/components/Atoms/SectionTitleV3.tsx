@@ -29,7 +29,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     withButton,
     borderBottom = false,
     fontSize = 'lg',
-    fontStyle = 'semibold',
+    fontStyle = 'medium',
     shadowOff = false,
     bgColor = 'bg-white',
     backButton,

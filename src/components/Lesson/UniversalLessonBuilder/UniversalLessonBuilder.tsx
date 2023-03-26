@@ -504,6 +504,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
               padding: 24,
               minHeight: 280
             }}
+            id="builder-content"
             className="bg-dark-blue overflow-x-hidden overflow-y-auto max-h-screen">
             <BuilderWrapper
               mode={`building`}

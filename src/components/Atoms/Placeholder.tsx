@@ -1,5 +1,5 @@
 import {initials, stringToHslColor} from '@utilities/strings';
-import {Avatar} from 'antd';
+import {Avatar, Image} from 'antd';
 
 const Placeholder = ({
   name = ' ',
@@ -7,7 +7,8 @@ const Placeholder = ({
   textSize,
   firstName = '',
   lastName = '',
-  image = null
+  image = null,
+  useAntdImage
 }: {
   name?: string;
   textSize?: string;
@@ -16,14 +17,17 @@ const Placeholder = ({
   firstName?: string;
   lastName?: string;
   image?: string | null;
+  useAntdImage?: boolean;
 }) => {
   if (image) {
+    const imageClass = 'rounded-full w-full h-full  customShadow bg-gray-500';
     return (
       <div className={`${size} rounded-full flex justify-center items-center`}>
-        <img
-          src={image}
-          className="rounded-full w-full h-full  customShadow bg-gray-500"
-        />
+        {useAntdImage ? (
+          <Image src={image} className={imageClass} />
+        ) : (
+          <img src={image} className={imageClass} />
+        )}
       </div>
     );
   } else {

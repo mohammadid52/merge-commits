@@ -20,7 +20,7 @@ import UploadMedia from 'molecules/UploadMedia';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import {getImageFromS3Static} from 'utilities/services';
+import {deleteImageFromS3, getImageFromS3Static} from 'utilities/services';
 import {estimatedTimeList} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 const features: string[] = ['colorPicker', 'inline'];
@@ -559,7 +559,7 @@ const NewLessonPlanSO = ({
           closeAction={() => closeVideoUploadModal()}
           // @ts-ignore
           file={file}
-          open={Boolean(videoUploadModal && file)}
+          open={Boolean(videoUploadModal)}
           setFile={setFile}
           customRef={customRef}
         />
@@ -606,30 +606,36 @@ const NewLessonPlanSO = ({
                 error={errors?.videoLink}
               />
               {!isUploadedFromPC ? (
-                <div
-                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                  onClick={() => setVideoUploadModal(true)}>
-                  Or upload from your pc
-                </div>
+                <Buttons
+                  variant="link"
+                  size="small"
+                  onClick={() => setVideoUploadModal(true)}
+                  label={'Or upload from your pc'}
+                />
               ) : (
                 <div>
-                  <div
-                    className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                  <Buttons
+                    variant="link"
+                    size="small"
                     onClick={() => {
                       const imageUrl = file
                         ? getImageFromS3Static(UPLOAD_KEYS.ULB + file?.fileKey)
                         : null;
                       imageUrl && window.open(imageUrl, '_blank');
-                    }}>
-                    See video
-                  </div>
-                  <div
-                    className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
+                    }}
+                    label={'See video'}
+                  />
+
+                  <Buttons
+                    variant="link"
+                    size="small"
                     onClick={() => {
                       setFile(null);
-                    }}>
-                    Clear
-                  </div>
+                      file && file.fileKey && deleteImageFromS3(file?.fileKey);
+                    }}
+                    redBtn
+                    label={'Clear'}
+                  />
                 </div>
               )}
             </Block>

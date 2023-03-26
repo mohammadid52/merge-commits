@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Dialog} from '@headlessui/react';
-import {XIcon} from '@heroicons/react/outline';
+
 import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {getAsset} from 'assets';
@@ -14,6 +14,7 @@ import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import Buttons from '@components/Atoms/Buttons';
 import {Divider} from 'antd';
+import {CloseOutlined} from '@ant-design/icons';
 
 interface IClassroomStudents {
   id?: string;
@@ -307,7 +308,7 @@ const GroupFormComponent = ({
                         className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         onClick={onCancel}>
                         <span className="sr-only">Close panel</span>
-                        <XIcon className="h-6 w-6" aria-hidden="true" />
+                        <CloseOutlined />
                       </button>
                     </div>
                   </div>

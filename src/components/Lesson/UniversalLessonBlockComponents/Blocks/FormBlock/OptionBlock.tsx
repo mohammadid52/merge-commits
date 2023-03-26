@@ -7,7 +7,7 @@ import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 
 const SelectMany = ({
   onChange,
-  shouldBeVertical,
+
   value
 }: {
   onChange: (e: any) => void;

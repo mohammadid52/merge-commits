@@ -2556,11 +2556,6 @@
   dependencies:
     client-only "^0.0.1"
 
-"@heroicons/react@^1.0.1":
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/@heroicons/react/-/react-1.0.6.tgz"
-  integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
-
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.1.1.tgz"
@@ -3143,6 +3138,15 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
+antd-img-crop@^4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/antd-img-crop/-/antd-img-crop-4.11.0.tgz#b9b79d738ccf6589c4c781c85510b78880cc66d3"
+  integrity sha512-DWf72AsFc8r2BKRfNMhUrMDh3xg2PvYB6b0gCYPrBEkVbQE1VP7Qt3HnthdeWDapSGdnmUPKFTcMgzML/FyuTA==
+  dependencies:
+    compare-versions "6.0.0-rc.1"
+    react-easy-crop "^4.7.4"
+    tslib "^2.5.0"
+
 antd@^5.3.1:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/antd/-/antd-5.3.2.tgz#6f225a3ae43c63c1003dc7af4d0045d3be612497"
@@ -3670,6 +3674,11 @@ common-tags@^1.8.0:
   version "1.8.2"
   resolved "https://registry.npmjs.org/common-tags/-/common-tags-1.8.2.tgz"
   integrity sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA==
+
+compare-versions@6.0.0-rc.1:
+  version "6.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-6.0.0-rc.1.tgz#93e6beb8767c2375333ee168fa64c28b75ace2c6"
+  integrity sha512-cFhkjbGY1jLFWIV7KegECbfuyYPxSGvgGkdkfM+ibboQDoPwg2FRHm5BSNTOApiauRBzJIQH7qvOJs2sW5ueKQ==
 
 compute-scroll-into-view@^3.0.0:
   version "3.0.0"
@@ -5065,6 +5074,11 @@ normalize-svg-path@^1.1.0:
   dependencies:
     svg-arc-to-cubic-bezier "^3.0.0"
 
+normalize-wheel@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/normalize-wheel/-/normalize-wheel-1.0.1.tgz#aec886affdb045070d856447df62ecf86146ec45"
+  integrity sha512-1OnlAPZ3zgrk8B91HyRj+eVv+kS5u+Z0SCsak6Xil/kmgEia50ga7zfkumayonZrImffAxPU/5WcyGhzetHNPA==
+
 npm-run-path@^4.0.0:
   version "4.0.1"
   resolved "https://registry.npmjs.org/npm-run-path/-/npm-run-path-4.0.1.tgz"
@@ -5817,6 +5831,14 @@ react-dropzone@^14.2.3:
     file-selector "^0.6.0"
     prop-types "^15.8.1"
 
+react-easy-crop@^4.7.4:
+  version "4.7.4"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-4.7.4.tgz#3106bfb3de371d9393aedc0b9ae1fb97c2b9f722"
+  integrity sha512-oDi1375Jo/zuPUvo3oauxnNbfy8L4wsbmHD1KB2vT55fdgu+q8/K0w/rDWzy9jz4jfQ94Q9+3Yu366sDDFVmiA==
+  dependencies:
+    normalize-wheel "^1.0.1"
+    tslib "2.0.1"
+
 react-fast-compare@^2.0.1:
   version "2.0.4"
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-2.0.4.tgz"
@@ -6460,6 +6482,11 @@ tsconfck@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/tsconfck/-/tsconfck-2.1.1.tgz#9b51603d2712d1f4740fa14748ca886a2e1893e5"
   integrity sha512-ZPCkJBKASZBmBUNqGHmRhdhM8pJYDdOXp4nRgj/O0JwUwsMq50lCDRQP/M5GBNAA0elPrq4gAeu4dkaVCuKWww==
+
+tslib@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
+  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
 
 tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.0, tslib@^1.9.3:
   version "1.14.1"

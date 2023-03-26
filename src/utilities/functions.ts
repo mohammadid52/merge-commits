@@ -311,12 +311,12 @@ export const getSeparatedHeaders = (arr: any[]) => {
   return arr;
 };
 
-export const scrollUp = (type = 'lesson') => {
+export const scrollUp = (type = 'lesson', customId?: string) => {
   const domID = {
     lesson: 'lesson-app-container',
     survey: 'survey-app-container'
   } as any;
-  const container = document.getElementById(domID[type]);
+  const container = document.getElementById(customId || domID[type]);
 
   if (container) {
     container.scrollTo({top: 0, behavior: 'smooth'});

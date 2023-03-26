@@ -3087,7 +3087,7 @@ const UserInformationDict: UserInformationDictInterface = {
     role: 'Role',
     status: 'Status',
     email: 'Email Address',
-    account: 'Account Created',
+    account: 'Member Since',
     ondemand: 'Self-Paced',
     CLASSROOM_LOCATION: 'Classroom Location',
     LOCATION: 'Location',

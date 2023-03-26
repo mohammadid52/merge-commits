@@ -14,6 +14,10 @@ export default defineConfig({
 
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
+      rollupOptions: {
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js'
+      },
       external: ['@react-pdf', '@react-pdf/pdfkit'],
 
       plugins: [

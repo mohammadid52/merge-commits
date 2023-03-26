@@ -1,6 +1,7 @@
+import SuccessMessage from '@components/Dashboard/Admin/UserManagement/SuccessMessage';
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
-import {CheckCircleIcon} from '@heroicons/react/solid';
+
 import {Drawer, Empty} from 'antd';
 import {UniversalLesson} from 'API';
 import Info from 'atoms/Alerts/Info';
@@ -183,12 +184,9 @@ const CopyCloneSlideOver = ({
       open={showDataForCopyClone}
       bodyStyle={{paddingBottom: 80}}>
       <div className="flex flex-col items-center space-y-2 mb-2">
-        <Info text="Lessons are case sensitive" className="my-2 mb-4 w-full" />
+        <Info text="Lessons are case sensitive" />
         {searchStatus === 'success' && status === 'none' && (
-          <Info
-            text="Click on a page to select for copy / clone"
-            className="w-full my-2 mb-4"
-          />
+          <Info text="Click on a page to select for copy / clone" />
         )}
         <div className="flex items-center w-full  space-x-2">
           <FormInput
@@ -240,49 +238,11 @@ const CopyCloneSlideOver = ({
               leave="transition-opacity duration-75"
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
-              <div
-                style={{backgroundColor: '#ecfdf5'}}
-                className={'my-4 rounded-md  p-4'}>
-                <div className="flex">
-                  <div className="flex-shrink-0 w-auto">
-                    {status !== 'loading' ? (
-                      <CheckCircleIcon
-                        className="h-5 w-5 text-green-400"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <div>
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-700"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-20"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800 w-auto">
-                      {status === 'loading'
-                        ? 'collecting page data...'
-                        : status === 'done'
-                        ? 'Redirecting you to your new page...'
-                        : ''}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {status === 'loading' ? (
+                <Info text="collecting page data..." />
+              ) : (
+                <SuccessMessage note="Redirecting you to your new page..." />
+              )}
             </Transition>
             <Transition
               show={Boolean(selectedId.lessonId) && Boolean(selectedId.pageId)}

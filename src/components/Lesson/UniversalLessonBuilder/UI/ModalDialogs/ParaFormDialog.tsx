@@ -95,7 +95,7 @@ const ParaModalComponent = ({
           />
         </div>
       </div>
-      <div className="flex mt-8 justify-end px-6 pb-4">
+      <div className="flex mt-8 justify-end px-6 relative z-100 pb-4">
         <div className="flex justify-end gap-4">
           <Buttons
             size="middle"

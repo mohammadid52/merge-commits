@@ -129,9 +129,8 @@ const useCsv = ({
               }
 
               if (singleAnswer && qids.indexOf(singleAnswer.domID) >= 0) {
-                surveyAnswerDates.push(answerArray.updatedAt);
-                surveyDates.push(answerArray.updatedAt);
-
+                //! surveyAnswerDates.push(answerArray.updatedAt) //  <-- not here;
+                //! surveyDates.push(answerArray.updatedAt); //  <-- not here;
                 if (
                   surveyQuestionOptions[singleAnswer.domID] &&
                   Array.isArray(surveyQuestionOptions[singleAnswer.domID]) &&
@@ -149,6 +148,8 @@ const useCsv = ({
                     );
 
                     if (Array.isArray(selectedOption) && selectedOption.length) {
+                      surveyAnswerDates.push(answerArray.updatedAt); // * <== but here
+                      surveyDates.push(answerArray.updatedAt); // * <== but here
                       hasTakenSurvey = true; // * <== but here
                       universalSurveyStudentID = answerArray.id; // * <== but here-
                       studentAnswers[singleAnswer.domID] = cleanString(

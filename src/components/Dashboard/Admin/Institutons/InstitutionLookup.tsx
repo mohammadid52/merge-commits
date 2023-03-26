@@ -1,3 +1,4 @@
+import {CloseOutlined} from '@ant-design/icons';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
@@ -5,7 +6,7 @@ import InstituteName from '@components/MicroComponents/InstituteName';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
-import {XIcon} from '@heroicons/react/outline';
+
 import {withZoiqFilter} from '@utilities/functions';
 import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
 import {getAsset} from 'assets';
@@ -302,7 +303,7 @@ const InstitutionLookup: React.FC = () => {
                 <span
                   className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
                   onClick={() => setShowAlert(false)}>
-                  <XIcon className="h-6 w-6" aria-hidden="true" />
+                  <CloseOutlined />
                 </span>
               </div>
             )}

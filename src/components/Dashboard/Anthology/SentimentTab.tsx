@@ -1,6 +1,7 @@
+import {MenuOutlined} from '@ant-design/icons';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
-import {MenuIcon} from '@heroicons/react/outline';
+
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -286,12 +287,9 @@ const SentimentTab = ({
           {!goBack ? (
             <span
               className={`w-auto ${goBack ? 'ml-8' : ''}`}
+              onClick={() => setView(view === 'table' ? 'emoji' : 'table')}
               title={`Show ${view === 'table' ? 'emoji' : 'table'} view`}>
-              <MenuIcon
-                onClick={() => setView(view === 'table' ? 'emoji' : 'table')}
-                className="block h-6 w-6 cursor-pointer"
-                aria-hidden="true"
-              />
+              <MenuOutlined />
             </span>
           ) : (
             <Buttons onClick={openModalWithData} label="Add backstory" />

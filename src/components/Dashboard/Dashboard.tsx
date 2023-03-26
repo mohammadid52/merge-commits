@@ -724,9 +724,6 @@ const Dashboard = () => {
       </ErrorBoundary>
     );
 
-  // check if url contains game-changers
-  const isGameChangers = window.location.href.includes('game-changers');
-
   return (
     <>
       <Navbar />

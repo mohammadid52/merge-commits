@@ -1,5 +1,4 @@
 import Buttons from '@components/Atoms/Buttons';
-import {Tooltip} from 'antd';
 
 import {useOverlayContext} from 'contexts/OverlayContext';
 import React from 'react';
@@ -32,11 +31,13 @@ const Toolbar = ({
                 }
               }}
               size="middle"
+              tooltip="Copy/Clone"
               Icon={AiOutlineCopy}
             />
 
             <Buttons
               size="middle"
+              tooltip="+ New Page"
               onClick={() => {
                 setNewLessonPlanShow(true);
                 setEditMode(false);
@@ -55,7 +56,13 @@ const Toolbar = ({
               Icon={AiOutlineFileAdd}
             />
 
-            <Buttons size="middle" redBtn Icon={AiOutlineDelete} onClick={deleteLesson} />
+            <Buttons
+              size="middle"
+              tooltip="Delete page"
+              redBtn
+              Icon={AiOutlineDelete}
+              onClick={deleteLesson}
+            />
           </div>
         </div>
       </nav>

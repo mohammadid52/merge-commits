@@ -403,6 +403,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const getComponentTitle = (type: string) => {
+    if (type.includes('form')) {
+      return 'Text Response Component';
+    }
+
     switch (type) {
       case FORM_TYPES.TEXT:
         return 'Input Component';
@@ -446,13 +450,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [optionsCollapse, setOptionsCollapse] = useState(true);
 
   return (
-    <div id={`builderWrapper`} className="relative  bg-dark-blue sm:rounded-lg">
-      {/* <LessonPlanNavigation
-        selectedPageID={selectedPageID}
-        setSelectedPageID={setSelectedPageID}
-        universalLessonDetails={universalLessonDetails}
-      /> */}
-
+    <div id={'builderWrapper'} className="relative  bg-dark-blue sm:rounded-lg">
       <Modal
         title={getComponentTitle(addContentModal.type)}
         onCancel={() => closeAction(false)}

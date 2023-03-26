@@ -118,38 +118,41 @@ const TextInput = ({
                   />
                 </div>
                 {idx !== 0 ? (
-                  <div className="flex my-2 items-center justify-end w-auto">
-                    <Form.Item label="One line answer" valuePropName="checked">
+                  <div className="flex my-2 items-center justify-between w-auto">
+                    <Form.Item
+                      className="mb-0"
+                      label="long answer"
+                      valuePropName="checked">
                       <Switch
                         checked={!Boolean(input.textArea)}
                         onClick={() => changeCheckboxValue(idx, input.textArea)}
                       />
                     </Form.Item>
 
-                    <button
+                    <Buttons
+                      label={'Remove'}
+                      size="small"
                       onClick={() => removeItemFromList(input.id)}
-                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-                      Remove
-                    </button>
+                      redBtn
+                    />
                   </div>
                 ) : (
-                  <Form.Item label="long answer" valuePropName="checked">
+                  <Form.Item className="mt-2" label="long answer" valuePropName="checked">
                     <Switch
                       checked={Boolean(input.textArea)}
                       onClick={() => changeCheckboxValue(idx, input.textArea)}
                     />
                   </Form.Item>
                 )}
-                <div className="flex items-center text-xs w-auto">
-                  <Checkbox
-                    checked={input.required}
-                    onClick={() => {
-                      update(list[idx], `required`, () => !input.required);
-                      setList([...list]);
-                    }}>
-                    Make this required
-                  </Checkbox>
-                </div>
+
+                <Checkbox
+                  checked={input.required}
+                  onClick={() => {
+                    update(list[idx], `required`, () => !input.required);
+                    setList([...list]);
+                  }}>
+                  Make this required
+                </Checkbox>
               </div>
 
               {shouldShowActions && (
@@ -163,6 +166,7 @@ const TextInput = ({
         label={'+ Add Field'}
         onClick={addOneInputField}
         size="small"
+        className="mt-2"
         variant="dashed"
       />
 

@@ -1,5 +1,6 @@
 import {HomeOutlined} from '@ant-design/icons';
 import useAuth from '@customHooks/useAuth';
+import {scrollUp} from '@utilities/functions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
@@ -86,6 +87,7 @@ const LessonPlanNavigation = ({
     checkIfEmotionComponentExists(pageContent);
 
     history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
+    scrollUp('-', 'builder-content');
   };
   // listSentimentss
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
