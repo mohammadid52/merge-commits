@@ -1,7 +1,7 @@
 import {Select} from 'antd';
 import {SizeType} from 'antd/es/config-provider/SizeContext';
 import {orderBy, uniqBy} from 'lodash';
-import React from 'react';
+import React, {forwardRef} from 'react';
 import Label from './Label';
 
 type Item = {
@@ -38,7 +38,9 @@ interface SelectorProps {
   showSearch?: boolean;
 }
 
-const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
+// turn this component into a ref component
+
+const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
   const {
     list,
     selectedItem,
@@ -70,6 +72,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         style={{width, borderRadius: 99}}
         disabled={loading || disabled}
         showSearch={showSearch}
+        ref={ref}
         size={size}
         dropdownRender={dropdownRender}
         loading={loading}
@@ -80,6 +83,6 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
       />
     </div>
   );
-};
+});
 
 export default Selector;

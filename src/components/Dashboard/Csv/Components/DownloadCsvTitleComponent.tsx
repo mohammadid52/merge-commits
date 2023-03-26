@@ -4,24 +4,22 @@ import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import {listInstitutions} from '@graphql/functions';
 
-import {Transition} from '@headlessui/react';
 import {insertExtraDataForClassroom, removeDuplicates} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import * as customQueries from 'customGraphql/customQueries';
 import {uniqBy} from 'lodash';
 import {useEffect, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
-import {DataValue} from '../Csv';
 
 const DownloadCsvTitleComponent = ({
   selectedUnit,
-
-  selectedCurriculum,
+  instituteDropdownRef,
+  classroomDropdownRef,
+  unitDropdownRef,
+  surveyDropdownRef,
 
   selectedSurvey,
   surveys,
 
-  setHoveringItem,
   selectedInst,
 
   selectedClassRoom,
@@ -29,11 +27,11 @@ const DownloadCsvTitleComponent = ({
   setSCQAnswers,
   getStudentsDemographicsQuestionsResponse,
   setClassStudents,
-  currentSelectedClassroomData,
+
   clearCSVData,
   setSelectedInst,
   setSelectedClassRoom,
-  hoveringItem,
+
   setSelectedCurriculum,
   listQuestions,
   resetInstitution,
@@ -45,11 +43,13 @@ const DownloadCsvTitleComponent = ({
   selectedSurvey: any;
   selectedUnit: any;
   selectedInst: any;
-  selectedCurriculum: any;
   getStudentsDemographicsQuestionsResponse: any;
   setSelectedCurriculum: any;
   setSelectedInst: any;
-  setHoveringItem: any;
+  instituteDropdownRef: any;
+  classroomDropdownRef: any;
+  unitDropdownRef: any;
+  surveyDropdownRef: any;
   setSelectedsurvey: any;
   setSCQAnswers: any;
   setSurveys: any;
@@ -58,15 +58,11 @@ const DownloadCsvTitleComponent = ({
   setDemographicsQuestions: any;
   setSelectedClassRoom: any;
 
-  currentSelectedClassroomData: any;
-
   surveys: any[];
 
   resetInstitution: () => void;
   clearCSVData: () => void;
   listQuestions: (surveyId: string) => Promise<void>;
-
-  hoveringItem: any;
 }) => {
   const {authId, email} = useAuth();
 
@@ -167,6 +163,7 @@ const DownloadCsvTitleComponent = ({
   };
 
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
+    setUnitsLoading(true);
     try {
       let sCR = selectedClassRoom;
       let cr = {id, label: name, value};
@@ -180,7 +177,6 @@ const DownloadCsvTitleComponent = ({
         // fetch students of the selected class. (This list of students will be used in the csv)
         const studentsEmails = await fetchStudents(classroom.class.id);
         if (classroom?.curriculum?.id) {
-          setUnitsLoading(true);
           await fetchUnits(classroom?.curriculum?.id, studentsEmails);
         }
         // units (syllabus fetched)
@@ -212,6 +208,7 @@ const DownloadCsvTitleComponent = ({
         .filter(Boolean);
       // console.log('units', units)
       setUnits(units);
+      setUnitsLoading(false);
       let curriculumData: any = await API.graphql(
         graphqlOperation(customQueries.getCurriculumCheckpointsData, {
           id: curriculumId
@@ -233,7 +230,7 @@ const DownloadCsvTitleComponent = ({
           });
         });
       });
-      setUnitsLoading(false);
+
       setDemographicsQuestions(demographicsQues);
       // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
       getStudentsDemographicsQuestionsResponse(cCheckpoints, '999999', studentsEmails);
@@ -306,6 +303,7 @@ const DownloadCsvTitleComponent = ({
                 {/* {isSuperAdmin && ( */}
                 <Selector
                   width={250}
+                  ref={instituteDropdownRef}
                   showSearch
                   placeholder={CsvDict[userLanguage]['SELECT_INST']}
                   list={institutions}
@@ -319,6 +317,7 @@ const DownloadCsvTitleComponent = ({
                   <Selector
                     showSearch
                     dataCy="analytics-classroom"
+                    ref={classroomDropdownRef}
                     width={250}
                     disabled={!selectedInst?.id}
                     loading={classRoomLoading}
@@ -326,96 +325,28 @@ const DownloadCsvTitleComponent = ({
                     placeholder="Select Classroom"
                     list={instClassRooms}
                     onChange={(value, option: any) => {
-                      setHoveringItem({});
                       onClassRoomSelect(option.id, value, value);
                     }}
                   />
-                  {currentSelectedClassroomData && (
-                    <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-                      <Transition
-                        style={{
-                          top: '0rem',
-                          bottom: '1.5rem',
-                          right: '-110%',
-                          zIndex: 999999
-                        }}
-                        className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                        show={Boolean(hoveringItem && hoveringItem.name)}>
-                        <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                          <DataValue
-                            title={'Institution Name'}
-                            content={
-                              currentSelectedClassroomData?.institutionName ||
-                              selectedInst?.name ||
-                              '--'
-                            }
-                          />
-                          <DataValue
-                            title={'Clasroom Name'}
-                            content={currentSelectedClassroomData?.name || '--'}
-                          />
-                          <DataValue
-                            title={'Status'}
-                            content={
-                              <p
-                                className={`${
-                                  currentSelectedClassroomData.status === 'ACTIVE'
-                                    ? 'text-green-500'
-                                    : 'text-yellow-500'
-                                } lowercase`}>
-                                {currentSelectedClassroomData.status || '--'}
-                              </p>
-                            }
-                          />
-                          <DataValue
-                            title={'Teacher'}
-                            content={
-                              <div className="flex items-center justify-center w-auto">
-                                <span className="w-auto">
-                                  {currentSelectedClassroomData.teacher.image ? (
-                                    <img
-                                      src={currentSelectedClassroomData.teacher.image}
-                                      className="h-6 w-6 rounded-full"
-                                    />
-                                  ) : (
-                                    <div className="h-6 w-6 rounded-full bg-gray-400"></div>
-                                  )}
-                                </span>
-                                <p className="w-auto ml-2">
-                                  {currentSelectedClassroomData.teacher.name}
-                                </p>
-                              </div>
-                            }
-                          />
-                          <DataValue
-                            title={'Course Name'}
-                            content={currentSelectedClassroomData.courseName || '--'}
-                          />
-                          {/* <DataValue
-                                title={"Active Unit"}
-                                content={currentActiveUnit?.name || "--"}
-                              /> */}
-                        </div>
-                      </Transition>
-                    </ClickAwayListener>
-                  )}
                 </div>
 
                 <Selector
                   dataCy="analytics-unit"
+                  ref={unitDropdownRef}
                   loading={unitsLoading}
                   showSearch
                   selectedItem={selectedUnit ? selectedUnit.label : ''}
                   placeholder="Select Unit"
                   width={250}
                   list={units}
-                  disabled={!selectedCurriculum}
+                  disabled={!selectedClassRoom}
                   onChange={(value, option: any) => onUnitSelect(option.id, value, value)}
                 />
 
                 <Selector
                   dataCy="analytics-survey"
                   width={250}
+                  ref={surveyDropdownRef}
                   showSearch
                   loading={surveysLoading}
                   disabled={!selectedUnit}

@@ -4322,8 +4322,8 @@ const UniversalBuilderDict: UniversalBuilderDictInterface = {
 const CsvDict: CsvDictInterface = {
   EN: {
     TITLE: 'Select Survey',
-    SELECT_INST: 'Select institute',
-    SELECT_CLASSROOM: 'Select classroom',
+    SELECT_INST: 'Select or search institute',
+    SELECT_CLASSROOM: 'Select or search classroom',
     SELECT_FILTERS: 'Select Filters',
     SELECT_REASON: 'Select Reason',
     REASON: 'Reason....',
