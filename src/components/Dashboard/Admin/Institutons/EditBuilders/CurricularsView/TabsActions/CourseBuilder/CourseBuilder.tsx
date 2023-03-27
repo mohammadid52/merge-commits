@@ -114,7 +114,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: CourseBuilderDict[userLanguage]['MESSAGES']['FETCH_COURSE_ERR'],
+          message:
+            CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['FETCH_COURSE_ERR'],
           isError: true
         });
         setFetchingDetails(false);
@@ -141,32 +142,25 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     {
       title: 'General Information',
       description: 'Capture core details of your Unit',
-      stepValue: 'overview',
-      isComplete: true
+      stepValue: 'overview'
     },
     {
       title: 'Unit manager',
       description: 'Assign units to course',
       stepValue: 'unit_manager',
-      disabled: !Boolean(courseId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(courseId)
     },
     {
       title: 'Learning Objectives',
       description: '',
       stepValue: 'learning_objectives',
-      disabled: !Boolean(courseId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(courseId)
     },
     {
       title: 'Demographics & information(Optional)',
       description: '',
       stepValue: 'demographics',
-      disabled: !Boolean(courseId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(courseId)
     }
   ];
   const currentStepComp = (currentStep: string) => {

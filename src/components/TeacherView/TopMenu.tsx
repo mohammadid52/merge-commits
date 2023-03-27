@@ -1,11 +1,11 @@
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import useTailwindBreakpoint from "customHooks/tailwindBreakpoint";
-import React from "react";
-import LessonControlBar from "./LessonControlBar/LessonControlBar";
-import StudentWindowTitleBar from "./StudentWindow/StudentWindowTitleBar";
-import CloseLesson from "./StudentWindow/TitleBarSections/CloseLesson";
-import FullscreenToggle from "./StudentWindow/TitleBarSections/FullscreenToggle";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import React from 'react';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
+import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
+import CloseLesson from './StudentWindow/TitleBarSections/CloseLesson';
+import FullscreenToggle from './StudentWindow/TitleBarSections/FullscreenToggle';
 
 interface TopMenuControlProps {
   isSameStudentShared: boolean;
@@ -23,46 +23,38 @@ interface TopMenuControlProps {
 const TopMenuControl: React.FC<TopMenuControlProps> = ({
   handlePageChange,
   fullscreen,
-  handleFullscreen,
+  handleFullscreen
 }: TopMenuControlProps) => {
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
-  const { lessonPlannerDict } = useDictionary();
+  const {lessonPlannerDict} = useDictionary();
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
 
-  const { breakpoint } = useTailwindBreakpoint();
+  const {breakpoint} = useTailwindBreakpoint();
 
   return (
     <div
       className={`${
-        breakpoint === "xl" || breakpoint === "2xl" ? "px-4" : "px-2"
-      } h-auto flex flex-col`}
-    >
+        breakpoint === 'xl' || breakpoint === '2xl' ? 'px-4' : 'px-2'
+      } h-auto w-full flex flex-col`}>
       {/* LABELS */}
       <div className="hidden lg:block  h-8 py-1 mb-2">
-        <div
-          className={`relative font-medium bg-transparent flex flex-row items-center`}
-        >
+        <div className={`relative font-medium bg-transparent flex flex-row items-center`}>
           {/* LEFT */}
 
           {/* RIGHT */}
           <div className="relative w-full h-full flex flex-row justify-between items-center ">
             <div className="h-8 align-middle text-sm font-semibold text-gray-600 leading-8 ">
-              {
-                lessonPlannerDict[userLanguage]["OTHER_LABELS"][
-                  "LESSON_CONTROL"
-                ]
-              }
-              :
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
             </div>
             {/* RIGHT - FULLSCREEN BUTTON */}
             <div className="w-auto gap-1 flex items-center">
               <CloseLesson />
 
-              {breakpoint === "xl" || breakpoint === "2xl" ? (
+              {breakpoint === 'xl' || breakpoint === '2xl' ? (
                 <FullscreenToggle
                   fullscreen={fullscreen}
                   handleFullscreen={handleFullscreen}

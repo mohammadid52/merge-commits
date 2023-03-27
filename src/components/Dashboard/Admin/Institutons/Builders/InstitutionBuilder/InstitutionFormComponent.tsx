@@ -21,7 +21,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const history = useHistory();
   const initialState: any = {
     id: null,
-    name: '',
+    label: '',
     type: '',
     website: '',
     isServiceProvider: false,
@@ -58,27 +58,27 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const institutionTypeList = [
     {
       id: 1,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
       value: 'School'
     },
     {
       id: 2,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
       value: 'After School'
     },
     {
       id: 3,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
       value: 'Day Camp'
     },
     {
       id: 4,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
       value: 'Summer Camp'
     },
     {
       id: 5,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['C3'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['C3'],
       value: '501C3'
     }
   ];
@@ -160,7 +160,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           );
         }
         let payload: any = {
-          name: instituteData.name,
+          label: instituteData.name,
           type: instituteData.type,
           website: instituteData.website,
           address: instituteData.address,
@@ -245,6 +245,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     isServiceProvider
   } = instituteData;
 
+  const formDict = InstitutionBuilderDict[userLanguage]['FORM'];
+
   return (
     <div className="">
       {/* Section Header */}
@@ -255,25 +257,19 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           <form>
             <div className={`h-full bg-white mb-4`}>
               {/* FORM */}
-              <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 px-4 py-5">
-                <div className="sm:col-span-3 px-3 py-2">
-                  <div className="">
-                    <Selector
-                      selectedItem={type}
-                      label={
-                        InstitutionBuilderDict[userLanguage]['FORM']['INSTITUTION_TYPE']
-                      }
-                      placeholder={
-                        InstitutionBuilderDict[userLanguage]['FORM']['INSTITUTION_TYPE']
-                      }
-                      list={institutionTypeList}
-                      onChange={onTypeSelect}
-                    />
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3 px-4 py-5">
+                <Selector
+                  selectedItem={type}
+                  label={formDict['INSTITUTION_TYPE']}
+                  placeholder={formDict['INSTITUTION_TYPE']}
+                  list={institutionTypeList}
+                  width="100%"
+                  onChange={onTypeSelect}
+                />
+
                 <UploadImageBtn
-                  className="sm:col-span-3 px-3 py-2"
                   label="Insitution Image"
+                  className="w-full"
                   handleImage={handleImage}
                   mediaRef={mediaRef}
                   setImageLoading={setImageLoading}
@@ -284,134 +280,100 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                   }}
                   toggleCropper={toggleCropper}
                 />
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={name}
-                    onChange={onInputChange}
-                    id="name"
-                    name="name"
-                    label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['NAME_INPUT_LABEL']
-                    }
-                    placeHolder={
-                      InstitutionBuilderDict[userLanguage]['FORM'][
-                        'NAME_INPUT_PLACEHOLDER'
-                      ]
-                    }
-                    isRequired
-                  />
-                </div>
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={website}
-                    onChange={onInputChange}
-                    id="website"
-                    name="website"
-                    label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['WEBSITE_INPUT_LABEL']
-                    }
-                    placeHolder={
-                      InstitutionBuilderDict[userLanguage]['FORM'][
-                        'WEBSITE_INPUT_PLACEHOLDER'
-                      ]
-                    }
-                  />
-                </div>
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={address}
-                    id="address"
-                    onChange={onInputChange}
-                    name="address"
-                    label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['ADDRESS_INPUT_LABEL']
-                    }
-                  />
-                </div>
 
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={addressLine2}
-                    id="addressLine2"
-                    onChange={onInputChange}
-                    name="addressLine2"
-                    label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']
-                    }
-                  />
-                </div>
+                <FormInput
+                  value={name}
+                  onChange={onInputChange}
+                  id="name"
+                  name="name"
+                  label={formDict['NAME_INPUT_LABEL']}
+                  placeHolder={formDict['NAME_INPUT_PLACEHOLDER']}
+                  isRequired
+                />
 
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={city}
-                    id="city"
-                    onChange={onInputChange}
-                    name="city"
-                    label={InstitutionBuilderDict[userLanguage]['FORM']['CITY_LABEL']}
-                  />
-                </div>
+                <FormInput
+                  value={website}
+                  onChange={onInputChange}
+                  id="website"
+                  name="website"
+                  label={formDict['WEBSITE_INPUT_LABEL']}
+                  placeHolder={formDict['WEBSITE_INPUT_PLACEHOLDER']}
+                />
 
-                <div className="sm:col-span-3 px-3 py-2">
-                  <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
-                    {InstitutionBuilderDict[userLanguage]['FORM']['STATE_LABEL']}
-                  </label>
-                  <Selector
-                    selectedItem={state}
-                    placeholder={InstitutionBuilderDict[userLanguage]['FORM']['state']}
-                    list={statesList}
-                    onChange={onStateSelect}
-                  />
-                </div>
+                <FormInput
+                  value={address}
+                  id="address"
+                  onChange={onInputChange}
+                  name="address"
+                  label={formDict['ADDRESS_INPUT_LABEL']}
+                />
 
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={zip}
-                    id="zip"
-                    onChange={onInputChange}
-                    name="zip"
-                    label={InstitutionBuilderDict[userLanguage]['FORM']['ZIP_LABEL']}
-                  />
-                </div>
+                <FormInput
+                  value={addressLine2}
+                  id="addressLine2"
+                  onChange={onInputChange}
+                  name="addressLine2"
+                  label={formDict['ADDRESS2_INPUT_LABEL']}
+                />
 
-                <div className="sm:col-span-3 px-3 py-2">
-                  <FormInput
-                    value={phone}
-                    id="phone"
-                    onChange={onInputChange}
-                    name="phone"
-                    label={InstitutionBuilderDict[userLanguage]['FORM']['PHONE_LABEL']}
-                  />
-                </div>
-                <div className="col-span-6 lg:col-span-3 px-3 py-2 flex items-center">
-                  <CheckBox
-                    value={isServiceProvider}
-                    onChange={handdleCheckBox}
-                    name="isServiceProvider"
-                    label={
-                      name
-                        ? `${name} ${InstitutionBuilderDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL_WITH_NAME']}`
-                        : InstitutionBuilderDict[userLanguage]['FORM'][
-                            'SERVICEPROVIDER_LABEL_WITHOUT_NAME'
-                          ]
-                    }
-                  />
-                </div>
+                <FormInput
+                  value={city}
+                  id="city"
+                  onChange={onInputChange}
+                  name="city"
+                  label={formDict['CITY_LABEL']}
+                />
+
+                <Selector
+                  selectedItem={state}
+                  placeholder={formDict['state']}
+                  list={statesList}
+                  width="100%"
+                  label={formDict['STATE_LABEL']}
+                  onChange={onStateSelect}
+                />
+
+                <FormInput
+                  value={zip}
+                  id="zip"
+                  onChange={onInputChange}
+                  name="zip"
+                  label={formDict['ZIP_LABEL']}
+                />
+
+                <FormInput
+                  value={phone}
+                  id="phone"
+                  onChange={onInputChange}
+                  name="phone"
+                  label={formDict['PHONE_LABEL']}
+                />
+
+                <div className="col-span-2"></div>
+                <CheckBox
+                  value={isServiceProvider}
+                  onChange={handdleCheckBox}
+                  name="isServiceProvider"
+                  label={
+                    name
+                      ? `${name} ${formDict['SERVICEPROVIDER_LABEL_WITH_NAME']}`
+                      : formDict['SERVICEPROVIDER_LABEL_WITHOUT_NAME']
+                  }
+                />
                 {checkIfAdmin() && (
-                  <div className="col-span-6 lg:col-span-3 px-3 py-2 flex items-center">
-                    <CheckBox
-                      name="isZoiq"
-                      dataCy="isZoiq"
-                      label={'ZOIQ'}
-                      className="group:hover:bg-gray-500"
-                      value={instituteData.isZoiq}
-                      onChange={(e) => {
-                        setInstituteData({
-                          ...instituteData,
-                          isZoiq: e.target.checked
-                        });
-                      }}
-                    />
-                  </div>
+                  <CheckBox
+                    name="isZoiq"
+                    dataCy="isZoiq"
+                    label={'ZOIQ'}
+                    className="group:hover:bg-gray-500"
+                    value={instituteData.isZoiq}
+                    onChange={(e) => {
+                      setInstituteData({
+                        ...instituteData,
+                        isZoiq: e.target.checked
+                      });
+                    }}
+                  />
                 )}
               </div>
               {serverMessage.message && (
@@ -419,25 +381,22 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                   {serverMessage.message}
                 </span>
               )}
-              <div className="px-4 w-full flex justify-end">
-                <div className="flex justify-end w-auto pb-4">
-                  <Buttons
-                    label={InstitutionBuilderDict[userLanguage]['BUTTON']['CANCEL']}
-                    btnClass="w-full px-6 py-4 mr-2"
-                    onClick={history.goBack}
-                    transparent
-                  />
-                  <Buttons
-                    label={
-                      saving
-                        ? ButtonDict[userLanguage]['SAVING']
-                        : InstitutionBuilderDict[userLanguage]['BUTTON']['SAVE']
-                    }
-                    btnClass="w-full px-6 py-4 ml-2"
-                    onClick={addNewInstitution}
-                    disabled={saving}
-                  />
-                </div>
+
+              <div className="flex justify-end gap-4 w-auto pb-4">
+                <Buttons
+                  label={InstitutionBuilderDict[userLanguage]['BUTTON']['CANCEL']}
+                  onClick={history.goBack}
+                  transparent
+                />
+                <Buttons
+                  label={
+                    saving
+                      ? ButtonDict[userLanguage]['SAVING']
+                      : InstitutionBuilderDict[userLanguage]['BUTTON']['SAVE']
+                  }
+                  onClick={addNewInstitution}
+                  disabled={saving}
+                />
               </div>
             </div>
 
@@ -447,13 +406,13 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           </form>
 
           {/* Image cropper */}
-          {showCropper && (
-            <ProfileCropModal
-              upImg={upImage || ''}
-              saveCroppedImage={(img: string) => saveCroppedImage(img)}
-              closeAction={toggleCropper}
-            />
-          )}
+
+          <ProfileCropModal
+            open={showCropper}
+            upImg={upImage || ''}
+            saveCroppedImage={(img: string) => saveCroppedImage(img)}
+            closeAction={toggleCropper}
+          />
         </div>
       </div>
     </div>

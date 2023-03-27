@@ -1,22 +1,22 @@
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import Selector from "atoms/Form/Selector";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import { find, map, omit } from "lodash";
-import React, { useEffect, useState } from "react";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-import { v4 as uuidv4 } from "uuid";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {find, map, omit} from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import ReviewSliderBlock, {
-  extractValuesFromClassString,
-} from "../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock";
-import ColorPicker from "../ColorPicker/ColorPicker";
-import { FORM_TYPES } from "../common/constants";
-import DummyContent from "../Preview/DummyContent";
-import PreviewLayout from "../Preview/Layout/PreviewLayout";
-import AnimatedContainer from "../UIComponents/Tabs/AnimatedContainer";
-import { Tabs3, useTabs } from "../UIComponents/Tabs/Tabs";
+  extractValuesFromClassString
+} from '../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
+import ColorPicker from '../ColorPicker/ColorPicker';
+import {FORM_TYPES} from '../common/constants';
+import DummyContent from '../Preview/DummyContent';
+import PreviewLayout from '../Preview/Layout/PreviewLayout';
+import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
+import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
 
 interface ReviewProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -24,17 +24,15 @@ interface ReviewProps extends IContentTypeComponentProps {
 }
 
 const roundedCornerList = [
-  { id: 0, name: "None", value: "rounded-none" },
-  { id: 1, name: "Small", value: "rounded-sm" },
-  { id: 2, name: "Medium", value: "rounded" },
-  { id: 3, name: "Large", value: "rounded-lg" },
-  { id: 4, name: "Extra large", value: "rounded-xl" },
+  {id: 0, label: 'None', value: 'rounded-none'},
+  {id: 1, label: 'Small', value: 'rounded-sm'},
+  {id: 2, label: 'Medium', value: 'rounded'},
+  {id: 3, label: 'Large', value: 'rounded-lg'},
+  {id: 4, label: 'Extra large', value: 'rounded-xl'}
 ];
 
 // remove value from property from list
-const roundedCornerListSelector = map(roundedCornerList, (item) =>
-  omit(item, ["value"])
-);
+const roundedCornerListSelector = map(roundedCornerList, (item) => omit(item, ['value']));
 
 const ReviewSliderModal = ({
   closeAction,
@@ -43,10 +41,10 @@ const ReviewSliderModal = ({
   updateBlockContentULBHandler,
   askBeforeClose,
   setUnsavedChanges,
-  classString,
+  classString
 }: ReviewProps) => {
-  const { userLanguage } = useGlobalContext();
-  const { EditQuestionModalDict } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {EditQuestionModalDict} = useDictionary();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   useEffect(() => {
@@ -57,15 +55,15 @@ const ReviewSliderModal = ({
       const {
         min = 1,
         max = 5,
-        bgColor = "",
-        fgColor = "",
-        cardBgColor = "",
-        rounded = "",
+        bgColor = '',
+        fgColor = '',
+        cardBgColor = '',
+        rounded = ''
       } = values || {};
 
       const roundedParsedValue =
-        find(roundedCornerList, (item) => item?.value === rounded)?.name ||
-        roundedCornerList[3].name;
+        find(roundedCornerList, (item) => item?.value === rounded)?.label ||
+        roundedCornerList[3].label;
 
       setReviewFields({
         ...reviewFields,
@@ -75,43 +73,42 @@ const ReviewSliderModal = ({
         cardBgColor,
         cardCorners: roundedParsedValue,
         bgColor,
-        fgColor,
+        fgColor
       });
     }
   }, [inputObj]);
 
   // fgColor = foreground color
   const [reviewFields, setReviewFields] = useState({
-    label: "",
-    value: ["1"],
-    range: "1-5",
-    previewValue: ["1"],
-    bgColor: "gray-700",
-    fgColor: "gray-800",
-    cardBgColor: "gray-700",
-    cardCorners: roundedCornerList[3].name,
+    label: '',
+    value: ['1'],
+    range: '1-5',
+    previewValue: ['1'],
+    bgColor: 'gray-700',
+    fgColor: 'gray-800',
+    cardBgColor: 'gray-700',
+    cardCorners: roundedCornerList[3].label
   });
 
-  const [errors, setErrors] = useState({ label: "" });
+  const [errors, setErrors] = useState({label: ''});
 
   const validate = () => {
     let isValid = true;
     if (!reviewFields.label) {
       isValid = false;
-      errors.label = "Please add a label";
+      errors.label = 'Please add a label';
     } else {
-      isValid = true;
-      errors.label = "";
+      errors.label = '';
     }
-    setErrors({ ...errors });
+    setErrors({...errors});
     return isValid;
   };
 
   const onChange = (e: React.FormEvent) => {
     setUnsavedChanges(true);
-    const { value, name } = e.target as HTMLFormElement;
-    setReviewFields({ ...reviewFields, [name]: value });
-    setErrors({ ...errors, [name]: "" });
+    const {value, name} = e.target as HTMLFormElement;
+    setReviewFields({...reviewFields, [name]: value});
+    setErrors({...errors, [name]: ''});
   };
 
   const addToDB = async (list: any) => {
@@ -119,15 +116,15 @@ const ReviewSliderModal = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
 
   const getClassValue = (): string => {
     const rounded =
-      find(roundedCornerList, (item) => item.name === reviewFields.cardCorners)
-        ?.value || "rounded-lg";
+      find(roundedCornerList, (item) => item.label === reviewFields.cardCorners)?.value ||
+      'rounded-lg';
     return `${reviewFields.range} || ${reviewFields.bgColor} || ${reviewFields.fgColor} || ${reviewFields.cardBgColor} || ${rounded}`;
   };
 
@@ -141,14 +138,14 @@ const ReviewSliderModal = ({
           type: FORM_TYPES.REVIEW_SLIDER,
           label: reviewFields.label,
           value: isEditingMode ? reviewFields.value : 1,
-          class: getClassValue(),
-        },
+          class: getClassValue()
+        }
       ];
 
       if (isEditingMode) {
         const updatedList = updateBlockContentULBHandler(
-          "",
-          "",
+          '',
+          '',
           `${FORM_TYPES.REVIEW_SLIDER}-form`,
           reviewSliderArray,
           0
@@ -156,8 +153,8 @@ const ReviewSliderModal = ({
         await addToDB(updatedList);
       } else {
         const updatedList = createNewBlockULBHandler(
-          "",
-          "",
+          '',
+          '',
           `${FORM_TYPES.REVIEW_SLIDER}-form`,
           reviewSliderArray,
           0
@@ -167,30 +164,25 @@ const ReviewSliderModal = ({
     }
   };
 
-  const [colorPickerActiveBG, setColorPickerActiveBG] =
-    useState<boolean>(false);
-  const [colorPickerActiveFG, setColorPickerActiveFG] =
-    useState<boolean>(false);
-  const [colorPickerActiveCardBG, setColorPickerActiveCardBG] =
-    useState<boolean>(false);
+  const [colorPickerActiveBG, setColorPickerActiveBG] = useState<boolean>(false);
+  const [colorPickerActiveFG, setColorPickerActiveFG] = useState<boolean>(false);
+  const [colorPickerActiveCardBG, setColorPickerActiveCardBG] = useState<boolean>(false);
 
   const handleColorPickerSelect = (pickedColor: string, type: string) => {
     setReviewFields({
       ...reviewFields,
-      [type === "bg" ? "bgColor" : type === "fg" ? "fgColor" : "cardBgColor"]:
-        pickedColor,
+      [type === 'bg' ? 'bgColor' : type === 'fg' ? 'fgColor' : 'cardBgColor']: pickedColor
     });
   };
 
-  const getColorDensity = (value: string | number) =>
-    `${(Number(value) * 10) / 100}%`;
+  const getColorDensity = (value: string | number) => `${(Number(value) * 10) / 100}%`;
 
   const tabs = [
-    { name: "Component Details", current: true },
-    { name: "Preview", current: false },
+    {name: 'Component Details', value: 'Component Details', current: true},
+    {name: 'Preview', value: 'Preview', current: false}
   ];
 
-  const { curTab, setCurTab, helpers, goTo } = useTabs();
+  const {curTab, setCurTab, helpers, goTo} = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
   const [_, toPreviewTab] = goTo;
 
@@ -202,16 +194,16 @@ const ReviewSliderModal = ({
         {onSetupTab && (
           <div className="grid grid-cols-3 my-2 gap-4">
             <div className="col-span-3">
-              <div className={"my-2"}>
+              <div className={'my-2'}>
                 <div className="mb-2">
                   <FormInput
-                    label={"Enter review title"}
+                    label={'Enter review title'}
                     onChange={onChange}
                     error={errors.label}
-                    name={"label"}
+                    name={'label'}
                     isRequired
                     value={reviewFields?.label}
-                    placeHolder={"Rate you experience"}
+                    placeHolder={'Rate you experience'}
                   />
                 </div>
               </div>
@@ -221,44 +213,36 @@ const ReviewSliderModal = ({
             </h3>
             <div className="col-span-1 ">
               <label
-                htmlFor={"range"}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-              >
+                htmlFor={'range'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                 Select range
               </label>
               <Selector
                 placeholder="Select range"
                 selectedItem={reviewFields.range}
-                onChange={(_, name) =>
-                  setReviewFields({ ...reviewFields, range: name })
-                }
+                onChange={(name) => setReviewFields({...reviewFields, range: name})}
                 list={[
-                  { id: 0, name: "1-5" },
-                  { id: 1, name: "1-10" },
+                  {id: 0, value: '1-5', label: '1-5'},
+                  {id: 1, value: '1-10', label: '1-10'}
                 ]}
               />
             </div>
             <div className="col-span-1 relative h-full">
               <label
-                htmlFor={"bgColor"}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-              >
+                htmlFor={'bgColor'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                 Select background color
               </label>
               <button
                 onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
-                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}
-              >
-                <span
-                  className={"text-gray-700 w-auto text-sm mr-2 capitalize"}
-                >
-                  {reviewFields.bgColor?.split("-")[0]}{" "}
-                  {getColorDensity(reviewFields.bgColor?.split("-")[1])}
+                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {reviewFields.bgColor?.split('-')[0]}{' '}
+                  {getColorDensity(reviewFields.bgColor?.split('-')[1])}
                 </span>
 
                 <span
-                  className={`h-4 block w-4 bg-${reviewFields.bgColor} rounded-full border-3 border-gray-400`}
-                ></span>
+                  className={`h-4 block w-4 bg-${reviewFields.bgColor} rounded-full border-3 border-gray-400`}></span>
               </button>
               {colorPickerActiveBG && (
                 <ColorPicker
@@ -266,33 +250,28 @@ const ReviewSliderModal = ({
                   classString={classString}
                   callbackColor={(pickedColor) => {
                     setColorPickerActiveBG(false);
-                    handleColorPickerSelect(pickedColor, "bg");
+                    handleColorPickerSelect(pickedColor, 'bg');
                   }}
-                  styleString={{ top: "100%" }}
+                  styleString={{top: '100%'}}
                 />
               )}
             </div>
             <div className="col-span-1 relative h-full">
               <label
-                htmlFor={"foreground"}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-              >
+                htmlFor={'foreground'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                 Select foreground color
               </label>
               <button
                 onClick={() => setColorPickerActiveFG(!colorPickerActiveFG)}
-                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}
-              >
-                <span
-                  className={"text-gray-700 w-auto text-sm mr-2 capitalize"}
-                >
-                  {reviewFields.fgColor?.split("-")[0]}{" "}
-                  {getColorDensity(reviewFields.fgColor?.split("-")[1])}
+                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {reviewFields.fgColor?.split('-')[0]}{' '}
+                  {getColorDensity(reviewFields.fgColor?.split('-')[1])}
                 </span>
 
                 <span
-                  className={`h-4 block w-4 bg-${reviewFields.fgColor} rounded-full border-3 border-gray-400`}
-                ></span>
+                  className={`h-4 block w-4 bg-${reviewFields.fgColor} rounded-full border-3 border-gray-400`}></span>
               </button>
               {colorPickerActiveFG && (
                 <ColorPicker
@@ -300,9 +279,9 @@ const ReviewSliderModal = ({
                   classString={classString}
                   callbackColor={(pickedColor) => {
                     setColorPickerActiveFG(false);
-                    handleColorPickerSelect(pickedColor, "fg");
+                    handleColorPickerSelect(pickedColor, 'fg');
                   }}
-                  styleString={{ top: "100%" }}
+                  styleString={{top: '100%'}}
                 />
               )}
             </div>
@@ -311,27 +290,20 @@ const ReviewSliderModal = ({
             </h3>
             <div className="col-span-1 relative h-full">
               <label
-                htmlFor={"foreground"}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-              >
+                htmlFor={'foreground'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                 Select card background color
               </label>
               <button
-                onClick={() =>
-                  setColorPickerActiveCardBG(!colorPickerActiveCardBG)
-                }
-                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}
-              >
-                <span
-                  className={"text-gray-700 w-auto text-sm mr-2 capitalize"}
-                >
-                  {reviewFields.cardBgColor?.split("-")[0]}{" "}
-                  {getColorDensity(reviewFields.cardBgColor?.split("-")[1])}
+                onClick={() => setColorPickerActiveCardBG(!colorPickerActiveCardBG)}
+                className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {reviewFields.cardBgColor?.split('-')[0]}{' '}
+                  {getColorDensity(reviewFields.cardBgColor?.split('-')[1])}
                 </span>
 
                 <span
-                  className={`h-4 block w-4 bg-${reviewFields.cardBgColor} rounded-full border-3 border-gray-400`}
-                ></span>
+                  className={`h-4 block w-4 bg-${reviewFields.cardBgColor} rounded-full border-3 border-gray-400`}></span>
               </button>
               {colorPickerActiveCardBG && (
                 <ColorPicker
@@ -339,25 +311,22 @@ const ReviewSliderModal = ({
                   classString={classString}
                   callbackColor={(pickedColor) => {
                     setColorPickerActiveCardBG(false);
-                    handleColorPickerSelect(pickedColor, "cardBg");
+                    handleColorPickerSelect(pickedColor, 'cardBg');
                   }}
-                  styleString={{ top: "100%" }}
+                  styleString={{top: '100%'}}
                 />
               )}
             </div>
             <div className="col-span-1 ">
               <label
-                htmlFor={"range"}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-              >
+                htmlFor={'range'}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                 Select corners
               </label>
               <Selector
                 placeholder="Select corners"
                 selectedItem={reviewFields.cardCorners}
-                onChange={(_, name) =>
-                  setReviewFields({ ...reviewFields, cardCorners: name })
-                }
+                onChange={(name) => setReviewFields({...reviewFields, cardCorners: name})}
                 list={roundedCornerListSelector}
               />
             </div>
@@ -368,15 +337,12 @@ const ReviewSliderModal = ({
         {onPreviewTab && (
           <PreviewLayout
             notAvailable={
-              reviewFields.label.length === 0
-                ? "Add label to see the preview"
-                : false
-            }
-          >
+              reviewFields.label.length === 0 ? 'Add label to see the preview' : false
+            }>
             <DummyContent />
 
             <ReviewSliderBlock
-              inputID={"preview_review_slider_id"}
+              inputID={'preview_review_slider_id'}
               disabled={false}
               classString={getClassValue()}
               label={reviewFields.label}
@@ -384,7 +350,7 @@ const ReviewSliderModal = ({
               onChange={(e) =>
                 setReviewFields({
                   ...reviewFields,
-                  previewValue: [e.target.value],
+                  previewValue: [e.target.value]
                 })
               }
             />
@@ -395,26 +361,22 @@ const ReviewSliderModal = ({
 
       <div className="flex mt-4 justify-between px-6 pl-0 pb-4">
         {onSetupTab ? (
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={"See the preview"}
-            onClick={() => setCurTab(toPreviewTab)}
-          />
+          <Buttons label={'See the preview'} onClick={() => setCurTab(toPreviewTab)} />
         ) : (
           <div className="w-auto" />
         )}
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onReviewSliderCreate}
+            size="middle"
           />
         </div>
       </div>

@@ -1,42 +1,29 @@
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import Label from "atoms/Form/Label";
-import RichTextEditor from "atoms/RichTextEditor";
-import Media from "components/Community/Components/Media";
-import {
-  COMMUNITY_UPLOAD_KEY,
-  IFile,
-} from "components/Community/constants.community";
-import { REGEX } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
-import {
-  ICheckItOutInput,
-  ICommunityCardProps,
-} from "interfaces/Community.interfaces";
-import isEmpty from "lodash/isEmpty";
-import { useEffect, useState } from "react";
-import AnimatedContainer from "uiComponents/Tabs/AnimatedContainer";
-import { getImageFromS3Static } from "utilities/services";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Label from 'atoms/Form/Label';
+import RichTextEditor from 'atoms/RichTextEditor';
+import Media from 'components/Community/Components/Media';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {ICheckItOutInput, ICommunityCardProps} from 'interfaces/Community.interfaces';
+import isEmpty from 'lodash/isEmpty';
+import {useEffect, useState} from 'react';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from 'utilities/services';
 
-const CheckItOut = ({
-  onCancel,
-  onSubmit,
-  editMode,
-  cardDetails,
-}: ICommunityCardProps) => {
+const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
-  const [overlayText, setOverlayText] = useState("");
+  const [overlayText, setOverlayText] = useState('');
   const [_, setUnsavedChanges] = useState(false);
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{
     summary: string;
     summaryHtml: string;
   }>({
-    summary:
-      editMode && !isEmpty(cardDetails) ? cardDetails?.summary || "" : "",
-    summaryHtml:
-      editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || "" : "",
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary || '' : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || '' : ''
   });
 
   const onEditorStateChange = (
@@ -45,9 +32,9 @@ const CheckItOut = ({
     fieldHtml: string,
     field: string
   ) => {
-    setError("");
+    setError('');
     setUnsavedChanges(true);
-    setFields({ ...fields, [field]: text, [fieldHtml]: html });
+    setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +53,7 @@ const CheckItOut = ({
         id: cardDetails?.id,
         isEditedCard: editMode,
         summaryHtml: fields.summaryHtml,
-        cardName: overlayText,
+        cardName: overlayText
       };
       if (!editMode) {
         delete checkItOutDetails.id;
@@ -74,8 +61,8 @@ const CheckItOut = ({
       if (youtubeVideoLink) {
         checkItOutDetails = {
           ...checkItOutDetails,
-          cardImageLink: "",
-          additionalLinks: [youtubeVideoLink],
+          cardImageLink: '',
+          additionalLinks: [youtubeVideoLink]
         };
       }
       onSubmit(checkItOutDetails, () => setIsLoading(false));
@@ -87,43 +74,38 @@ const CheckItOut = ({
     const isUrlValid = REGEX.Youtube.test(youtubeVideoLink);
 
     if (!editMode && !youtubeVideoLink && isEmpty(file)) {
-      setError("Image or video not found");
+      setError('Image or video not found');
       isValid = false;
     } else {
-      setError("");
+      setError('');
       isValid = true;
     }
     if (!overlayText) {
-      setError("Overlay text not found");
+      setError('Overlay text not found');
       isValid = false;
     } else {
-      setError("");
+      setError('');
       isValid = true;
     }
     if (!fields.summary) {
-      setError("Description not found");
+      setError('Description not found');
       isValid = false;
     } else {
-      setError("");
+      setError('');
       isValid = true;
     }
-    if (
-      !youtubeVideoLink &&
-      !tempData?.image &&
-      !youtubeVideoLink &&
-      isEmpty(file)
-    ) {
-      setError("Please add youtube/vimeo link");
+    if (!youtubeVideoLink && !tempData?.image && !youtubeVideoLink && isEmpty(file)) {
+      setError('Please add youtube/vimeo link');
       isValid = false;
     } else {
-      setError("");
+      setError('');
       isValid = true;
     }
     if (youtubeVideoLink && !isUrlValid) {
-      setError("Invalid Url");
+      setError('Invalid Url');
       isValid = false;
     } else {
-      setError("");
+      setError('');
       isValid = true;
     }
     return isValid;
@@ -134,13 +116,10 @@ const CheckItOut = ({
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails.cardImageLink,
+        image: cardDetails.cardImageLink
       });
 
-      if (
-        cardDetails?.additionalLinks &&
-        cardDetails?.additionalLinks?.length > 0
-      ) {
+      if (cardDetails?.additionalLinks && cardDetails?.additionalLinks?.length > 0) {
         setYoutubeVideoLink(cardDetails.additionalLinks[0]);
       }
 
@@ -148,14 +127,14 @@ const CheckItOut = ({
     }
   }, [editMode, cardDetails]);
 
-  const [youtubeVideoLink, setYoutubeVideoLink] = useState("");
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
 
   const mediaProps = {
     videoLink: youtubeVideoLink,
     setVideoLink: setYoutubeVideoLink,
     setError: setError,
     setFile: setFile,
-    file: file,
+    file: file
   };
 
   return (
@@ -166,7 +145,7 @@ const CheckItOut = ({
           <Media
             initialImage={getImageFromS3Static(
               COMMUNITY_UPLOAD_KEY +
-                (!isEmpty(file) && file?._status === "success"
+                (!isEmpty(file) && file?._status === 'success'
                   ? file?.fileKey
                   : tempData?.image)
             )}
@@ -177,7 +156,7 @@ const CheckItOut = ({
         // @ts-ignore
         <Media
           initialImage={
-            !isEmpty(file) && file?._status === "success"
+            !isEmpty(file) && file?._status === 'success'
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
               : undefined
           }
@@ -188,11 +167,10 @@ const CheckItOut = ({
       <div className="px-3 py-4">
         <div>
           <FormInput
-            dataCy="checkItOut-overlay-input"
             label="Step 2: Add overlay text"
             placeHolder="Overlay text"
             onChange={(e) => {
-              setError("");
+              setError('');
               setOverlayText(e.target.value);
             }}
             value={overlayText}
@@ -205,24 +183,17 @@ const CheckItOut = ({
         <div>
           <RichTextEditor
             placeholder={
-              "What do you want people in the community to check out this video or image you uploaded?"
+              'What do you want people in the community to check out this video or image you uploaded?'
             }
             rounded
             customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(
-                htmlContent,
-                plainText,
-                "summaryHtml",
-                "summary"
-              )
+              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
             }
           />
 
-          <div className="text-right text-gray-400">
-            {fields.summary.length} of 750
-          </div>
+          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
 
@@ -230,20 +201,9 @@ const CheckItOut = ({
         {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={"Cancel"}
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            dataCy="save-checkItOut-button"
-            loading={isLoading}
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={"Save"}
-            onClick={_onSubmit}
-          />
+        <div className="flex justify-end gap-4">
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
+          <Buttons loading={isLoading} label={'Save'} onClick={_onSubmit} />
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
+import {Card as AntdCard} from 'antd';
 
 const EditChatModal = ({
   chatConfig,
@@ -65,8 +66,13 @@ const EditChatModal = ({
   const disableSaveBtn =
     chatConfig.chatValue === value || value.length === 0 || isLoading;
 
-  return chatEditModal ? (
-    <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
+  return (
+    <Modal
+      open={chatEditModal}
+      title="Edit Chat"
+      showHeader
+      showFooter={false}
+      closeAction={closeAction}>
       <div className="min-w-132">
         <FormInput
           label="Comment"
@@ -75,16 +81,9 @@ const EditChatModal = ({
         />
       </div>
       <div className="flex mt-8 justify-end">
-        <Buttons
-          btnClass="py-1 px-8 text-xs ml-2"
-          disabled={disableSaveBtn}
-          label={'Save'}
-          onClick={onEditedChatSave}
-        />
+        <Buttons disabled={disableSaveBtn} label={'Save'} onClick={onEditedChatSave} />
       </div>
     </Modal>
-  ) : (
-    <div className="hidden w-auto" />
   );
 };
 
@@ -361,7 +360,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
         <div className="flex max-w-xl  mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
-              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+              <div className="text-gray-400 community-media font-medium text-sm mb-7 mt-3 px-2">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
             </div>
@@ -474,7 +473,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 </div>
               )}
 
-              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+              <div className="text-gray-400 font-medium community-media text-sm mb-7 mt-3 px-2">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
 
@@ -585,7 +584,7 @@ const Card = ({
   const [chatCount, setChatCount] = useState<number>(cardDetails?.chatCount || 0);
 
   return (
-    <div className="relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+    <AntdCard>
       {MenuOptions}
       <EditChatModal
         chatConfig={chatConfig}
@@ -622,7 +621,7 @@ const Card = ({
           />
         )}
       </div>
-    </div>
+    </AntdCard>
   );
 };
 

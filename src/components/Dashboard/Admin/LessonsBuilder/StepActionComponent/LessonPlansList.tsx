@@ -97,7 +97,6 @@ const LessonPlansList = ({
             <Fragment>
               <div className="flex justify-end w-full m-auto ">
                 <Buttons
-                  btnClass="mx-4"
                   label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                   onClick={addNewLessonPlan}
                 />
@@ -201,7 +200,6 @@ const LessonPlansList = ({
               </div>
               <div className="flex justify-center my-4">
                 <Buttons
-                  btnClass="mx-4"
                   label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                   onClick={addNewLessonPlan}
                 />

@@ -35,18 +35,18 @@ const EditMeasurement = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: measurement.topic.value,
-      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
       goBack: true
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditMeasurement'],
-      url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
+      href: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
       last: true
     }
   ];
@@ -90,7 +90,7 @@ const EditMeasurement = () => {
     const msgs = validation;
     if (!measurement.name.length) {
       isValid = false;
-      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequired'];
+      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequierd'];
     } else {
       msgs.name = '';
     }
@@ -142,7 +142,6 @@ const EditMeasurement = () => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
             onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -199,13 +198,11 @@ const EditMeasurement = () => {
             </div>
             <div className="flex my-8 justify-center">
               <Buttons
-                btnClass="py-3 px-10 mr-4"
                 label={EditMeasurementDict[userLanguage]['button']['cancel']}
                 onClick={history.goBack}
                 transparent
               />
               <Buttons
-                btnClass="py-3 px-10 ml-4"
                 label={EditMeasurementDict[userLanguage]['button']['save']}
                 onClick={saveMeasurementDetails}
               />

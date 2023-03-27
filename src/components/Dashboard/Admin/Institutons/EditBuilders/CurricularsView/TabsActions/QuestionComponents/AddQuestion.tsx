@@ -10,6 +10,7 @@ import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
+import {languageList} from '@utilities/staticData';
 
 interface AddQuestionProps {
   goBackToPreviousStep: () => void;
@@ -17,19 +18,14 @@ interface AddQuestionProps {
 }
 
 const typeList: any = [
-  {id: '1', name: 'Text', value: 'text'},
-  {id: '2', name: 'Input', value: 'input'},
-  {id: '3', name: 'Select Many', value: 'selectMany'},
-  {id: '4', name: 'Select One', value: 'selectOne'},
-  {id: '5', name: 'Date Picker', value: 'datePicker'},
-  {id: '6', name: 'Emoji', value: 'emoji'},
-  {id: '7', name: 'Attachments', value: 'attachments'},
-  {id: '8', name: 'Link', value: 'link'}
-];
-
-const languageList = [
-  {id: 1, name: 'English', value: 'EN'},
-  {id: 2, name: 'Spanish', value: 'ES'}
+  {id: '1', label: 'Text', value: 'text'},
+  {id: '2', label: 'Input', value: 'input'},
+  {id: '3', label: 'Select Many', value: 'selectMany'},
+  {id: '4', label: 'Select One', value: 'selectOne'},
+  {id: '5', label: 'Date Picker', value: 'datePicker'},
+  {id: '6', label: 'Emoji', value: 'emoji'},
+  {id: '7', label: 'Attachments', value: 'attachments'},
+  {id: '8', label: 'Link', value: 'link'}
 ];
 
 const selectOneOptions = [
@@ -65,7 +61,7 @@ interface InitialState {
 
 interface InputValue {
   id: string;
-  name: string;
+  label: string;
   value: string;
 }
 
@@ -79,8 +75,8 @@ const AddQuestion = (props: AddQuestionProps) => {
     question: '',
     notes: '',
     label: '',
-    type: {id: '', name: '', value: ''},
-    language: {id: '1', name: 'English', value: 'EN'},
+    type: {id: '', label: '', value: ''},
+    language: {id: '1', label: 'English', value: 'EN'},
     isRequired: false,
     options: [
       {label: '1', text: ''},
@@ -317,10 +313,12 @@ const AddQuestion = (props: AddQuestionProps) => {
                 <span className="text-red-500">*</span>
               </label>
               <Selector
-                selectedItem={type.name}
+                selectedItem={type.label}
                 placeholder={addQuestionDict[userLanguage]['selectpl']}
                 list={typeList}
-                onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+                onChange={(val, option: any) =>
+                  onSelectOption(val, val, option.id, 'type')
+                }
               />
             </div>
             <div>
@@ -328,10 +326,12 @@ const AddQuestion = (props: AddQuestionProps) => {
                 {addQuestionDict[userLanguage]['selectlang']}
               </label>
               <Selector
-                selectedItem={language.name}
+                selectedItem={language.label}
                 placeholder={addQuestionDict[userLanguage]['selectlanpl']}
                 list={languageList}
-                onChange={(val, name, id) => onSelectOption(val, name, id, 'language')}
+                onChange={(val, option: any) =>
+                  onSelectOption(val, val, option.id, 'language')
+                }
               />
             </div>
           </div>
@@ -403,13 +403,11 @@ const AddQuestion = (props: AddQuestionProps) => {
           <div className="flex justify-center mt-16 w-5/10 mx-auto">
             <Buttons
               label={addQuestionDict[userLanguage]['Button']['cancel']}
-              btnClass="px-8 py-3 mr-4"
               onClick={goBackToPreviousStep}
               transparent
             />
             <Buttons
               label={addQuestionDict[userLanguage]['Button']['save']}
-              btnClass="px-10 py-3 ml-4"
               onClick={saveNewQuestion}
             />
           </div>

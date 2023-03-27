@@ -307,7 +307,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
                     onClick={() => handleEditToggle?.('', '', 0, '')}
                     label={anthologyDict[userLanguage].ACTIONS.CANCEL}
                     transparent
-                    btnClass="mr-2"
                   />
                 ) : null}
                 {viewEditMode?.mode === 'create' &&

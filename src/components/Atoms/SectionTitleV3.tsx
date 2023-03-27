@@ -6,7 +6,7 @@ import {useHistory} from 'react-router';
 
 interface SectionTitleProps {
   title: React.ReactNode;
-  subtitle?: string;
+  subtitle?: string | null;
   fontSize?: string;
   fontStyle?: string;
   extraClass?: string;
@@ -29,7 +29,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     withButton,
     borderBottom = false,
     fontSize = 'lg',
-    fontStyle = 'semibold',
+    fontStyle = 'medium',
     shadowOff = false,
     bgColor = 'bg-white',
     backButton,
@@ -41,6 +41,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
 
   return (
     <div
+      style={{borderBottom: borderBottom ? `1px solid rgba(237, 242, 247,1)` : 'unset'}}
       className={`${
         withButton
           ? 'flex items-start xl:items-center gap-4 flex-col xl:flex-row  justify-between '

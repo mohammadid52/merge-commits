@@ -38,10 +38,12 @@ const INITIAL_DATA = {
 const DictionaryMutationModal = ({
   closeAction,
   dictionary,
-  onSuccessMutation
+  onSuccessMutation,
+  open
 }: {
   dictionary?: Dicitionary | null;
   closeAction: () => void;
+  open: boolean;
   onSuccessMutation?: () => void;
 }) => {
   const {authId, email} = useAuth();
@@ -107,6 +109,7 @@ const DictionaryMutationModal = ({
 
   return (
     <Modal
+      open={open}
       saveAction={isEdit ? updateDictionary : _addNewDictionary}
       closeAction={() => {
         setFormData(INITIAL_DATA);

@@ -41,18 +41,18 @@ const EditTopic = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: topic?.learning?.value,
-      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
       goBack: true
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditTopic'],
-      url: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
+      href: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
       last: true
     }
   ];
@@ -174,7 +174,6 @@ const EditTopic = () => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
             onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -271,13 +270,11 @@ const EditTopic = () => {
             </div>
             <div className="flex my-8 justify-center">
               <Buttons
-                btnClass="py-3 px-10 mr-4"
                 label={EditTopicDict[userLanguage]['button']['cancel']}
                 onClick={history.goBack}
                 transparent
               />
               <Buttons
-                btnClass="py-3 px-10 ml-4"
                 label={EditTopicDict[userLanguage]['button']['save']}
                 onClick={saveTopicDetails}
               />

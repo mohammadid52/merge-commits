@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from 'react';
 
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import { PartContentSub } from "interfaces/UniversalLessonInterfaces";
-import { remove } from "lodash";
-import { nanoid } from "nanoid";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-import RemoveInput from "../common/RemoveInput";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import RemoveInput from '../common/RemoveInput';
 
 interface Links extends IContentTypeComponentProps {
   inputObj?: any;
@@ -18,24 +18,24 @@ interface Links extends IContentTypeComponentProps {
 
 const initialInputFieldsState = [
   {
-    id: "link_1",
-    type: "",
-    label: "Link to Page",
-    value: "https://www.google.com",
+    id: 'link_1',
+    type: '',
+    label: 'Link to Page',
+    value: 'https://www.google.com'
   },
   {
-    id: "link_2",
-    type: "",
-    label: "Link to Page",
-    value: "https://www.google.com",
-  },
+    id: 'link_2',
+    type: '',
+    label: 'Link to Page',
+    value: 'https://www.google.com'
+  }
 ];
 
 const newLinkObj: PartContentSub = {
-  id: "link_",
-  type: "",
-  label: "Link Label",
-  value: "Link URL",
+  id: 'link_',
+  type: '',
+  label: 'Link Label',
+  value: 'Link URL'
 };
 
 const LinksModalDialog = ({
@@ -44,9 +44,9 @@ const LinksModalDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: Links) => {
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -69,7 +69,7 @@ const LinksModalDialog = ({
     const newInputFieldsArray = inputFieldsArray.map(
       (inputObj: PartContentSub, inputObjIdx: number) => {
         if (inputObjIdx === idx) {
-          return { ...inputObj, [`${name}`]: value };
+          return {...inputObj, [`${name}`]: value};
         } else {
           return inputObj;
         }
@@ -81,7 +81,7 @@ const LinksModalDialog = ({
   const handleAddNewLink = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      { ...newLinkObj, id: `${newLinkObj.id}${nanoid(4)}` },
+      {...newLinkObj, id: `${newLinkObj.id}${nanoid(4)}`}
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };
@@ -97,8 +97,8 @@ const LinksModalDialog = ({
   const [_, setInputErrorArray] = useState<boolean[]>([]);
   const onChange = (e: React.FormEvent, idx: number) => {
     setUnsavedChanges(true);
-    const { value, name } = e.target as HTMLFormElement;
-    // validateUrl(value, idx);
+    const {value, name} = e.target as HTMLFormElement;
+
     handleUpdateInputFields(value, name, idx);
   };
 
@@ -111,29 +111,29 @@ const LinksModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
   const onLinkCreate = async () => {
     const validLinkArray = inputFieldsArray.map((field: PartContentSub) =>
-      validateUrl(field?.value || "")
+      validateUrl(field?.value || '')
     );
     if (!validLinkArray.includes(true)) {
       if (isEditingMode) {
         const updatedList = updateBlockContentULBHandler(
-          "",
-          "",
-          "links",
+          '',
+          '',
+          'links',
           inputFieldsArray,
           0
         );
         await addToDB(updatedList);
       } else {
         const updatedList = createNewBlockULBHandler(
-          "",
-          "",
-          "links",
+          '',
+          '',
+          'links',
           inputFieldsArray,
           0
         );
@@ -154,17 +154,16 @@ const LinksModalDialog = ({
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
-              <div className={"my-2"} key={`keyword_${idx}`}>
+              <div className={'my-2'} key={`keyword_${idx}`}>
                 <label
-                  htmlFor={"Link"}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-                >
+                  htmlFor={'Link'}
+                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                   Link {idx + 1}:
                 </label>
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    name={"label"}
+                    name={'label'}
                     value={inputFieldsArray[idx]?.label}
                     placeHolder={inputFieldsArray[idx]?.label}
                   />
@@ -173,14 +172,14 @@ const LinksModalDialog = ({
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
                     value={inputFieldsArray[idx]?.value}
-                    name={"value"}
+                    name={'value'}
                     label="Enter url"
                     isRequired
                     error={
-                      !validateUrl(inputFieldsArray?.[idx]?.value || "")
-                        ? ""
+                      !validateUrl(inputFieldsArray?.[idx]?.value || '')
+                        ? ''
                         : // <p className={`text-red-400 text-xs`}>
-                          "Please enter a valid link"
+                          'Please enter a valid link'
                       // </p>
                     }
                     placeHolder={inputFieldsArray[idx]?.value}
@@ -189,7 +188,7 @@ const LinksModalDialog = ({
 
                 <RemoveInput
                   idx={idx}
-                  inputId={inputObj?.id || ""}
+                  inputId={inputObj?.id || ''}
                   removeItemFromList={removeItemFromList}
                 />
               </div>
@@ -202,22 +201,19 @@ const LinksModalDialog = ({
         <div className="flex items-center w-auto">
           <button
             onClick={handleAddNewLink}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 "
-          >
+            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
             + Add Field
           </button>
         </div>
-        <div className="flex items-center w-auto">
+        <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onLinkCreate}
           />
         </div>

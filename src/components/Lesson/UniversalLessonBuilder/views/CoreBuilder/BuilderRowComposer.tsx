@@ -88,7 +88,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
                   {pagePart?.partContent?.length > 0 ? (
-                    <ul className={pagePart.class}>
+                    <ul className={`${pagePart.class} `}>
                       {pagePart.partContent.map((content: PartContent, idx2: number) => (
                         <li
                           key={content.id}
@@ -134,35 +134,38 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             deleteFromULBHandler={deleteFromULBHandler}
                             updateFromULBHandler={updateFromULBHandler}>
                             {content.value.length > 0 ? (
-                              <div>
-                                <div
-                                  className={`${
-                                    content.type === FORM_TYPES.JUMBOTRON
-                                      ? 'px-0 pt-4'
-                                      : content.type === 'header' ||
-                                        content.type === 'image' ||
-                                        content.type === 'customVideo' ||
-                                        content.type === 'divider'
-                                      ? ''
-                                      : content.class
-                                  }`}
-                                  id={`${
-                                    content.type === 'notes-form' ? '' : content.id
-                                  }`}>
-                                  {composePartContent(
-                                    content.id,
-                                    content.type || '',
-                                    content.value,
-                                    `pp_${idx}_pc_${idx2}`,
-                                    content.class,
-                                    pagePart.id,
-                                    mode,
-                                    updateBlockContentULBHandler,
-                                    idx2,
-                                    undefined, // notesData
-                                    false // isStudent,
-                                  )}
-                                </div>
+                              <div
+                                className={`${
+                                  content.type === FORM_TYPES.JUMBOTRON
+                                    ? 'px-0 pt-4'
+                                    : content.type === 'header' ||
+                                      content.type === 'image' ||
+                                      content.type === 'customVideo' ||
+                                      content.type === 'divider'
+                                    ? ''
+                                    : content.class
+                                } ${
+                                  (content.type.includes('form') &&
+                                    content.type !== 'notes-form') ||
+                                  content.type.includes(FORM_TYPES.POEM) ||
+                                  content.type.includes(FORM_TYPES.WRITING_EXERCISE)
+                                    ? ''
+                                    : 'space-y-4'
+                                } mt-4 `}
+                                id={`${content.type === 'notes-form' ? '' : content.id}`}>
+                                {composePartContent(
+                                  content.id,
+                                  content.type || '',
+                                  content.value,
+                                  `pp_${idx}_pc_${idx2}`,
+                                  content.class,
+                                  pagePart.id,
+                                  mode,
+                                  updateBlockContentULBHandler,
+                                  idx2,
+                                  undefined, // notesData
+                                  false // isStudent,
+                                )}
                               </div>
                             ) : null}
                           </EditOverlayBlock>
@@ -184,7 +187,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <div className="flex flex-col items-center justify-center w-auto">
-          <h1 className={`w-full theme-text my-2 text-center`}>
+          <h1 className={`w-full text-white my-2 mb-4 text-center`}>
             {navState !== 'addContent'
               ? 'No content added yet. Click on the button to add content.'
               : 'Now select a component type'}

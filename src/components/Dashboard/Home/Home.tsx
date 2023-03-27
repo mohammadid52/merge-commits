@@ -1,10 +1,10 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import useAuth from '@customHooks/useAuth';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
@@ -40,50 +40,33 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const {roomsLoading, homeData = [], handleRoomSelection = () => {}} = props;
-
-  const [classList, setClassList] = useState<any[]>([]);
-
-  const {user, isStudent} = useAuth();
-
-  const getRooms = () => {
-    let rooms = homeData.map(
-      (dataObj: {class: {name: any; room: any; students: any}}) => ({
-        name: dataObj?.class?.name,
-        room: dataObj?.class?.room,
-        students: dataObj?.class?.students
-      })
-    );
-
-    setClassList(rooms);
-  };
-
-  useEffect(() => {
-    if (homeData && classList.length === 0) {
-      getRooms();
-    }
-  }, [homeData]);
+  const {
+    homeData,
+    classList,
+    handleRoomSelection = () => {},
+    isTeacher,
+    roomsLoading
+  } = props;
 
   const {state, dispatch, userLanguage, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
   const {DashboardDict} = useDictionary();
 
-  const {currentPage, activeRoom} = state;
+  const user = !isEmpty(state)
+    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
+    : null;
 
   useEffect(() => {
-    if (isStudent) {
-      if (currentPage !== 'home') {
-        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-      }
-      if (activeRoom && activeRoom.length > 0) {
+    if (state.user.role === 'ST') {
+      if (state.activeRoom && state.activeRoom.length > 0) {
         dispatch({
           type: 'UPDATE_ACTIVEROOM',
-          payload: {roomID: '', syllabusID: '', name: ''}
+          payload: {name: '', roomID: '', syllabusID: ''}
         });
       }
     }
-  }, [isStudent]);
+  }, [state.user.role]);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
@@ -103,7 +86,6 @@ const Home = (props: ClassroomControlProps) => {
       ? homeData.reduce((acc: any[], dataObj: any) => {
           if (dataObj?.class?.room) {
             const teacherObj = dataObj?.class?.room?.teacher;
-            // const allRooms = homeData[0]?.class?.rooms?.items;
 
             const teacherIsPresent = acc?.find(
               (teacher: any) =>
@@ -257,10 +239,15 @@ const Home = (props: ClassroomControlProps) => {
     }
   }, [homeData]);
 
+  const refetchHomeData = () => {
+    const response = getClassList();
+    return response;
+  };
+
   return (
     <ErrorBoundary componentName="Home">
       {homeData ? (
-        <div>
+        <>
           <div>
             <HeroBanner imgUrl={dashboardBanner1} title={'Dashboard'} />
           </div>
@@ -271,7 +258,12 @@ const Home = (props: ClassroomControlProps) => {
               <span className="font-semibold">
                 {user.preferredName ? user.preferredName : user.firstName}
               </span>
-              . {DashboardDict[userLanguage]['GREETINGS_STUDENT']}
+              .{' '}
+              {
+                DashboardDict[userLanguage][
+                  isTeacher ? 'GREETINGS_TEACHER' : 'GREETINGS_STUDENT'
+                ]
+              }
             </HeaderTextBar>
           )}
 
@@ -279,9 +271,12 @@ const Home = (props: ClassroomControlProps) => {
           <div className="px-3">
             <ErrorBoundary componentName="RoomTiles">
               <RoomTiles
+                refetchHomeData={refetchHomeData}
                 roomsLoading={roomsLoading}
                 handleRoomSelection={handleRoomSelection}
-                classList={user.status !== PersonStatus.INACTIVE ? getClassList() : []}
+                classList={
+                  state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
+                }
               />
             </ErrorBoundary>
 
@@ -309,14 +304,18 @@ const Home = (props: ClassroomControlProps) => {
             <ErrorBoundary componentName="StudentTiles">
               <div className="my-6">
                 <StudentsTiles
-                  title={DashboardDict[userLanguage]['YOUR_CLASSMATES']}
+                  loading={roomsLoading}
+                  title={
+                    DashboardDict[userLanguage][
+                      isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
+                    ]
+                  }
                   studentsList={studentsList}
-                  loading={Boolean(roomsLoading)}
                 />
               </div>
             </ErrorBoundary>
           </div>
-        </div>
+        </>
       ) : null}
     </ErrorBoundary>
   );

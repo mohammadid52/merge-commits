@@ -22,14 +22,6 @@ export interface UniversalLesson {
   darkMode?: boolean;
 }
 
-export interface UniversalLessonPlanStage {
-  enabled: boolean;
-  open: boolean;
-  active: boolean;
-  label: string;
-  displayMode: string;
-}
-
 export interface UniversalLessonPage {
   id: string;
   enabled?: boolean;
@@ -111,7 +103,7 @@ export interface StudentExerciseData {
   shared?: boolean;
 }
 
-export interface TeacherStudentComments {
+interface TeacherStudentComments {
   commentBy: string;
   comment: string;
 }

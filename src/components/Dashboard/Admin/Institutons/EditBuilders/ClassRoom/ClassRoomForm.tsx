@@ -1,4 +1,4 @@
-import {RoomStatus, TeachingStyle, ClassroomType} from 'API';
+import {ClassroomType, RoomStatus, TeachingStyle} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
@@ -12,7 +12,6 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
@@ -21,25 +20,14 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
 import useAuth from '@customHooks/useAuth';
-import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
-import {checkUniqRoomName, logError} from '@graphql/functions';
+
+import {useQuery} from '@customHooks/urlParam';
+import {checkUniqRoomName, listInstitutions, logError} from '@graphql/functions';
+import {methods, statusList, typeList} from '@utilities/staticData';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
-
-export const methods = [
-  {
-    id: 1,
-    name: 'Performer',
-    value: TeachingStyle.PERFORMER
-  },
-  {
-    id: 2,
-    name: 'Academic',
-    value: TeachingStyle.ACADEMIC
-  }
-];
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -51,42 +39,12 @@ interface ClassRoomFormProps {
   instId: string;
 }
 
-export const TypeList = [
-  {
-    id: 1,
-    name: 'ONLINE',
-    value: 'ONLINE'
-  },
-  {
-    id: 2,
-    name: 'TRADITIONAL',
-    value: 'TRADITIONAL'
-  }
-];
 const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
   const {roomId}: any = useParams();
   const {userLanguage, checkIfAdmin} = useGlobalContext();
-
-  const StatusList = [
-    {
-      id: 1,
-      name: 'ACTIVE',
-      value: 'ACTIVE'
-    },
-    {
-      id: 2,
-      name: 'INACTIVE',
-      value: 'INACTIVE'
-    },
-    {
-      id: 3,
-      name: 'TRAINING',
-      value: 'TRAINING'
-    }
-  ];
 
   const [units, setUnits] = useState<any[]>([]);
 
@@ -111,7 +69,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         .map((item: any) => {
           return {
             id: item?.unit?.id,
-            name: item?.unit?.name,
+            label: item?.unit?.name,
             value: item?.unit?.id,
             index: seq.indexOf(item?.unit?.id)
           };
@@ -126,12 +84,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         if (activeUnit) {
           setRoomData({
             ...roomData,
-            activeUnit: {id: activeUnit.id, name: activeUnit.name}
+            activeUnit: {id: activeUnit.id, label: activeUnit.label}
           });
         } else {
           setRoomData({
             ...roomData,
-            activeUnit: {id: '', name: ''}
+            activeUnit: {id: '', label: ''}
           });
         }
       }
@@ -146,20 +104,20 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     id: '',
     name: '',
     type: ClassroomType.ONLINE,
-    institute: {id: instId, name: '', value: ''},
-    teacher: {id: '', name: '', value: ''},
+    institute: {id: instId, label: '', value: ''},
+    teacher: {id: '', label: '', value: ''},
     coTeachers: [{}],
-    classRoom: {id: '', name: '', value: ''},
-    curricular: {id: '', name: '', value: ''},
+    classRoom: {id: '', label: '', value: ''},
+    curricular: {id: '', label: '', value: ''},
     maxPersons: '',
-    status: '',
+    status: RoomStatus.ACTIVE,
     conferenceCallLink: '',
     location: '',
     isZoiq: false,
     teachingStyle: TeachingStyle.PERFORMER,
     activeUnit: {
       id: '',
-      name: ''
+      label: ''
     },
     activeSyllabus: '',
     classID: '',
@@ -190,14 +148,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       name?: string;
     }[]
   >([]);
-  const [AllInstitutions, setAllInstitutions] = useState<any[]>([]);
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
+  const [allInstitutions, setAllInstitutions] = useState<any[]>([]);
 
-  const {RoomBuilderdict, RoomEDITdict} = useDictionary();
+  const {RoomBuilderdict, RoomEDITdict, LessonEditDict} = useDictionary();
 
-  const params = useQuery();
+  const params = useQuery(location.search);
 
   const [_, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -207,7 +162,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   });
 
   useEffect(() => {
-    listInstitutions('', []);
+    async function fetch() {
+      const response = await listInstitutions(authId, email);
+
+      setAllInstitutions(response);
+    }
+
+    fetch();
   }, []);
 
   useEffect(() => {
@@ -223,69 +184,30 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     });
   };
 
-  const listInstitutions = async (nextToken: string, outArray: any[]): Promise<any> => {
-    let combined;
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutions, {
-          nextToken: nextToken
-        })
-      );
-      let returnedData = result.data.listInstitutions?.items;
-      let NextToken = result.data.listInstitutions?.nextToken;
-
-      combined = [...outArray, ...returnedData];
-
-      if (NextToken) {
-        combined = await listInstitutions(NextToken, combined);
-      }
-
-      setAllInstitutions(combined);
-      return combined;
-    } catch (error) {
-      console.error(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listInstitutions ~ error',
-        error
-      );
-    }
-  };
-
-  const selectTeacher = (val: string, name: string, id: string) => {
+  const selectTeacher = (val: string, option: any) => {
     setRoomData({
       ...roomData,
       teacher: {
-        id: id,
-        name: name,
+        id: option.id,
+        label: val,
         value: val
       }
     });
 
     const filteredDefaultTeacher: object[] = teachersList.filter(
-      (coTeacher: any) => coTeacher.id !== id
+      (coTeacher: any) => coTeacher.id !== option.id
     );
     setUnsavedChanges(true);
     setCoTeachersList(filteredDefaultTeacher);
-    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
+    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== option.id));
   };
 
   const selectClassroomType = (_: string, name: ClassroomType, _2: string) => {
     setRoomData({...roomData, type: name});
   };
 
-  const selectCoTeacher = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentCoTeachers = selectedCoTeachers;
-    const selectedItem = currentCoTeachers.find((item) => item.id === id);
-
-    if (!selectedItem) {
-      const selectedItem = coTeachersList.find((item) => item.id === id);
-      updatedList = [...currentCoTeachers, {id, name, value, ...selectedItem}];
-    } else {
-      updatedList = currentCoTeachers.filter((item) => item.id !== id);
-    }
-    setUnsavedChanges(true);
-
-    setSelectedCoTeachers(updatedList);
+  const selectCoTeacher = (_: string[], option: any[]) => {
+    setSelectedCoTeachers(option);
   };
 
   const editInputField = (e: any) => {
@@ -297,12 +219,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     removeErrorMsg();
   };
 
-  const selectCurriculum = (val: string, name: string, id: string) => {
+  const selectCurriculum = (val: string, option: any) => {
     setRoomData({
       ...roomData,
       curricular: {
-        id: id,
-        name: name,
+        id: option.id,
+        label: val,
         value: val
       }
     });
@@ -622,10 +544,9 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         })
       );
 
-      //@ts-ignore
       const syllabusSequenceArray =
         syllabusCSequenceFetch.data.getCurriculum?.universalSyllabusSeq;
-      //@ts-ignore
+
       const firstSyllabusID = syllabusSequenceArray?.length
         ? syllabusSequenceArray[0]
         : '';
@@ -811,7 +732,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       curricular: {
         id: selectedCurr?.id,
-        name: selectedCurr?.name,
+        label: selectedCurr?.label,
         value: selectedCurr?.value
       }
     });
@@ -884,13 +805,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               type: savedData?.type || ClassroomType.ONLINE,
               institute: {
                 id: savedData.institution?.id,
-                name: savedData.institution?.name,
+                label: savedData.institution?.name,
                 value: savedData.institution?.name
               },
               isZoiq: savedData.isZoiq,
               teacher: {
                 id: savedData.teacher?.id,
-                name: `${savedData.teacher?.firstName || ''} ${
+                label: `${savedData.teacher?.firstName || ''} ${
                   savedData.teacher?.lastName || ''
                 }`,
                 value: `${savedData.teacher?.firstName || ''} ${
@@ -899,7 +820,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               },
               classRoom: {
                 id: savedData.class?.id,
-                name: savedData.class?.name,
+                label: savedData.class?.name,
                 value: savedData.class?.name
               },
               // ***** UNCOMMENT THIS ******
@@ -929,7 +850,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         ...roomData,
         institute: {
           id: params.get('id') || '',
-          name: '',
+          label: '',
           value: ''
         }
       });
@@ -976,7 +897,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       institute: {
         id: institute.id,
-        name: institute.name,
+        label: institute.name,
         value: institute.name
       }
     });
@@ -989,7 +910,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       activeUnit: {
         id: unit.id,
-        name: unit.name
+        label: unit.name
       }
     });
   };
@@ -1001,7 +922,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         <div className="w-full m-auto">
           <div className="">
             <SectionTitleV3
-              // @ts-ignore
               title={
                 <div className="flex flex-col">
                   <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
@@ -1012,17 +932,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               }
             />
 
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-3">
               <div className="px-3 py-4">
                 <Selector
+                  width={'100%'}
+                  showSearch
                   selectedItem={institute.value}
                   placeholder={RoomEDITdict[userLanguage]['INSTITUTION_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['INSTITUTION_LABEL']}
-                  list={AllInstitutions}
+                  list={allInstitutions}
                   isRequired
-                  onChange={(value, name, id) => {
-                    let institute = {value, name, id};
-                    selectInstitute(institute);
+                  onChange={(_, option: any) => {
+                    selectInstitute(option);
                   }}
                 />
               </div>
@@ -1040,10 +961,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               <div className="px-3 py-4">
                 <Selector
                   selectedItem={status}
+                  width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['STATUS_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['STATUS_LABEL']}
                   labelTextClass={'text-xs'}
-                  list={StatusList}
+                  list={statusList}
                   isRequired
                   // @ts-ignore
                   onChange={beforeUptatingStatus}
@@ -1052,10 +974,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               <div className="px-3 py-4">
                 <Selector
                   selectedItem={type}
+                  width={'100%'}
                   placeholder={'Classroom type'}
                   label={'Classroom type'}
                   labelTextClass={'text-xs'}
-                  list={TypeList}
+                  list={typeList}
                   isRequired
                   // @ts-ignore
                   onChange={selectClassroomType}
@@ -1068,10 +991,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                       ? 'Classroom inactive'
                       : curricular.value
                   }
+                  showSearch
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
                   disabled={loadingCurricular || status === RoomStatus.INACTIVE}
-                  labelTextClass={'text-xs'}
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
@@ -1083,14 +1006,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   selectedItem={
                     status === RoomStatus.INACTIVE
                       ? 'Classroom inactive'
-                      : roomData.activeUnit.name
+                      : roomData.activeUnit.label
                   }
+                  showSearch
+                  width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
-                  labelTextClass={'text-xs'}
                   list={units}
                   loading={unitsLoading}
-                  onChange={(_, name, id) => onSelectActiveUnit({id, name})}
+                  onChange={(value, option: any) =>
+                    onSelectActiveUnit({id: option.id, name: value})
+                  }
                 />
               </div>
             </div>
@@ -1100,16 +1026,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
              * Institute, will add this later if need to add builders separately.
              */}
             <div>
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-3">
                 <div className="px-3 py-4">
-                  <SelectorWithAvatar
+                  <Selector
                     label={RoomEDITdict[userLanguage]['TEACHER_LABEL']}
+                    showSearch
                     isRequired
-                    selectedItem={
-                      status === RoomStatus.INACTIVE
-                        ? {value: 'Classroom inactive'}
-                        : teacher
-                    }
+                    selectedItem={teacher.label}
                     list={teachersList}
                     disabled={status === RoomStatus.INACTIVE}
                     placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
@@ -1122,15 +1045,29 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     withAvatar
                     disabledText="Classroom inactive"
                     disabled={status === RoomStatus.INACTIVE}
+                    // @ts-ignore
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
                     placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
                     onChange={selectCoTeacher}
+                    showSearch
+                  />
+                </div>
+                <div className="px-3 py-4">
+                  <Selector
+                    selectedItem={roomData.teachingStyle}
+                    placeholder={RoomEDITdict[userLanguage].METHOD}
+                    label={RoomEDITdict[userLanguage].METHOD}
+                    list={methods}
+                    width={'100%'}
+                    onChange={(value) =>
+                      setRoomData({...roomData, teachingStyle: value as TeachingStyle})
+                    }
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
                   <FormInput
                     label={RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_LABEL}
@@ -1149,18 +1086,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     value={roomLocation}
                     onChange={editInputField}
                     placeHolder={RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER}
-                  />
-                </div>
-                <div className="px-3 py-4">
-                  <Selector
-                    selectedItem={roomData.teachingStyle}
-                    placeholder={RoomEDITdict[userLanguage].METHOD}
-                    label={RoomEDITdict[userLanguage].METHOD}
-                    list={methods}
-                    // @ts-ignore
-                    onChange={(value: TeachingStyle) =>
-                      setRoomData({...roomData, teachingStyle: value})
-                    }
                   />
                 </div>
               </div>
@@ -1184,17 +1109,15 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             </p>
           </div>
         ) : null}
-        <div className="flex my-8 justify-center">
+        <div className="flex my-8 gap-4 justify-center">
           <Buttons
-            btnClass="py-3 px-12 text-sm mr-4"
             label={RoomEDITdict[userLanguage]['BUTTON']['CANCEL']}
             onClick={history.goBack}
             transparent
           />
           <Buttons
             disabled={loading}
-            btnClass="py-3 px-12 text-sm ml-4"
-            label={loading ? 'Saving...' : RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
+            label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
             onClick={saveRoomDetails}
           />
         </div>
@@ -1207,14 +1130,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           )}
         </AnimatedContainer>
 
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={warnModal.onSaveAction}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
-        )}
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={toggleModal}
+          saveAction={warnModal.onSaveAction}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
       </PageWrapper>
     </div>
   );

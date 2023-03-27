@@ -112,65 +112,72 @@ const useCsv = ({
         let universalSurveyStudentID = '';
         let demographicsDataID = '';
 
-        SCQAnswers[0].map(
-          (answerArray: {
-            studentID: any;
-            id: string;
-            surveyData: any[];
-            updatedAt: any;
-          }) => {
-            if (answerArray.studentID === stu.authId) {
-              hasTakenSurvey = true;
-              universalSurveyStudentID = answerArray.id;
-              answerArray &&
-                answerArray?.surveyData?.map((singleAnswer: any) => {
-                  if (qids.indexOf(singleAnswer.domID) >= 0) {
-                    surveyAnswerDates.push(answerArray.updatedAt);
-                    surveyDates.push(answerArray.updatedAt);
-                    if (
-                      surveyQuestionOptions[singleAnswer.domID] &&
-                      Array.isArray(surveyQuestionOptions[singleAnswer.domID]) &&
-                      surveyQuestionOptions[singleAnswer.domID].length
-                    ) {
-                      if (
-                        Array.isArray(singleAnswer.input) &&
-                        singleAnswer.input.length &&
-                        singleAnswer.input[0].length
-                      ) {
-                        let selectedOption = surveyQuestionOptions[
-                          singleAnswer.domID
-                        ].filter((option: any) => {
-                          return option.id === singleAnswer.input[0];
-                        });
-                        if (Array.isArray(selectedOption) && selectedOption.length) {
-                          // cleanup here
-                          studentAnswers[singleAnswer.domID] = cleanString(
-                            selectedOption[0].text
-                          );
-                        } else {
-                          studentAnswers[singleAnswer.domID] = '';
-                        }
-                      } else {
-                        studentAnswers[singleAnswer.domID] = '';
+        SCQAnswers[0].forEach((answerArray: any) => {
+          if (answerArray.studentID === stu.authId) {
+            answerArray?.surveyData?.forEach((singleAnswer: any) => {
+              //! hasTakenSurvey = true; <-- not here
+              //! universalSurveyStudentID = answerArray.id; <-- not here
+
+              if (
+                singleAnswer &&
+                singleAnswer?.input &&
+                singleAnswer.input[0] === 'Not-taken-yet'
+              ) {
+                hasTakenSurvey = false;
+                universalSurveyStudentID = 'Not-taken-yet';
+                return;
+              }
+
+              if (singleAnswer && qids.indexOf(singleAnswer.domID) >= 0) {
+                //! surveyAnswerDates.push(answerArray.updatedAt) //  <-- not here;
+                //! surveyDates.push(answerArray.updatedAt); //  <-- not here;
+                if (
+                  surveyQuestionOptions[singleAnswer.domID] &&
+                  Array.isArray(surveyQuestionOptions[singleAnswer.domID]) &&
+                  surveyQuestionOptions[singleAnswer.domID].length
+                ) {
+                  if (
+                    Array.isArray(singleAnswer.input) &&
+                    singleAnswer.input.length &&
+                    singleAnswer.input[0].length
+                  ) {
+                    let selectedOption = surveyQuestionOptions[singleAnswer.domID].filter(
+                      (option: any) => {
+                        return option.id === singleAnswer.input[0];
                       }
+                    );
+
+                    if (Array.isArray(selectedOption) && selectedOption.length) {
+                      surveyAnswerDates.push(answerArray.updatedAt); // * <== but here
+                      surveyDates.push(answerArray.updatedAt); // * <== but here
+                      hasTakenSurvey = true; // * <== but here
+                      universalSurveyStudentID = answerArray.id; // * <== but here-
+                      studentAnswers[singleAnswer.domID] = cleanString(
+                        selectedOption[0].text
+                      );
                     } else {
-                      // cleanup here
-                      studentAnswers[singleAnswer.domID] =
-                        Array.isArray(singleAnswer.input) && singleAnswer.input.length
-                          ? cleanString(singleAnswer.input[0])
-                          : '';
+                      studentAnswers[singleAnswer.domID] = '';
                     }
+                  } else {
+                    studentAnswers[singleAnswer.domID] = '';
                   }
-                });
-            }
+                } else {
+                  // cleanup here
+                  studentAnswers[singleAnswer.domID] =
+                    Array.isArray(singleAnswer.input) && singleAnswer.input.length
+                      ? cleanString(singleAnswer.input[0])
+                      : '';
+                }
+              }
+            });
           }
-        );
+        });
 
         /* Enable this code if demographics questions */
         DCQAnswers.forEach((ans: any) => {
           if (ans.person.id === stu.id) {
             demographicsDataID = ans.id;
-            ans.responseObject.map((resp: any) => {
+            ans.responseObject.forEach((resp: any) => {
               if (qids.indexOf(resp.qid) >= 0) {
                 studentAnswers[resp.qid] =
                   Array.isArray(resp.response) && resp.response.length
@@ -257,6 +264,7 @@ const useCsv = ({
     mappedHeaders,
     isCSVDownloadReady,
     csvGettingReady,
+    setCSVData,
     clearCSVData,
     statistics,
     CSVData

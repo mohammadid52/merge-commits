@@ -5,15 +5,15 @@ import React, {useContext, useEffect, useMemo, useReducer, useRef, useState} fro
 import {GlobalActions, globalReducer} from 'reducers/GlobalReducer';
 import {LessonControlActions, lessonControlReducer} from 'reducers/LessonControlReducer';
 import {LessonActions, lessonReducer} from 'reducers/LessonReducer';
-import {globalState, GlobalStateType, standardTheme} from 'state/GlobalState';
+import {
+  allowedAuthIds,
+  globalState,
+  GlobalStateType,
+  standardTheme
+} from 'state/GlobalState';
 import {lessonControlState, LessonControlStateType} from 'state/LessonControlState';
 import {lessonState as lessonStateObject, LessonStateType} from 'state/LessonState';
 import {getClientKey} from 'utilities/strings';
-
-export const allowedAuthIds = [
-  '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
-  '22241431-5b44-434a-bba1-6dcb40e7c7fa'
-];
 
 type ClientKey = 'iconoclast' | 'curate' | 'demo';
 type AuthState = 'loggedIn' | 'notLoggedIn' | 'loading';
@@ -29,7 +29,7 @@ interface GlobalContextTypes {
   dispatch: React.Dispatch<GlobalActions>;
   lessonState: LessonStateType;
   checkIfAdmin: () => boolean;
-  userLanguage: string;
+  userLanguage: 'ES' | 'EN';
   clientKey: ClientKey;
 
   updateAuthState: (auth: boolean) => void;

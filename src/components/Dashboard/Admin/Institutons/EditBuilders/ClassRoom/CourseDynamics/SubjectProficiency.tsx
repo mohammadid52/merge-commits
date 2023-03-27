@@ -1,40 +1,40 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
-import * as customMutations from "customGraphql/customMutations";
-import * as customQueries from "customGraphql/customQueries";
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
-import AddButton from "atoms/Buttons/AddButton";
-import Loader from "atoms/Loader";
+import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
 
-import { useGlobalContext } from "contexts/GlobalContext";
-import ModalPopUp from "molecules/ModalPopUp";
-import GroupCard from "./GroupCards";
-import GroupFormComponent from "./GroupFormComponent";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import ModalPopUp from 'molecules/ModalPopUp';
+import GroupCard from './GroupCards';
+import GroupFormComponent from './GroupFormComponent';
 
 interface ISubjectProficiencyProps {
   roomData: any;
 }
 
-const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
+const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
   const history = useHistory();
 
   const {
-    state: { user },
+    state: {user}
   } = useGlobalContext();
-  const isSuperAdmin = user.role === "SUP";
+  const isSuperAdmin = user.role === 'SUP';
 
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [groupFormOpen, setGroupFormOpen] = useState<boolean>(false);
   const [activeGroupData, setActiveGroupData] = useState<any>({});
   const [classRoomGroups, setClassRoomGroups] = useState<any>([]);
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState('');
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: "It will remove students from group",
-    action: () => {},
+    message: 'It will remove students from group',
+    action: () => {}
   });
 
   useEffect(() => {
@@ -49,16 +49,16 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listClassroomGroupss, {
           filter: {
-            classRoomID: { eq: roomData?.id },
-            groupType: { eq: "Proficiency" },
-          },
+            classRoomID: {eq: roomData?.id},
+            groupType: {eq: 'Proficiency'}
+          }
         })
       );
       setClassRoomGroups(list?.data?.listClassroomGroups.items);
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      setServerError("Error while fetching class room groups");
+      setServerError('Error while fetching class room groups');
     }
   };
 
@@ -76,8 +76,8 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
                   ...data,
                   classroomGroupsStudents: {
                     ...group.classroomGroupsStudents,
-                    ...data.classroomGroupsStudents,
-                  },
+                    ...data.classroomGroupsStudents
+                  }
                 }
               : group
           )
@@ -96,7 +96,7 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteClassroomGroups, {
-          input: { id: group?.id },
+          input: {id: group?.id}
         })
       );
       if (group.classroomGroupsStudents?.items?.length) {
@@ -105,7 +105,7 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
             async (student: any) =>
               await API.graphql(
                 graphqlOperation(customMutations.deleteClassroomGroupStudents, {
-                  input: { id: student.id },
+                  input: {id: student.id}
                 })
               )
           )
@@ -122,11 +122,11 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
     setWarnModal((prevValues) => ({
       ...prevValues,
       show: true,
-      action: onDrop,
+      action: onDrop
     }));
   };
   const closeDeleteModal = () => {
-    setWarnModal((prevValues) => ({ ...prevValues, show: false }));
+    setWarnModal((prevValues) => ({...prevValues, show: false}));
   };
 
   const redirectToUserPage = (studentId: string) => {
@@ -142,7 +142,7 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
       <div className="flex justify-end my-8">
         <AddButton
           className="ml-4 py-1 cursor-pointer"
-          label={"Group"}
+          label={'Group'}
           onClick={() => setGroupFormOpen(true)}
         />
       </div>
@@ -174,21 +174,21 @@ const SubjectProficiency = ({ roomData }: ISubjectProficiencyProps) => {
       </div>
       <GroupFormComponent
         groupData={activeGroupData}
-        groupType={"Proficiency"}
+        groupType={'Proficiency'}
         open={groupFormOpen}
         onCancel={handleCancel}
         postMutation={postMutation}
         roomData={roomData}
       />
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeDeleteModal}
-          saveAction={warnModal.action}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={deleting}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeDeleteModal}
+        saveAction={warnModal.action}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={deleting}
+      />
     </div>
   );
 };

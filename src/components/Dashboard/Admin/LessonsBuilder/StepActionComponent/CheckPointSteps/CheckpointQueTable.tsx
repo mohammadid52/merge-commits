@@ -1,11 +1,9 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { getAsset } from "assets";
-import Buttons from "atoms/Buttons";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import { Fragment, useEffect, useState } from "react";
-import { getTypeString } from "utilities/strings";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from 'atoms/Buttons';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {Fragment, useEffect, useState} from 'react';
+import {getTypeString} from 'utilities/strings';
 
 interface CheckPointContentProps {
   changeStep?: (step?: string) => void;
@@ -16,17 +14,10 @@ interface CheckPointContentProps {
 }
 
 const CheckpointQueTable = (props: CheckPointContentProps) => {
-  const {
-    changeStep,
-    checkpointId,
-    showActionIcons,
-    DeleteCheckpoint,
-    editCheckPoint,
-  } = props;
+  const {changeStep, checkpointId, showActionIcons, DeleteCheckpoint, editCheckPoint} =
+    props;
 
-  const { theme, clientKey, userLanguage } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
-  const { CheckpointQueTableDict } = useDictionary();
+  const {CheckpointQueTableDict, userLanguage} = useDictionary();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -37,21 +28,18 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
         graphqlOperation(customQueries.getCheckpointDetails, {
-          id: checkpointId,
+          id: checkpointId
         })
       );
-      let questionSequence =
-        fetchCheckpointsData.data?.getCheckpoint.questionSeq;
+      let questionSequence = fetchCheckpointsData.data?.getCheckpoint.questionSeq;
 
       if (!fetchCheckpointsData) {
         setError(true);
-        throw new Error("fail!");
+        throw new Error('fail!');
       } else {
         const checkpointQuestions =
           fetchCheckpointsData.data?.getCheckpoint?.questions?.items;
-        checkpointQuestions.map(
-          (item: { questionID: string }) => item.questionID
-        );
+        checkpointQuestions.map((item: {questionID: string}) => item.questionID);
         if (checkpointQuestions?.length > 0) {
           const questionsList: any = checkpointQuestions.map(
             (item: any) => item.question
@@ -60,7 +48,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
             ? questionsList
                 .map((t: any) => {
                   let index = questionSequence.indexOf(t.id);
-                  return { ...t, index };
+                  return {...t, index};
                 })
                 .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
             : questionsList;
@@ -79,7 +67,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
   };
   const editCurrentCheckp = () => {
     editCheckPoint?.(checkpointId);
-    changeStep?.("EditCheckPoint");
+    changeStep?.('EditCheckPoint');
   };
 
   useEffect(() => {
@@ -92,14 +80,12 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
         <div className="w-full mx-auto my-4 flex justify-end">
           <div className="flex justify-end w-6/10 items-center">
             <Buttons
-              btnClass={`py-1 px-4 text-xs mr-2 hover:bg-gray-100 ${theme.btnTransparent[themeColor]}`}
-              label={CheckpointQueTableDict[userLanguage]["BUTTON"]["EDIT"]}
+              label={CheckpointQueTableDict[userLanguage]['BUTTON']['EDIT']}
               onClick={editCurrentCheckp}
               transparent
             />
             <Buttons
-              btnClass="py-1 px-4 text-xs ml-2 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500"
-              label={CheckpointQueTableDict[userLanguage]["BUTTON"]["REMOVE"]}
+              label={CheckpointQueTableDict[userLanguage]['BUTTON']['REMOVE']}
               onClick={() => DeleteCheckpoint?.(checkpointId)}
               transparent
             />
@@ -109,13 +95,13 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
       <div className="mb-4">
         <div className="flex justify-between w-full lg:w-9/10 px-4 lg:px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
           <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            <span>{CheckpointQueTableDict[userLanguage]["NO"]}</span>
+            <span>{CheckpointQueTableDict[userLanguage]['NO']}</span>
           </div>
           <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            <span>{CheckpointQueTableDict[userLanguage]["QUESTION"]}</span>
+            <span>{CheckpointQueTableDict[userLanguage]['QUESTION']}</span>
           </div>
           <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            <span>{CheckpointQueTableDict[userLanguage]["TYPE"]}</span>
+            <span>{CheckpointQueTableDict[userLanguage]['TYPE']}</span>
           </div>
           {/* <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>Language</span>
@@ -130,17 +116,16 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
                     questionsList.map((item, index) => (
                       <div
                         key={item.id}
-                        className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200"
-                      >
+                        className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                           {index + 1}.
                         </div>
                         <div className="flex w-7/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                          {" "}
-                          {item.question}{" "}
+                          {' '}
+                          {item.question}{' '}
                         </div>
                         <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                          {item.type ? getTypeString(item.type) : "--"}
+                          {item.type ? getTypeString(item.type) : '--'}
                         </div>
                         {/* <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language}</div> */}
                       </div>
@@ -148,25 +133,21 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
                   ) : (
                     <div className="py-12 my-6 text-center">
                       <p>
-                        {" "}
-                        {
-                          CheckpointQueTableDict[userLanguage][
-                            "NOQUESTIONCHECKPOINT"
-                          ]
-                        }
+                        {' '}
+                        {CheckpointQueTableDict[userLanguage]['NOQUESTIONCHECKPOINT']}
                       </p>
                     </div>
                   )}
                 </Fragment>
               ) : (
                 <div className="py-12 my-6 text-center">
-                  <p>{CheckpointQueTableDict[userLanguage]["FETCHERR"]} </p>
+                  <p>{CheckpointQueTableDict[userLanguage]['FETCHERR']} </p>
                 </div>
               )}
             </Fragment>
           ) : (
             <div className="py-12 my-6 text-center text-gray-700">
-              <p> {CheckpointQueTableDict[userLanguage]["FETCHING"]}</p>
+              <p> {CheckpointQueTableDict[userLanguage]['FETCHING']}</p>
             </div>
           )}
         </div>

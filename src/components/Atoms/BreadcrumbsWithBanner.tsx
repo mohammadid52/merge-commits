@@ -1,21 +1,20 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {useHistory} from 'react-router';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
-import {getAsset} from 'assets';
+import {Breadcrumb} from 'antd';
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
+import {AiOutlineHome} from 'react-icons/ai';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 
 export type BreadCrumb = {
   title: string;
-  url: string;
+  href: string;
   last: boolean;
   goBack?: boolean;
 };
@@ -38,42 +37,17 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     institutionId,
     institutionData,
     items = [],
-    separateGoBackButton = '',
-    unsavedChanges = false,
-    toggleModal,
+
     bannerImage,
     title
   } = props;
-  const {state, theme, userLanguage, dispatch, clientKey} = useGlobalContext();
+  const {state, userLanguage} = useGlobalContext();
 
   const user = state.temp.user;
 
   const {BreadcrumsTitles, Institute_info} = useDictionary();
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const history = useHistory();
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-
-  const goToUrl = (url: string) => {
-    if (unsavedChanges) {
-      toggleModal(url);
-    } else {
-      setLessonData({});
-      setRoomData({});
-      setCourseData({});
-      setUnitData({});
-
-      dispatch({
-        type: 'UPDATE_TEMP_USER',
-        payload: {
-          user: null
-        }
-      });
-
-      history.push(url);
-    }
-  };
 
   const [lessonData, setLessonData] = useState<{
     id?: string;
@@ -222,14 +196,14 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
   const breadCrumbsList: BreadCrumb[] = [
     {
-      title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      title: <AiOutlineHome />,
+      href: '/dashboard',
       last: false
     },
 
     institutionId && {
       title: institutionData?.name,
-      url:
+      href:
         currentPath === 'edit'
           ? `${location.pathname}${location.search}`
           : `/dashboard/manage-institutions/institution/${institutionId}/edit`,
@@ -244,8 +218,11 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     <>
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
-        <div className={`absolute theme-bg w-full bottom-0 z-20`}>
-          <div
+        {/* <div className={`absolute theme-bg w-full bottom-0 z-20`}> */}
+        <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
+          <Breadcrumb items={finalList} />
+        </div>
+        {/* <div
             className={`${
               separateGoBackButton ? 'justify-between' : ''
             } flex flex-row my-0 py-2`}>
@@ -308,9 +285,9 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                 <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
               </span>
             </div>
-          </div>
-        </div>
+          </div> */}
       </div>
+      {/* </div> */}
       {/* <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}

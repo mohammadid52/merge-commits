@@ -1,16 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {CgNotes} from 'react-icons/cg';
-import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
-import {IoIosCalendar} from 'react-icons/io';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {CgNotes} from 'react-icons/cg';
 import {FaCalendarDay} from 'react-icons/fa';
+import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
 
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutation from 'graphql/mutations';
 
 import Buttons from 'atoms/Buttons';
-import DatePickerInput from 'atoms/Form/DatePickerInput';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -21,13 +19,14 @@ import {awsFormatDate, dateString, timeIntervals} from 'utilities/time';
 import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 
+import {DatePicker} from 'antd';
 import Modal from 'atoms/Modal';
 
-export interface ICourseScheduleProps {
+interface ICourseScheduleProps {
   roomData: any;
 }
 
-export interface ICourseScheduleFields {
+interface ICourseScheduleFields {
   startDate: Date | null;
   endDate: Date | null;
   startTime: string;
@@ -43,7 +42,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {userLanguage} = useGlobalContext();
   const {CourseScheduleDict} = useDictionary();
 
-  const [startDateFocus, setStartDateFocus] = useState(false);
+  const [_, setStartDateFocus] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [logsChanged, setLogsChanged] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -165,10 +164,10 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     setUnsavedChanges(true);
   };
 
-  const handleDateChange = (date: Date | null, fieldName: string) => {
+  const handleDateChange = (dateString: any, fieldName: string) => {
     setScheduleData((prevData) => ({
       ...prevData,
-      [fieldName]: date
+      [fieldName]: dateString
     }));
     setUnsavedChanges(true);
   };
@@ -254,30 +253,28 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           </div>
           <div className="mt-8">
             <div className="flex mt-4">
-              <span className="w-auto inline-flex items-center">
-                <IoIosCalendar className="w-6 h-6 mr-2" />
-              </span>
-              <div className="mr-2 w-64 relative">
-                <DatePickerInput
-                  date={scheduleData.startDate}
-                  placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
-                  onChange={(date: Date | null) => handleDateChange(date, 'startDate')}
-                  focus={startDateFocus}
-                />
-                <div className="text-xs 2xl:text-base text-red-500">
-                  {errors.startDate}
-                </div>
-              </div>
+              <DatePicker
+                // @ts-ignore
+                defaultValue={moment(scheduleData.startDate)}
+                placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
+                onChange={(_, dateString: string) =>
+                  handleDateChange(dateString, 'startDate')
+                }
+              />
+
+              <div className="text-xs 2xl:text-base text-red-500">{errors.startDate}</div>
+
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
-              <div className="mr-2 w-64 relative">
-                <DatePickerInput
-                  date={scheduleData.endDate}
-                  placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_DATE}
-                  minDate={scheduleData.startDate || new Date()}
-                  onChange={(date: Date | null) => handleDateChange(date, 'endDate')}
-                />
-                <div className="text-xs 2xl:text-base text-red-500">{errors.endDate}</div>
-              </div>
+
+              <DatePicker
+                // @ts-ignore
+                defaultValue={moment(scheduleData.endDate)}
+                placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_DATE}
+                onChange={(_, dateString: string) =>
+                  handleDateChange(dateString, 'startDate')
+                }
+              />
+              <div className="text-xs 2xl:text-base text-red-500">{errors.endDate}</div>
             </div>
             <div className="flex mt-4">
               <span className="w-auto inline-flex items-center">
@@ -285,9 +282,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </span>
               <div className="mr-2 w-64">
                 <Selector
-                  onChange={(_: string, name: string) =>
-                    handleSelection(name, 'startTime')
-                  }
+                  onChange={(name: string) => handleSelection(name, 'startTime')}
                   selectedItem={scheduleData.startTime}
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_TIME}
@@ -299,7 +294,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64">
                 <Selector
-                  onChange={(_: string, name: string) => handleSelection(name, 'endTime')}
+                  onChange={(name: string) => handleSelection(name, 'endTime')}
                   selectedItem={scheduleData.endTime}
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_TIME}
@@ -314,9 +309,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 </span>
                 <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
-                    onChange={(_: string, name: string) =>
-                      handleSelection(name, 'frequency')
-                    }
+                    onChange={(name: string) => handleSelection(name, 'frequency')}
                     selectedItem={scheduleData.frequency}
                     list={frequencyOptions}
                     placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY}
@@ -329,9 +322,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 </span>
                 <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
-                    onChange={(_: string, name: string) =>
-                      handleSelection(name, 'weekDay')
-                    }
+                    onChange={(name: string) => handleSelection(name, 'weekDay')}
                     selectedItem={scheduleData.weekDay}
                     list={weekdaysOption}
                     placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
@@ -406,27 +397,21 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         </div>
       )}
 
-      {showAlert && (
-        <Modal
-          showHeader={false}
-          showFooter={false}
-          closeAction={() => setShowAlert(false)}>
-          <div className="py-8 px-16">
-            <div className="mx-auto flex items-center justify-center rounded-full">
-              <FiAlertCircle className="w-8 h-8" />
-            </div>
-            <div className="mt-4">Enter schedule details</div>
-            <div className="flex justify-center mt-4">
-              <Buttons
-                btnClass={'abc'}
-                label={'Ok'}
-                labelClass={'leading-6'}
-                onClick={onAlertClose}
-              />
-            </div>
+      <Modal
+        open={showAlert}
+        showHeader={false}
+        showFooter={false}
+        closeAction={() => setShowAlert(false)}>
+        <div className="py-8 px-16">
+          <div className="mx-auto flex items-center justify-center rounded-full">
+            <FiAlertCircle className="w-8 h-8" />
           </div>
-        </Modal>
-      )}
+          <div className="mt-4">Enter schedule details</div>
+          <div className="flex justify-center mt-4">
+            <Buttons label={'Ok'} onClick={onAlertClose} />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

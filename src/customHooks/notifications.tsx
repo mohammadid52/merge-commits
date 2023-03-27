@@ -1,13 +1,22 @@
-import { useGlobalContext } from "contexts/GlobalContext";
-import { NotificationListItem } from "interfaces/GlobalInfoComponentsInterfaces";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { getLocalStorageData } from "utilities/localStorage";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getLocalStorageData} from 'utilities/localStorage';
 import {
   getSessionStorageData,
   removeSessionStorageData,
-  setSessionStorageData,
-} from "utilities/sessionStorage";
-import useLessonControls from "./lessonControls";
+  setSessionStorageData
+} from 'utilities/sessionStorage';
+import useLessonControls from './lessonControls';
+
+const getPageLabel = (pageID: string) => {
+  const localLessonPlan = getLocalStorageData('lesson_plan', '[]') || [];
+  const findPage = localLessonPlan && localLessonPlan?.length > 0;
+  localLessonPlan?.find((pageObj: any) => pageObj && pageObj?.id === pageID);
+  if (findPage && pageID) {
+    return findPage.label;
+  }
+};
 
 // ##################################################################### //
 // ######################## GLOBAL NOTIFICATIONS ####################### //
@@ -23,38 +32,35 @@ const useGlobalNotifications = () => {
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
     {
-      check: state.user.image === null || state.user.image === "",
+      check: state.user.image === null || state.user.image === '',
       notification: {
-        label: "Avatar not set",
-        message: "Please set up your avatar to complete your profile!",
-        type: "alert",
-        cta: "Change Now",
+        label: 'Avatar not set',
+        message: 'Please set up your avatar to complete your profile!',
+        type: 'alert',
+        cta: 'Change Now'
       },
       action: () => {
-        history.push("/dashboard/profile");
-        dispatch({ type: "UPDATE_CURRENTPAGE", payload: { data: "profile" } });
+        history.push('/dashboard/profile');
+        dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'profile'}});
       },
       cancel: () => {
         //
-      },
-    },
+      }
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
-    return list.reduce(
-      (acc: NotificationListItem[], val: NotificationListItem) => {
-        if (val.check) {
-          return [...acc, val];
-        } else {
-          return acc;
-        }
-      },
-      []
-    );
+    return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+      if (val.check) {
+        return [...acc, val];
+      } else {
+        return acc;
+      }
+    }, []);
   };
 
   return {
-    globalNotifications: collectNotifications(watchList),
+    globalNotifications: collectNotifications(watchList)
   };
 };
 
@@ -69,21 +75,12 @@ const useLessonControlNotifications = () => {
 
   // ~~~~~~~~~~~ FUNCTIONS - LIVE ~~~~~~~~~~ //
 
-  const { resetViewAndShare } = useLessonControls();
+  const {resetViewAndShare} = useLessonControls();
 
   // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
-  const getPageLabel = (pageID: string) => {
-    const localLessonPlan = getLocalStorageData("lesson_plan");
-    const findPage =
-      localLessonPlan &&
-      localLessonPlan.find((pageObj: any) => pageObj && pageObj?.id === pageID);
-    if (findPage && pageID) {
-      return findPage.label;
-    }
-  };
 
   const getSharedStudenName = (authID: string) => {
-    const studentList = getLocalStorageData("student_list");
+    const studentList = getLocalStorageData('student_list');
     const findStudent =
       studentList &&
       studentList.reduce((acc: any, studentObj: any) => {
@@ -94,25 +91,24 @@ const useLessonControlNotifications = () => {
         }
       }, {});
     if (findStudent && authID) {
-      return findStudent?.firstName + " " + findStudent?.lastName;
+      return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
-    return "";
+    return '';
   };
 
   const displayData = lessonState?.displayData?.[0];
 
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
   const isPresenting = displayData?.isTeacher === true;
-  const studentIsViewed = lessonState.studentViewing !== "";
-  const isClosed = displayData?.studentAuthID === "closed";
-  const studentIsShared =
-    displayData?.studentAuthID !== "" && !isClosed && !isPresenting;
+  const studentIsViewed = lessonState.studentViewing !== '';
+  const isClosed = displayData?.studentAuthID === 'closed';
+  const studentIsShared = displayData?.studentAuthID !== '' && !isClosed && !isPresenting;
   const isLessonClosed = lessonState?.displayData && isClosed && isPresenting;
 
   const history = useHistory();
 
   const goToDashboard = () => {
-    history.push("/dashboard");
+    history.push('/dashboard');
   };
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
@@ -120,83 +116,80 @@ const useLessonControlNotifications = () => {
     {
       check: studentIsViewed,
       notification: {
-        label: "Viewing student data",
+        label: 'Viewing student data',
         message: ` "${getSharedStudenName(lessonState.studentViewing)}"`,
-        type: "info",
-        cta: "Quit Viewing",
+        type: 'info',
+        cta: 'Quit Viewing'
       },
       action: () => {
         resetViewAndShare();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: isLessonClosed,
       notification: {
-        label: "This lesson/survey is closed",
+        label: 'This lesson/survey is closed',
         message: ``,
-        type: "info",
-        cta: "Go to dashboard",
+        type: 'info',
+        cta: 'Go to dashboard'
       },
       action: () => {
         goToDashboard();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: studentIsShared,
       notification: {
-        label: "Sharing student data",
-        message: `"${getPageLabel(
-          displayData?.lessonPageID
-        )}" by "${getSharedStudenName(displayData?.studentAuthID)}"`,
-        type: "alert",
-        cta: "Quit Sharing",
+        label: 'Sharing student data',
+        message: `"${getPageLabel(displayData?.lessonPageID)}" by "${getSharedStudenName(
+          displayData?.studentAuthID
+        )}"`,
+        type: 'alert',
+        cta: 'Quit Sharing'
       },
       action: () => {
         resetViewAndShare();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: isPresenting,
       notification: {
-        label: "You are now presenting a page",
+        label: 'You are now presenting a page',
         message: null,
-        type: "info",
-        cta: "Stop Presenting",
+        type: 'info',
+        cta: 'Stop Presenting'
       },
       action: () => {
         resetViewAndShare();
       },
-      cancel: () => {},
-    },
+      cancel: () => {}
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
-    if (lessonState?.lessonData?.type === "lesson") {
-      return list.reduce(
-        (acc: NotificationListItem[], val: NotificationListItem) => {
-          if (val.check) {
-            return [...acc, val];
-          } else {
-            return acc;
-          }
-        },
-        []
-      );
+    if (lessonState?.lessonData?.type === 'lesson') {
+      return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+        if (val.check) {
+          return [...acc, val];
+        } else {
+          return acc;
+        }
+      }, []);
     } else {
       return [];
     }
   };
 
-  return { lessonControlNotifications: collectNotifications(watchList) };
+  return {lessonControlNotifications: collectNotifications(watchList)};
 };
 
 // ##################################################################### //
@@ -214,58 +207,45 @@ const useLessonNotifications = () => {
   // ~~~~~~~~~~~~~ ROUTER STUFF ~~~~~~~~~~~~ //
   const history = useHistory();
   const match = useRouteMatch();
-  const getNavigationState = getSessionStorageData("navigation_state");
+  const getNavigationState = getSessionStorageData('navigation_state');
 
   // ~~~~~~~~ FUNCTIONS - NAVIGATION ~~~~~~~ //
   const navigateAway = () => {
-    setSessionStorageData("navigation_state", {
+    setSessionStorageData('navigation_state', {
       fromIdx: lessonState?.currentPage,
-      fromUrl: `${match.url}/${lessonState.currentPage}`,
+      fromUrl: `${match.url}/${lessonState.currentPage}`
     });
-    history.push(
-      `${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`
-    );
+    history.push(`${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`);
     lessonDispatch({
-      type: "SET_CURRENT_PAGE",
-      payload: getPageIdx(lessonState.displayData[0].lessonPageID),
+      type: 'SET_CURRENT_PAGE',
+      payload: getPageIdx(lessonState.displayData[0].lessonPageID)
     });
   };
 
   const navigateBack = () => {
     history.push(getNavigationState?.fromUrl);
     lessonDispatch({
-      type: "SET_CURRENT_PAGE",
-      payload: getNavigationState.fromIdx,
+      type: 'SET_CURRENT_PAGE',
+      payload: getNavigationState.fromIdx
     });
-    removeSessionStorageData("navigation_state");
+    removeSessionStorageData('navigation_state');
   };
 
   const navigateCancel = () => {
-    removeSessionStorageData("navigation_state");
+    removeSessionStorageData('navigation_state');
   };
 
   // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
   const getPageIdx = (pageID: string) => {
-    const localLessonPlan = getLocalStorageData("lesson_plan");
+    const localLessonPlan = getLocalStorageData('lesson_plan');
     if (localLessonPlan && pageID) {
-      return localLessonPlan.findIndex(
-        (lessonPage: any) => lessonPage.id === pageID
-      );
-    }
-  };
-
-  const getPageLabel = (pageID: string) => {
-    const localLessonPlan = getLocalStorageData("lesson_plan");
-    const findPage =
-      localLessonPlan &&
-      localLessonPlan.find((pageObj: any) => pageObj && pageObj?.id === pageID);
-    if (findPage && pageID) {
-      return findPage.label;
+      return localLessonPlan.findIndex((lessonPage: any) => lessonPage.id === pageID);
     }
   };
 
   const getSharedStudenName = (authID: string) => {
-    const studentList = getLocalStorageData("student_list");
+    const studentList = getLocalStorageData('student_list');
+
     const findStudent =
       studentList &&
       studentList.reduce((acc: any, studentObj: any) => {
@@ -275,179 +255,179 @@ const useLessonNotifications = () => {
           return acc;
         }
       }, {});
+
     if (findStudent && authID) {
-      return findStudent?.firstName + " " + findStudent?.lastName;
+      return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
-    return "";
+    return '';
   };
 
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //a
   const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const iAmViewed = lessonState.studentViewing === user.authId;
-  const isLessonPageID = lessonState.displayData[0].lessonPageID !== "";
+  const isLessonPageID = lessonState.displayData[0].lessonPageID !== '';
   const iAmShared = lessonState.displayData[0].studentAuthID === user.authId;
   const isClosed =
-    lessonState.displayData[0].studentAuthID === "closed" && !isLessonPageID;
+    lessonState.displayData[0].studentAuthID === 'closed' && !isLessonPageID;
 
   const anyPageIsShared =
     isLessonPageID && lessonState.displayData[0].isTeacher === false;
   const thisPageIsShared =
     lessonPlan &&
     !teacherIsPresenting &&
-    lessonState.displayData[0].lessonPageID ===
-      lessonPlan[lessonState.currentPage]?.id;
+    lessonState.displayData[0].lessonPageID === lessonPlan[lessonState.currentPage]?.id;
   const canNavigateBack =
     !anyPageIsShared && getNavigationState && getNavigationState.fromUrl;
 
   const goToDashboard = () => {
-    history.push("/dashboard");
+    history.push('/dashboard');
   };
+
+  const studentAuthID = lessonState.displayData[0].studentAuthID;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList: NotificationListItem[] = [
     {
       check: iAmViewed && !iAmShared,
       notification: {
-        label: "Teacher is viewing you",
+        label: 'Teacher is viewing you',
         message: null,
-        type: "positive",
-        cta: "",
+        type: 'positive',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: isClosed,
       notification: {
-        label:
-          "Teacher has closed this lesson. Your poems are moved to notebook section",
+        label: 'Teacher has closed this lesson. Your poems are moved to notebook section',
         message: null,
-        type: "alert",
+        type: 'alert',
 
-        cta: "Go to Notebook",
+        cta: 'Go to Notebook'
       },
       action: () => {
         goToDashboard();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: anyPageIsShared && !iAmShared && !thisPageIsShared,
       notification: {
-        label: "Teacher is sharing a page",
-        message: ` by "${getSharedStudenName(
-          lessonState.displayData[0].studentAuthID
-        )}"`,
-        type: "alert",
-        cta: "Go There Now",
+        label: 'Teacher is sharing a page',
+        message: studentAuthID
+          ? ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`
+          : '',
+        type: 'alert',
+        cta: 'Go There Now'
       },
       action: () => {
         navigateAway();
-      },
+      }
     },
     {
       check: iAmShared && !thisPageIsShared,
       notification: {
-        label: "Teacher is sharing your page",
-        message: `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`,
-        type: "alert",
-        cta: "Go There Now",
+        label: 'Teacher is sharing your page',
+        message: studentAuthID
+          ? `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`
+          : '',
+        type: 'alert',
+        cta: 'Go There Now'
       },
       action: () => {
         navigateAway();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: canNavigateBack,
       notification: {
-        label: "Return to the previous page?",
+        label: 'Return to the previous page?',
         message: ``,
-        type: "alert",
-        cta: "Go Back",
+        type: 'alert',
+        cta: 'Go Back'
       },
       action: () => {
         navigateBack();
       },
       cancel: () => {
         navigateCancel();
-      },
+      }
     },
     {
       check: thisPageIsShared && iAmShared,
       notification: {
-        label: "Teacher is sharing your data for this page",
+        label: 'Teacher is sharing your data for this page',
         message: null,
-        type: "info",
-        cta: "",
+        type: 'info',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: thisPageIsShared && !iAmShared && !teacherIsPresenting,
       notification: {
-        label: "You are viewing this page",
-        message: `by "${getSharedStudenName(
-          lessonState.displayData[0].studentAuthID
-        )}"`,
-        type: "info",
-        cta: "",
+        label: 'You are viewing this page',
+        message: studentAuthID
+          ? `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`
+          : '',
+        type: 'info',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: teacherIsPresenting,
       notification: {
-        label: "The teacher is controlling the lesson",
+        label: 'The teacher is controlling the lesson',
         message: null,
-        type: "alert",
-        cta: "",
+        type: 'alert',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
-    },
+      }
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
-    if (lessonState?.lessonData?.type === "lesson") {
-      return list.reduce(
-        (acc: NotificationListItem[], val: NotificationListItem) => {
-          if (val.check) {
-            return [...acc, val];
-          } else {
-            return acc;
-          }
-        },
-        []
-      );
+    if (lessonState?.lessonData?.type === 'lesson') {
+      return list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+        if (val.check) {
+          return [...acc, val];
+        } else {
+          return acc;
+        }
+      }, []);
     } else {
       return [];
     }
   };
 
-  return { lessonNotifications: collectNotifications(watchList) };
+  return {lessonNotifications: collectNotifications(watchList)};
 };
 const useInputNotifications = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
@@ -460,18 +440,18 @@ const useInputNotifications = () => {
     {
       check: !lessonState.isValid,
       notification: {
-        label: "Please fill all required fields",
-        message: "",
-        type: "alert",
-        cta: "",
+        label: 'Please fill all required fields',
+        message: '',
+        type: 'alert',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
-    },
+      }
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) =>
@@ -483,40 +463,36 @@ const useInputNotifications = () => {
       }
     }, []);
 
-  return { inputNotifications: collectNotifications(watchList) };
+  return {inputNotifications: collectNotifications(watchList)};
 };
 
 // ##################################################################### //
 // ############################# MAIN HOOK ############################# //
 // ##################################################################### //
 
-const useNotifications = (
-  props: "lesson" | "lessonControl" | "global" | "input"
-) => {
-  const globalNotifications = () =>
-    useGlobalNotifications().globalNotifications;
+const useNotifications = (props: 'lesson' | 'lessonControl' | 'global' | 'input') => {
+  const globalNotifications = () => useGlobalNotifications().globalNotifications;
   const lessonControlNotifications = () =>
     useLessonControlNotifications().lessonControlNotifications;
-  const lessonNotifications = () =>
-    useLessonNotifications().lessonNotifications;
+  const lessonNotifications = () => useLessonNotifications().lessonNotifications;
   const inputNotifications = () => useInputNotifications().inputNotifications;
 
   const notifications = (switchByContext: string) => {
     switch (switchByContext) {
-      case "global":
+      case 'global':
         return globalNotifications();
-      case "lessonControl":
+      case 'lessonControl':
         return lessonControlNotifications();
-      case "lesson":
+      case 'lesson':
         return lessonNotifications();
-      case "input":
+      case 'input':
         return inputNotifications();
       default:
         return null;
     }
   };
 
-  return { notifications: notifications(props) };
+  return {notifications: notifications(props)};
 };
 
 export default useNotifications;

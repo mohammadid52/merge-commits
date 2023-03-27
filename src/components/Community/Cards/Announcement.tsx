@@ -162,7 +162,6 @@ const Announcements = ({
       <div className="px-3 py-4">
         <div>
           <FormInput
-            dataCy="announcement-overlay-input"
             label="Step 2: Add overlay text"
             onChange={(e) => {
               setError('');
@@ -198,18 +197,11 @@ const Announcements = ({
       </AnimatedContainer>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            dataCy="save-announcement-button"
             loading={isLoading}
             disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
-            btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
             onClick={_onSubmit}
           />

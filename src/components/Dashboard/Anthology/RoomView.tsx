@@ -1,16 +1,16 @@
-import { API, graphqlOperation } from "aws-amplify";
-import Loader from "@components/Atoms/Loader";
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import { useQuery } from "@customHooks/urlParam";
-import useAuth from "@customHooks/useAuth";
-import { createFilterToFetchSpecificItemsOnly } from "@utilities/strings";
+import {API, graphqlOperation} from 'aws-amplify';
+import Loader from '@components/Atoms/Loader';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import React, { useEffect, useState } from "react";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import React, {useEffect, useState} from 'react';
 
-import { getImageFromS3 } from "utilities/services";
-import RoomViewCard from "./RoomView/RoomViewCard";
+import {getImageFromS3} from 'utilities/services';
+import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
   roomIdList: string[];
@@ -32,7 +32,7 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  roomIdList,
+  roomIdList
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -42,14 +42,14 @@ const RoomView = ({
   const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
-  const { state, zoiqFilter } = useGlobalContext();
+  const {state, zoiqFilter} = useGlobalContext();
 
   const mapData = (responseData: any[]) => {
     const curriculumMap = responseData.map(async (roomObj: any) => {
       if (roomObj) {
         const curriculumFull: any = await API.graphql(
           graphqlOperation(customQueries.getCurriculumNotebook, {
-            id: roomObj.curricula?.items[0]?.curriculumID,
+            id: roomObj.curricula?.items[0]?.curriculumID
           })
         );
         const curriculumData = curriculumFull.data.getCurriculum;
@@ -64,17 +64,15 @@ const RoomView = ({
                 name: curriculumData?.name,
                 image: curriculumData?.image,
                 summary: curriculumData?.summary,
-                description: curriculumData?.description,
-              },
-            ],
-          },
+                description: curriculumData?.description
+              }
+            ]
+          }
         };
       }
     });
     Promise.all(curriculumMap)
       .then((responseArray: any[]) => {
-        // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-        // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
         setFilteredRooms(responseArray);
       })
       .finally(() => {
@@ -87,38 +85,35 @@ const RoomView = ({
       const responseData = state?.roomData?.rooms || [];
       mapData(responseData);
     } catch (e) {
-      console.error("getMultipleRooms - ", e);
+      console.error('getMultipleRooms - ', e);
     }
   };
   const getMultipleRoomsAsATeacher = async (idList: any[]) => {
     try {
-      const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, "id");
+      const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
 
       let filter = {
-        or: [...compoundQuery.or],
+        or: [...compoundQuery.or]
       };
 
       if (zoiqFilter.length > 0) {
-        filter = { ...filter, or: [...filter.or, ...zoiqFilter] };
+        filter = {...filter, or: [...filter.or, ...zoiqFilter]};
       }
 
       const roomsList: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsNotebook, {
-          filter: filter,
+          filter: filter
         })
       );
       const responseData = roomsList?.data?.listRooms?.items || [];
       mapData(responseData);
     } catch (e) {
-      console.error("getMultipleRooms - ", e);
+      console.error('getMultipleRooms - ', e);
     }
   };
 
   // if nothing works call this
   const checkFromState = () => {
-    // if (studentAuthId && studentEmail) {
-    //   getDashboardData(studentAuthId, studentEmail);
-    // }
     if (state?.temp?.roomData) {
       mapData(state?.temp?.roomData);
     } else {
@@ -128,7 +123,7 @@ const RoomView = ({
     }
   };
 
-  const { isStudent } = useAuth();
+  const {isStudent} = useAuth();
 
   useEffect(() => {
     if (isStudent) {
@@ -150,7 +145,7 @@ const RoomView = ({
     if (imageUrl) {
       return imageUrl;
     } else {
-      return "";
+      return '';
     }
   };
 
@@ -158,20 +153,18 @@ const RoomView = ({
   // ################### MAP ROOM OBJECTS TO NOTEBOOKS ################### //
   // ##################################################################### //
 
-  const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>(
-    []
-  );
+  const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
   const mapNotebookRoomCards = (onSuccess?: (output?: any[]) => void) => {
     const mapped = filteredRooms.map(async (item) => {
-      const { curricula } = item;
+      const {curricula} = item;
 
       const bannerImage = await (curricula?.items[0]?.image
         ? getImageURL(curricula?.items[0]?.image)
         : null);
       const curriculumName = curricula?.items[0]?.name;
 
-      return { ...item, bannerImage, curriculumName };
+      return {...item, bannerImage, curriculumName};
     });
 
     Promise.all(mapped).then((output: any) => {
@@ -189,7 +182,7 @@ const RoomView = ({
 
   const params = useQuery(location.search);
 
-  const roomId = params.get("roomId");
+  const roomId = params.get('roomId');
 
   useEffect(() => {
     if (loaded && filteredRooms.length > 0) {
@@ -199,7 +192,7 @@ const RoomView = ({
           const roomObj = output.find((room: any) => room.id === roomId);
 
           roomObj &&
-            handleSectionSelect?.("Class Notebook", roomObj.id, roomObj.name);
+            handleSectionSelect?.('Class Notebook', roomObj.id, roomObj.curriculumName);
         }
       });
     }
@@ -218,9 +211,8 @@ const RoomView = ({
           <AnimatedContainer
             delay="1s"
             animationType="opacity"
-            show={sectionRoomID === ""}
-          >
-            {sectionRoomID === "" && (
+            show={sectionRoomID === ''}>
+            {sectionRoomID === '' && (
               <p className="text-base inline text-gray-500">
                 Select a notebook to continue
               </p>
@@ -230,18 +222,17 @@ const RoomView = ({
           <div
             // #ts-ignores
             style={{
-              transition: "width 2s",
-              transitionTimingFunction: "cubic-bezier(0.1, 0.7, 1, 0.1)",
+              transition: 'width 2s',
+              transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
-            className="mt-0 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2"
-          >
+            className="mt-2 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             <RoomViewCard
-              roomID={"private"}
+              roomID={'private'}
               mainSection={mainSection}
               sectionRoomID={sectionRoomID}
               sectionTitle={sectionTitle}
               handleSectionSelect={handleSectionSelect}
-              type={"Private Notebook"}
+              type={'Private Notebook'}
             />
             {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
               ? mappedNotebookRoomCards.map((room, idx) => (

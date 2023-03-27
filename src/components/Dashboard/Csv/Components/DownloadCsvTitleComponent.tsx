@@ -1,28 +1,25 @@
 import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import {listInstitutions} from '@graphql/functions';
 
-import {Transition} from '@headlessui/react';
 import {insertExtraDataForClassroom, removeDuplicates} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
-import React, {useEffect, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
-import {DataValue} from '../Csv';
 import * as customQueries from 'customGraphql/customQueries';
 import {uniqBy} from 'lodash';
+import {useEffect, useState} from 'react';
 
 const DownloadCsvTitleComponent = ({
   selectedUnit,
-
-  selectedCurriculum,
+  instituteDropdownRef,
+  classroomDropdownRef,
+  unitDropdownRef,
+  surveyDropdownRef,
 
   selectedSurvey,
   surveys,
 
-  setHoveringItem,
   selectedInst,
 
   selectedClassRoom,
@@ -30,11 +27,11 @@ const DownloadCsvTitleComponent = ({
   setSCQAnswers,
   getStudentsDemographicsQuestionsResponse,
   setClassStudents,
-  currentSelectedClassroomData,
+
   clearCSVData,
   setSelectedInst,
   setSelectedClassRoom,
-  hoveringItem,
+
   setSelectedCurriculum,
   listQuestions,
   resetInstitution,
@@ -46,28 +43,28 @@ const DownloadCsvTitleComponent = ({
   selectedSurvey: any;
   selectedUnit: any;
   selectedInst: any;
-  selectedCurriculum: any;
   getStudentsDemographicsQuestionsResponse: any;
   setSelectedCurriculum: any;
   setSelectedInst: any;
-  setHoveringItem: any;
+  instituteDropdownRef: any;
+  classroomDropdownRef: any;
+  unitDropdownRef: any;
+  surveyDropdownRef: any;
+
   setSelectedsurvey: any;
   setSCQAnswers: any;
   setSurveys: any;
   setSelectedUnit: any;
   setClassStudents: any;
+
   setDemographicsQuestions: any;
   setSelectedClassRoom: any;
-
-  currentSelectedClassroomData: any;
 
   surveys: any[];
 
   resetInstitution: () => void;
   clearCSVData: () => void;
   listQuestions: (surveyId: string) => Promise<void>;
-
-  hoveringItem: any;
 }) => {
   const {authId, email} = useAuth();
 
@@ -104,7 +101,7 @@ const DownloadCsvTitleComponent = ({
     setClassRoomLoading(true);
     try {
       let sInst = selectedInst;
-      let inst = {id, name, value};
+      let inst = {id, label: name, value};
       setSelectedInst(inst);
       if (!sInst || sInst.id !== inst.id) {
         reset();
@@ -125,7 +122,7 @@ const DownloadCsvTitleComponent = ({
             instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           return {
             id: cr.id,
-            name: cr.name,
+            label: cr.name,
 
             value: cr.name,
             class: {...cr.class},
@@ -149,18 +146,12 @@ const DownloadCsvTitleComponent = ({
       })
     );
     let students = classData?.data?.getClass?.students?.items || [];
+
     let classStudents = students.map((stu: any) => stu.student);
 
-    let uniqIds: any[] = [];
+    // remove duplicates
+    classStudents = uniqBy(classStudents, (stu: any) => stu.id);
 
-    classStudents = classStudents.filter((stu: any) => {
-      if (!uniqIds.includes(stu?.authId)) {
-        uniqIds.push(stu?.authId);
-        return true;
-      } else {
-        return false;
-      }
-    });
     let studentsEmails = classStudents.map((stu: any) => stu?.email).filter(Boolean);
 
     setClassStudents(classStudents);
@@ -168,9 +159,10 @@ const DownloadCsvTitleComponent = ({
   };
 
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
+    setUnitsLoading(true);
     try {
       let sCR = selectedClassRoom;
-      let cr = {id, name, value};
+      let cr = {id, label: name, value};
       setSelectedClassRoom(cr);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
@@ -181,7 +173,6 @@ const DownloadCsvTitleComponent = ({
         // fetch students of the selected class. (This list of students will be used in the csv)
         const studentsEmails = await fetchStudents(classroom.class.id);
         if (classroom?.curriculum?.id) {
-          setUnitsLoading(true);
           await fetchUnits(classroom?.curriculum?.id, studentsEmails);
         }
         // units (syllabus fetched)
@@ -203,18 +194,23 @@ const DownloadCsvTitleComponent = ({
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
       units = units.filter((d: any) => d.unit !== null);
 
-      units = units.map((syl: any) => {
-        let unitData = syl.unit;
-        return {id: unitData.id, name: unitData.name, value: unitData.name};
-      });
+      units = units
+        .map((syl: any) => {
+          let unitData = syl.unit;
+          return unitData
+            ? {id: unitData.id, label: unitData.name, value: unitData.name}
+            : null;
+        })
+        .filter(Boolean);
       // console.log('units', units)
       setUnits(units);
+      setUnitsLoading(false);
       let curriculumData: any = await API.graphql(
         graphqlOperation(customQueries.getCurriculumCheckpointsData, {
           id: curriculumId
         })
       );
-      // console.log('curriculumData', curriculumData);
+
       let curricularCheckpoints =
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
@@ -230,7 +226,7 @@ const DownloadCsvTitleComponent = ({
           });
         });
       });
-      setUnitsLoading(false);
+
       setDemographicsQuestions(demographicsQues);
       // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
       getStudentsDemographicsQuestionsResponse(cCheckpoints, '999999', studentsEmails);
@@ -240,7 +236,7 @@ const DownloadCsvTitleComponent = ({
   };
 
   const onUnitSelect = (id: string, name: string, value: string) => {
-    let unit = {id, name, value};
+    let unit = {id, label: name, value};
     setSelectedUnit(unit);
     fetchSurveys(unit.id);
   };
@@ -260,7 +256,7 @@ const DownloadCsvTitleComponent = ({
         if (les.lesson && les.lesson.type === 'survey') {
           surveys.push({
             id: les.lesson.id,
-            name: les.lesson.title,
+            label: les.lesson.title,
             value: les.lesson.title
           });
           return les.lesson;
@@ -280,7 +276,6 @@ const DownloadCsvTitleComponent = ({
       clearCSVData();
     }
     setSCQAnswers([]);
-    // getReason();
 
     setSelectedsurvey(survey);
     await listQuestions(survey.id);
@@ -291,8 +286,7 @@ const DownloadCsvTitleComponent = ({
     loadInstitution();
   }, []);
 
-  const {userLanguage} = useGlobalContext();
-  const {CsvDict} = useDictionary();
+  const {CsvDict, userLanguage} = useDictionary();
   return (
     <div className="mx-auto w-full">
       <div className="flex flex-row my-0  w-full py-0 mb-4 justify-between">
@@ -303,122 +297,60 @@ const DownloadCsvTitleComponent = ({
               <div className="grid grid-cols-2 xl:grid-cols-4  gap-4">
                 {/* {isSuperAdmin && ( */}
                 <Selector
-                  loading={institutionsLoading}
-                  width="xl:w-64"
-                  selectedItem={selectedInst ? selectedInst.name : ''}
+                  width={250}
+                  ref={instituteDropdownRef}
+                  showSearch
                   placeholder={CsvDict[userLanguage]['SELECT_INST']}
                   list={institutions}
-                  onChange={(value, name, id) => onInstSelect(id, name, value)}
+                  loading={institutionsLoading}
+                  selectedItem={selectedInst ? selectedInst.label : ''}
+                  onChange={(value, option: any) => onInstSelect(option.id, value, value)}
                 />
                 {/* )} */}
 
                 <div className="w-auto relative">
                   <Selector
+                    showSearch
                     dataCy="analytics-classroom"
-                    width="xl:w-64"
+                    ref={classroomDropdownRef}
+                    width={250}
                     disabled={!selectedInst?.id}
-                    setHoveringItem={setHoveringItem}
                     loading={classRoomLoading}
-                    selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-                    placeholder="select classroom"
+                    selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
+                    placeholder="Select Classroom"
                     list={instClassRooms}
-                    onChange={(value, name, id) => {
-                      setHoveringItem({});
-                      onClassRoomSelect(id, name, value);
+                    onChange={(value, option: any) => {
+                      onClassRoomSelect(option.id, value, value);
                     }}
                   />
-                  {currentSelectedClassroomData && (
-                    <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-                      <Transition
-                        style={{
-                          top: '0rem',
-                          bottom: '1.5rem',
-                          right: '-110%',
-                          zIndex: 999999
-                        }}
-                        className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                        show={Boolean(hoveringItem && hoveringItem.name)}>
-                        <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                          <DataValue
-                            title={'Institution Name'}
-                            content={
-                              currentSelectedClassroomData?.institutionName ||
-                              selectedInst?.name ||
-                              '--'
-                            }
-                          />
-                          <DataValue
-                            title={'Clasroom Name'}
-                            content={currentSelectedClassroomData?.name || '--'}
-                          />
-                          <DataValue
-                            title={'Status'}
-                            content={
-                              <p
-                                className={`${
-                                  currentSelectedClassroomData.status === 'ACTIVE'
-                                    ? 'text-green-500'
-                                    : 'text-yellow-500'
-                                } lowercase`}>
-                                {currentSelectedClassroomData.status || '--'}
-                              </p>
-                            }
-                          />
-                          <DataValue
-                            title={'Teacher'}
-                            content={
-                              <div className="flex items-center justify-center w-auto">
-                                <span className="w-auto">
-                                  {currentSelectedClassroomData.teacher.image ? (
-                                    <img
-                                      src={currentSelectedClassroomData.teacher.image}
-                                      className="h-6 w-6 rounded-full"
-                                    />
-                                  ) : (
-                                    <div className="h-6 w-6 rounded-full bg-gray-400"></div>
-                                  )}
-                                </span>
-                                <p className="w-auto ml-2">
-                                  {currentSelectedClassroomData.teacher.name}
-                                </p>
-                              </div>
-                            }
-                          />
-                          <DataValue
-                            title={'Course Name'}
-                            content={currentSelectedClassroomData.courseName || '--'}
-                          />
-                          {/* <DataValue
-                                title={"Active Unit"}
-                                content={currentActiveUnit?.name || "--"}
-                              /> */}
-                        </div>
-                      </Transition>
-                    </ClickAwayListener>
-                  )}
                 </div>
 
                 <Selector
                   dataCy="analytics-unit"
+                  ref={unitDropdownRef}
                   loading={unitsLoading}
-                  selectedItem={selectedUnit ? selectedUnit.name : ''}
-                  placeholder="select unit"
-                  width="xl:w-64"
+                  showSearch
+                  selectedItem={selectedUnit ? selectedUnit.label : ''}
+                  placeholder="Select Unit"
+                  width={250}
                   list={units}
-                  disabled={!selectedCurriculum}
-                  onChange={(value, name, id) => onUnitSelect(id, name, value)}
+                  disabled={!selectedClassRoom}
+                  onChange={(value, option: any) => onUnitSelect(option.id, value, value)}
                 />
 
                 <Selector
                   dataCy="analytics-survey"
-                  direction="left"
-                  width="xl:w-64"
+                  width={250}
+                  ref={surveyDropdownRef}
+                  showSearch
                   loading={surveysLoading}
                   disabled={!selectedUnit}
-                  selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-                  placeholder="select survey"
+                  selectedItem={selectedSurvey ? selectedSurvey.label : ''}
+                  placeholder="Select Survey"
                   list={surveys}
-                  onChange={(value, name, id) => onSurveySelect(id, name, value)}
+                  onChange={(value, option: any) =>
+                    onSurveySelect(option.id, value, value)
+                  }
                 />
               </div>
             }

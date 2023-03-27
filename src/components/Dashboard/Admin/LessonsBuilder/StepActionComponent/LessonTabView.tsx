@@ -44,17 +44,17 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      href: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
       last: true
     }
   ];
@@ -112,7 +112,6 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   };
 
   const updateTab = (tab: number) => {
-    // setActiveTab(tab);
     history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
   };
 
@@ -157,7 +156,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
             {/* <div className="flex mb-8 mt-4 justify-center">
               <Tooltip placement="top" text={LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO']}>
                 <Buttons
-                  btnClass="py-3 px-10"
+                  
                   label={BUTTONS[userLanguage]['PUBLISH']}
                   disabled={true}
                 />
@@ -219,11 +218,10 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
-            btnClass="mr-4"
             onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
-          <Buttons btnClass="mr-4 px-6" label="Edit" onClick={handleEdit} Icon={FaEdit} />
+          <Buttons label="Edit" onClick={handleEdit} Icon={FaEdit} />
         </div>
       </div>
       <div className="flex px-4 flex-col">

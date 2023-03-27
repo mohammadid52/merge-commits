@@ -3,7 +3,6 @@ import {API, graphqlOperation} from 'aws-amplify';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
 import HeroBanner from '../Header/HeroBanner';
 
 interface DashboardContainerProps {
@@ -45,9 +44,9 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
 
   return !isLoading ? (
     <div className="flex items-center flex-col sm:flex-row justify-center">
-      <h4 className="w-auto text-sm font-medium">{institute.name || '--'}</h4>
-      <span className="hidden w-auto sm:block mx-4">•</span>
-      <h4 className="w-auto text-sm font-medium">{courseName || '--'}</h4>
+      <h4 className=" mb-0 w-auto text-sm font-medium">{institute.name || '--'}</h4>
+      <span className=" mb-0 hidden w-auto sm:block mx-4">•</span>
+      <h4 className=" mb-0 w-auto text-sm font-medium">{courseName || '--'}</h4>
     </div>
   ) : (
     <div>--</div>
@@ -55,8 +54,6 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
 };
 
 const DashboardContainer = ({
-  user,
-
   bannerTitle,
   bannerImg,
   children,
@@ -64,10 +61,6 @@ const DashboardContainer = ({
   showTitleBanner = true,
   courseName = ''
 }: DashboardContainerProps) => {
-  const isTeacher = user?.role === 'TR' || user?.role === 'FLW';
-
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-
   return (
     <ErrorBoundary componentName="DashboardContainer">
       <div className={`flex flex-row`}>
@@ -81,7 +74,7 @@ const DashboardContainer = ({
                 ) : (
                   <div className="py-4"></div>
                 )}
-                {isTeacher && (
+                {/* {isTeacher && (
                   <div className="w-auto">
                     <span
                       className="w-auto cursor-pointer"
@@ -91,7 +84,7 @@ const DashboardContainer = ({
                       />
                     </span>
                   </div>
-                )}
+                )} */}
               </div>
             </HeaderTextBar>
           ) : (

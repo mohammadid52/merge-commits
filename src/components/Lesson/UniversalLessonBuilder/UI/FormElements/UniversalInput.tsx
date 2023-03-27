@@ -1,27 +1,27 @@
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import ToggleForModal from "components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
-import { map, remove, update } from "lodash";
-import { useEffect } from "react";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-import { v4 as uuidv4 } from "uuid";
+import {Checkbox} from 'antd';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {map, remove, update} from 'lodash';
+import {useEffect} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import {
   ATTACHMENTS,
   DATE_PICKER,
   FORM_TYPES,
   INPUT,
   INPUT_WITH_EMOJI,
-  LINK,
-} from "../common/constants";
+  LINK
+} from '../common/constants';
 
 /**
  * @param classes multipple classes separeted bt comma
  * @returns multiple classes into a single class
  * */
-export const classNames = (...classes: any[]) =>
-  classes.filter(Boolean).join(" ");
+export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
 
 const UniversalInput = (props: any) => {
   const {
@@ -30,23 +30,23 @@ const UniversalInput = (props: any) => {
     list,
     setList,
     isEditingMode,
-    setNumbered,
+
     updateContent,
     askBeforeClose,
     setUnsavedChanges,
     selectedForm,
     createNewContent,
-    inputObj,
+    inputObj
   } = props;
 
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
   useEffect(() => {
     if (inputObj && inputObj.length > 0) {
       if (inputObj[0].type === FORM_TYPES.ATTACHMENTS) {
         inputObj[0].isRequired && makeRequired(0);
         update(list[0], `label`, () => inputObj[0].label);
-        update(list[0], "value", () => inputObj[0].value);
+        update(list[0], 'value', () => inputObj[0].value);
       }
     }
   }, [inputObj, list]);
@@ -56,13 +56,13 @@ const UniversalInput = (props: any) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
   };
   const addOneInputField = () => {
-    setList([...list, { id: uuidv4(), label: "", value: "", required: false }]);
+    setList([...list, {id: uuidv4(), label: '', value: '', required: false}]);
   };
 
   const makeRequired = (idx: number, required: boolean = false) => {
@@ -72,13 +72,13 @@ const UniversalInput = (props: any) => {
 
   const onChange = (e: any, idx: number, label: boolean = true) => {
     setUnsavedChanges(true);
-    const { value } = e.target;
-    update(list[idx], label ? `label` : "value", () => value);
+    const {value} = e.target;
+    update(list[idx], label ? `label` : 'value', () => value);
     setList([...list]);
   };
 
   const changeCheckboxValue = (idx: number, currentValue: boolean) => {
-    update(list[idx], "textArea", () => !currentValue);
+    update(list[idx], 'textArea', () => !currentValue);
     setList([...list]);
   };
 
@@ -104,15 +104,15 @@ const UniversalInput = (props: any) => {
           : FORM_TYPES.TEXT,
       label: d.label,
       value: d.value,
-      isRequired: d.required,
+      isRequired: d.required
     }));
 
-    const type: string = `form-${numbered ? "numbered" : "default"}`;
+    const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
-      const updatedList = updateContent("", "", type, inputObjArray);
+      const updatedList = updateContent('', '', type, inputObjArray);
       await addToDB(updatedList);
     } else {
-      const updatedList = createNewContent("", "", type, inputObjArray);
+      const updatedList = createNewContent('', '', type, inputObjArray);
       await addToDB(updatedList);
     }
 
@@ -132,7 +132,7 @@ const UniversalInput = (props: any) => {
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    label={`${numbered ? `${idx + 1}. ` : ""}Label`}
+                    label={`${numbered ? idx + 1 : ''}Label`}
                     isRequired
                     value={input.label}
                     id={`formFieldInput_${input.id}`}
@@ -155,35 +155,27 @@ const UniversalInput = (props: any) => {
                     <div className="flex items-center mt-4 gap-x-4">
                       {selectedForm === INPUT && (
                         <>
-                          <div className="sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm w-auto">
-                            <div className="flex items-center text-xs w-auto">
-                              Sentence
-                              <ToggleForModal
-                                checked={input.textArea}
-                                onClick={() =>
-                                  changeCheckboxValue(idx, input.textArea)
-                                }
-                              />
-                              Paragraph
-                            </div>
-                          </div>
+                          <ToggleForModal
+                            label="long answer"
+                            checked={input.textArea}
+                            onClick={() => changeCheckboxValue(idx, input.textArea)}
+                          />
                         </>
                       )}
                       {!hideBtns && (
                         <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                          Make this required
-                          <ToggleForModal
+                          <Checkbox
                             checked={input.required}
-                            onClick={() => makeRequired(idx, input.required)}
-                          />
+                            onClick={() => makeRequired(idx, input.required)}>
+                            Make this required
+                          </Checkbox>
                         </div>
                       )}
                     </div>
 
                     <button
                       onClick={() => removeItemFromList(input.id)}
-                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}
-                    >
+                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
                       Remove
                     </button>
                   </div>
@@ -191,28 +183,19 @@ const UniversalInput = (props: any) => {
                   <div className="flex items-center mt-4 gap-x-4">
                     {selectedForm === INPUT && (
                       <>
-                        <div className="flex items-center w-auto sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
-                          <div className="flex items-center text-xs w-auto">
-                            Sentence
-                            <ToggleForModal
-                              checked={input.textArea}
-                              onClick={() =>
-                                changeCheckboxValue(idx, input.textArea)
-                              }
-                            />
-                            Paragraph
-                          </div>
-                        </div>
+                        <ToggleForModal
+                          label="long answer"
+                          checked={input.textArea}
+                          onClick={() => changeCheckboxValue(idx, input.textArea)}
+                        />
                       </>
                     )}
                     {!hideBtns && (
-                      <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <Checkbox
+                        checked={input.required}
+                        onClick={() => makeRequired(idx, input.required)}>
                         Make this required
-                        <ToggleForModal
-                          checked={input.required}
-                          onClick={() => makeRequired(idx, input.required)}
-                        />
-                      </div>
+                      </Checkbox>
                     )}
                   </div>
                 )}
@@ -226,37 +209,25 @@ const UniversalInput = (props: any) => {
       </div>
       <div className="flex mt-8 justify-between px-6 pb-4">
         {!hideBtns ? (
-          <div className="flex items-center w-auto">
-            <button
-              onClick={addOneInputField}
-              className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 "
-            >
-              + Add Field
-            </button>
-            <button
-              onClick={() => setNumbered(!numbered)}
-              className={`${
-                numbered
-                  ? "border-indigo-500 text-white bg-indigo-400"
-                  : "border-gray-300 text-dark"
-              } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}
-            >
-              {numbered ? "Numbered" : "Unnumbered"}
-            </button>
-          </div>
+          <Buttons
+            label={'+ Add Field'}
+            onClick={addOneInputField}
+            size="small"
+            variant="dashed"
+          />
         ) : (
           <div className="w-auto" />
         )}
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+            size="middle"
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+            size="middle"
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onFormCreate}
           />
         </div>

@@ -1,38 +1,37 @@
 // global context
-import { useNotifications } from "contexts/NotificationContext";
-import useInGC from "customHooks/checkIfGameChanges";
-import useInLessonCheck from "customHooks/checkIfInLesson";
-import gsap from "gsap";
-import { isEmpty } from "lodash";
-import React, { useEffect } from "react";
+import {useNotifications} from 'contexts/NotificationContext';
+import useInGC from 'customHooks/checkIfGameChanges';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import gsap from 'gsap';
+import {isEmpty} from 'lodash';
+import {useEffect} from 'react';
 // local context
-import { useGameChangers } from "../context/GameChangersContext";
+import {useGameChangers} from '../context/GameChangersContext';
 
 const BubbleVersion = () => {
-  const { setSecondaryEmotion, primaryEmotion, setPrimaryEmotion } =
+  const {setSecondaryEmotion, primaryEmotion, setPrimaryEmotion} = useGameChangers();
+
+  const {selectedEmotions, setSelectedEmotions, replaceIdx, setReplaceIdx} =
     useGameChangers();
 
-  const { selectedEmotions, setSelectedEmotions, replaceIdx, setReplaceIdx } =
-    useGameChangers();
-
-  const { setNotification, clearNotification } = useNotifications();
+  const {setNotification, clearNotification} = useNotifications();
 
   useEffect(() => {
-    const circles = document.querySelectorAll("#emotion-btn");
-    const circleTexts = document.querySelectorAll("#emotion-btn-path");
+    const circles = document.querySelectorAll('#emotion-btn');
+    const circleTexts = document.querySelectorAll('#emotion-btn-path');
     // @ts-ignore
     gsap.from([...circles, ...circleTexts], {
       scale: 0.7,
       duration: 0.5,
       stagger: {
-        from: "center",
-        each: 0.01,
+        from: 'center',
+        each: 0.01
       },
-      transformOrigin: "center",
+      transformOrigin: 'center'
     });
   }, [primaryEmotion]);
 
-  const onPrimaryEmotion = (_: any, emotionName: string) => {
+  const onPrimaryEmotion = (emotionName: string) => {
     setPrimaryEmotion(emotionName);
   };
 
@@ -41,24 +40,24 @@ const BubbleVersion = () => {
 
   const config = {
     duration: 0.5,
-    transformOrigin: "center",
-    ease: "easeInOut",
+    transformOrigin: 'center',
+    ease: 'easeInOut'
   };
   const circleWithPath = (e: any) => {
     return [e.target, e.target.nextSibling];
   };
 
-  const onMouseEnter = (e: { target: gsap.TweenTarget }) => {
+  const onMouseEnter = (e: {target: gsap.TweenTarget}) => {
     gsap.to(circleWithPath(e), {
       ...config,
-      scale: 0.87,
+      scale: 0.87
     });
   };
 
-  const onMouseLeave = (e: { target: gsap.TweenTarget }) => {
+  const onMouseLeave = (e: {target: gsap.TweenTarget}) => {
     gsap.to(circleWithPath(e), {
       ...config,
-      scale: 1,
+      scale: 1
     });
   };
 
@@ -68,7 +67,7 @@ const BubbleVersion = () => {
   const onSecondEmotion = (e: any, emotionName: string) => {
     if (!exists(emotionName)) {
       if (selectedEmotions.length < 3 || replaceIdx !== null) {
-        const obj = { primary: primaryEmotion, secondary: emotionName };
+        const obj = {primary: primaryEmotion, secondary: emotionName};
         setSecondaryEmotion(emotionName);
         if (replaceIdx !== null) {
           selectedEmotions.splice(replaceIdx, 1, obj);
@@ -80,19 +79,19 @@ const BubbleVersion = () => {
         setSelectedEmotions([...selectedEmotions]);
         gsap.to(circleWithPath(e), {
           ...config,
-          scale: 0.75,
+          scale: 0.75
         });
         clearNotification();
       } else if (selectedEmotions.length >= 3 && (isInLesson || inGC)) {
         setNotification({
           title: `You cannot select more than 3 emotions`,
-          show: true,
+          show: true
         });
       }
     } else if (isInLesson || inGC) {
       setNotification({
         title: `You have already selected ${emotionName}.`,
-        show: true,
+        show: true
       });
     }
   };
@@ -107,13 +106,12 @@ const BubbleVersion = () => {
               height="500"
               viewBox="0 0 594 626"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
                 cx="524"
                 cy="319"
-                onClick={(e) => onPrimaryEmotion(e, "sad")}
+                onClick={() => onPrimaryEmotion('sad')}
                 r="70"
                 fill="url(#paint0_linear_9_249)"
               />
@@ -126,7 +124,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="280"
                 cy="355"
-                onClick={(e) => onPrimaryEmotion(e, "happy")}
+                onClick={() => onPrimaryEmotion('happy')}
                 r="115"
                 fill="url(#paint1_linear_9_249)"
               />
@@ -138,7 +136,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="407"
-                onClick={(e) => onPrimaryEmotion(e, "angry")}
+                onClick={() => onPrimaryEmotion('angry')}
                 cy="520"
                 r="70"
                 fill="url(#paint2_linear_9_249)"
@@ -150,7 +148,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onPrimaryEmotion(e, "bad")}
+                onClick={() => onPrimaryEmotion('bad')}
                 cx="60"
                 cy="334"
                 r="55"
@@ -164,7 +162,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="115"
-                onClick={(e) => onPrimaryEmotion(e, "surprised")}
+                onClick={() => onPrimaryEmotion('surprised')}
                 cy="115"
                 r="115"
                 fill="url(#paint4_linear_9_249)"
@@ -176,7 +174,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onPrimaryEmotion(e, "disgusted")}
+                onClick={() => onPrimaryEmotion('disgusted')}
                 cx="382"
                 cy="135"
                 r="95"
@@ -190,7 +188,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="174"
-                onClick={(e) => onPrimaryEmotion(e, "fearful")}
+                onClick={() => onPrimaryEmotion('fearful')}
                 cy="551"
                 r="75"
                 fill="url(#paint6_linear_9_249)"
@@ -207,8 +205,7 @@ const BubbleVersion = () => {
                   y1="409.417"
                   x2="483.167"
                   y2="266.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#82B9E4" />
                   <stop offset="1" stopColor="#577CBD" />
                 </linearGradient>
@@ -218,8 +215,7 @@ const BubbleVersion = () => {
                   y1="277.238"
                   x2="374.19"
                   y2="443.714"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -230,8 +226,7 @@ const BubbleVersion = () => {
                   y1="610.417"
                   x2="366.167"
                   y2="467.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -241,8 +236,7 @@ const BubbleVersion = () => {
                   y1="405.042"
                   x2="27.9167"
                   y2="292.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -252,8 +246,7 @@ const BubbleVersion = () => {
                   y1="211.5"
                   x2="204"
                   y2="-6.50001"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -264,8 +257,7 @@ const BubbleVersion = () => {
                   y1="257.708"
                   x2="326.583"
                   y2="63.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6EC59D" />
                   <stop offset="1" stopColor="#D790B6" />
                 </linearGradient>
@@ -275,8 +267,7 @@ const BubbleVersion = () => {
                   y1="647.875"
                   x2="130.25"
                   y2="494.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -285,20 +276,19 @@ const BubbleVersion = () => {
           </div>
         )}
 
-        {!isEmpty(primaryEmotion) && primaryEmotion === "sad" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'sad' && (
           <div className="">
             <svg
               width="500"
               height="500"
               viewBox="0 0 760 779"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
                 cx="75"
                 cy="106"
-                onClick={(e) => onSecondEmotion(e, "lonely")}
+                onClick={(e) => onSecondEmotion(e, 'lonely')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="lonely"
@@ -314,7 +304,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="677"
                 cy="112.5"
-                onClick={(e) => onSecondEmotion(e, "vulnerable")}
+                onClick={(e) => onSecondEmotion(e, 'vulnerable')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="vulnerable"
@@ -329,7 +319,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="491.5"
-                onClick={(e) => onSecondEmotion(e, "depressed")}
+                onClick={(e) => onSecondEmotion(e, 'depressed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="depressed"
@@ -348,7 +338,7 @@ const BubbleVersion = () => {
                 cy="63"
                 id="emotion-btn"
                 r="60"
-                onClick={(e) => onSecondEmotion(e, "isolated")}
+                onClick={(e) => onSecondEmotion(e, 'isolated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="isolated"
@@ -361,7 +351,7 @@ const BubbleVersion = () => {
               />
               <circle
                 data-name="fragile"
-                onClick={(e) => onSecondEmotion(e, "fragile")}
+                onClick={(e) => onSecondEmotion(e, 'fragile')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 cx="95"
@@ -378,7 +368,7 @@ const BubbleVersion = () => {
               <circle
                 cx="554.5"
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "abandoned")}
+                onClick={(e) => onSecondEmotion(e, 'abandoned')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="abandoned"
@@ -393,7 +383,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="77.5"
-                onClick={(e) => onSecondEmotion(e, "remorseful")}
+                onClick={(e) => onSecondEmotion(e, 'remorseful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="remorseful"
@@ -409,7 +399,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="376"
-                onClick={(e) => onSecondEmotion(e, "unimportant")}
+                onClick={(e) => onSecondEmotion(e, 'unimportant')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="unimportant"
@@ -425,7 +415,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="287"
-                onClick={(e) => onSecondEmotion(e, "disappointed")}
+                onClick={(e) => onSecondEmotion(e, 'disappointed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="disappointed"
@@ -444,7 +434,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cy="450"
                 r="85"
-                onClick={(e) => onSecondEmotion(e, "embarrassed")}
+                onClick={(e) => onSecondEmotion(e, 'embarrassed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="embarrassed"
@@ -457,7 +447,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="690"
-                onClick={(e) => onSecondEmotion(e, "powerless")}
+                onClick={(e) => onSecondEmotion(e, 'powerless')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="powerless"
@@ -473,7 +463,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="75"
-                onClick={(e) => onSecondEmotion(e, "ashamed")}
+                onClick={(e) => onSecondEmotion(e, 'ashamed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="ashamed"
@@ -489,7 +479,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="641"
-                onClick={(e) => onSecondEmotion(e, "victimized")}
+                onClick={(e) => onSecondEmotion(e, 'victimized')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="victimized"
@@ -505,7 +495,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="215"
-                onClick={(e) => onSecondEmotion(e, "despair")}
+                onClick={(e) => onSecondEmotion(e, 'despair')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="despair"
@@ -521,7 +511,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="446"
-                onClick={(e) => onSecondEmotion(e, "empty")}
+                onClick={(e) => onSecondEmotion(e, 'empty')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="empty"
@@ -537,7 +527,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="208"
-                onClick={(e) => onSecondEmotion(e, "guilty")}
+                onClick={(e) => onSecondEmotion(e, 'guilty')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="guilty"
@@ -555,7 +545,7 @@ const BubbleVersion = () => {
                 cx="554"
                 cy="723"
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "grief")}
+                onClick={(e) => onSecondEmotion(e, 'grief')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="grief"
@@ -569,7 +559,7 @@ const BubbleVersion = () => {
               />
               <circle
                 cx="531"
-                onClick={(e) => onSecondEmotion(e, "hurt")}
+                onClick={(e) => onSecondEmotion(e, 'hurt')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="hurt"
@@ -590,8 +580,7 @@ const BubbleVersion = () => {
                   y1="54.4"
                   x2="145.8"
                   y2="187"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -602,8 +591,7 @@ const BubbleVersion = () => {
                   y1="51.01"
                   x2="760.178"
                   y2="210.81"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -614,8 +602,7 @@ const BubbleVersion = () => {
                   y1="207.15"
                   x2="577.05"
                   y2="367.375"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -626,8 +613,7 @@ const BubbleVersion = () => {
                   y1="11.4"
                   x2="471.8"
                   y2="144"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -638,8 +624,7 @@ const BubbleVersion = () => {
                   y1="230.4"
                   x2="165.8"
                   y2="363"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -650,8 +635,7 @@ const BubbleVersion = () => {
                   y1="449.85"
                   x2="645.95"
                   y2="621.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -662,8 +646,7 @@ const BubbleVersion = () => {
                   y1="634.85"
                   x2="168.95"
                   y2="806.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -674,8 +657,7 @@ const BubbleVersion = () => {
                   y1="591.9"
                   x2="476.3"
                   y2="779.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -686,8 +668,7 @@ const BubbleVersion = () => {
                   y1="166.9"
                   x2="387.3"
                   y2="354.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -698,8 +679,7 @@ const BubbleVersion = () => {
                   y1="376.9"
                   x2="387.3"
                   y2="564.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -710,8 +690,7 @@ const BubbleVersion = () => {
                   y1="560.8"
                   x2="772.6"
                   y2="715.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -722,8 +701,7 @@ const BubbleVersion = () => {
                   y1="407.1"
                   x2="151.7"
                   y2="550.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -734,8 +712,7 @@ const BubbleVersion = () => {
                   y1="284.8"
                   x2="723.6"
                   y2="439.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -746,8 +723,7 @@ const BubbleVersion = () => {
                   y1="7"
                   x2="274"
                   y2="117.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -758,8 +734,7 @@ const BubbleVersion = () => {
                   y1="359.3"
                   x2="499.1"
                   y2="458.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -770,8 +745,7 @@ const BubbleVersion = () => {
                   y1="565"
                   x2="267"
                   y2="675.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -782,8 +756,7 @@ const BubbleVersion = () => {
                   y1="680"
                   x2="613"
                   y2="790.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -794,8 +767,7 @@ const BubbleVersion = () => {
                   y1="82.6"
                   x2="578.2"
                   y2="171"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#8BC5EB" />
                   <stop offset="0.39" stopColor="#70A6D5" />
                   <stop offset="1" stopColor="#4878B5" />
@@ -805,19 +777,18 @@ const BubbleVersion = () => {
           </div>
         )}
 
-        {!isEmpty(primaryEmotion) && primaryEmotion === "disgusted" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'disgusted' && (
           <div>
             <svg
               width="500"
               height="500"
               viewBox="0 0 718 752"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
                 cx="108"
-                onClick={(e) => onSecondEmotion(e, "disapproving")}
+                onClick={(e) => onSecondEmotion(e, 'disapproving')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="disapproving"
@@ -833,7 +804,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="240"
-                onClick={(e) => onSecondEmotion(e, "disappointed")}
+                onClick={(e) => onSecondEmotion(e, 'disappointed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="disappointed"
@@ -850,7 +821,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="340"
                 cy="70"
-                onClick={(e) => onSecondEmotion(e, "repelled")}
+                onClick={(e) => onSecondEmotion(e, 'repelled')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="repelled"
@@ -866,7 +837,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="598"
                 cy="70"
-                onClick={(e) => onSecondEmotion(e, "hesitant")}
+                onClick={(e) => onSecondEmotion(e, 'hesitant')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="hesitant"
@@ -881,7 +852,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="70"
-                onClick={(e) => onSecondEmotion(e, "horrified")}
+                onClick={(e) => onSecondEmotion(e, 'horrified')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="horrified"
@@ -896,7 +867,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "awful")}
+                onClick={(e) => onSecondEmotion(e, 'awful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="awful"
@@ -915,7 +886,7 @@ const BubbleVersion = () => {
                 cx="623"
                 cy="622"
                 r="95"
-                onClick={(e) => onSecondEmotion(e, "judgemental")}
+                onClick={(e) => onSecondEmotion(e, 'judgemental')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="judgemental"
@@ -931,7 +902,7 @@ const BubbleVersion = () => {
                 cx="503"
                 cy="433"
                 r="80"
-                onClick={(e) => onSecondEmotion(e, "humiliated")}
+                onClick={(e) => onSecondEmotion(e, 'humiliated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="humiliated"
@@ -947,7 +918,7 @@ const BubbleVersion = () => {
                 cx="110"
                 cy="660"
                 r="80"
-                onClick={(e) => onSecondEmotion(e, "nauseated")}
+                onClick={(e) => onSecondEmotion(e, 'nauseated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="nauseated"
@@ -962,7 +933,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="357"
                 cy="672"
-                onClick={(e) => onSecondEmotion(e, "detestable")}
+                onClick={(e) => onSecondEmotion(e, 'detestable')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="detestable"
@@ -978,7 +949,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="443"
                 cy="218"
-                onClick={(e) => onSecondEmotion(e, "appalled")}
+                onClick={(e) => onSecondEmotion(e, 'appalled')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="appalled"
@@ -995,7 +966,7 @@ const BubbleVersion = () => {
                 cx="293"
                 cy="494"
                 r="80"
-                onClick={(e) => onSecondEmotion(e, "revolted")}
+                onClick={(e) => onSecondEmotion(e, 'revolted')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="revolted"
@@ -1013,8 +984,7 @@ const BubbleVersion = () => {
                   y1="200"
                   x2="49"
                   y2="13"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1025,8 +995,7 @@ const BubbleVersion = () => {
                   y1="388"
                   x2="181"
                   y2="201"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1037,8 +1006,7 @@ const BubbleVersion = () => {
                   y1="140"
                   x2="298.7"
                   y2="9.1"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1049,8 +1017,7 @@ const BubbleVersion = () => {
                   y1="140"
                   x2="556.7"
                   y2="9.1"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1061,8 +1028,7 @@ const BubbleVersion = () => {
                   y1="494"
                   x2="28.7"
                   y2="363.1"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1073,8 +1039,7 @@ const BubbleVersion = () => {
                   y1="306"
                   x2="638.5"
                   y2="212.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1085,8 +1050,7 @@ const BubbleVersion = () => {
                   y1="717"
                   x2="566.95"
                   y2="539.35"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1097,8 +1061,7 @@ const BubbleVersion = () => {
                   y1="513"
                   x2="455.8"
                   y2="363.4"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1109,8 +1072,7 @@ const BubbleVersion = () => {
                   y1="740"
                   x2="62.8"
                   y2="590.4"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1121,8 +1083,7 @@ const BubbleVersion = () => {
                   y1="752"
                   x2="309.8"
                   y2="602.4"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1133,8 +1094,7 @@ const BubbleVersion = () => {
                   y1="288"
                   x2="401.7"
                   y2="157.1"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1145,8 +1105,7 @@ const BubbleVersion = () => {
                   y1="574"
                   x2="245.8"
                   y2="424.4"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F996B8" />
                   <stop offset="0.703125" stopColor="#ACC5E3" />
                   <stop offset="1" stopColor="#7BC8B0" />
@@ -1156,19 +1115,18 @@ const BubbleVersion = () => {
           </div>
         )}
 
-        {!isEmpty(primaryEmotion) && primaryEmotion === "angry" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'angry' && (
           <div className="">
             <svg
               width="500"
               height="500"
               viewBox="0 0 760 790"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
                 cx="75"
-                onClick={(e) => onSecondEmotion(e, "let down")}
+                onClick={(e) => onSecondEmotion(e, 'let down')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="down"
@@ -1183,7 +1141,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "bitter")}
+                onClick={(e) => onSecondEmotion(e, 'bitter')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="bitter"
@@ -1201,7 +1159,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="201"
                 cy="333"
-                onClick={(e) => onSecondEmotion(e, "numb")}
+                onClick={(e) => onSecondEmotion(e, 'numb')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="numb"
@@ -1216,7 +1174,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="680"
-                onClick={(e) => onSecondEmotion(e, "critical")}
+                onClick={(e) => onSecondEmotion(e, 'critical')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="critical"
@@ -1230,7 +1188,7 @@ const BubbleVersion = () => {
                 fill="white"
               />
               <circle
-                onClick={(e) => onSecondEmotion(e, "hostile")}
+                onClick={(e) => onSecondEmotion(e, 'hostile')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="hostile"
@@ -1247,7 +1205,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "violated")}
+                onClick={(e) => onSecondEmotion(e, 'violated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="violated"
@@ -1264,7 +1222,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="549"
-                onClick={(e) => onSecondEmotion(e, "distant")}
+                onClick={(e) => onSecondEmotion(e, 'distant')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="distant"
@@ -1282,7 +1240,7 @@ const BubbleVersion = () => {
                 cx="477"
                 cy="193"
                 r="40"
-                onClick={(e) => onSecondEmotion(e, "mad")}
+                onClick={(e) => onSecondEmotion(e, 'mad')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="mad"
@@ -1297,7 +1255,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="207"
                 cy="198"
-                onClick={(e) => onSecondEmotion(e, "humiliated")}
+                onClick={(e) => onSecondEmotion(e, 'humiliated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="humiliated"
@@ -1311,7 +1269,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "furious")}
+                onClick={(e) => onSecondEmotion(e, 'furious')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="furious"
@@ -1329,7 +1287,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="351"
                 cy="120"
-                onClick={(e) => onSecondEmotion(e, "annoyed")}
+                onClick={(e) => onSecondEmotion(e, 'annoyed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="annoyed"
@@ -1345,7 +1303,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="644"
                 cy="74"
-                onClick={(e) => onSecondEmotion(e, "jealous")}
+                onClick={(e) => onSecondEmotion(e, 'jealous')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="jealous"
@@ -1361,7 +1319,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="356"
                 cy="299"
-                onClick={(e) => onSecondEmotion(e, "disrespected")}
+                onClick={(e) => onSecondEmotion(e, 'disrespected')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="disrespected"
@@ -1376,7 +1334,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="536"
-                onClick={(e) => onSecondEmotion(e, "withdrawn")}
+                onClick={(e) => onSecondEmotion(e, 'withdrawn')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="withdrawn"
@@ -1392,7 +1350,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="75"
-                onClick={(e) => onSecondEmotion(e, "aggressive")}
+                onClick={(e) => onSecondEmotion(e, 'aggressive')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="aggressive"
@@ -1408,7 +1366,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="63"
-                onClick={(e) => onSecondEmotion(e, "ridiculed")}
+                onClick={(e) => onSecondEmotion(e, 'ridiculed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="ridiculed"
@@ -1424,7 +1382,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="236"
-                onClick={(e) => onSecondEmotion(e, "indignant")}
+                onClick={(e) => onSecondEmotion(e, 'indignant')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="indignant"
@@ -1440,7 +1398,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="683"
-                onClick={(e) => onSecondEmotion(e, "frustrated")}
+                onClick={(e) => onSecondEmotion(e, 'frustrated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="frustrated"
@@ -1458,7 +1416,7 @@ const BubbleVersion = () => {
                 cx="540"
                 cy="320"
                 r="75"
-                onClick={(e) => onSecondEmotion(e, "dismissive")}
+                onClick={(e) => onSecondEmotion(e, 'dismissive')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="dismissive"
@@ -1472,7 +1430,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="680"
-                onClick={(e) => onSecondEmotion(e, "resentful")}
+                onClick={(e) => onSecondEmotion(e, 'resentful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="resentful"
@@ -1489,7 +1447,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="249"
                 cy="662"
-                onClick={(e) => onSecondEmotion(e, "infuriated")}
+                onClick={(e) => onSecondEmotion(e, 'infuriated')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="infuriated"
@@ -1505,7 +1463,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="496"
                 cy="72"
-                onClick={(e) => onSecondEmotion(e, "betrayed")}
+                onClick={(e) => onSecondEmotion(e, 'betrayed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="betrayed"
@@ -1521,7 +1479,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="72"
                 cy="353"
-                onClick={(e) => onSecondEmotion(e, "provoked")}
+                onClick={(e) => onSecondEmotion(e, 'provoked')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="provoked"
@@ -1537,7 +1495,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="383"
                 cy="508"
-                onClick={(e) => onSecondEmotion(e, "skeptical")}
+                onClick={(e) => onSecondEmotion(e, 'skeptical')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="skeptical"
@@ -1556,8 +1514,7 @@ const BubbleVersion = () => {
                   y1="141.5"
                   x2="40"
                   y2="19"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1567,8 +1524,7 @@ const BubbleVersion = () => {
                   y1="251.125"
                   x2="29.75"
                   y2="159.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1578,8 +1534,7 @@ const BubbleVersion = () => {
                   y1="391.125"
                   x2="174.75"
                   y2="299.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1589,8 +1544,7 @@ const BubbleVersion = () => {
                   y1="637.583"
                   x2="650.833"
                   y2="535.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1600,8 +1554,7 @@ const BubbleVersion = () => {
                   y1="784.583"
                   x2="358.833"
                   y2="682.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1611,8 +1564,7 @@ const BubbleVersion = () => {
                   y1="774.042"
                   x2="672.917"
                   y2="661.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1622,8 +1574,7 @@ const BubbleVersion = () => {
                   y1="548.583"
                   x2="519.833"
                   y2="446.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1633,8 +1584,7 @@ const BubbleVersion = () => {
                   y1="244.667"
                   x2="453.667"
                   y2="163"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1644,8 +1594,7 @@ const BubbleVersion = () => {
                   y1="288.417"
                   x2="166.167"
                   y2="145.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1655,8 +1604,7 @@ const BubbleVersion = () => {
                   y1="137.5"
                   x2="196"
                   y2="15"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1666,8 +1614,7 @@ const BubbleVersion = () => {
                   y1="197.5"
                   x2="316"
                   y2="75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1677,8 +1624,7 @@ const BubbleVersion = () => {
                   y1="151.5"
                   x2="609"
                   y2="29"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1688,8 +1634,7 @@ const BubbleVersion = () => {
                   y1="415.25"
                   x2="303.5"
                   y2="231.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1699,8 +1644,7 @@ const BubbleVersion = () => {
                   y1="744.875"
                   x2="492.25"
                   y2="591.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1710,8 +1654,7 @@ const BubbleVersion = () => {
                   y1="613.875"
                   x2="31.25"
                   y2="460.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1721,8 +1664,7 @@ const BubbleVersion = () => {
                   y1="807.5"
                   x2="28"
                   y2="685"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1732,8 +1674,7 @@ const BubbleVersion = () => {
                   y1="571.958"
                   x2="198.083"
                   y2="439.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1743,8 +1684,7 @@ const BubbleVersion = () => {
                   y1="346.875"
                   x2="639.25"
                   y2="193.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1754,8 +1694,7 @@ const BubbleVersion = () => {
                   y1="416.875"
                   x2="496.25"
                   y2="263.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1765,8 +1704,7 @@ const BubbleVersion = () => {
                   y1="513.417"
                   x2="639.167"
                   y2="370.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1776,8 +1714,7 @@ const BubbleVersion = () => {
                   y1="752.417"
                   x2="208.167"
                   y2="609.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1787,8 +1724,7 @@ const BubbleVersion = () => {
                   y1="155.958"
                   x2="458.083"
                   y2="23.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1798,8 +1734,7 @@ const BubbleVersion = () => {
                   y1="436.958"
                   x2="34.0833"
                   y2="304.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1809,8 +1744,7 @@ const BubbleVersion = () => {
                   y1="591.958"
                   x2="345.083"
                   y2="459.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F14825" />
                   <stop offset="1" stopColor="#F4B516" />
                 </linearGradient>
@@ -1818,18 +1752,17 @@ const BubbleVersion = () => {
             </svg>
           </div>
         )}
-        {!isEmpty(primaryEmotion) && primaryEmotion === "happy" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'happy' && (
           <div className="">
             <svg
               width="500"
               height="500"
               viewBox="0 0 765 801"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "playful")}
+                onClick={(e) => onSecondEmotion(e, 'playful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="playful"
@@ -1846,7 +1779,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="284"
-                onClick={(e) => onSecondEmotion(e, "joyful")}
+                onClick={(e) => onSecondEmotion(e, 'joyful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="joyful"
@@ -1861,7 +1794,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "curious")}
+                onClick={(e) => onSecondEmotion(e, 'curious')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="curious"
@@ -1878,7 +1811,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="344"
-                onClick={(e) => onSecondEmotion(e, "inquisitive")}
+                onClick={(e) => onSecondEmotion(e, 'inquisitive')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="inquisitive"
@@ -1894,7 +1827,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="62.5"
-                onClick={(e) => onSecondEmotion(e, "respected")}
+                onClick={(e) => onSecondEmotion(e, 'respected')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="respected"
@@ -1910,7 +1843,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="699"
-                onClick={(e) => onSecondEmotion(e, "intimate")}
+                onClick={(e) => onSecondEmotion(e, 'intimate')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="intimate"
@@ -1927,7 +1860,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="102"
                 cy="733"
-                onClick={(e) => onSecondEmotion(e, "hopeful")}
+                onClick={(e) => onSecondEmotion(e, 'hopeful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="hopeful"
@@ -1942,7 +1875,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="226"
-                onClick={(e) => onSecondEmotion(e, "inspired")}
+                onClick={(e) => onSecondEmotion(e, 'inspired')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="inspired"
@@ -1957,7 +1890,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "successful")}
+                onClick={(e) => onSecondEmotion(e, 'successful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="successful"
@@ -1974,7 +1907,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="217"
-                onClick={(e) => onSecondEmotion(e, "content")}
+                onClick={(e) => onSecondEmotion(e, 'content')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="content"
@@ -1990,7 +1923,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="127"
-                onClick={(e) => onSecondEmotion(e, "accepted")}
+                onClick={(e) => onSecondEmotion(e, 'accepted')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="accepted"
@@ -2004,7 +1937,7 @@ const BubbleVersion = () => {
                 fill="white"
               />
               <circle
-                onClick={(e) => onSecondEmotion(e, "powerful")}
+                onClick={(e) => onSecondEmotion(e, 'powerful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="powerful"
@@ -2021,7 +1954,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "courageous")}
+                onClick={(e) => onSecondEmotion(e, 'courageous')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="courageous"
@@ -2038,7 +1971,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="519"
-                onClick={(e) => onSecondEmotion(e, "sensitive")}
+                onClick={(e) => onSecondEmotion(e, 'sensitive')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="sensitive"
@@ -2055,7 +1988,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="499"
                 cy="85"
-                onClick={(e) => onSecondEmotion(e, "aroused")}
+                onClick={(e) => onSecondEmotion(e, 'aroused')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="aroused"
@@ -2068,7 +2001,7 @@ const BubbleVersion = () => {
                 fill="white"
               />
               <circle
-                onClick={(e) => onSecondEmotion(e, "confident")}
+                onClick={(e) => onSecondEmotion(e, 'confident')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="confident"
@@ -2087,7 +2020,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="597"
                 cy="475"
-                onClick={(e) => onSecondEmotion(e, "thankful")}
+                onClick={(e) => onSecondEmotion(e, 'thankful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="thankful"
@@ -2102,7 +2035,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="326"
-                onClick={(e) => onSecondEmotion(e, "peaceful")}
+                onClick={(e) => onSecondEmotion(e, 'peaceful')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="peaceful"
@@ -2119,7 +2052,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="520"
                 cy="316"
-                onClick={(e) => onSecondEmotion(e, "loving")}
+                onClick={(e) => onSecondEmotion(e, 'loving')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="loving"
@@ -2134,7 +2067,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="185"
-                onClick={(e) => onSecondEmotion(e, "trusting")}
+                onClick={(e) => onSecondEmotion(e, 'trusting')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="trusting"
@@ -2151,7 +2084,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="550"
                 cy="755"
-                onClick={(e) => onSecondEmotion(e, "valued")}
+                onClick={(e) => onSecondEmotion(e, 'valued')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="valued"
@@ -2166,7 +2099,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="624"
-                onClick={(e) => onSecondEmotion(e, "optimistic")}
+                onClick={(e) => onSecondEmotion(e, 'optimistic')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="optimistic"
@@ -2181,7 +2114,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "interested")}
+                onClick={(e) => onSecondEmotion(e, 'interested')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="interested"
@@ -2199,7 +2132,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="431"
                 cy="240"
-                onClick={(e) => onSecondEmotion(e, "proud")}
+                onClick={(e) => onSecondEmotion(e, 'proud')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="proud"
@@ -2214,7 +2147,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="373"
-                onClick={(e) => onSecondEmotion(e, "free")}
+                onClick={(e) => onSecondEmotion(e, 'free')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="free"
@@ -2230,7 +2163,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="709"
-                onClick={(e) => onSecondEmotion(e, "cheeky")}
+                onClick={(e) => onSecondEmotion(e, 'cheeky')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="cheeky"
@@ -2250,8 +2183,7 @@ const BubbleVersion = () => {
                   y1="17.8095"
                   x2="111.048"
                   y2="97.4286"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2262,8 +2194,7 @@ const BubbleVersion = () => {
                   y1="166.19"
                   x2="324.952"
                   y2="238.571"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2274,8 +2205,7 @@ const BubbleVersion = () => {
                   y1="376.19"
                   x2="91.9524"
                   y2="448.571"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2286,8 +2216,7 @@ const BubbleVersion = () => {
                   y1="500.667"
                   x2="401.333"
                   y2="602"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2298,8 +2227,7 @@ const BubbleVersion = () => {
                   y1="548.238"
                   x2="113.69"
                   y2="638.714"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2310,8 +2238,7 @@ const BubbleVersion = () => {
                   y1="538.81"
                   x2="744.048"
                   y2="618.429"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2322,8 +2249,7 @@ const BubbleVersion = () => {
                   y1="699.19"
                   x2="142.952"
                   y2="771.571"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2334,8 +2260,7 @@ const BubbleVersion = () => {
                   y1="625.19"
                   x2="266.952"
                   y2="697.571"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2346,8 +2271,7 @@ const BubbleVersion = () => {
                   y1="404.429"
                   x2="499.143"
                   y2="491.286"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2358,8 +2282,7 @@ const BubbleVersion = () => {
                   y1="23.0476"
                   x2="270.238"
                   y2="117.143"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2370,8 +2293,7 @@ const BubbleVersion = () => {
                   y1="139.667"
                   x2="184.333"
                   y2="241"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2382,8 +2304,7 @@ const BubbleVersion = () => {
                   y1="432.667"
                   x2="242.333"
                   y2="534"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2394,8 +2315,7 @@ const BubbleVersion = () => {
                   y1="683.667"
                   x2="447.333"
                   y2="785"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2406,8 +2326,7 @@ const BubbleVersion = () => {
                   y1="579.429"
                   x2="568.143"
                   y2="666.286"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2418,8 +2337,7 @@ const BubbleVersion = () => {
                   y1="41.0476"
                   x2="552.238"
                   y2="135.143"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2430,8 +2348,7 @@ const BubbleVersion = () => {
                   y1="674.048"
                   x2="742.238"
                   y2="768.143"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2442,8 +2359,7 @@ const BubbleVersion = () => {
                   y1="437.81"
                   x2="642.048"
                   y2="517.429"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2454,8 +2370,7 @@ const BubbleVersion = () => {
                   y1="326.048"
                   x2="379.238"
                   y2="420.143"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2466,8 +2381,7 @@ const BubbleVersion = () => {
                   y1="282.19"
                   x2="560.952"
                   y2="354.571"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2478,8 +2392,7 @@ const BubbleVersion = () => {
                   y1="292.81"
                   x2="230.048"
                   y2="372.429"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2490,8 +2403,7 @@ const BubbleVersion = () => {
                   y1="724.571"
                   x2="586.857"
                   y2="789.714"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2502,8 +2414,7 @@ const BubbleVersion = () => {
                   y1="136.286"
                   x2="685.429"
                   y2="244.857"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2514,8 +2425,7 @@ const BubbleVersion = () => {
                   y1="315.667"
                   x2="752.333"
                   y2="417"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2526,8 +2436,7 @@ const BubbleVersion = () => {
                   y1="206.19"
                   x2="471.952"
                   y2="278.571"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2538,8 +2447,7 @@ const BubbleVersion = () => {
                   y1="70.9524"
                   x2="405.762"
                   y2="128.857"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2550,8 +2458,7 @@ const BubbleVersion = () => {
                   y1="23.8095"
                   x2="754.048"
                   y2="103.429"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#6B83C1" />
                   <stop offset="0.0124815" stopColor="#737DB8" />
                   <stop offset="1" stopColor="#E8222B" />
@@ -2561,20 +2468,19 @@ const BubbleVersion = () => {
           </div>
         )}
 
-        {!isEmpty(primaryEmotion) && primaryEmotion === "fearful" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'fearful' && (
           <div>
             <svg
               width="500"
               height="500"
               viewBox="0 0 729 801"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
                 cx="57"
                 cy="104"
-                onClick={(e) => onSecondEmotion(e, "scared")}
+                onClick={(e) => onSecondEmotion(e, 'scared')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="scared"
@@ -2588,7 +2494,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "inferior")}
+                onClick={(e) => onSecondEmotion(e, 'inferior')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="inferior"
@@ -2605,7 +2511,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="47"
-                onClick={(e) => onSecondEmotion(e, "weak")}
+                onClick={(e) => onSecondEmotion(e, 'weak')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="weak"
@@ -2622,7 +2528,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="220"
                 cy="60"
-                onClick={(e) => onSecondEmotion(e, "anxious")}
+                onClick={(e) => onSecondEmotion(e, 'anxious')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="anxious"
@@ -2639,7 +2545,7 @@ const BubbleVersion = () => {
                 cx="418"
                 cy="90"
                 r="60"
-                onClick={(e) => onSecondEmotion(e, "insecure")}
+                onClick={(e) => onSecondEmotion(e, 'insecure')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="insecure"
@@ -2655,7 +2561,7 @@ const BubbleVersion = () => {
                 cx="467"
                 cy="230"
                 r="60"
-                onClick={(e) => onSecondEmotion(e, "rejected")}
+                onClick={(e) => onSecondEmotion(e, 'rejected')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="rejected"
@@ -2671,7 +2577,7 @@ const BubbleVersion = () => {
                 cx="86"
                 cy="264"
                 r="60"
-                onClick={(e) => onSecondEmotion(e, "helpless")}
+                onClick={(e) => onSecondEmotion(e, 'helpless')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="helpless"
@@ -2686,7 +2592,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="334"
                 cy="523"
-                onClick={(e) => onSecondEmotion(e, "worried")}
+                onClick={(e) => onSecondEmotion(e, 'worried')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="worried"
@@ -2701,7 +2607,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="445.5"
-                onClick={(e) => onSecondEmotion(e, "threatened")}
+                onClick={(e) => onSecondEmotion(e, 'threatened')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="threatened"
@@ -2717,7 +2623,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="656.5"
-                onClick={(e) => onSecondEmotion(e, "persecuted")}
+                onClick={(e) => onSecondEmotion(e, 'persecuted')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="persecuted"
@@ -2731,7 +2637,7 @@ const BubbleVersion = () => {
                 fill="white"
               />
               <circle
-                onClick={(e) => onSecondEmotion(e, "excluded")}
+                onClick={(e) => onSecondEmotion(e, 'excluded')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="excluded"
@@ -2750,7 +2656,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="641"
                 cy="710"
-                onClick={(e) => onSecondEmotion(e, "exposed")}
+                onClick={(e) => onSecondEmotion(e, 'exposed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="exposed"
@@ -2767,7 +2673,7 @@ const BubbleVersion = () => {
                 cx="72.5"
                 cy="445.5"
                 r="72.5"
-                onClick={(e) => onSecondEmotion(e, "inadequate")}
+                onClick={(e) => onSecondEmotion(e, 'inadequate')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="inadequate"
@@ -2781,7 +2687,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="249.5"
-                onClick={(e) => onSecondEmotion(e, "frightened")}
+                onClick={(e) => onSecondEmotion(e, 'frightened')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="frightened"
@@ -2796,7 +2702,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "distraught")}
+                onClick={(e) => onSecondEmotion(e, 'distraught')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="distraught"
@@ -2813,7 +2719,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="334.5"
-                onClick={(e) => onSecondEmotion(e, "worthless")}
+                onClick={(e) => onSecondEmotion(e, 'worthless')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="worthless"
@@ -2831,7 +2737,7 @@ const BubbleVersion = () => {
                 cx="492.5"
                 cy="590.5"
                 r="72.5"
-                onClick={(e) => onSecondEmotion(e, "nervous")}
+                onClick={(e) => onSecondEmotion(e, 'nervous')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="nervous"
@@ -2847,7 +2753,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="158"
                 cy="636"
-                onClick={(e) => onSecondEmotion(e, "insignificant")}
+                onClick={(e) => onSecondEmotion(e, 'insignificant')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="insignificant"
@@ -2866,8 +2772,7 @@ const BubbleVersion = () => {
                   y1="168.583"
                   x2="27.8333"
                   y2="66.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2877,8 +2782,7 @@ const BubbleVersion = () => {
                   y1="477.583"
                   x2="184.833"
                   y2="375.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2888,8 +2792,7 @@ const BubbleVersion = () => {
                   y1="812.667"
                   x2="23.6667"
                   y2="731"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2899,8 +2802,7 @@ const BubbleVersion = () => {
                   y1="137.5"
                   x2="185"
                   y2="15"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2910,8 +2812,7 @@ const BubbleVersion = () => {
                   y1="167.5"
                   x2="383"
                   y2="45"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2921,8 +2822,7 @@ const BubbleVersion = () => {
                   y1="307.5"
                   x2="432"
                   y2="185"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2932,8 +2832,7 @@ const BubbleVersion = () => {
                   y1="341.5"
                   x2="51"
                   y2="219"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2943,8 +2842,7 @@ const BubbleVersion = () => {
                   y1="600.5"
                   x2="299"
                   y2="478"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2954,8 +2852,7 @@ const BubbleVersion = () => {
                   y1="482.146"
                   x2="403.208"
                   y2="334.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2965,8 +2862,7 @@ const BubbleVersion = () => {
                   y1="409.146"
                   x2="614.208"
                   y2="261.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2976,8 +2872,7 @@ const BubbleVersion = () => {
                   y1="573.5"
                   x2="618"
                   y2="451"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2987,8 +2882,7 @@ const BubbleVersion = () => {
                   y1="787.5"
                   x2="606"
                   y2="665"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -2998,8 +2892,7 @@ const BubbleVersion = () => {
                   y1="539.146"
                   x2="30.2083"
                   y2="391.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3009,8 +2902,7 @@ const BubbleVersion = () => {
                   y1="342.146"
                   x2="207.208"
                   y2="194.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3020,8 +2912,7 @@ const BubbleVersion = () => {
                   y1="197.146"
                   x2="575.208"
                   y2="49.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3031,8 +2922,7 @@ const BubbleVersion = () => {
                   y1="799.146"
                   x2="292.208"
                   y2="651.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3042,8 +2932,7 @@ const BubbleVersion = () => {
                   y1="684.146"
                   x2="450.208"
                   y2="536.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3053,8 +2942,7 @@ const BubbleVersion = () => {
                   y1="684.146"
                   x2="450.208"
                   y2="536.125"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3064,8 +2952,7 @@ const BubbleVersion = () => {
                   y1="739.333"
                   x2="111.333"
                   y2="576"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#FAAE16" />
                   <stop offset="1" stopColor="#95CAC5" />
                 </linearGradient>
@@ -3073,18 +2960,17 @@ const BubbleVersion = () => {
             </svg>
           </div>
         )}
-        {!isEmpty(primaryEmotion) && primaryEmotion === "bad" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'bad' && (
           <div>
             <svg
               width="500"
               height="500"
               viewBox="0 0 750 785"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "bored")}
+                onClick={(e) => onSecondEmotion(e, 'bored')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="bored"
@@ -3102,7 +2988,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="253"
                 cy="115"
-                onClick={(e) => onSecondEmotion(e, "tired")}
+                onClick={(e) => onSecondEmotion(e, 'tired')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="tired"
@@ -3117,7 +3003,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="60"
-                onClick={(e) => onSecondEmotion(e, "busy")}
+                onClick={(e) => onSecondEmotion(e, 'busy')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="busy"
@@ -3133,7 +3019,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="131"
-                onClick={(e) => onSecondEmotion(e, "stressed")}
+                onClick={(e) => onSecondEmotion(e, 'stressed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="stressed"
@@ -3149,7 +3035,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="253"
-                onClick={(e) => onSecondEmotion(e, "sleepy")}
+                onClick={(e) => onSecondEmotion(e, 'sleepy')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="sleepy"
@@ -3165,7 +3051,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="431"
-                onClick={(e) => onSecondEmotion(e, "indifferent")}
+                onClick={(e) => onSecondEmotion(e, 'indifferent')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="indifferent"
@@ -3182,7 +3068,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="141"
                 cy="627"
-                onClick={(e) => onSecondEmotion(e, "overwhelmed")}
+                onClick={(e) => onSecondEmotion(e, 'overwhelmed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="overwhelmed"
@@ -3197,7 +3083,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="640"
-                onClick={(e) => onSecondEmotion(e, "out of control")}
+                onClick={(e) => onSecondEmotion(e, 'out of control')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="out of control"
@@ -3212,7 +3098,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "apathetic")}
+                onClick={(e) => onSecondEmotion(e, 'apathetic')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="apathetic"
@@ -3229,7 +3115,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="402"
-                onClick={(e) => onSecondEmotion(e, "unfocused")}
+                onClick={(e) => onSecondEmotion(e, 'unfocused')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="unfocused"
@@ -3244,7 +3130,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "pressured")}
+                onClick={(e) => onSecondEmotion(e, 'pressured')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="pressured"
@@ -3260,7 +3146,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "rushed")}
+                onClick={(e) => onSecondEmotion(e, 'rushed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="rushed"
@@ -3281,8 +3167,7 @@ const BubbleVersion = () => {
                   y1="165.958"
                   x2="29.0833"
                   y2="33.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3292,8 +3177,7 @@ const BubbleVersion = () => {
                   y1="198.958"
                   x2="215.083"
                   y2="66.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3303,8 +3187,7 @@ const BubbleVersion = () => {
                   y1="507.5"
                   x2="25"
                   y2="385"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3314,8 +3197,7 @@ const BubbleVersion = () => {
                   y1="381.25"
                   x2="78.5"
                   y2="197.5"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3325,8 +3207,7 @@ const BubbleVersion = () => {
                   y1="526.875"
                   x2="209.25"
                   y2="373.75"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3336,8 +3217,7 @@ const BubbleVersion = () => {
                   y1="478.167"
                   x2="372.667"
                   y2="274"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3347,8 +3227,7 @@ const BubbleVersion = () => {
                   y1="782"
                   x2="71"
                   y2="537"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3358,8 +3237,7 @@ const BubbleVersion = () => {
                   y1="814.167"
                   x2="581.667"
                   y2="610"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3369,8 +3247,7 @@ const BubbleVersion = () => {
                   y1="244.167"
                   x2="591.667"
                   y2="40"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3380,8 +3257,7 @@ const BubbleVersion = () => {
                   y1="787.625"
                   x2="340.75"
                   y2="573.25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3391,8 +3267,7 @@ const BubbleVersion = () => {
                   y1="229.167"
                   x2="369.667"
                   y2="25"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3402,8 +3277,7 @@ const BubbleVersion = () => {
                   y1="562.333"
                   x2="602.333"
                   y2="399"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#3C9158" />
                   <stop offset="1" stopColor="#F9ED51" />
                 </linearGradient>
@@ -3411,20 +3285,19 @@ const BubbleVersion = () => {
             </svg>
           </div>
         )}
-        {!isEmpty(primaryEmotion) && primaryEmotion === "surprised" && (
+        {!isEmpty(primaryEmotion) && primaryEmotion === 'surprised' && (
           <div>
             <svg
               width="500"
               height="500"
               viewBox="0 0 758 779"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <circle
                 id="emotion-btn"
                 cx="110"
                 cy="90"
-                onClick={(e) => onSecondEmotion(e, "startled")}
+                onClick={(e) => onSecondEmotion(e, 'startled')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="startled"
@@ -3439,7 +3312,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="115"
-                onClick={(e) => onSecondEmotion(e, "amazed")}
+                onClick={(e) => onSecondEmotion(e, 'amazed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="amazed"
@@ -3455,7 +3328,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="478"
-                onClick={(e) => onSecondEmotion(e, "excited")}
+                onClick={(e) => onSecondEmotion(e, 'excited')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="excited"
@@ -3470,7 +3343,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "eager")}
+                onClick={(e) => onSecondEmotion(e, 'eager')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="eager"
@@ -3486,7 +3359,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "energetic")}
+                onClick={(e) => onSecondEmotion(e, 'energetic')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="energetic"
@@ -3503,7 +3376,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="678"
-                onClick={(e) => onSecondEmotion(e, "awe")}
+                onClick={(e) => onSecondEmotion(e, 'awe')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="awe"
@@ -3519,7 +3392,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="100"
-                onClick={(e) => onSecondEmotion(e, "shocked")}
+                onClick={(e) => onSecondEmotion(e, 'shocked')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="shocked"
@@ -3536,7 +3409,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="330"
                 cy="158"
-                onClick={(e) => onSecondEmotion(e, "confused")}
+                onClick={(e) => onSecondEmotion(e, 'confused')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="confused"
@@ -3552,7 +3425,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="578"
                 cy="115"
-                onClick={(e) => onSecondEmotion(e, "dismayed")}
+                onClick={(e) => onSecondEmotion(e, 'dismayed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="dismayed"
@@ -3566,7 +3439,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onSecondEmotion(e, "perplexed")}
+                onClick={(e) => onSecondEmotion(e, 'perplexed')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="perplexed"
@@ -3584,7 +3457,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="678"
                 cy="699"
-                onClick={(e) => onSecondEmotion(e, "astonished")}
+                onClick={(e) => onSecondEmotion(e, 'astonished')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="astonished"
@@ -3600,7 +3473,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="450"
                 cy="597"
-                onClick={(e) => onSecondEmotion(e, "disillusioned")}
+                onClick={(e) => onSecondEmotion(e, 'disillusioned')}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-name="disillusioned"
@@ -3619,8 +3492,7 @@ const BubbleVersion = () => {
                   y1="165.522"
                   x2="179.652"
                   y2="-5.08696"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3631,8 +3503,7 @@ const BubbleVersion = () => {
                   y1="382.717"
                   x2="188.522"
                   y2="202.63"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3643,8 +3514,7 @@ const BubbleVersion = () => {
                   y1="402.522"
                   x2="547.652"
                   y2="231.913"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3655,8 +3525,7 @@ const BubbleVersion = () => {
                   y1="479.935"
                   x2="357.043"
                   y2="337.761"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3667,8 +3536,7 @@ const BubbleVersion = () => {
                   y1="766.13"
                   x2="304.913"
                   y2="614.478"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3679,8 +3547,7 @@ const BubbleVersion = () => {
                   y1="320.957"
                   x2="716.696"
                   y2="226.174"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3691,8 +3558,7 @@ const BubbleVersion = () => {
                   y1="620.913"
                   x2="177.391"
                   y2="431.348"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3703,8 +3569,7 @@ const BubbleVersion = () => {
                   y1="241.913"
                   x2="407.391"
                   y2="52.3478"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3715,8 +3580,7 @@ const BubbleVersion = () => {
                   y1="198.913"
                   x2="655.391"
                   y2="9.34782"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3727,8 +3591,7 @@ const BubbleVersion = () => {
                   y1="542.913"
                   x2="731.391"
                   y2="353.348"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3739,8 +3602,7 @@ const BubbleVersion = () => {
                   y1="766.13"
                   x2="739.913"
                   y2="614.478"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />
@@ -3751,8 +3613,7 @@ const BubbleVersion = () => {
                   y1="697.696"
                   x2="542.87"
                   y2="470.217"
-                  gradientUnits="userSpaceOnUse"
-                >
+                  gradientUnits="userSpaceOnUse">
                   <stop stopColor="#F397B9" />
                   <stop offset="1" stopColor="#EAE5F2" />
                   <stop offset="1" stopColor="#EAE5F2" />

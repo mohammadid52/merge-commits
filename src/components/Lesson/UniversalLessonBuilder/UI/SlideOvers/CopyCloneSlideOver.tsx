@@ -1,7 +1,8 @@
+import SuccessMessage from '@components/Dashboard/Admin/UserManagement/SuccessMessage';
 import useAuth from '@customHooks/useAuth';
-import {Dialog, Transition} from '@headlessui/react';
-import {XIcon} from '@heroicons/react/outline';
-import {CheckCircleIcon} from '@heroicons/react/solid';
+import {Transition} from '@headlessui/react';
+
+import {Drawer, Empty} from 'antd';
 import {UniversalLesson} from 'API';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
@@ -15,70 +16,10 @@ import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 
 import map from 'lodash/map';
-import React, {Fragment, useState} from 'react';
+import {useState} from 'react';
 import {FiBook} from 'react-icons/fi';
 import {useHistory} from 'react-router';
 import {wait} from 'utilities/functions';
-
-const Slideover = ({
-  open,
-  setOpen,
-  children
-}: {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  children: React.ReactNode;
-}) => {
-  return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        static
-        style={{zIndex: 9999}}
-        className="fixed  w-auto inset-0 overflow-hidden"
-        open={open}
-        onClose={setOpen}>
-        <div className="absolute w-auto inset-0 overflow-hidden">
-          <Dialog.Overlay className="absolute inset-0" />
-
-          <div className="fixed w-auto inset-y-0 right-0 pl-10 max-w-full flex">
-            <Transition.Child
-              as={Fragment}
-              enter="transform transition ease-in-out duration-500 sm:duration-700"
-              enterFrom="translate-x-full"
-              enterTo="translate-x-0"
-              leave="transform transition ease-in-out duration-500 sm:duration-700"
-              leaveFrom="translate-x-0"
-              leaveTo="translate-x-full">
-              <div className="">
-                <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-                  <div className="px-4 sm:px-6">
-                    <div className="flex items-start justify-between">
-                      <Dialog.Title className="text-lg font-medium text-gray-900">
-                        Select Page to copy / clone
-                      </Dialog.Title>
-                      <div className="ml-3 h-7 flex items-center w-auto">
-                        <button
-                          className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none w-auto"
-                          onClick={() => setOpen(false)}>
-                          <span className="sr-only">Close panel</span>
-                          <XIcon className="h-6 w-6" aria-hidden="true" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-6 relative flex-1 px-4 sm:px-6 max-w-140 min-w-136">
-                    {children}
-                  </div>
-                </div>
-              </div>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root>
-  );
-};
 
 const CopyCloneSlideOver = ({
   getCopyData,
@@ -236,25 +177,25 @@ const CopyCloneSlideOver = ({
   };
 
   return (
-    <Slideover open={showDataForCopyClone} setOpen={setShowDataForCopyClone}>
+    <Drawer
+      title={'Select Page to copy / clone'}
+      width={400}
+      onClose={() => setShowDataForCopyClone(false)}
+      open={showDataForCopyClone}
+      bodyStyle={{paddingBottom: 80}}>
       <div className="flex flex-col items-center space-y-2 mb-2">
-        <Info text="Lessons are case sensitive" className="my-2 mb-4" />
+        <Info text="Lessons are case sensitive" />
         {searchStatus === 'success' && status === 'none' && (
-          <Info text="Click on a page to select for copy / clone" className="my-2 mb-4" />
+          <Info text="Click on a page to select for copy / clone" />
         )}
-        <div className="flex items-center space-x-2">
-          <div className="">
-            <FormInput
-              value={searchQuery}
-              onKeyDown={(e) => {
-                if (e.keyCode === 13) {
-                  loadLessonsOnSearch();
-                }
-              }}
-              onChange={onSearchChange}
-              placeHolder="Search lessons"
-            />
-          </div>
+        <div className="flex items-center w-full  space-x-2">
+          <FormInput
+            value={searchQuery}
+            className="w-full"
+            onChange={onSearchChange}
+            placeHolder="Search lessons"
+          />
+
           <Buttons onClick={loadLessonsOnSearch} label="Search" />
         </div>
       </div>
@@ -279,17 +220,14 @@ const CopyCloneSlideOver = ({
         ) : searchStatus === 'error' ? (
           <div>Oops! Something went wrong.</div>
         ) : searchStatus === 'no_results' ? (
-          <div className="w-auto flex items-center flex-col justify-center">
-            <img
-              src={'https://image.flaticon.com/icons/png/512/5319/5319100.png'}
-              alt="no results found"
-              className="h-32 w-32 mb-4 text-gray-400"
-            />
-            <p className="w-auto text-center block text-gray-500 text-base">
-              Oops! No results found matching '{searchQuery}'.
-              <br /> Please check spellings or try another one.
-            </p>
-          </div>
+          <Empty
+            description={
+              <>
+                Oops! No results found matching '{searchQuery}'.
+                <br /> Please check spellings or try another one.
+              </>
+            }
+          />
         ) : (
           <div className="self-start">
             <Transition
@@ -300,49 +238,11 @@ const CopyCloneSlideOver = ({
               leave="transition-opacity duration-75"
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
-              <div
-                style={{backgroundColor: '#ecfdf5'}}
-                className={'my-4 rounded-md  p-4'}>
-                <div className="flex">
-                  <div className="flex-shrink-0 w-auto">
-                    {status !== 'loading' ? (
-                      <CheckCircleIcon
-                        className="h-5 w-5 text-green-400"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <div>
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-700"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-20"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800 w-auto">
-                      {status === 'loading'
-                        ? 'collecting page data...'
-                        : status === 'done'
-                        ? 'Redirecting you to your new page...'
-                        : ''}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {status === 'loading' ? (
+                <Info text="collecting page data..." />
+              ) : (
+                <SuccessMessage note="Redirecting you to your new page..." />
+              )}
             </Transition>
             <Transition
               show={Boolean(selectedId.lessonId) && Boolean(selectedId.pageId)}
@@ -384,7 +284,7 @@ const CopyCloneSlideOver = ({
           </div>
         )}
       </div>
-    </Slideover>
+    </Drawer>
   );
 };
 

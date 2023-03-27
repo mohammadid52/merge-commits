@@ -9,7 +9,7 @@ export interface GlobalStateType {
   roomData: {
     id: string;
     name: string;
-    teachingStyle: TeachingStyle;
+    teachingStyle?: TeachingStyle;
     curriculum: any;
     rooms: any[];
     syllabus: any[];
@@ -52,7 +52,7 @@ export const globalState: GlobalStateType = {
   roomData: {
     id: '',
     name: '',
-    teachingStyle: TeachingStyle.PERFORMER,
+    teachingStyle: TeachingStyle.ACADEMIC,
     widgets: [],
     curriculum: {},
     rooms: [],
@@ -83,7 +83,7 @@ export const globalState: GlobalStateType = {
     email: '',
     firstName: '',
     lastName: '',
-    language: '',
+    language: 'EN',
     role: Role.ST,
     image: '',
     preferredName: '',
@@ -106,7 +106,9 @@ export const globalState: GlobalStateType = {
 };
 
 export const standardTheme = {
-  bg: 'bg-dark-gray',
+  iconoclast: '#667eea',
+  curate: '#0081cb',
+  bg: 'bg-dark-blue',
   underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
   gradient: {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue'
@@ -234,3 +236,8 @@ export const standardTheme = {
     }
   }
 };
+
+export const allowedAuthIds = [
+  '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
+  '22241431-5b44-434a-bba1-6dcb40e7c7fa'
+];

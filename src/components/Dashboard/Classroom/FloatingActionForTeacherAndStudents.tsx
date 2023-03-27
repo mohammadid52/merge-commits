@@ -1,6 +1,7 @@
 import Placeholder from '@components/Atoms/Placeholder';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import {formatPageName} from '@utilities/functions';
 import {getImageFromS3} from '@utilities/services';
 import {PersonStatus, RoomStatus} from 'API';
 import gsap from 'gsap';
@@ -9,7 +10,6 @@ import React, {useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {AiOutlineUsergroupDelete} from 'react-icons/ai';
 import {HiOutlineUserGroup} from 'react-icons/hi';
-import {formatPageName} from '../Admin/UserManagement/List';
 
 const Content = ({
   list,

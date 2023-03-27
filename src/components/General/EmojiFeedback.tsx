@@ -349,18 +349,12 @@ const EmojiFeedback = () => {
     onSave
   };
 
-  return showSentimentModal ? (
+  return (
     <Modal
-      // title={'How are you today?'}
-      customTitle={
-        <div className="w-auto">
-          <h3 className="text-xl text-white font-medium ">How are you today?</h3>
-          <p className="text-sm  text-gray-200">Click on emoji to save emotion</p>
-        </div>
-      }
+      open={showSentimentModal}
+      title={'How are you today?'}
       scrollHidden
       intenseOpacity
-      width={'w-auto'}
       modalCloseId="sentiment-modal-close"
       closeAction={onCancel}
       closeOnBackdrop={false}
@@ -401,8 +395,6 @@ const EmojiFeedback = () => {
         </div>
       </>
     </Modal>
-  ) : (
-    <div className="w-auto hidden" />
   );
 };
 

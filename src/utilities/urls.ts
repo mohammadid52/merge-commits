@@ -6,7 +6,7 @@
 // ~~~~~~~~~~~~~~~ DEMOSITE ~~~~~~~~~~~~~~ //
 // ~~~~~~~~~~~~~~~~ UATENV ~~~~~~~~~~~~~~~ //
 
-export const getCorrectUrl = (clientKey: string) => {
+const getCorrectUrl = (clientKey: string) => {
   switch (clientKey) {
     case 'iconoclast':
       return {
@@ -49,11 +49,11 @@ export const getCorrectUrl = (clientKey: string) => {
     default:
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/prod-create-user',
+          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user',
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/prod-request-reset-password',
+          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password',
         tableCleanupUrl:
-          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast'
+          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson'
       };
   }
 };
@@ -66,7 +66,7 @@ export const getCorrectUrl = (clientKey: string) => {
 // @ts-ignore
 import * as awsconfig2 from '../aws-exports';
 
-export const getBackendKey = (input: any) => {
+const getBackendKey = (input: any) => {
   if (input) {
     //@ts-ignore
     let configJson = input['default'];

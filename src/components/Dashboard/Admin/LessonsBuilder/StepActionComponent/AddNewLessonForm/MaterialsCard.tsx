@@ -1,4 +1,3 @@
-import React from 'react';
 import RichTextEditor from 'atoms/RichTextEditor';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
@@ -16,7 +15,7 @@ const MaterialsCard = ({purposeHtml, studentMaterials, setEditorContent}: any) =
   const [onTeacherTab, onStudentTab] = helpers;
 
   return (
-    <div className="max-h-96 p-4">
+    <div className="">
       <Tabs2 curTab={curTab} setCurTab={setCurTab} tabs={tabs} />
 
       <AnimatedContainer duration="500" animationType="translateY" show={onTeacherTab}>

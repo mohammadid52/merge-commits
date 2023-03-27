@@ -1,9 +1,6 @@
 import {getUserRoleString} from '@utilities/strings';
+import {Tag} from 'antd';
 import {Role} from 'API';
-import React from 'react';
-import {Status} from './UserStatus';
-
-// type Role = 'ADM' | 'BLD' | 'FLW' |  'TR' | 'ST';
 
 type RoleProps = {
   role: Role | string;
@@ -11,7 +8,18 @@ type RoleProps = {
 
 const UserRole = ({role}: RoleProps) => {
   return (
-    <Status className={'bg-gray-200 text-gray-600'}>{getUserRoleString(role)}</Status>
+    <Tag
+      color={
+        role === 'ST'
+          ? 'purple'
+          : role === 'ADM'
+          ? 'magenta'
+          : role === 'TR' || role === 'FLW'
+          ? 'blue'
+          : 'green'
+      }>
+      {getUserRoleString(role)}
+    </Tag>
   );
 };
 

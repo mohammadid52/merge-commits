@@ -164,11 +164,7 @@ const SyllabusList = (props: SyllabusListProps) => {
               {(!list || (list && list.length === 0)) && (
                 <Fragment>
                   <div className="flex justify-center mt-8">
-                    <Buttons
-                      btnClass="mx-4"
-                      label="Add new unit"
-                      onClick={createNewSyllabus}
-                    />
+                    <Buttons label="Add new unit" onClick={createNewSyllabus} />
                   </div>
                   <p className="text-center p-16">
                     {' '}

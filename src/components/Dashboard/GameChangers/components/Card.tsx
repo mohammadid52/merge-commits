@@ -4,21 +4,21 @@ import {
   GRATITUDE,
   SINGING_BOWL,
   SQUARE,
-  THINK_ABOUT_IT,
-} from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
-import { useEffect } from "react";
+  THINK_ABOUT_IT
+} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {useEffect} from 'react';
 
-import Buttons from "@components/Atoms/Buttons";
-import ErrorBoundary from "@components/Error/ErrorBoundary";
+import Buttons from '@components/Atoms/Buttons';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {
   EmotionSvg,
   FSEBreathingSvg,
   GratitudeSvg,
   SingingBowlSvg,
   SquareSvg,
-  ThinkAboutItSvg,
-} from "components/Dashboard/GameChangers/svg";
-import useInLessonCheck from "customHooks/checkIfInLesson";
+  ThinkAboutItSvg
+} from 'components/Dashboard/GameChangers/svg';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
 
 const getSVG = (type: string) => {
   switch (type) {
@@ -41,43 +41,38 @@ const getSVG = (type: string) => {
 
 const Card = ({
   card,
-  onClick,
+  onClick
 }: {
-  card?: { id: number; type: string; title: string; desc: string };
+  card?: {id: number; type: string; title: string; desc: string};
   onClick: (id: number, autoClick?: boolean) => void;
   selected: boolean;
 }) => {
   const inLesson = useInLessonCheck();
   useEffect(() => {
     if (!inLesson) {
-      $(".flickity-button").css("display", "block");
+      $('.flickity-button').css('display', 'block');
     }
   }, [inLesson]);
 
   return (
     <ErrorBoundary componentName="Card">
       <div
-        className={`carousel-cell box mx-6 z-100 my-12 lg:my-0 gap-y-4 cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button xl:max-h-156 xl:min-h-156 max-h-104 min-h-104`}
-      >
+        className={`carousel-cell box mx-6 z-100 my-12 lg:my-0 gap-y-4 cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button xl:max-h-156 xl:min-h-156 max-h-104 min-h-104`}>
         <div
-          className={`h-full mb-4 inner-card transition-all rounded-xl p-8 lg:py-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}
-        >
+          className={`h-full mb-4 inner-card transition-all rounded-xl p-8 lg:py-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}>
           {card && getSVG(card.type)}
 
           <h1 className="lg:text-4xl text-xl my-4  text-white font-bold">
-            {card?.title || ""}
+            {card?.title || ''}
           </h1>
           <p className="lg:text-base text-xs my-2 text-white font-light">
-            {card?.desc || ""}
+            {card?.desc || ''}
           </p>
         </div>
 
         <Buttons
-          btnClass="w-full"
           onClick={() => card && onClick(card.id)}
-          label={`Select ${
-            card && card.type !== THINK_ABOUT_IT ? "Exercise" : ""
-          }`}
+          label={`Select ${card && card.type !== THINK_ABOUT_IT ? 'Exercise' : ''}`}
         />
       </div>
     </ErrorBoundary>

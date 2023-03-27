@@ -1,4 +1,5 @@
 import Label from '@components/Atoms/Form/Label';
+import {Modal, Table} from 'antd';
 import {UniversalLesson} from 'API';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
@@ -6,8 +7,7 @@ import {
   useTabs
 } from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import map from 'lodash/map';
-import Table from 'molecules/Table';
-import ThemeModal from 'molecules/ThemeModal';
+
 import {lazy, useState} from 'react';
 
 const EvidenceTab = lazy(() => import('@components/Lesson/Components/EvidenceTab'));
@@ -72,40 +72,47 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson?.label,
+    key: lesson?.id,
     time: `${lesson?.estTime} min`,
-    instructions: lesson?.description || '--'
+    instructions: lesson?.description || '<p>---</p>'
   }));
 
   const lessonPlanTableConfig = {
-    headers: ['Name', 'Time', 'Instructions'],
-    dataList,
-    config: {
-      dark: currentLesson?.darkMode || true,
-      dataList: {
-        pattern: 'striped',
-        customWidth: {
-          name: 'w-40',
-          time: 'w-40',
-          instructions: 'w-full'
-        },
-        patternConfig: {
-          firstColor: 'bg-gray-800',
-          secondColor: 'bg-gray-700'
-        }
+    dataSource: dataList,
+    className: 'universal-table dark-table mt-2',
+    columns: [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name'
+      },
+      {
+        title: 'Time',
+        dataIndex: 'time',
+        key: 'time'
+      },
+      {
+        title: 'Instructions',
+        dataIndex: 'instructions',
+        key: 'instructions',
+        render: (text: string) => <WithHtml html={text} emptyText="--" />
       }
-    }
+    ]
   };
 
   return (
-    <ThemeModal
-      dark={Boolean(
-        currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true
-      )}
-      subHeader={currentLesson?.summary || ''}
-      header={`${currentLesson?.title} - Overview`}
+    <Modal
+      footer={null}
+      width={1000}
+      className="dark-modal"
+      // dark={Boolean(
+      //   currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true
+      // )}
+      // subHeader={currentLesson?.summary || ''}
+      title={`${currentLesson?.title} - Overview`}
       open={open}
-      setOpen={setOpen}>
-      <div>
+      onCancel={() => setOpen(false)}>
+      <div className="bg-dark-blue">
         <div className="my-2 border-b-0 border-gray-700 py-4 min-h-56">
           <Tabs3
             config={{fullColor: true}}
@@ -155,12 +162,12 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
           </div>
         </div>
         <div className="min-h-56 py-4">
-          <Label label="Lesson Plan" />
+          <Label dark label="Lesson Plan" />
 
           <Table {...lessonPlanTableConfig} />
         </div>
       </div>
-    </ThemeModal>
+    </Modal>
   );
 };
 

@@ -39,7 +39,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
   const [partners, setPartners] = useState<any>([]);
 
-  const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
+  const [newServPro, setNewServPro] = useState({id: '', label: '', value: ''});
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
 
@@ -55,10 +55,10 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
     }
   }, [serviceProviders]);
 
-  const onServProChange = (val: string, name: string, id: string) => {
+  const onServProChange = (val: string, option: any) => {
     setNewServPro({
-      id: id,
-      name: name,
+      id: option.id,
+      label: option.label,
       value: val
     });
   };
@@ -129,7 +129,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         const updatedAvailableServiceProviders = availableServiceProviders.filter(
           (item: any) => item.id !== newServPro.id
         );
-        setNewServPro({id: '', name: '', value: ''});
+        setNewServPro({id: '', label: '', value: ''});
         setPartners(updatedPartners);
         setAvailableServiceProviders(updatedAvailableServiceProviders);
       } else {

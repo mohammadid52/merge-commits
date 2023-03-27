@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
-import {allowedAuthIds} from '@contexts/GlobalContext';
+import {formatPageName} from 'utilities/functions';
+
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
@@ -10,6 +10,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {isEmpty} from 'lodash';
+import {allowedAuthIds} from 'state/GlobalState';
 import {v4 as uuidV4} from 'uuid';
 
 interface S3UploadOptions {
@@ -63,7 +64,7 @@ export const uploadImageToS3 = async (
     }
     if (options && options?.onError && typeof options?.onError === 'function') {
       // if there is a error callback, call the onError function
-      options.onError(error);
+      options.onError(error as Error);
     } else {
       // otherwise throw the error to console
       console.error(error);
@@ -194,7 +195,7 @@ export const checkUniqRoomName = async (
   instituteId: string,
   roomName: string,
   authId: string
-) => {
+): Promise<boolean> => {
   try {
     const list: any = await API.graphql(
       graphqlOperation(queries.listRooms, {
@@ -223,7 +224,7 @@ export const listInstitutions = async (authId: string, email: string) => {
     institutions = institutions.map((inst: any) => {
       return {
         id: inst.id,
-        name: inst.name,
+        label: inst.name,
         value: inst.name
       };
     });

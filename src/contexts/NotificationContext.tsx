@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
 
 const NotificationContext = createContext<any>(null);
 type INotification = {
@@ -9,26 +9,22 @@ type INotification = {
   buttonUrl?: string;
   timeout?: number;
 
-  type?: "success" | "error" | "info";
+  type?: 'success' | 'error' | 'info';
 };
 
-const NotificationContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+const NotificationContextProvider = ({children}: {children: React.ReactNode}) => {
   const [notification, setNotification] = useState<INotification>({
     show: false,
-    title: "",
-    buttonText: "",
-    buttonUrl: "",
+    title: '',
+    buttonText: '',
+    buttonUrl: '',
     dark: false,
     timeout: 5000,
-    type: "info",
+    type: 'info'
   });
 
   const clearNotification = () => {
-    setNotification({ title: "", buttonText: "", buttonUrl: "", show: false });
+    setNotification({title: '', buttonText: '', buttonUrl: '', show: false});
   };
 
   useEffect(() => {
@@ -39,17 +35,13 @@ const NotificationContextProvider = ({
     }
   }, [notification.show]);
 
+  const value = useMemo(
+    () => ({notification, setNotification, clearNotification}),
+    [notification, setNotification, clearNotification]
+  );
+
   return (
-    <NotificationContext.Provider
-      // @ts-ignore
-      value={{
-        notification,
-        setNotification,
-        clearNotification,
-      }}
-    >
-      {children}
-    </NotificationContext.Provider>
+    <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>
   );
 };
 

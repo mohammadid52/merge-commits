@@ -5,7 +5,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
@@ -19,7 +19,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import {map, orderBy} from 'lodash';
+import {map, orderBy, uniqBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface RoomListProps {
@@ -80,18 +80,26 @@ const RoomsList = (props: RoomListProps) => {
           filter: withZoiqFilter({})
         })
       );
+
+      const institutions = list?.data?.listInstitutions?.items;
+
       setInstitutionList(
-        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        )
+        uniqBy(institutions, 'name').map((d: any) => ({
+          id: d.id,
+          label: d.name,
+          value: d.name
+        }))
       );
+
       setLoading(false);
     } catch (error) {
+      console.error(error);
+
       setLoading(false);
     }
   };
 
-  const {authId, isFellow, isTeacher, isSuperAdmin, isAdmin, isBuilder} = useAuth();
+  const {authId, isFellow, isTeacher, role, isSuperAdmin, isAdmin, isBuilder} = useAuth();
 
   const fetchRoomList = async () => {
     try {
@@ -181,10 +189,10 @@ const RoomsList = (props: RoomListProps) => {
       fetchInstitutions();
       fetchRoomList();
     }
-  }, [isSuperAdmin]);
+  }, [role]);
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string) => {
+    setSelectedInstitution({value});
     updateRoomList(value);
     setFilters(null);
   };
@@ -251,11 +259,6 @@ const RoomsList = (props: RoomListProps) => {
     ['asc']
   );
 
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-    removeSearchAction();
-  };
-
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
       setSearchInput({...searchInput, isActive: false});
@@ -312,7 +315,7 @@ const RoomsList = (props: RoomListProps) => {
     status: <Status useDefault status={item.status} />
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       InstitueRomms[userLanguage]['NO'],
       InstitueRomms[userLanguage]['CLASSROOMS_NAME'],
@@ -324,31 +327,14 @@ const RoomsList = (props: RoomListProps) => {
     ],
     dataList,
     config: {
-      dark: false,
-
-      headers: {textColor: 'text-white'},
       dataList: {
         loading,
-        emptyText:
-          searchInput.isActive && !searchInput.typing
-            ? 'no data'
-            : searchInput.isActive && searchInput.typing
-            ? `Hit enter to search for ${searchInput.value}`
-            : '',
+
         pagination: {
           showPagination: true,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          no: 'w-12'
-        },
-        maxHeight: '--',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
         }
       }
     }
@@ -366,47 +352,28 @@ const RoomsList = (props: RoomListProps) => {
             borderBottom
             shadowOff
             withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+              <div className={`w-auto flex gap-x-4 justify-end items-center`}>
                 {(isSuperAdmin || isAdmin || isBuilder) && (
                   <Selector
-                    dataCy="classroom-institution"
+                    width={300}
+                    showSearch
                     placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
                     list={institutionList}
-                    selectedItem={selectedInstitution?.name}
+                    selectedItem={selectedInstitution?.label}
                     onChange={instituteChange}
-                    arrowHidden={true}
-                    additionalClass={`w-60 ${
-                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
-                    }`}
-                    isClearable
-                    onClear={onInstitutionSelectionRemove}
                   />
                 )}
                 <SearchInput
                   dataCy="classroom-search-input"
                   value={searchInput.value}
                   onChange={setSearch}
-                  isActive={searchInput.isActive}
                   disabled={loading}
                   onKeyDown={searchRoom}
                   closeAction={() => {
                     removeSearchAction();
                   }}
-                  // style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
                 />
-                {/* <Selector
-                placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
-                list={staffList}
-                selectedItem={selectedStaff?.name}
-                onChange={handleStaffChange}
-                arrowHidden={true}
-                additionalClass={`w-auto md:w-52 lg:w-48 ${
-                  isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
-                }`}
-                isClearable
-                onClear={onStaffSelectionRemove}
-              /> */}
-                {/* </div> */}
+
                 {(!isSuperAdmin || !isAdmin || !isBuilder) && (
                   <AddButton
                     label={InstitueRomms[userLanguage]['BUTTON']['ADD']}

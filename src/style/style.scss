@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-@import '@pathofdev/react-tag-input/build/index.css';
 
 // Variables
 @import 'variables';
@@ -109,8 +107,8 @@ $polka-dot-size: 0.8px;
 
 .white_container {
   background-color: white;
-  border-radius: 1rem;
-  // box-shadow: 1px 1px 10px 1px #e0e0e0;
+  // border-radius: 1rem;
+  box-shadow: 1px 1px 10px 1px #e0e0e0;
 
   @media screen and (max-width: 767px) {
     padding: 1rem;
@@ -295,7 +293,7 @@ $polka-dot-size: 0.8px;
 
 .white_back {
   background-color: white;
-  border-radius: 1rem;
+  // border-radius: 1rem;
   box-shadow: 1px 1px 10px 1px #e0e0e0;
 
   @media screen and (max-width: 767px) {
@@ -1052,44 +1050,6 @@ $polka-dot-size: 0.8px;
 .questionItemChild:last-child {
   margin-bottom: 1.5rem;
 }
-.ulb-datepicker {
-  .react-datepicker__close-icon {
-    &::after {
-      height: 26px;
-      width: 26px;
-      font-size: 18px;
-    }
-    width: auto;
-  }
-  .react-datepicker__navigation-icon::before {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.event-details-datepicker {
-  .react-datepicker__input-container input {
-    border-radius: 6px;
-    font-size: 0.875rem;
-    border: 1px solid rgba(226, 232, 240, 1);
-    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-      var(--tw-shadow);
-    margin-top: 0.25rem;
-  }
-  .react-datepicker__close-icon {
-    &::after {
-      height: 20px;
-      width: 20px;
-      font-size: 14px;
-    }
-    width: auto;
-  }
-  .react-datepicker__navigation-icon::before {
-    width: 16px;
-    height: 16px;
-  }
-}
 
 .wrapperClassName.dark {
   background-color: transparent;
@@ -1223,44 +1183,6 @@ $polka-dot-size: 0.8px;
 
 // -------------------------------------------------
 
-// datepicker library config styles
-.react-datepicker-popper {
-  width: auto;
-}
-
-.datePickerWrapper.light .react-datepicker__input-container input {
-  background-color: rgb(237, 242, 247);
-  color: rgb(50, 50, 62);
-}
-
-// .react-datepicker__input-container input {
-//   border-radius: 1rem;
-//   background-color: rgb(39, 39, 48);
-// }
-
-.react-datepicker__triangle {
-  display: none;
-}
-
-.react-datepicker__navigation-icon::before,
-.react-datepicker__year-read-view--down-arrow,
-.react-datepicker__month-read-view--down-arrow,
-.react-datepicker__month-year-read-view--down-arrow {
-  height: 13px !important;
-  top: 10px !important;
-  width: 13px !important;
-}
-
-.react-datepicker__year-read-view--down-arrow,
-.react-datepicker__month-read-view--down-arrow,
-.react-datepicker__month-year-read-view--down-arrow {
-  right: 80px !important;
-  top: 0 !important;
-}
-.react-datepicker__year-option--selected {
-  width: auto !important;
-}
-
 // Search Styles
 
 .rotateSearchIcon {
@@ -1276,10 +1198,6 @@ $polka-dot-size: 0.8px;
   to {
     transform: rotateZ(0deg);
   }
-}
-
-.react-datepicker__tab-loop {
-  width: auto;
 }
 
 ::-webkit-calendar-picker-indicator {
@@ -1530,10 +1448,6 @@ $polka-dot-size: 0.8px;
   }
 }
 
-.bg-component-dark {
-  background-color: $dark-component-bg !important;
-}
-
 .border-none {
   border-color: transparent !important;
 }
@@ -1780,5 +1694,145 @@ $translation-fab-width: 50px;
     min-height: 120px;
     width: $translation-fab-width * 6;
     border-radius: 1rem;
+  }
+}
+
+// Ant Design Overwrite styles
+
+.ant-btn {
+  svg {
+    margin-right: 0.25rem;
+  }
+}
+
+.ant-breadcrumb-link {
+  display: flex;
+  align-items: center;
+}
+
+.ant-steps-item-description {
+  max-width: unset !important;
+}
+
+.ant-steps-item-container {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.ant-input-search
+  > .ant-input-group
+  > .ant-input-group-addon:last-child
+  .ant-input-search-button {
+  border-start-end-radius: 99px !important;
+  border-end-end-radius: 99px !important;
+}
+
+.ant-card .ant-card-head {
+  font-weight: 500;
+}
+
+.ant-slider-rail {
+  background-color: $lesson-form-block-border !important;
+}
+
+.ant-divider-horizontal.ant-divider-with-text.ant-divider-dashed {
+  border-color: $gray-500;
+  color: $gray-500;
+  font-weight: 400;
+}
+
+.dark-blue {
+  background-color: $lesson-form-block-bg;
+}
+
+.community-media .ant-image {
+  width: 100%;
+}
+
+.universal-table th {
+  font-weight: 500 !important;
+  color: #eee !important;
+}
+
+.iconoclast .universal-table th,
+.iconoclast .universal-table thead .ant-table-row-expand-icon-cell {
+  background-color: $iconoclast !important;
+}
+.curate .universal-table th,
+.curate .universal-table thead .ant-table-row-expand-icon-cell {
+  background-color: $curate !important;
+}
+
+.ant-card-meta-detail .ant-card-meta-title {
+  font-weight: 500 !important;
+  margin-bottom: 0 !important;
+}
+
+.ant-card-meta-title {
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+.lesson-progress-breadcrumb .ant-breadcrumb-separator {
+  color: $gray-500 !important;
+}
+
+// To center icon in button
+.ant-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// removing bottom border from list items
+.table-list .ant-list-items li {
+  border-block-end: 0;
+}
+
+// Styles For Dark Modal
+.dark-modal .ant-modal-content,
+.dark-modal .ant-modal-header {
+  color: white;
+  background-color: rgba(28, 44, 66, 1);
+  .ant-modal-title,
+  button {
+    color: white;
+  }
+}
+
+.dark-modal .ant-table-pagination {
+  display: none;
+}
+
+// Styles for dark table
+
+.dark-table {
+  .ant-table-tbody > tr > td {
+    background-color: $gray-800;
+    color: white;
+  }
+  .ant-table-tbody > tr > .ant-table-cell {
+    border-bottom: 1px solid $gray-700 !important;
+  }
+  // change bg color on hover of row
+  .ant-table-tbody > tr:hover > .ant-table-cell {
+    background-color: $gray-700 !important;
+  }
+}
+
+// Styles for dark selector
+
+.dark-selector {
+  .ant-select-selector {
+    background-color: $theme-500 !important;
+    color: white;
+    border-color: $gray-700 !important;
+    // placeholder color
+    & .ant-select-selection-placeholder {
+      color: white;
+    }
+  }
+
+  .ant-select-arrow {
+    color: white;
   }
 }

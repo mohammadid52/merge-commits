@@ -117,8 +117,8 @@ const LessonMeasurements = ({lessonId}: any) => {
     }
   };
 
-  const handleSelectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasurement({id, name, value: val});
+  const handleSelectMeasurement = (val: string, option: any) => {
+    setSelectedMeasurement({id: option.id, name: val, value: val});
   };
 
   return (
@@ -146,7 +146,6 @@ const LessonMeasurements = ({lessonId}: any) => {
               </div>
               <div className="ml-4 w-auto">
                 <Buttons
-                  btnClass="ml-4 py-1"
                   label="Add"
                   onClick={addNewMeasurement}
                   disabled={saving || !measurementOptions.length}
@@ -224,15 +223,15 @@ const LessonMeasurements = ({lessonId}: any) => {
           </p>
         </div>
       )}
-      {showDeleteModal.state && (
-        <ModalPopUp
-          deleteModal
-          deleteLabel="Remove"
-          closeAction={toggleModal}
-          saveAction={deleteMeasurement}
-          message={showDeleteModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={showDeleteModal.state}
+        deleteModal
+        deleteLabel="Remove"
+        closeAction={toggleModal}
+        saveAction={deleteMeasurement}
+        message={showDeleteModal.message}
+      />
     </div>
   );
 };

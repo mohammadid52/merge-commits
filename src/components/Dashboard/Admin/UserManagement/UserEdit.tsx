@@ -1,4 +1,3 @@
-import React, {Fragment, useEffect, useState} from 'react';
 import CheckBox from '@components/Atoms/Form/CheckBox';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {PersonStatus} from 'API';
@@ -12,11 +11,11 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import moment from 'moment';
+import React, {Fragment, useEffect, useState} from 'react';
 import {IoLockClosed} from 'react-icons/io5';
 import {useHistory} from 'react-router-dom';
 import {convertArrayIntoObj, getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
 
 function classNames(...classes: any[]) {
@@ -317,9 +316,7 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   const onMultipleSelection = (
-    id: string,
-    name: string,
-    value: string,
+    option: any[],
     checkpointID: string,
     questionID: string
   ) => {
@@ -337,19 +334,12 @@ const UserEdit = (props: UserInfoProps) => {
           }
         });
       }
-      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
-      let updatedList;
-      if (selectedOption) {
-        const newList = selectedQuestion.filter((item: any) => item.id !== id);
-        updatedList = [...newList];
-      } else {
-        updatedList = [...selectedQuestion, {id, name, value}];
-      }
+
       setCheckpointData({
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList]
+          [questionID]: [...option]
         }
       });
     } else {
@@ -357,13 +347,7 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [
-            {
-              id,
-              name,
-              value
-            }
-          ]
+          [questionID]: [...option]
         }
       });
     }
@@ -385,11 +369,11 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
-  const handleChangeStatus = (item: {name: string; code: string}) => {
+  const handleChangeStatus = (value: string) => {
     setEditUser(() => {
       return {
         ...editUser,
-        status: item.code as PersonStatus
+        status: value as PersonStatus
       };
     });
     closeModal();
@@ -405,50 +389,50 @@ const UserEdit = (props: UserInfoProps) => {
     setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
-  const beforeStatusChange = (item: {name: string; code: string}) => {
-    if (item.name === PersonStatus.INACTIVE) {
+  const beforeStatusChange = (value: string) => {
+    if (value === PersonStatus.INACTIVE) {
       setWarnModal({
         show: true,
         message:
           'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
-        onSaveAction: () => handleChangeStatus(item)
+        onSaveAction: () => handleChangeStatus(value)
       });
     } else {
-      handleChangeStatus(item);
+      handleChangeStatus(value);
     }
   };
 
-  const handleChangeRole = (item: {name: string; code: string}) => {
+  const handleChangeRole = (value: string) => {
     setEditUser(() => {
       return {
         ...editUser,
-        role: item.code
+        role: value
       };
     });
   };
 
-  const handleChangeOnDemand = (item: {name: string; code: boolean}) => {
+  const handleChangeOnDemand = (item: {label: string; value: boolean}) => {
     setEditUser(() => {
       return {
         ...editUser,
-        onDemand: item.code
+        onDemand: item.value
       };
     });
   };
 
   const Status = [
     {
-      code: 'ACTIVE',
-      name: 'ACTIVE'
+      label: 'ACTIVE',
+      value: 'ACTIVE'
     },
 
     {
-      code: 'INACTIVE',
-      name: 'INACTIVE'
+      label: 'INACTIVE',
+      value: 'INACTIVE'
     },
     {
-      code: 'TRAINING',
-      name: 'TRAINING'
+      label: 'TRAINING',
+      value: 'TRAINING'
     }
     // {
     //   code: 'HOLD',
@@ -458,36 +442,36 @@ const UserEdit = (props: UserInfoProps) => {
 
   const Role = [
     state.user.role === 'SUP' && {
-      code: 'SUP',
-      name: 'Super Admin'
+      label: 'SUP',
+      value: 'Super Admin'
     },
     {
-      code: 'ADM',
-      name: 'Admin'
+      label: 'ADM',
+      value: 'Admin'
     },
     {
-      code: 'BLD',
-      name: 'Builder'
+      label: 'BLD',
+      value: 'Builder'
     },
     {
-      code: 'FLW',
-      name: 'Fellow'
+      label: 'FLW',
+      value: 'Fellow'
     },
 
     {
-      code: 'TR',
-      name: 'Teacher'
+      label: 'TR',
+      value: 'Teacher'
     }
   ].filter(Boolean);
 
   const OnDemand = [
     {
-      code: false,
-      name: 'No'
+      value: false,
+      label: 'No'
     },
     {
-      code: true,
-      name: 'Yes'
+      value: true,
+      label: 'Yes'
     }
   ];
 
@@ -674,47 +658,35 @@ const UserEdit = (props: UserInfoProps) => {
                   </div>
 
                   <div className="sm:col-span-3 p-2">
-                    <DropdownForm
-                      value=""
-                      style={false}
-                      // @ts-ignore
-                      handleChange={beforeStatusChange}
-                      userInfo={editUser.status}
+                    <Selector
+                      selectedItem={editUser.status}
+                      placeholder={UserEditDict[userLanguage]['status']}
+                      list={Status}
+                      onChange={beforeStatusChange}
                       label={UserEditDict[userLanguage]['status']}
-                      id="status"
-                      isRequired
-                      items={Status}
                     />
                   </div>
 
                   <div className="sm:col-span-3 p-2">
-                    <DropdownForm
-                      value=""
-                      style={false}
-                      // @ts-ignore
-                      handleChange={handleChangeRole}
-                      userInfo={getUserRoleString(editUser.role)}
+                    <Selector
+                      selectedItem={getUserRoleString(editUser.role)}
+                      placeholder={UserEditDict[userLanguage]['role']}
+                      list={Role as any[]}
+                      onChange={handleChangeRole}
                       label={UserEditDict[userLanguage]['role']}
-                      listClassName="h-28"
-                      id="role"
-                      isRequired
-                      items={Role}
                     />
                   </div>
 
                   {superEdit && user.role === 'ST' && (
                     <div className="sm:col-span-3 p-2">
-                      <DropdownForm
-                        dataCy="ondemand"
-                        value=""
-                        style={false}
-                        // @ts-ignore
-                        handleChange={handleChangeOnDemand}
-                        userInfo={editUser?.onDemand ? 'Yes' : 'No'}
-                        label={UserEditDict[userLanguage]['ondemand']}
-                        id="ondemand"
+                      <Selector
+                        placeholder="Select on demand"
+                        selectedItem={editUser?.onDemand ? 'Yes' : 'No'}
+                        onChange={(_: string, option: any) =>
+                          handleChangeOnDemand(option)
+                        }
                         isRequired
-                        items={OnDemand}
+                        list={OnDemand}
                       />
                     </div>
                   )}
@@ -896,11 +868,11 @@ const UserEdit = (props: UserInfoProps) => {
                                           list={convertToSelectorList(
                                             item?.question?.options
                                           )}
-                                          onChange={(value, name, id) =>
+                                          onChange={(value, option: any) =>
                                             onSingleSelect(
                                               value,
-                                              name,
-                                              id,
+                                              value,
+                                              option.id,
                                               checkpoint.id,
                                               item.question.id
                                             )
@@ -955,11 +927,9 @@ const UserEdit = (props: UserInfoProps) => {
                                               : []
                                           }
                                           placeholder=""
-                                          onChange={(id, name, value) =>
+                                          onChange={(_, option: any[]) =>
                                             onMultipleSelection(
-                                              id,
-                                              name,
-                                              value,
+                                              option,
                                               checkpoint.id,
                                               item.question.id
                                             )
@@ -981,9 +951,8 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
           </div>
 
-          <div className="px-4 pt-4 w-full flex justify-end">
+          <div className="px-4 pt-4 w-full gap-4 flex justify-end">
             <Buttons
-              btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
               label={UserEditDict[userLanguage]['button']['cancel']}
               onClick={() => {
                 setIsEditMode && setIsEditMode(false);
@@ -994,10 +963,9 @@ const UserEdit = (props: UserInfoProps) => {
             <Buttons
               dataCy="edit-user-save-button"
               disabled={updating}
-              btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
               label={
                 updating
-                  ? ButtonDict['SAVING']
+                  ? ButtonDict[userLanguage]['SAVING']
                   : UserEditDict[userLanguage]['button']['save']
               }
               onClick={onSubmit}
@@ -1005,14 +973,14 @@ const UserEdit = (props: UserInfoProps) => {
           </div>
         </form>
       </div>
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
     </>
   );
 };

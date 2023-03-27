@@ -5,12 +5,12 @@ import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+
 import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
@@ -45,7 +45,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const {theme, state, userLanguage} = useGlobalContext();
 
-  const {BreadcrumsTitles, CommonlyUsedDict, LessonsListDict} = useDictionary();
+  const {BreadcrumsTitles, InstitueRomms, LessonsListDict} = useDictionary();
 
   const [status, setStatus] = useState('');
   const [lessonsData, setLessonsData] = useState<any[]>([]);
@@ -60,7 +60,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
     currentList: _currentList,
     allAsProps,
-    setCurrentList
+    setCurrentList,
+    getIndex
   } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
 
   const currentList = getSortedList(_currentList);
@@ -77,19 +78,19 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: true
     }
   ];
 
   const sortByList = [
-    {id: 1, name: 'Title', value: 'title'},
-    {id: 2, name: 'Type', value: 'type'}
+    {id: 1, label: 'Title', value: 'title'},
+    {id: 2, label: 'Type', value: 'type'}
   ];
 
   const buildLesson = () => {
@@ -212,14 +213,9 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setLastPage(!(filteredData.length > pageCount));
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string, option: any) => {
+    setSelectedInstitution({name: value, id: option.id});
     onSearch(searchInput.value, value);
-  };
-
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-    onSearch(searchInput.value, '');
   };
 
   const fetchSortedList = () => {
@@ -232,10 +228,10 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setLessonsData(newLessonsList);
   };
 
-  const setSortingValue = (str: string, name: string) => {
+  const setSortingValue = (name: string) => {
     setSortingType({
       ...sortingType,
-      value: str,
+      value: name,
       name: name
     });
   };
@@ -393,7 +389,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   };
 
   const dataList = map(finalList, (item: any, index: number) => ({
-    no: index + 1 + (currentPage === 0 ? 0 : pageCount * currentPage),
+    no: getIndex(index),
     onClick: () => handleLessonsEdit(item.id),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
@@ -421,7 +417,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       LessonsListDict[userLanguage]['NO'],
       LessonsListDict[userLanguage]['LESSONTITLE'],
@@ -429,34 +425,18 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
       LessonsListDict[userLanguage]['TYPE'],
       LessonsListDict[userLanguage]['TARGET_AUDIENCE'],
       InstitueRomms[userLanguage]['STATUS'],
-      'Last Edit Date',
-      LessonsListDict[userLanguage]['ACTION']
+      'Last Edit Date'
     ],
     dataList,
     config: {
-      isLastAction: true,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading: status !== 'done',
         pagination: {
           showPagination: true,
           config: {
-            allAsProps,
-            totalNum: totalLessonNum
+            allAsProps
           }
-        },
-        emptyText:
-          searchInput?.value || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-            : LessonsListDict[userLanguage]['NORESULT'],
-        customWidth: {
-          no: 'w-12',
-          lessonTitle: 'w-72',
-          lessonPlan: 'w-96',
-          actions: '-'
-        },
-        maxHeight: 'max-h-196'
+        }
       }
     }
   };
@@ -465,12 +445,12 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     return (
       <ErrorBoundary componentName="LessonsList">
         <div className={`w-full h-full`}>
-          {showCloneModal.show && (
-            <CloneLesson
-              setShowCloneModal={setShowCloneModal}
-              getCloneLessonDetails={getCloneLessonDetails}
-            />
-          )}
+          <CloneLesson
+            open={showCloneModal.show}
+            setShowCloneModal={setShowCloneModal}
+            getCloneLessonDetails={getCloneLessonDetails}
+          />
+
           {/* Header section */}
           {!isInInstitution && <BreadCrums items={breadCrumsList} />}
           <div
@@ -492,10 +472,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                       list={institutionList}
                       selectedItem={selectedInstitution?.name}
                       onChange={instituteChange}
-                      arrowHidden={true}
-                      additionalClass={'w-auto lg:w-48'}
-                      isClearable
-                      onClear={onInstitutionSelectionRemove}
                     />
                   )}
                   {!isInInstitution && (
@@ -505,8 +481,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                         list={sortByList}
                         selectedItem={sortingType.name}
                         onChange={setSortingValue}
-                        btnClass="rounded-r-none  border-r-none "
-                        arrowHidden={true}
                       />
                       <button
                         className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
@@ -520,10 +494,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                     </>
                   )}
                   <SearchInput
-                    dataCy="unit-search-input"
                     value={searchInput.value}
                     onChange={setSearch}
-                    isActive={searchInput.isActive}
                     disabled={status !== 'done'}
                     onKeyDown={searchLesson}
                     closeAction={removeSearchAction}
@@ -538,7 +510,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                   {params.get('from') ? (
                     <Buttons
                       label="Go back"
-                      btnClass="mr-4"
                       onClick={() => history.goBack()}
                       Icon={IoArrowUndoCircleOutline}
                     />
@@ -566,15 +537,14 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
           <div className={`px-8`}>
             <Table {...tableConfig} />
 
-            {deleteModal.show && (
-              <ModalPopUp
-                closeAction={handleToggleDelete}
-                saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                cancelLabel="CANCEL"
-                message={deleteModal.message}
-              />
-            )}
+            <ModalPopUp
+              open={deleteModal.show}
+              closeAction={handleToggleDelete}
+              saveAction={deleting ? () => {} : deleteModal.action}
+              saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+              cancelLabel="CANCEL"
+              message={deleteModal.message}
+            />
           </div>
 
           {/* Pagination And Counter */}

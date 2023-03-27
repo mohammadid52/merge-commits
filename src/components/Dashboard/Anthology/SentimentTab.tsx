@@ -1,18 +1,19 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { Transition } from "@headlessui/react";
-import { MenuIcon } from "@heroicons/react/outline";
-import { getAsset } from "assets";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import Loader from "atoms/Loader";
-import Modal from "atoms/Modal";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import { findIndex, isEmpty, update } from "lodash";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import {MenuOutlined} from '@ant-design/icons';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Transition} from '@headlessui/react';
+
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {findIndex, isEmpty, update} from 'lodash';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
 
 interface ISentiment {
   personAuthID: string;
@@ -30,7 +31,7 @@ const EditBackstory = ({
   data,
   setStudentSentiments,
   fromDashboard,
-  onSuccess,
+  onSuccess
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,8 +41,8 @@ const EditBackstory = ({
   fromDashboard?: boolean;
   onSuccess?: () => void;
 }) => {
-  const { userLanguage } = useGlobalContext();
-  const [backstory, setBackstory] = useState("");
+  const {userLanguage} = useGlobalContext();
+  const [backstory, setBackstory] = useState('');
 
   useEffect(() => {
     data && setBackstory(data.backstory);
@@ -49,7 +50,7 @@ const EditBackstory = ({
 
   const [saving, setSaving] = useState(false);
 
-  const { EditQuestionModalDict, General } = useDictionary();
+  const {EditQuestionModalDict, General} = useDictionary();
 
   const updateBackstory = async () => {
     setSaving(true);
@@ -61,13 +62,13 @@ const EditBackstory = ({
           date: data.date,
           time: data.time,
           backstory,
-          responseText: data.responseText,
+          responseText: data.responseText
         };
 
         if (fromDashboard) {
           await API.graphql(
             graphqlOperation(customMutations.createPersonSentiments, {
-              input: payload,
+              input: payload
             })
           );
           await API.graphql(
@@ -75,15 +76,15 @@ const EditBackstory = ({
               input: {
                 authId: data.personAuthID,
                 email: data.personEmail,
-                lastEmotionSubmission: data.date,
-              },
+                lastEmotionSubmission: data.date
+              }
             })
           );
           onSuccess && onSuccess();
         } else {
           await API.graphql(
             graphqlOperation(customMutations.updatePersonSentiments, {
-              input: payload,
+              input: payload
             })
           );
         }
@@ -104,35 +105,32 @@ const EditBackstory = ({
     }
   };
 
-  return show ? (
+  return (
     <Modal
-      title={General[userLanguage]["SENTIMENT"]["MODAL_TITLE"]}
+      open={show}
+      title={General[userLanguage]['SENTIMENT']['MODAL_TITLE']}
       closeAction={() => setShow(false)}
       showHeader={true}
-      showFooter={false}
-    >
+      showFooter={false}>
       <div className="min-w-96 max-w-132 min-h-32">
         <FormInput
           dataCy="backstory-input"
           rows={3}
           showCharacterUsage
-          className={"mb-2"}
+          className={'mb-2'}
           maxLength={144}
           textarea
           value={backstory}
           onChange={(e: any) => setBackstory(e.target.value)}
-          placeHolder={`I'm feeling ${
-            data?.responseText || "happy"
-          } because...`}
+          placeHolder={`I'm feeling ${data?.responseText || 'happy'} because...`}
         />
         <div className="flex items-center justify-end mt-4">
           <Buttons
             dataCy="backstory-button"
             disabled={saving}
-            btnClass="py-1 px-8 text-xs ml-2"
             label={
               !saving ? (
-                EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]
+                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
               ) : (
                 <Loader className="text-white" />
               )
@@ -142,15 +140,13 @@ const EditBackstory = ({
         </div>
       </div>
     </Modal>
-  ) : (
-    <div className="hidden w-auto" />
   );
 };
 
 const SentimentTab = ({
   goBack,
   backstoryData,
-  onSuccess,
+  onSuccess
 }: {
   backstoryData?: {
     personAuthID: string;
@@ -164,17 +160,17 @@ const SentimentTab = ({
 }) => {
   const [studentSentiments, setStudentSentiments] = useState<any[]>([]);
 
-  const { state, userLanguage } = useGlobalContext();
-  const { authId } = state.user;
+  const {state, userLanguage} = useGlobalContext();
+  const {authId} = state.user;
 
-  const [nextToken, setNextToken] = useState<string>("");
+  const [nextToken, setNextToken] = useState<string>('');
 
   const [disableLoad, setDisableLoad] = useState(false);
 
   const [loadingSentiments, setLoadingSentiments] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const { General } = useDictionary();
+  const {General} = useDictionary();
 
   const fetchSentiments = async (fetchNewRecords: boolean = false) => {
     try {
@@ -187,8 +183,8 @@ const SentimentTab = ({
       let payload: any = {
         personAuthID: authId,
         limit: 8,
-        sortDirection: "DESC",
-        nextToken: nextToken || null,
+        sortDirection: 'DESC',
+        nextToken: nextToken || null
       };
 
       const res: any = await API.graphql(
@@ -202,7 +198,7 @@ const SentimentTab = ({
         backstory: record.backstory,
         date: record.date,
         time: record.time,
-        responseText: record.responseText,
+        responseText: record.responseText
       }));
       if (fetchNewRecords) {
         setStudentSentiments(temp);
@@ -215,10 +211,7 @@ const SentimentTab = ({
           setDisableLoad(true);
         } else {
           setDisableLoad(false);
-          setStudentSentiments((prevAttendance: any) => [
-            ...prevAttendance,
-            ...temp,
-          ]);
+          setStudentSentiments((prevAttendance: any) => [...prevAttendance, ...temp]);
         }
       }
 
@@ -243,18 +236,18 @@ const SentimentTab = ({
     };
   }, []);
 
-  const emojiGifs = getAsset("general", "emoji");
+  const emojiGifs = getAsset('general', 'emoji');
 
-  const [view, setView] = useState(goBack ? "table" : "emoji");
+  const [view, setView] = useState(goBack ? 'table' : 'emoji');
 
-  const [selectedSentiment, setSelectedSentiment] = useState<ISentiment | null>(
-    null
-  );
+  const [selectedSentiment, setSelectedSentiment] = useState<ISentiment | null>(null);
   // Modal state for backstory edit
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const getEmojiName = (eName: string = "OKAY") =>
-    General[userLanguage]["SENTIMENT"]["EMOJIS"][eName?.toUpperCase()];
+  const getEmojiName = (eName: string = 'OKAY') => {
+    // @ts-ignore
+    return General[userLanguage]['SENTIMENT']['EMOJIS'][eName?.toUpperCase()];
+  };
 
   const openModalWithData = () => {
     setShowEditModal(true);
@@ -262,17 +255,13 @@ const SentimentTab = ({
   };
 
   useEffect(() => {
-    if (!isEmpty(backstoryData) && goBack && typeof goBack === "function") {
+    if (!isEmpty(backstoryData) && goBack && typeof goBack === 'function') {
       openModalWithData();
     }
   }, [goBack, backstoryData]);
 
   return (
-    <div
-      className={` ${
-        goBack ? "" : "mt-8"
-      } relative bg-white transition-all min-h-96`}
-    >
+    <div className={` ${goBack ? '' : 'mt-8'} relative bg-white transition-all min-h-96`}>
       {!loadingSentiments && showEditModal && (
         <EditBackstory
           studentSentiments={studentSentiments}
@@ -291,21 +280,16 @@ const SentimentTab = ({
           </div>
           <span
             className={`${
-              goBack ? "w-auto" : ""
-            } mt-2 block text-xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl`}
-          >
-            {General[userLanguage]["SENTIMENT"]["TITLE"]}
+              goBack ? 'w-auto' : ''
+            } mt-2 block text-xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl`}>
+            {General[userLanguage]['SENTIMENT']['TITLE']}
           </span>
           {!goBack ? (
             <span
-              className={`w-auto ${goBack ? "ml-8" : ""}`}
-              title={`Show ${view === "table" ? "emoji" : "table"} view`}
-            >
-              <MenuIcon
-                onClick={() => setView(view === "table" ? "emoji" : "table")}
-                className="block h-6 w-6 cursor-pointer"
-                aria-hidden="true"
-              />
+              className={`w-auto ${goBack ? 'ml-8' : ''}`}
+              onClick={() => setView(view === 'table' ? 'emoji' : 'table')}
+              title={`Show ${view === 'table' ? 'emoji' : 'table'} view`}>
+              <MenuOutlined />
             </span>
           ) : (
             <Buttons onClick={openModalWithData} label="Add backstory" />
@@ -321,8 +305,7 @@ const SentimentTab = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
           appear
-          show={loadingSentiments}
-        >
+          show={loadingSentiments}>
           <div className="flex h-96 items-center justify-center text-center">
             <Loader className="text-gray-500 text-lg" />
           </div>
@@ -331,7 +314,7 @@ const SentimentTab = ({
         {studentSentiments.length === 0 && !loadingSentiments && (
           <div className="flex h-96 items-center justify-center text-center">
             <p className="text-gray-500 text-lg">
-              {General[userLanguage]["SENTIMENT"]["NO_DATA"]}
+              {General[userLanguage]['SENTIMENT']['NO_DATA']}
             </p>
           </div>
         )}
@@ -343,10 +326,9 @@ const SentimentTab = ({
           leave="transform transition ease-in-out duration-700"
           leaveFrom="translate-x-0 opacity-100"
           leaveTo="-translate-x-full opacity-0"
-          show={view === "table"}
+          show={view === 'table'}
           className=""
-          role="table"
-        >
+          role="table">
           <div className="flex flex-col">
             <div className="">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -356,20 +338,17 @@ const SentimentTab = ({
                       <tr>
                         <th
                           scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Check-in
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Backstory
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Date
                         </th>
 
@@ -382,25 +361,22 @@ const SentimentTab = ({
                       {studentSentiments.map((sentiment, sentimentIdx) => (
                         <tr
                           key={sentimentIdx}
-                          className={
-                            sentimentIdx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                          }
-                        >
+                          className={sentimentIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                           <td className="px-6 py-4 whitespace-nowrap capitalize flex items-center text-sm font-medium text-gray-900">
                             <p className="w-auto">
-                              {getEmojiName(sentiment?.responseText || "okay")}
+                              {getEmojiName(sentiment?.responseText || 'okay')}
                             </p>
                             <img
-                              src={emojiGifs[sentiment.responseText || "okay"]}
+                              src={emojiGifs[sentiment.responseText || 'okay']}
                               alt={getEmojiName(sentiment?.responseText)}
                               className="ml-2 h-7 w-7 transform hover:scale-110 transition-all duration-100 cursor-pointer"
                             />
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {sentiment.backstory || "-"}
+                            {sentiment.backstory || '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {moment(sentiment.date).format("ll")}
+                            {moment(sentiment.date).format('ll')}
                           </td>
 
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -410,17 +386,15 @@ const SentimentTab = ({
                                 setShowEditModal(true);
                                 setSelectedSentiment({
                                   idx: sentimentIdx,
-                                  responseText:
-                                    sentiment.responseText || "okay",
-                                  backstory: sentiment.backstory || "",
+                                  responseText: sentiment.responseText || 'okay',
+                                  backstory: sentiment.backstory || '',
                                   personAuthID: sentiment.personAuthID,
                                   personEmail: sentiment.personEmail,
                                   date: sentiment.date,
-                                  time: sentiment.time,
+                                  time: sentiment.time
                                 });
                               }}
-                              className={`cursor-pointer iconoclast:curate-600 hover:curate:text-900 iconoclast:text-600 hover:iconoclast:text-900 `}
-                            >
+                              className={`cursor-pointer iconoclast:curate-600 hover:curate:text-900 iconoclast:text-600 hover:iconoclast:text-900 `}>
                               Edit
                             </a>
                           </td>
@@ -440,11 +414,10 @@ const SentimentTab = ({
           leave="transform transition ease-in-out duration-500 sm:duration-700"
           leaveFrom="translate-x-0 opacity-100"
           leaveTo="translate-x-full opacity-0"
-          show={view === "emoji"}
+          show={view === 'emoji'}
           as="ul"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-          role="list"
-        >
+          role="list">
           {studentSentiments.map((sentiment, sentimentIdx) => (
             <li
               data-cy="sentiment-emoji"
@@ -455,32 +428,28 @@ const SentimentTab = ({
                 setShowEditModal(true);
                 setSelectedSentiment({
                   idx: sentimentIdx,
-                  responseText: sentiment.responseText || "okay",
-                  backstory: sentiment.backstory || "",
+                  responseText: sentiment.responseText || 'okay',
+                  backstory: sentiment.backstory || '',
                   personAuthID: sentiment.personAuthID,
                   personEmail: sentiment.personEmail,
                   date: sentiment.date,
-                  time: sentiment.time,
+                  time: sentiment.time
                 });
               }}
-              className="col-span-1 flex flex-col text-center items-center justify-center"
-            >
-              {sentiment.responseText !== "none" ? (
+              className="col-span-1 flex flex-col text-center items-center justify-center">
+              {sentiment.responseText !== 'none' ? (
                 <img
-                  src={
-                    emojiGifs[sentiment.responseText || "okay"] ||
-                    emojiGifs["okay"]
-                  }
+                  src={emojiGifs[sentiment.responseText || 'okay'] || emojiGifs['okay']}
                   alt={getEmojiName(sentiment?.responseText)}
                   className="h-32 w-32 transform hover:scale-110 transition-all duration-100 cursor-pointer"
                 />
               ) : (
                 <p className=" text-gray-700 h-32 w-1/2 text-center flex items-center">
-                  {"No response"}
+                  {'No response'}
                 </p>
               )}
               <span className="w-auto text-gray-500 text-sm">
-                {moment(sentiment.date).format("ll")}
+                {moment(sentiment.date).format('ll')}
               </span>
             </li>
           ))}
@@ -493,7 +462,7 @@ const SentimentTab = ({
             disabled={disableLoad}
             label={
               !loadingMore ? (
-                "Load more"
+                'Load more'
               ) : (
                 <Loader withText="Loading" className="text-white" />
               )

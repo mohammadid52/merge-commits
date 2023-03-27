@@ -74,7 +74,7 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
           {description ? (
             <div
               dangerouslySetInnerHTML={{__html: `"${description}"`}}
-              className="header-font font-light"></div>
+              className="header-font leading-5 font-light"></div>
           ) : null}
         </div>
 
@@ -84,9 +84,9 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
           className={`
           ${
             heroIsActive ? 'opacity-0' : `opacity-100`
-          } absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
+          } absolute bottom-0 opacity-100 h-full w-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
           <div
-            className={`${textClass} absolute bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
+            className={`${textClass} absolute w-full bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
             <div
               dangerouslySetInnerHTML={{__html: title || ''}}
               className="text-4.5xl header-font font-light"></div>

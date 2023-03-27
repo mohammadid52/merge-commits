@@ -1,3 +1,5 @@
+import Buttons from '@components/Atoms/Buttons';
+import {Modal, Result} from 'antd';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -12,7 +14,6 @@ import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import PositiveAlert from '../General/Popup';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
@@ -23,7 +24,7 @@ import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 import ProfileFrame from './StudentWindow/ProfileFrame';
 
-export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
+const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
   return (
     roomData?.completedLessons?.findIndex(
       (item: {lessonID?: string | null; time?: string | null}) =>
@@ -534,52 +535,42 @@ const LessonControl = () => {
         )}
 
         {/* USER MANAGEMENT */}
-        <div
-          className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleLeavePopup}>
-          <PositiveAlert
-            identifier={''}
-            alert={leavePopup}
-            header="Are you sure you want to leave the Teacher View?"
-            button1="Go to student management"
-            button2="Cancel"
-            svg="question"
-            handleButton1={handleGoToUserManagement}
-            handleButton2={() => handleLeavePopup}
-            theme="light"
-            fill="screen"
+
+        <Modal open={leavePopup}>
+          <Result
+            status="warning"
+            title="Are you sure you want to leave the Teacher View?"
+            extra={[
+              <Buttons
+                onClick={handleGoToUserManagement}
+                label={'Go to student management'}
+              />,
+              <Buttons onClick={handleLeavePopup} label={'Cancel'} />
+            ]}
           />
-        </div>
+        </Modal>
+
         {/* HANDLE GO  HOME */}
-        <div
-          className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleHomePopup}>
-          <PositiveAlert
-            identifier={''}
-            alert={homePopup}
-            header="Are you sure you want to leave the Teacher View?"
-            button1="Go to the dashboard"
-            button2="Cancel"
-            svg="question"
-            handleButton1={handleHome}
-            handleButton2={() => handleHomePopup}
-            theme="light"
-            fill="screen"
+        <Modal open={homePopup}>
+          <Result
+            status="warning"
+            title="Are you sure you want to leave the Teacher View?"
+            extra={[
+              <Buttons onClick={handleHome} label={'Go to the dashboard'} />,
+              <Buttons onClick={handleHomePopup} label={'Cancel'} />
+            ]}
           />
-        </div>
+        </Modal>
+
         {/* USER HAS LEFT NOTIFICATION */}
-        <div className={`${userHasLeftPopup ? 'absolute z-100 h-full' : 'hidden'}`}>
-          <PositiveAlert
-            identifier={''}
-            alert={userHasLeftPopup}
-            header="The student you were viewing has left the room."
-            button1="Close"
-            svg="question"
-            handleButton1={handleUserHasLeftPopup}
-            theme="light"
-            fill="screen"
+
+        <Modal open={userHasLeftPopup}>
+          <Result
+            status="info"
+            title="The student you were viewing has left the room."
+            extra={[<Buttons onClick={handleUserHasLeftPopup} label={'Close'} />]}
           />
-        </div>
+        </Modal>
 
         <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}

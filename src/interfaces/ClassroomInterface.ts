@@ -1,26 +1,12 @@
 import {DashboardProps} from '@components/Dashboard/Dashboard';
 
-interface Artist {
-  id: string;
-  images: [];
-  name: string;
-  type: string;
-}
-
-export interface CurriculumInfo {
-  artist: Artist;
-  language: string;
-  summary: string;
-  title: string;
-}
-
 export interface Syllabus {
   id: string;
   name: string;
   [key: string]: any;
 }
 
-export interface Lesson {
+interface Lesson {
   id: string;
   open?: boolean;
   status?: string;

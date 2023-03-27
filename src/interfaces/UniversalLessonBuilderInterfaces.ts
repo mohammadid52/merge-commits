@@ -1,20 +1,5 @@
 import {PagePart, UniversalLesson} from './UniversalLessonInterfaces';
 
-export interface ModalProps {
-  saveAction?: () => void;
-  closeAction?: () => void;
-  message?: string;
-  saveLabel?: string;
-  onlyInfo?: boolean;
-  deleteModal?: boolean;
-  deleteLabel?: string;
-  cancelLabel?: string;
-}
-
-export interface ULBDialogComponent {
-  inputJSX?: JSX.Element;
-}
-
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
@@ -50,7 +35,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   ) => void;
   handleModalPopToggle?: (
     dialogToToggle: string,
-    position?: Number,
+    position?: number,
     section?: string,
     targetID?: string
   ) => void;

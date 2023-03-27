@@ -40,6 +40,7 @@ import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
 import CommonList from 'components/Community/CommanList';
+import PageWrapper from '@components/Atoms/PageWrapper';
 
 const TitleBar = ({
   selectedFilterType,
@@ -51,7 +52,6 @@ const TitleBar = ({
   changeFilter: any;
 }) => (
   <SectionTitleV3
-    extraContainerClass="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
     title={'Community'}
     fontSize="xl"
     fontStyle="semibold"
@@ -61,9 +61,9 @@ const TitleBar = ({
     withButton={
       <div className="w-auto">
         <Selector
+          width={250}
           selectedItem={selectedFilterType.name}
           list={filterList}
-          additionalClass="md:w-56"
           placeholder={'All '}
           onChange={changeFilter}
         />
@@ -110,12 +110,12 @@ const Community = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['COMMUNTIY'],
-      url: `/dashboard/`,
+      href: `/dashboard/`,
       last: true
     }
   ];
@@ -362,11 +362,11 @@ const Community = () => {
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
 
   const filterList = [
-    {id: 1434, name: 'All', value: 'all'},
-    {id: 1, name: 'Spotlight', value: 'spotlight'},
-    {id: 2, name: 'Announcement', value: 'announcement'},
-    {id: 3, name: 'Event', value: 'event'},
-    {id: 4, name: 'Check It Out', value: 'check_it_out'}
+    {id: 1434, label: 'All', value: 'all'},
+    {id: 1, label: 'Spotlight', value: 'spotlight'},
+    {id: 2, label: 'Announcement', value: 'announcement'},
+    {id: 3, label: 'Event', value: 'event'},
+    {id: 4, label: 'Check It Out', value: 'check_it_out'}
   ];
 
   if (isStudent) {
@@ -434,31 +434,32 @@ const Community = () => {
           setShowCardsModal={setShowCardsModal}
         />
         {/* ~~~~~~~~~~~~~CARDS MODAL ENDS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
-          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <BreadCrums items={breadCrumsList} />
+        <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
+          <BreadCrums items={breadCrumsList} />
+        </div>
+        <PageWrapper>
+          <div className={`p-4 pt-0`}>
+            <TitleBar
+              selectedFilterType={selectedFilterType}
+              filterList={filterList}
+              changeFilter={changeFilter}
+            />
+
+            <div className="">
+              <CommonList
+                selectedFilterType={selectedFilterType}
+                filteredList={filteredList}
+                list={list}
+                onDelete={onDelete}
+                onCardEdit={onCardEdit}
+                error={error}
+                isFetched={isFetched}
+                isLoading={isLoading}
+                setShowCardsModal={setShowCardsModal}
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="px-10">
-          <TitleBar
-            selectedFilterType={selectedFilterType}
-            filterList={filterList}
-            changeFilter={changeFilter}
-          />
-
-          <CommonList
-            selectedFilterType={selectedFilterType}
-            filteredList={filteredList}
-            list={list}
-            onDelete={onDelete}
-            onCardEdit={onCardEdit}
-            error={error}
-            isFetched={isFetched}
-            isLoading={isLoading}
-            setShowCardsModal={setShowCardsModal}
-          />
-        </div>
+        </PageWrapper>
       </DashboardContainer>
     </ErrorBoundary>
   );

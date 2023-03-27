@@ -1,10 +1,32 @@
-import {allowedAuthIds} from '@contexts/GlobalContext';
-import {RoomStatus} from 'API';
+import {RoomStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import {isEmpty} from 'lodash';
-import {getLocalStorageData, setLocalStorageData} from './localStorage';
+import {allowedAuthIds} from 'state/GlobalState';
 import {getImageFromS3Static} from './services';
 import {getClientKey} from './strings';
+
+export const formatPageName = (pageState: UserPageState) => {
+  switch (pageState) {
+    case UserPageState.GAME_CHANGERS:
+      return 'Game Changers';
+    case UserPageState.NOT_LOGGED_IN:
+      return 'Logged Out';
+    case UserPageState.LOGGED_IN:
+      return 'Logged In';
+    case UserPageState.CLASS:
+      return 'Classroom';
+    case UserPageState.LESSON:
+      return 'Lesson';
+    case UserPageState.DASHBOARD:
+      return 'Dashboard';
+    case UserPageState.COMMUNITY:
+      return 'Community';
+    case UserPageState.NOTEBOOK:
+      return 'Notebook';
+    default:
+      return pageState;
+  }
+};
 
 export const goBackBreadCrumb = (list: any[], history: any) => {
   const lastSecondIdx = list.length - 2;
@@ -67,25 +89,6 @@ export const randomNumber = (min: number, max: number): number => {
   return Math.random() * (max - min) + min;
 };
 
-export const getJSON = async (url: string): Promise<string> => {
-  const doestThisJsonExistsInLocalStorage = getLocalStorageData(url);
-  if (!isEmpty(doestThisJsonExistsInLocalStorage)) {
-    return doestThisJsonExistsInLocalStorage;
-  } else {
-    const response = await fetch(url);
-    const json = await response.json();
-
-    setLocalStorageData(url, json);
-    return json;
-  }
-};
-
-export const paginationPage = (lang: string, page: number, total: number) => {
-  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
-  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
-  return '';
-};
-
 export const setPageTitle = (title: string) => {
   if (title) {
     document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));
@@ -114,23 +117,28 @@ const zoiqFilterFallback = (authId: string) =>
   allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
 
 export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
-  let zoiqFilter =
-    _zoiqFilter && _zoiqFilter?.length > 0
-      ? _zoiqFilter
-      : zoiqFilterFallback && zoiqFilterFallback.length > 0
-      ? zoiqFilterFallback
-      : [];
+  if (isEmpty(_zoiqFilter) || isEmpty(_zoiqFilter[0])) return generalFilter;
+  try {
+    let zoiqFilter =
+      _zoiqFilter && _zoiqFilter?.length > 0
+        ? _zoiqFilter
+        : zoiqFilterFallback && zoiqFilterFallback.length > 0
+        ? zoiqFilterFallback
+        : [];
 
-  let filter: any = {};
-  filter =
-    zoiqFilter?.length > 0
-      ? {
-          ...generalFilter,
-          or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
-        }
-      : generalFilter;
+    let filter: any = {};
+    filter =
+      zoiqFilter?.length > 0
+        ? {
+            ...generalFilter,
+            or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
+          }
+        : generalFilter;
 
-  return filter;
+    return filter;
+  } catch (error) {
+    return generalFilter;
+  }
 };
 
 export const getSignInError = (error: any, onlyEmail: any) => {
@@ -301,4 +309,16 @@ export const getSeparatedHeaders = (arr: any[]) => {
     return result;
   }
   return arr;
+};
+
+export const scrollUp = (type = 'lesson', customId?: string) => {
+  const domID = {
+    lesson: 'lesson-app-container',
+    survey: 'survey-app-container'
+  } as any;
+  const container = document.getElementById(customId || domID[type]);
+
+  if (container) {
+    container.scrollTo({top: 0, behavior: 'smooth'});
+  }
 };

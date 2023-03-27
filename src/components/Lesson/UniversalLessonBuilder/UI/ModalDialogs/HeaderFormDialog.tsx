@@ -1,26 +1,26 @@
-import { EditQuestionModalDict } from "@dictionary/dictionary.iconoclast";
-import { Switch } from "@headlessui/react";
-import { HeaderBlock } from "@UlbBlocks/HeaderBlock";
-import ColorPicker from "@UlbUI/ColorPicker/ColorPicker";
-import { classNames } from "@UlbUI/FormElements/TextInput";
-import DummyContent from "@UlbUI/Preview/DummyContent";
-import PreviewLayout from "@UlbUI/Preview/Layout/PreviewLayout";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import Selector from "atoms/Form/Selector";
-import RichTextEditor from "atoms/RichTextEditor";
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
+
+import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
+import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
+import DummyContent from '@UlbUI/Preview/DummyContent';
+import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import RichTextEditor from 'atoms/RichTextEditor';
 import {
   Tabs3,
-  useTabs,
-} from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import AnimatedContainer from "uiComponents/Tabs/AnimatedContainer";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-// import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+  useTabs
+} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+
+import {Form, Switch} from 'antd';
+import {useEffect, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -29,48 +29,6 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   setUnsavedChanges: any;
   askBeforeClose: () => void;
 }
-
-const Toggle = ({
-  checked,
-  onClick,
-  text,
-  disabled,
-  error,
-}: {
-  text?: string;
-  error?: string;
-  checked: boolean;
-  onClick: any;
-  disabled?: boolean;
-}) => {
-  return (
-    <Switch.Group as="div" className="flex items-center">
-      <Switch.Label as="span" className="mr-3 w-auto">
-        <span className="text-sm font-medium text-gray-900">{text}</span>
-      </Switch.Label>
-      <Switch
-        disabled={disabled}
-        checked={checked}
-        onChange={onClick}
-        className={classNames(
-          checked ? "theme-bg" : "bg-gray-200",
-          "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        )}
-      >
-        <span
-          aria-hidden="true"
-          className={classNames(
-            checked ? "translate-x-5" : "translate-x-0",
-            "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
-          )}
-        />
-      </Switch>
-      <Switch.Label as="span" className="ml-3 w-auto">
-        <span className="text-sm font-medium text-red-500">{error}</span>
-      </Switch.Label>
-    </Switch.Group>
-  );
-};
 
 interface IInput {
   title: string;
@@ -83,32 +41,32 @@ interface IInput {
 const HeaderModalComponent = ({
   closeAction,
   inputObj,
-  classString = "",
+  classString = '',
   setUnsavedChanges,
   askBeforeClose,
   createNewBlockULBHandler,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: IHeaderModalComponentProps) => {
-  const { userLanguage } = useGlobalContext();
-  const { blockConfig } = useULBContext();
+  const {userLanguage} = useGlobalContext();
+  const {blockConfig} = useULBContext();
 
-  const [errors, setErrors] = useState({ animation: "", title: "" });
+  const [errors, setErrors] = useState({animation: '', title: ''});
   const [selectedValues, setSelectedValues] = useState({
-    size: "medium",
-    color: "No Border",
+    size: 'medium',
+    color: 'No Border'
   });
 
   // ---------- constants -------------
-  const NO_BORDER_SELECTED = selectedValues.color === "No Border";
+  const NO_BORDER_SELECTED = selectedValues.color === 'No Border';
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
     setUnsavedChanges(true);
-    const { value, id } = e.target;
+    const {value, id} = e.target;
     setInputFields({
       ...inputFields,
-      [id]: value,
+      [id]: value
     });
   };
 
@@ -116,9 +74,9 @@ const HeaderModalComponent = ({
     if (!NO_BORDER_SELECTED) {
       setUnsavedChanges(true);
 
-      onToggle("animated");
+      onToggle('animated');
     } else {
-      setErrors({ ...errors, animation: "Please select border color first." });
+      setErrors({...errors, animation: 'Please select border color first.'});
     }
   };
 
@@ -126,16 +84,16 @@ const HeaderModalComponent = ({
     setInputFields({
       ...inputFields,
       // @ts-ignore
-      [name]: !inputFields[name],
+      [name]: !inputFields[name]
     });
   };
 
   const [inputFields, setInputFields] = useState<IInput>({
-    title: "",
+    title: '',
     animated: false,
     instructions: false,
-    instructionsText: "",
-    instructionsHtml: "<p></p>",
+    instructionsText: '',
+    instructionsHtml: '<p></p>'
   });
 
   useEffect(() => {
@@ -143,20 +101,19 @@ const HeaderModalComponent = ({
       setInputFields((prevInputFields: any) => ({
         ...prevInputFields,
         title: inputObj[0].value,
-        animated: classString.includes("animated-border-on"),
-        instructionsText: inputObj[1]?.value || "",
+        animated: classString.includes('animated-border-on'),
+        instructionsText: inputObj[1]?.value || '',
         instructions: inputObj[1]?.value?.length > 0 || false,
-        instructionsHtml: inputObj[1]?.value || "<p></p>",
+        instructionsHtml: inputObj[1]?.value || '<p></p>'
       }));
       // retrieves the result of matching a string against border color
-      const matchBorderColor: any[] | null =
-        classString.match(/border-\w\w+-\d+/);
+      const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
       setSelectedValues({
         size: convertClassToSizeName(classString),
         color:
           matchBorderColor && matchBorderColor.length
-            ? matchBorderColor[0].split("border-")[1]
-            : "",
+            ? matchBorderColor[0].split('border-')[1]
+            : ''
       });
       setIsEditingMode(true);
     }
@@ -164,45 +121,41 @@ const HeaderModalComponent = ({
 
   const convertSizeNameToClass = (sizeName: string) => {
     switch (sizeName) {
-      case "smallest":
-        return "text-base";
-      case "small":
-        return "text-lg";
-      case "medium":
-        return "text-xl";
-      case "large":
-        return "text-2xl";
-      case "largest":
-        return "text-3xl";
+      case 'smallest':
+        return 'text-base';
+      case 'small':
+        return 'text-lg';
+      case 'medium':
+        return 'text-xl';
+      case 'large':
+        return 'text-2xl';
+      case 'largest':
+        return 'text-3xl';
       default:
-        return "text-xl";
+        return 'text-xl';
     }
   };
   const convertClassToSizeName = (classString: string) => {
-    let sizeName = "medium";
+    let sizeName = 'medium';
     if (classString) {
-      if (classString.includes("text-base")) {
-        sizeName = "smallest";
-      } else if (classString.includes("text-lg")) {
-        sizeName = "small";
-      } else if (classString.includes("text-xl")) {
-        sizeName = "medium";
-      } else if (classString.includes("text-2xl")) {
-        sizeName = "large";
-      } else if (classString.includes("text-3xl")) {
-        sizeName = "largest";
-      } else {
-        sizeName = "medium";
+      if (classString.includes('text-base')) {
+        sizeName = 'smallest';
+      } else if (classString.includes('text-lg')) {
+        sizeName = 'small';
+      } else if (classString.includes('text-2xl')) {
+        sizeName = 'large';
+      } else if (classString.includes('text-3xl')) {
+        sizeName = 'largest';
       }
     }
     return sizeName;
   };
 
-  const animationClass = "animated-border-on fade__animation-short";
+  const animationClass = 'animated-border-on fade__animation-short';
 
   const generateBorderCSS = () =>
     `animated-border animated-border-${selectedValues.color} ${
-      inputFields.animated ? animationClass : ""
+      inputFields.animated ? animationClass : ''
     } `;
 
   const addToDB = async (list: any) => {
@@ -210,7 +163,7 @@ const HeaderModalComponent = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -218,7 +171,6 @@ const HeaderModalComponent = ({
 
   const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
 
-  // const borderColorCLass: string = selectedValues.color;
   const classValue = `${generateBorderCSS()} ${fontSizeClass}`;
 
   const onHeaderCreate = async () => {
@@ -228,15 +180,15 @@ const HeaderModalComponent = ({
 
       if (isEditingMode) {
         const updatedList: any = updateBlockContentULBHandler(
-          "",
-          "",
-          "header",
+          '',
+          '',
+          'header',
           [
-            { id: uuidv4().toString(), value },
+            {id: uuidv4().toString(), value},
             {
               id: uuidv4().toString(),
-              value: inputFields.instructionsHtml || "",
-            },
+              value: inputFields.instructionsHtml || ''
+            }
           ],
           blockConfig.position,
           classValue
@@ -245,16 +197,16 @@ const HeaderModalComponent = ({
         await addToDB(updatedList);
       } else {
         const updatedList: any = createNewBlockULBHandler(
-          "",
-          "",
-          "header",
+          '',
+          '',
+          'header',
 
           [
-            { id: uuidv4().toString(), value },
+            {id: uuidv4().toString(), value},
             {
               id: uuidv4().toString(),
-              value: inputFields.instructionsHtml || "",
-            },
+              value: inputFields.instructionsHtml || ''
+            }
           ],
           blockConfig.position,
 
@@ -268,23 +220,23 @@ const HeaderModalComponent = ({
       setInputFields({
         ...inputFields,
         animated: false,
-        title: "",
+        title: ''
       });
     }
   };
 
   const fontSizeList = [
-    { id: 1, name: "smallest" },
-    { id: 2, name: "small" },
-    { id: 3, name: "medium" },
-    { id: 4, name: "large" },
-    { id: 5, name: "largest" },
+    {id: 1, label: 'smallest', value: 'smallest'},
+    {id: 2, label: 'small', value: 'small'},
+    {id: 3, label: 'medium', value: 'medium'},
+    {id: 4, label: 'large', value: 'large'},
+    {id: 5, label: 'largest', value: 'largest'}
   ];
 
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
   const handleColorPickerSelect = (pickedColor: string) => {
-    setErrors({ ...errors, animation: "" });
-    setSelectedValues({ ...selectedValues, color: pickedColor });
+    setErrors({...errors, animation: ''});
+    setSelectedValues({...selectedValues, color: pickedColor});
     setColorPickerActive(false);
   };
 
@@ -292,14 +244,13 @@ const HeaderModalComponent = ({
     let isValid = true;
 
     if (inputFields.title.trim().length <= 0) {
-      errors.title = "Please add title";
+      errors.title = 'Please add title';
       isValid = false;
     } else {
-      errors.title = "";
-      isValid = true;
+      errors.title = '';
     }
 
-    setErrors({ ...errors });
+    setErrors({...errors});
     return isValid;
   };
 
@@ -308,11 +259,11 @@ const HeaderModalComponent = ({
     setInputFields({
       ...inputFields,
       instructionsText: text,
-      instructionsHtml: html,
+      instructionsHtml: html
     });
   };
 
-  const { curTab, setCurTab, helpers } = useTabs();
+  const {curTab, setCurTab, helpers} = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
 
   return (
@@ -326,10 +277,10 @@ const HeaderModalComponent = ({
               <div className="col-span-2">
                 <FormInput
                   onChange={onChange}
-                  label={"Title"}
+                  label={'Title'}
                   isRequired
                   value={inputFields.title}
-                  id={"title"}
+                  id={'title'}
                   placeHolder={`Enter title`}
                   type="text"
                   error={errors.title}
@@ -338,9 +289,9 @@ const HeaderModalComponent = ({
 
               <div className="col-span-1">
                 <Selector
-                  label={"Select font size"}
-                  onChange={(_: any, name: string) =>
-                    setSelectedValues({ ...selectedValues, size: name })
+                  label={'Select font size'}
+                  onChange={(name: string) =>
+                    setSelectedValues({...selectedValues, size: name})
                   }
                   list={fontSizeList}
                   placeholder="Select font size"
@@ -354,17 +305,13 @@ const HeaderModalComponent = ({
                 </label>
                 <button
                   onClick={() => setColorPickerActive(!colorPickerActive)}
-                  className={`border-0 border-gray-300 rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}
-                >
-                  <span
-                    className={"text-gray-700 w-auto text-sm mr-2 capitalize"}
-                  >
-                    {selectedValues.color.split("-")[0]}
+                  className={`border-0 border-gray-300 rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}>
+                  <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                    {selectedValues.color.split('-')[0]}
                   </span>
 
                   <span
-                    className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-gray-400`}
-                  ></span>
+                    className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-gray-400`}></span>
                 </button>
                 {colorPickerActive && (
                   <ColorPicker
@@ -373,58 +320,56 @@ const HeaderModalComponent = ({
                     onNoneClick={() => {
                       setSelectedValues({
                         ...selectedValues,
-                        color: "No Border",
+                        color: 'No Border'
                       });
                       setColorPickerActive(false);
                     }}
                     classString={classString}
                     callbackColor={handleColorPickerSelect}
-                    styleString={{ top: "100%" }}
+                    styleString={{top: '100%'}}
                   />
                 )}
               </div>
             </div>
             <div className="col-span-1 my-4 flex items-center w-auto">
-              <Toggle
-                error={errors.animation}
-                checked={Boolean(inputFields.animated)}
-                text="Animated Title"
-                // disabled={NO_BORDER_SELECTED}
-                onClick={onAnimationToggle}
-              />
+              <Form.Item label="Animated title" valuePropName="checked">
+                <Switch
+                  checked={Boolean(inputFields.animated)}
+                  disabled={NO_BORDER_SELECTED}
+                  onClick={onAnimationToggle}
+                />
+              </Form.Item>
             </div>
             <div className="col-span-1 my-4 flex items-center w-auto">
-              <Toggle
-                checked={Boolean(inputFields.instructions)}
-                text="Instructions"
-                // disabled={NO_BORDER_SELECTED}
-                onClick={() => onToggle("instructions")}
-              />
+              <Form.Item label="Instructions" valuePropName="checked">
+                <Switch
+                  checked={Boolean(inputFields.instructions)}
+                  onClick={() => onToggle('instructions')}
+                />
+              </Form.Item>
             </div>
             {inputFields.instructions && (
               <div className="col-span-2 max-w-256">
                 <RichTextEditor
                   withStyles
-                  initialValue={inputFields?.instructionsText || ""}
+                  initialValue={inputFields?.instructionsText || ''}
                   onChange={(htmlContent, plainText) =>
                     onEditorStateChange(htmlContent, plainText)
                   }
                 />
               </div>
             )}
-            <div className="flex mt-8 justify-center px-6 pb-4">
-              <div className="flex justify-end">
+            <div className="flex mt-8 justify-end px-6 pb-4">
+              <div className="flex justify-end gap-4">
                 <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
-                  label={
-                    EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]
-                  }
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
+                  size="middle"
                   transparent
                 />
                 <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2"
-                  label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+                  size="middle"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                   onClick={onHeaderCreate}
                 />
               </div>
@@ -437,15 +382,12 @@ const HeaderModalComponent = ({
         {onPreviewTab && (
           <PreviewLayout
             notAvailable={
-              inputFields.title.length < 3
-                ? "Please add title to see preview"
-                : false
-            }
-          >
+              inputFields.title.length < 3 ? 'Please add title to see preview' : false
+            }>
             <HeaderBlock
               classString={classValue}
               mode="building"
-              value={[{ id: uuidv4().toString(), value: inputFields.title }]}
+              value={[{id: uuidv4().toString(), value: inputFields.title}]}
             />
             <DummyContent />
           </PreviewLayout>

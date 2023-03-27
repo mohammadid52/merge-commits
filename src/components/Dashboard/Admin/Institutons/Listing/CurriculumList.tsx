@@ -1,29 +1,32 @@
-import Filters, {SortType} from 'components/Atoms/Filters';
-import Highlighted from 'components/Atoms/Highlighted';
-import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
-import CommonActionsBtns from 'components/MicroComponents/CommonActionsBtns';
-import CourseName from 'components/MicroComponents/CourseName';
-import CourseUnits from 'components/MicroComponents/CourseUnits';
-import ModalPopUp from 'components/Molecules/ModalPopUp';
-import Table from 'components/Molecules/Table';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import useAuth from 'customHooks/useAuth';
-import usePagination from 'customHooks/usePagination';
-import useSearch from 'customHooks/useSearch';
-import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
-import {logError} from 'graphql/functions';
-import {withZoiqFilter} from 'utilities/functions';
+import Placeholder from '@components/Atoms/Placeholder';
+import {getImageFromS3} from '@utilities/services';
+import {Card, Descriptions} from 'antd';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import {API, graphqlOperation} from 'aws-amplify';
+import Filters, {SortType} from 'components/Atoms/Filters';
+import Highlighted from 'components/Atoms/Highlighted';
+import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
+
+import CourseUnits from 'components/MicroComponents/CourseUnits';
+import ModalPopUp from 'components/Molecules/ModalPopUp';
+import Table, {ITableProps} from 'components/Molecules/Table';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import useAuth from 'customHooks/useAuth';
+import usePagination from 'customHooks/usePagination';
+import useSearch from 'customHooks/useSearch';
+import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
+import {logError} from 'graphql/functions';
 import * as mutations from 'graphql/mutations';
 import {isEmpty, map, orderBy} from 'lodash';
+import moment from 'moment';
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
+import {withZoiqFilter} from 'utilities/functions';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface CurriculumListProps {
@@ -36,6 +39,8 @@ interface CurriculumListProps {
 interface ICurricular {
   name?: string;
   status?: string;
+  summary?: string;
+  description?: string;
   id: string;
   institutionID: string;
   institution?: {name?: string; id: string};
@@ -49,7 +54,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
   const userLanguage = gContext.userLanguage;
-  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary();
+  const {InstitueCurriculum} = useDictionary();
 
   const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
 
@@ -84,8 +89,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   }, [isSuperAdmin]);
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string) => {
+    setSelectedInstitution({name: value, id: value});
 
     updateRoomList(value);
   };
@@ -152,10 +157,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     } finally {
       setLoading(false);
     }
-  };
-
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
   };
 
   const fetchInstitutions = async () => {
@@ -312,42 +313,45 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{
-    name?: string;
-    id?: string;
-  }>({});
+  const currentSelectedItem = (id: string) => courseList?.find((_c: any) => _c.id === id);
 
-  const checkIfRemovable = (curriculumObj: any) => {
-    if (
-      curriculumObj.syllabi?.length > 0 ||
-      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0) ||
-      curriculumObj?.isUsed
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const currentSelectedItem =
-    hoveringItem &&
-    hoveringItem?.name &&
-    hoveringItem?.id &&
-    courseList?.find((_c: any) => _c.id === hoveringItem?.id);
+  const {Meta} = Card;
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: index + 1,
-    // onClick: () => editCurrentCurricular(item.id),
+    onClick: () => editCurrentCurricular(item.id),
+
+    content: (
+      <Descriptions title="Course Details">
+        <Descriptions.Item label="Status">
+          <Status status={currentSelectedItem(item.id)?.status} useDefault />
+        </Descriptions.Item>
+        <Descriptions.Item label="Created date">
+          {moment(item.createdAt).format('ll')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Last update">
+          {moment(item.updatedAt).format('ll')}
+        </Descriptions.Item>
+        <Descriptions.Item span={2} label="Summary">
+          {currentSelectedItem(item.id)?.summary || 'n/a'}
+        </Descriptions.Item>
+        <Descriptions.Item span={2} label="Description">
+          {currentSelectedItem(item.id)?.description || 'n/a'}
+        </Descriptions.Item>
+      </Descriptions>
+    ),
     courseName: (
-      <CourseName
-        item={item}
-        setHoveringItem={setHoveringItem}
-        hoveringItem={hoveringItem}
-        isLast={finalList.length - 1 === index}
-        searchTerm={searchInput.value}
-        currentSelectedItem={currentSelectedItem}
-        isSuperAdmin={isSuperAdmin}
-        editCurrentCurricular={editCurrentCurricular}
+      <Meta
+        title={item.name}
+        className="flex items-center"
+        avatar={
+          <Placeholder
+            // @ts-ignore
+            image={getImageFromS3(item.image)}
+            size="h-6 w-6 mr-2"
+            name={item.name}
+          />
+        }
       />
     ),
     institutionName: isSuperAdmin && (
@@ -364,57 +368,37 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         redirectToUnit={redirectToUnit}
       />
     ),
-    status: <Status useDefault status={item.status} />,
-    actions: (
-      <CommonActionsBtns
-        button1Label="View"
-        isDeletable={checkIfRemovable(item)}
-        button1Action={() => editCurrentCurricular(item.id)}
-        button2Action={() => handleToggleDelete(item.name, item)}
-      />
-    )
+    status: <Status useDefault status={item.status} />
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Label="View"
+    //     isDeletable={checkIfRemovable(item)}
+    //     button1Action={() => editCurrentCurricular(item.id)}
+    //     button2Action={() => handleToggleDelete(item.name, item)}
+    //   />
+    // )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       InstitueCurriculum[userLanguage]['NO'],
       InstitueCurriculum[userLanguage]['NAME'],
       isSuperAdmin && InstitueCurriculum[userLanguage]['INSTITUTION_NAME'],
       InstitueCurriculum[userLanguage]['COURSE_TYPE'],
       InstitueCurriculum[userLanguage]['UNITS'],
-      InstitueRomms[userLanguage]['STATUS'],
-      InstitueCurriculum[userLanguage]['ACTION']
+      InstitueRomms[userLanguage]['STATUS']
+      // InstitueCurriculum[userLanguage]['ACTION']
     ],
     dataList,
     config: {
-      dark: false,
-      isLastAction: true,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading,
+        expandable: true,
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0 && isEmpty(filters),
           config: {
             allAsProps
           }
-        },
-        emptyText:
-          searchInput || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-            : InstitueCurriculum[userLanguage]['INFO'],
-        customWidth: {
-          no: 'w-12',
-          courseType: 'w-72',
-          courseName: 'w-72',
-          courseUnits: 'w-96',
-          actions: '-'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
         }
       }
     }
@@ -441,17 +425,12 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
                 />
               )}
               <SearchInput
                 dataCy="curriculum-search-input"
                 value={searchInput.value}
                 onChange={setSearch}
-                isActive={searchInput.isActive}
                 disabled={loading}
                 onKeyDown={searchRoom}
                 closeAction={removeSearchAction}
@@ -482,15 +461,14 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
         <Table {...tableConfig} />
 
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            cancelLabel="CANCEL"
-            message={deleteModal.message}
-          />
-        )}
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          message={deleteModal.message}
+        />
       </div>
     </div>
   );

@@ -17,22 +17,22 @@ import * as mutation from 'graphql/mutations';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
-import {languageList} from 'utilities/staticData';
+import {languageList, typeList} from 'utilities/staticData';
 
 export const RoomStatusList = [
   {
-    name: RoomStatus.ACTIVE,
+    label: RoomStatus.ACTIVE,
     id: 1,
     value: RoomStatus.ACTIVE
   },
 
   {
-    name: RoomStatus.INACTIVE,
+    label: RoomStatus.INACTIVE,
     id: 3,
     value: RoomStatus.INACTIVE
   },
   {
-    name: RoomStatus.TRAINING,
+    label: RoomStatus.TRAINING,
     id: 4,
     value: RoomStatus.TRAINING
   }
@@ -49,7 +49,7 @@ interface ICourseForm {
   summary: string;
   objectives: string;
   type?: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {id?: string; label: string; value: string}[];
   institute: {
     id: string;
   };
@@ -67,7 +67,7 @@ const CourseFormComponent = ({
     status: RoomStatus.ACTIVE,
     summary: '',
     type: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{id: '1', label: 'English', value: 'EN'}],
     institute: {
       id: ''
     }
@@ -111,39 +111,17 @@ const CourseFormComponent = ({
   };
 
   // Temporary List
-  //*******//
-  const typeList = [
-    {id: 0, name: 'In-School Programming'},
-    {id: 1, name: 'After-School Programming'},
-    {id: 2, name: 'Summer Intensives (2 week programming)'},
-    {id: 3, name: "Writer's Retreat"}
-  ];
+
   //*****//
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = curricularData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
+  const selectLanguage = (_: string[], option: any[]) => {
     setCurricularData({
       ...curricularData,
-      languages: updatedList
+      languages: option
     });
   };
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigners(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigners(option);
   };
 
   const saveCourse = async () => {
@@ -466,10 +444,9 @@ const CourseFormComponent = ({
                 placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
                 // @ts-ignore
-                onChange={(_: any, name: RoomStatus) => {
+                onChange={(name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
-                dropdownWidth="w-56"
                 selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>
@@ -478,7 +455,7 @@ const CourseFormComponent = ({
                 label={CurricularBuilderdict[userLanguage]['TYPE']}
                 placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
                 list={typeList}
-                onChange={(_: any, name: string) => {
+                onChange={(name: string) => {
                   setCurricularData({...curricularData, type: name});
                 }}
                 selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
@@ -536,14 +513,13 @@ const CourseFormComponent = ({
         </div>
       ) : null}
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
 
       <div className="flex my-8 gap-5 justify-center">
         <Buttons
@@ -563,15 +539,16 @@ const CourseFormComponent = ({
         </button> */}
       </div>
       {/* Image cropper */}
-      {showCropper && (
-        <ProfileCropModal
-          upImg={upImage || ''}
-          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-          locked
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
+
+      <ProfileCropModal
+        open={showCropper}
+        upImg={upImage || ''}
+        customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+        locked
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
+
       {/* </PageWrapper> */}
     </div>
   );

@@ -18,9 +18,10 @@ interface Props {
   setShowCloneModal?: React.Dispatch<
     React.SetStateAction<{show: boolean; lessonId: string}>
   >;
+  open: boolean;
 }
 
-const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
+const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) => {
   const onCloneModalClose = () => {
     setShowCloneModal?.({show: false, lessonId: ''});
   };
@@ -139,6 +140,7 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
   return (
     <Modal
+      open={open}
       title={
         cloningStatus !== 'success'
           ? 'Please confirm you want to clone this lesson'
@@ -198,14 +200,8 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
         {success && (
           <div className="flex items-center justify-center ">
+            <Buttons label={'Back to lessons'} onClick={onCloneModalClose} transparent />
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
-              label={'Back to lessons'}
-              onClick={onCloneModalClose}
-              transparent
-            />
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
               label={'Update new cloned lesson details'}
               onClick={onRedirectToNewLesson}
             />
@@ -222,9 +218,8 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
         {!failed && !success && (
           <div className="flex mt-8 justify-center px-6 pb-4">
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-4">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                 onClick={onCloneModalClose}
                 transparent
@@ -232,7 +227,6 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
               />
               <Buttons
                 disabled={cloning}
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={LessonsListDict[userLanguage]['BUTTON']['START_CLONING']}
                 onClick={startClone}
               />

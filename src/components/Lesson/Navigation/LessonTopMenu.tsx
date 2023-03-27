@@ -1,9 +1,11 @@
 import {ReactNode} from 'react';
 import ProgressBar from './ProgressBar/ProgressBar';
 
+import useAuth from '@customHooks/useAuth';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import {AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
+import PageTimer from '../Components/PageTimer';
 
 const Button = ({
   children,
@@ -36,14 +38,17 @@ const LessonTopMenu = ({
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
 
-  const theme = gContext.theme;
+  const {isTeacher} = useAuth();
+
+  const estTime = Number(pages?.[lessonState.currentPage]?.estTime || 1); // unit of time here is minutes
+  const estTimeInSeconds = estTime * 60;
 
   return (
     <>
       <div
-        className={`${theme.toolbar.bg}  shadow-1 w-full flex justify-center items-center content-center py-2 px-6`}>
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="flex flex-row justify-center">
+        className={`dark-blue  shadow-1 w-full flex  items-center justify-center py-4 px-6`}>
+        <div className="w-full flex flex-row items-center justify-center">
+          <div className="flex flex-row justify-center w-full items-center">
             {/* BACK BUTTON */}
 
             <div
@@ -67,7 +72,7 @@ const LessonTopMenu = ({
                 requiredInputs={lessonState?.requiredInputs}
               />
             )}
-
+            {isTeacher && <PageTimer startTime={estTimeInSeconds} />}
             {/* FORWARD BUTTON */}
 
             <Button

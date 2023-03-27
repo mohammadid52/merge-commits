@@ -23,9 +23,7 @@ import AddTopic from '../AddTopic';
 
 const ActionBtns = ({
   actionOne,
-  actionTwo,
-  titleOne,
-  titleTwo
+  actionTwo
 }: {
   actionOne: () => void;
   actionTwo: () => void;
@@ -37,18 +35,11 @@ const ActionBtns = ({
       style={{transform: 'scale(0.7)'}}
       className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
       {actionOne && (
-        <Buttons
-          title={titleOne}
-          onClick={actionOne}
-          Icon={HiPencil}
-          size="small"
-          transparent
-        />
+        <Buttons onClick={actionOne} Icon={HiPencil} size="small" transparent />
       )}
       {actionTwo && (
         <Buttons
           onClick={actionTwo}
-          title={titleTwo}
           Icon={HiOutlineTrash}
           size="small"
           transparent
@@ -78,9 +69,6 @@ const Topic = ({
   deleteModal: (id: string, type: string) => void;
   editCurrentMeasurement: (rubric: any, learningId: string) => void;
 }) => {
-  const {userLanguage} = useGlobalContext();
-  const {AddMeasurementDict} = useDictionary();
-
   return (
     <div className=" w-auto">
       <div key={topic.id} className="pr-1  show-action-on-hover-2 mb-2">
@@ -94,7 +82,6 @@ const Topic = ({
               style={{transform: 'scale(0.7)'}}
               className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
               <Buttons
-                title={'Edit topic'}
                 onClick={() => editCurrentTopic(topic)}
                 Icon={HiPencil}
                 size="small"
@@ -104,14 +91,12 @@ const Topic = ({
               <Buttons
                 onClick={() => deleteModal(topic?.id, 'topic')}
                 Icon={HiOutlineTrash}
-                title={'Delete topic'}
                 size="small"
                 transparent
                 redBtn
               />
 
               <Buttons
-                title={AddMeasurementDict[userLanguage]['title']}
                 onClick={() => createNewMeasurement(topic.id, learning.id)}
                 Icon={IoIosAdd}
                 size="small"
@@ -191,8 +176,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   const [createOrEditLearningObjectiveModal, setCreateOrEditLearningObjectiveModal] =
     useState(false);
 
-  const {AddMeasurementDict, AddTopicDict, LEARINGOBJECTIVEDICT, TOPICLISTDICT} =
-    useDictionary();
+  const {AddMeasurementDict, AddTopicDict, LEARINGOBJECTIVEDICT} = useDictionary();
 
   const createLearningObjective = () => {
     setCreateOrEditLearningObjectiveModal(true);
@@ -530,7 +514,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                   disabled={loading || isInactive}
                   label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
                   Icon={IoIosAdd}
-                  iconBeforeLabel
                   onClick={createLearningObjective}
                 />
               )
@@ -556,27 +539,21 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                             <div className="actions-2 justify-center gap-x-4 flex items-center">
                               <Buttons
                                 onClick={() => editLearningObj(learning)}
-                                iconSize="w-4 h-6"
                                 Icon={HiPencil}
                                 size="small"
                                 transparent
-                                title="Edit topic"
                               />
                               <Buttons
                                 size="small"
                                 type="submit"
                                 onClick={() => createNewTopic(learning.id)}
-                                title={TOPICLISTDICT[userLanguage]['ADD']}
-                                iconBeforeLabel
                                 Icon={IoIosAdd}
                               />
                               <Buttons
                                 onClick={() => deleteModal(learning?.id, 'objective')}
-                                iconSize="w-4 h-6"
                                 Icon={HiOutlineTrash}
                                 size="small"
                                 transparent
-                                title="Delete topic"
                                 redBtn
                               />
                             </div>
@@ -612,7 +589,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                 <Fragment>
                   <div className="flex justify-center mt-8">
                     <Buttons
-                      btnClass="mx-4"
                       label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
                       onClick={createLearningObjective}
                     />
@@ -633,52 +609,51 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             </div>
           )}
         </PageWrapper>
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={onCancel}
-            saveAction={onSaveAction}
-            saveLabel="Yes"
-            cancelLabel="No"
-            loading={deleting}
-            message={warnModal.message}
-          />
-        )}
-        {openMeasurementModal && (
-          <Modal
-            showHeader={true}
-            title={AddMeasurementDict[userLanguage]['title']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onMeasurementClose}>
-            <AddMeasurement
-              curricularId={curricularId}
-              onCancel={onMeasurementClose}
-              postMutation={postMeasurementChange}
-              rubricData={selectedRubricData}
-              topicId={selectedRubricData.topicId}
-            />
-          </Modal>
-        )}
 
-        {createOrEditLearningObjectiveModal && (
-          <Modal
-            showHeader={true}
-            title={
-              LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
-                isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
-              ]
-            }
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={handleCancel}>
-            <AddLearningObjective
-              curricularId={curricularId}
-              handleCancel={handleCancel}
-              learningObjectiveData={selectedObjectiveData}
-              postMutation={postLearningObjectiveChange}
-            />
-          </Modal>
-        )}
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={onCancel}
+          saveAction={onSaveAction}
+          saveLabel="Yes"
+          cancelLabel="No"
+          loading={deleting}
+          message={warnModal.message}
+        />
+
+        <Modal
+          open={openMeasurementModal}
+          showHeader={true}
+          title={AddMeasurementDict[userLanguage]['title']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onMeasurementClose}>
+          <AddMeasurement
+            curricularId={curricularId}
+            onCancel={onMeasurementClose}
+            postMutation={postMeasurementChange}
+            rubricData={selectedRubricData}
+            topicId={selectedRubricData.topicId}
+          />
+        </Modal>
+
+        <Modal
+          open={createOrEditLearningObjectiveModal}
+          showHeader={true}
+          title={
+            LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
+              isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
+            ]
+          }
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={handleCancel}>
+          <AddLearningObjective
+            curricularId={curricularId}
+            handleCancel={handleCancel}
+            learningObjectiveData={selectedObjectiveData}
+            postMutation={postLearningObjectiveChange}
+          />
+        </Modal>
 
         <AnimatedContainer show={isInactive}>
           {isInactive && (
@@ -688,21 +663,20 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           )}
         </AnimatedContainer>
 
-        {openTopicModal && (
-          <Modal
-            showHeader={true}
-            title={AddTopicDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onTopicModalClose}>
-            <AddTopic
-              curricularId={curricularId}
-              onCancel={onTopicModalClose}
-              postMutation={postTopicChange}
-              topicData={selectedTopicData}
-            />
-          </Modal>
-        )}
+        <Modal
+          open={openTopicModal}
+          showHeader={true}
+          title={AddTopicDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onTopicModalClose}>
+          <AddTopic
+            curricularId={curricularId}
+            onCancel={onTopicModalClose}
+            postMutation={postTopicChange}
+            topicData={selectedTopicData}
+          />
+        </Modal>
       </div>
     </div>
   );

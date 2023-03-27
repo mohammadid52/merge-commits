@@ -36,7 +36,7 @@
 .sticky-container {
   ._sticky {
     & textarea {
-      font-family: 'Patrick Hand', cursive;
+      font-family: 'Patrick Hand', cursive !important;
       background: transparent;
       border: transparent;
       user-select: text !important;
@@ -129,4 +129,31 @@
   color: rgba(238, 238, 238, 0.7);
   text-align: center;
   padding-top: 20px;
+}
+
+.note {
+  &-purple {
+    background-color: #a855f7;
+    color: #f3e8ff;
+  }
+  &-indigo {
+    background-color: #6366f1;
+    color: #e0e7ff;
+  }
+  &-yellow {
+    background-color: #eab308;
+    color: #fef9c3;
+  }
+  &-blue {
+    background-color: #3b82f6;
+    color: #dbeafe;
+  }
+  &-green {
+    background-color: #22c55e;
+    color: #dcfce7;
+  }
+  &-red {
+    background-color: #ef4444;
+    color: #fee2e2;
+  }
 }

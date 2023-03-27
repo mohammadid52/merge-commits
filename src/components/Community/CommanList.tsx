@@ -1,11 +1,11 @@
-import ContentCard from '@components/Atoms/ContentCard';
 import Loader from '@components/Atoms/Loader';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {ICommunityCard} from '@interfaces/Community.interfaces';
+import {Empty} from 'antd';
+import Card from 'components/Community/Card';
 import {isEmpty} from 'lodash';
 import {BsCardHeading} from 'react-icons/bs';
-import Card from 'components/Community/Card';
 
 const FAB = ({
   setShowCardsModal
@@ -51,9 +51,9 @@ const CommonList = ({
       : filteredList;
   return (
     <ErrorBoundary componentName="CommonList">
-      <ContentCard hasBackground={false} additionalClass=" space-y-12 p-6">
-        <div> {<FAB setShowCardsModal={setShowCardsModal} />}</div>
+      <div> {<FAB setShowCardsModal={setShowCardsModal} />}</div>
 
+      <div className="mx-auto max-w-[760px] max-h-[80vh] p-4 my-4 overflow-y-auto">
         {/* Error--1213 */}
         <AnimatedContainer show={Boolean(error)}>
           {error && (
@@ -67,34 +67,38 @@ const CommonList = ({
 
         {!Boolean(error) && isLoading && !isFetched && (
           <div className="flex items-center justify-center">
-            <Loader animation withText="Loading cards..." className="w-auto" />
+            <Loader withText="Loading cards..." className="w-auto" />
           </div>
         )}
 
-        {!Boolean(error) &&
-          !isLoading &&
-          isFetched &&
-          data &&
-          data.length > 0 &&
-          data.map((card: ICommunityCard) => (
-            <Card
-              onCardEdit={onCardEdit}
-              onDelete={onDelete}
-              key={card.id}
-              cardDetails={card}
-            />
-          ))}
+        <div className="flex flex-col gap-4">
+          {!Boolean(error) &&
+            !isLoading &&
+            isFetched &&
+            data &&
+            data.length > 0 &&
+            data.map((card: ICommunityCard) => (
+              <Card
+                onCardEdit={onCardEdit}
+                onDelete={onDelete}
+                key={card.id}
+                cardDetails={card}
+              />
+            ))}
+        </div>
 
         <AnimatedContainer show={Boolean(data.length === 0 && isFetched)}>
           {data.length === 0 && isFetched && (
-            <div className="flex items-center justify-center">
-              <p className="text-gray-500 text-sm">
-                No community posts... Be the first to start the conversation
-              </p>
+            <div className="my-4">
+              <Empty
+                description={
+                  'No community posts... Be the first to start the conversation'
+                }
+              />
             </div>
           )}
         </AnimatedContainer>
-      </ContentCard>
+      </div>
     </ErrorBoundary>
   );
 };

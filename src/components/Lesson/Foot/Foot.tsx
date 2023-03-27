@@ -1,10 +1,11 @@
+import Buttons from '@components/Atoms/Buttons';
+import {Modal, Result} from 'antd';
 import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
-import PositiveAlert from '../../General/Popup';
 
 const Foot = () => {
   const {lessonState, clientKey} = useGlobalContext();
@@ -60,23 +61,20 @@ const Foot = () => {
 
   return (
     <>
-      <div className="mt-auto mb-0 bg-darker-gray flex-row justify-center items-center">
-        <div className={`${visible ? 'absolute z-100' : 'hidden'}`} onClick={handlePopup}>
-          <PositiveAlert
-            alert={visible}
-            header="Are you sure you want to leave the Lesson?"
-            button1="Go to the dashboard"
-            button2="Cancel"
-            svg="question"
-            handleButton1={handleManualSave}
-            handleButton2={() => handlePopup}
-            theme="dark"
-            fill="screen"
+      <div className="mt-auto mb-0 bg-dark-blue flex-row justify-center items-center">
+        <Modal open={visible}>
+          <Result
+            status="warning"
+            title={'Are you sure you want to leave the Lesson?'}
+            extra={[
+              <Buttons onClick={handleManualSave} label={'Go to the dashboard'} />,
+              <Buttons onClick={handlePopup} label={'Cancel'} />
+            ]}
           />
-        </div>
+        </Modal>
 
         <div
-          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          className={`w-full lg:w-256 h-auto mx-auto  py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">

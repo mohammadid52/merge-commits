@@ -380,9 +380,10 @@ const FeedbacksUploads = ({
     obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
 
   const AttachmentsModalPopUp = (props: any) => {
-    const {children, closeAction} = props;
+    const {children, closeAction, open} = props;
     return (
       <Modal
+        open={open}
         closeOnBackdrop
         closeAction={closeAction}
         showHeader={false}
@@ -459,92 +460,88 @@ const FeedbacksUploads = ({
     <div key={idx} className={`w-full pb-2 mb-2`}>
       {showComments && (
         <div className="comment-container">
-          {attModal.show && (
-            <AttachmentsModalPopUp
-              closeAction={() => setAttModal({show: false, url: '', type: ''})}>
-              {attModal.type.includes('image') && (
-                <img
-                  style={{
-                    objectFit: 'cover',
-                    maxHeight: '90vh',
-                    maxWidth: '90vw'
-                  }}
-                  className="h-auto w-auto rounded"
-                  src={attModal.url}
-                />
-              )}
-            </AttachmentsModalPopUp>
-          )}
-          {editModal.show && (
-            <Modal
-              showHeader={true}
-              title={`Edit`}
-              showHeaderBorder={true}
-              showFooter={false}
-              closeAction={closeEditModal}>
-              <div>
-                <textarea
-                  onKeyUp={(e) => doResize(e.target)}
-                  style={{resize: 'none'}}
-                  cols={125}
-                  rows={1}
-                  placeholder="Edit Feedback"
-                  className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded"
-                  value={editCommentInput}
-                  onChange={(e) => setEditCommentInput(e.target.value)}
-                />
-                <div className="mt-8 px-6 pb-4">
-                  <div className="flex justify-center items-center">
-                    <Buttons
-                      btnClass="py-1 px-4 text-xs mr-2"
-                      label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                      onClick={closeEditModal}
-                      transparent
-                    />
-                    <Buttons
-                      btnClass="py-1 px-8 text-xs ml-2"
-                      label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-                      onClick={() => editComment(editModal.id)}
-                    />
-                    {showEmojiForEdit && (
-                      <div
-                        onClick={(e: any) => {
-                          const {id} = e.target;
-                          if (id === 'picker-wrapper') {
-                            setShowEmojiForEdit(false);
-                          }
-                        }}
-                        id="picker-wrapper"
-                        className="picker-wrapper absolute bottom-1 left-5">
-                        <EmojiPicker
-                          onEmojiClick={(_: any, emoji: any) =>
-                            onEmojiSelect(emoji, true)
-                          }
-                        />
-                      </div>
-                    )}
-                    <button
-                      onClick={() => setShowEmojiForEdit(!showEmojiForEdit)}
-                      className={`${actionStyles}`}>
-                      <HiEmojiHappy className="" />
-                    </button>
-                  </div>
+          <AttachmentsModalPopUp
+            open={attModal.show}
+            closeAction={() => setAttModal({show: false, url: '', type: ''})}>
+            {attModal.type.includes('image') && (
+              <img
+                style={{
+                  objectFit: 'cover',
+                  maxHeight: '90vh',
+                  maxWidth: '90vw'
+                }}
+                className="h-auto w-auto rounded"
+                src={attModal.url}
+              />
+            )}
+          </AttachmentsModalPopUp>
+
+          <Modal
+            open={editModal.show}
+            showHeader={true}
+            title={`Edit`}
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={closeEditModal}>
+            <div>
+              <textarea
+                onKeyUp={(e) => doResize(e.target)}
+                style={{resize: 'none'}}
+                cols={125}
+                rows={1}
+                placeholder="Edit Feedback"
+                className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded"
+                value={editCommentInput}
+                onChange={(e) => setEditCommentInput(e.target.value)}
+              />
+              <div className="mt-8 px-6 pb-4">
+                <div className="flex justify-center items-center">
+                  <Buttons
+                    label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                    onClick={closeEditModal}
+                    transparent
+                  />
+                  <Buttons
+                    label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                    onClick={() => editComment(editModal.id)}
+                  />
+                  {showEmojiForEdit && (
+                    <div
+                      onClick={(e: any) => {
+                        const {id} = e.target;
+                        if (id === 'picker-wrapper') {
+                          setShowEmojiForEdit(false);
+                        }
+                      }}
+                      id="picker-wrapper"
+                      className="picker-wrapper absolute bottom-1 left-5">
+                      <EmojiPicker
+                        onEmojiClick={(emoji: any) => onEmojiSelect(emoji, true)}
+                      />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setShowEmojiForEdit(!showEmojiForEdit)}
+                    className={`${actionStyles}`}>
+                    <HiEmojiHappy className="" />
+                  </button>
                 </div>
               </div>
-            </Modal>
-          )}
-          {deleteModal.show && (
-            <ModalPopUp
-              message="Are you sure you want to delete it?"
-              deleteLabel="delete"
-              deleteModal
-              saveAction={() => {
-                deleteComment(deleteModal.id);
-                setDeleteModal({show: false, id: ''});
-              }}
-              closeAction={() => setDeleteModal({show: false, id: ''})}
-            />
-          )}
+            </div>
+          </Modal>
+
+          <ModalPopUp
+            open={deleteModal.show}
+            message="Are you sure you want to delete it?"
+            deleteLabel="delete"
+            deleteModal
+            saveAction={() => {
+              deleteComment(deleteModal.id);
+              setDeleteModal({show: false, id: ''});
+            }}
+            closeAction={() => setDeleteModal({show: false, id: ''})}
+          />
+
           {loadingComments ? (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
@@ -698,7 +695,7 @@ const FeedbacksUploads = ({
                       id="picker-wrapper"
                       className="picker-wrapper absolute bottom-5 left-5">
                       <EmojiPicker
-                        onEmojiClick={(_: any, emoji: any) => onEmojiSelect(emoji, false)}
+                        onEmojiClick={(emoji: any) => onEmojiSelect(emoji, false)}
                       />
                     </div>
                   )}

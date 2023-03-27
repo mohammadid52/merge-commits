@@ -1,6 +1,8 @@
+import {DownOutlined, UpOutlined} from '@ant-design/icons';
 import {Transition} from '@headlessui/react';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
+import {Alert} from 'antd';
 import {
   DeleteFeelingsArchiveInput,
   FeelingsArchive,
@@ -22,12 +24,7 @@ import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {IconType} from 'react-icons';
-import {
-  AiFillCloseCircle,
-  AiOutlineArrowLeft,
-  AiOutlineEdit,
-  AiOutlinePlus
-} from 'react-icons/ai';
+import {AiOutlineArrowLeft, AiOutlineEdit, AiOutlinePlus} from 'react-icons/ai';
 import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
 import {HiOutlineArrowRight, HiSwitchHorizontal} from 'react-icons/hi';
@@ -40,26 +37,13 @@ import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 type ActionTypes = 'edit' | 'delete' | 'init' | 'replace';
 
 // ======constants===================>>
-const btnClass = `font-semibold hover:text-gray-600 focus:curate:border-500 focus:iconoclast:border-500 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
 
 const MESSAGES = {
   CLICK_CIRCLE: 'Click on a circle to select position'
 };
 
 const ClickOnCircle = ({message, onClose}: {message: string; onClose: () => void}) => (
-  <div className="flex relative items-center justify-between group flex-col p-4 rounded-xl border-0 border-green-300 bg-green-500 bg-opacity-50 ">
-    {' '}
-    {/* // Removed "iconoclast:border-main curate:border-main" to make UI clearer */}
-    <p className="w-auto dark:text-white">{message}</p>
-    <span
-      onClick={onClose}
-      style={{top: '-.75rem', right: '-.75rem'}}
-      className="absolute cursor-pointer -top-1 w-auto -right-1 rounded-full transition-all min-w-6 min-h-6 bg-green-600">
-      <span className="relative flex rounded-full border-0 border-green-300">
-        <AiFillCloseCircle className="text-white text-2xl" />
-      </span>
-    </span>
-  </div>
+  <Alert description={message} type="warning" closable onClose={onClose} />
 );
 
 const BottomButtonWithMessage = ({
@@ -68,7 +52,8 @@ const BottomButtonWithMessage = ({
 }: {
   message?: string;
   btns: {
-    label: string;
+    label?: string;
+    Icon?: any;
     disabled?: boolean;
     transparent?: boolean;
     onClick: () => void;
@@ -76,19 +61,20 @@ const BottomButtonWithMessage = ({
 }) => {
   return (
     <div className="min-h-28 flex items-center justify-between flex-col p-4 rounded-xl border-0 iconoclast:border-main curate:border-main">
-      {message && <p className="w-auto dark:text-white">{message}</p>}
+      {message && <p className="text-white">{message}</p>}
       <div
         className={` justify-${
           btns.length === 1 ? 'center' : 'between'
-        } flex flex-col 2xl:flex-row px-2 dark:text-gray-500 2xl:items-center mt-2 2xl:mt-0`}>
+        } flex px-2 w-full dark:text-gray-500 items-center mt-2 2xl:mt-0`}>
         {map(btns, (btn, idx) => (
           <Buttons
             disabled={btn.disabled}
             key={idx}
+            Icon={btn.Icon}
             onClick={() => btn.onClick()}
-            overrideClass
             transparent={btn.transparent}
-            btnClass={btnClass}
+            variant="primary"
+            size="middle"
             label={btn.label}
           />
         ))}
@@ -301,7 +287,7 @@ const OverlayHeaderTitle = ({
 
       <h4
         id="page_builder_overlay--header-title"
-        className="dark:text-white text-gray-900 font-semibold tracking-wide text-lg 2xl:text-xl text-center">
+        className=" text-white font-medium tracking-wide text-lg 2xl:text-xl text-center">
         {title}
       </h4>
     </div>
@@ -317,7 +303,7 @@ const Item = ({
   label = '',
   Icon,
   subTitle = '',
-
+  className,
   deleteBtn = false,
   selected = false,
   RightIcon = HiOutlineArrowRight
@@ -334,18 +320,18 @@ const Item = ({
   return (
     <div
       onClick={onClick}
-      className={`${
+      className={`${className} ${
         selected
           ? 'iconoclast:border-500 curate:border-500'
-          : `border-gray-300 dark:border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
-      } relative my-6 2xl:my-8 cursor-pointer form-button mt-3 2xl:mt-4 form-button rounded-lg border-0 dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
+          : `border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
+      } w-full relative my-6 2xl:my-8 cursor-pointer form-button 2xl:mt-4  rounded-lg border-0 bg-dark-blue shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
       {Icon && (
         <span className={classNames('rounded-lg inline-flex w-auto')}>
           <Icon
             className={classNames(
               deleteBtn
                 ? 'text-red-500'
-                : 'group-hover:iconoclast:text-500 dark:text-white text-gray-900 group-hover:curate:text-500',
+                : 'group-hover:iconoclast:text-500 text-white group-hover:curate:text-500',
               'xl:h-6 h-2 w-4 xl:w-6  transition-all'
             )}
             aria-hidden="true"
@@ -355,8 +341,8 @@ const Item = ({
       <div className="flex-1 min-w-0 focus:outline-none flex items-center justify-start">
         <p
           className={`${
-            deleteBtn ? 'text-red-500' : 'text-gray-900 dark:text-white'
-          } xl:text-sm text-xs font-medium w-auto `}>
+            deleteBtn ? 'text-red-500' : 'text-white'
+          } xl:text-sm text-xs font-medium mb-0 w-auto `}>
           {label}
         </p>
         {subTitle && (
@@ -417,7 +403,7 @@ const ActionButtons = ({
       <Item
         selected={actionMode === 'edit'}
         Icon={AiOutlineEdit}
-        label="Edit existing component"
+        label="Edit component"
         onClick={() => {
           setActionMode('edit');
           setShowingPin(true);
@@ -438,7 +424,7 @@ const ActionButtons = ({
         selected={actionMode === 'delete'}
         deleteBtn
         Icon={BiTrashAlt}
-        label="Delete existing component"
+        label="Delete component"
         onClick={() => {
           setActionMode('delete');
           setShowingPin(true);
@@ -494,7 +480,7 @@ const PageBuilderSlideOver = ({
   open: boolean;
   handleModalPopToggle?: (
     dialogToToggle: string,
-    position?: Number,
+    position?: number,
     section?: string,
     targetID?: string
   ) => void;
@@ -871,6 +857,7 @@ const PageBuilderSlideOver = ({
                   btns={[
                     {
                       label: 'Cancel',
+                      transparent: true,
                       onClick: () => {
                         onCancel();
                         onActionCancel();
@@ -878,8 +865,7 @@ const PageBuilderSlideOver = ({
                     },
                     {
                       label: 'Replace',
-                      onClick: handleReplce,
-                      transparent: true
+                      onClick: handleReplce
                     }
                   ]}
                   message={'Are you sure you want to replace this component?'}
@@ -899,6 +885,7 @@ const PageBuilderSlideOver = ({
                   btns={[
                     {
                       label: 'Cancel',
+                      transparent: true,
                       onClick: () => {
                         onCancel();
                         onActionCancel();
@@ -906,8 +893,7 @@ const PageBuilderSlideOver = ({
                     },
                     {
                       label: 'Delete',
-                      onClick: onDeleteClick,
-                      transparent: true
+                      onClick: onDeleteClick
                     }
                   ]}
                   message={'Are you sure you want to delete?'}
@@ -938,19 +924,20 @@ const PageBuilderSlideOver = ({
                 <BottomButtonWithMessage
                   btns={[
                     {
-                      label: 'Move up',
-                      transparent: true,
+                      Icon: UpOutlined,
+
                       disabled: disableState.COMPONENT_UP,
                       onClick: () => moveComponent('up')
                     },
                     {
                       label: 'Cancel',
+                      transparent: true,
                       onClick: () => onMovementCancel()
                     },
                     {
-                      label: 'Move Down',
+                      Icon: DownOutlined,
                       disabled: disableState.COMPONENT_DOWN,
-                      transparent: true,
+
                       onClick: () => moveComponent('down')
                     }
                   ]}
@@ -1034,6 +1021,7 @@ const PageBuilderSlideOver = ({
         <Item
           Icon={RiPagesLine}
           label="Page details"
+          className="mt-12"
           onClick={() => {
             setNewLessonPlanShow(true);
             setEditMode(true);

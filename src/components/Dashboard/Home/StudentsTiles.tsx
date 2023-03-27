@@ -1,7 +1,10 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
+import Placeholder from '@components/Atoms/Placeholder';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {getImageFromS3} from '@utilities/services';
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
@@ -10,7 +13,7 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {orderBy} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 const StudentsTiles = (props: {
@@ -34,7 +37,7 @@ const StudentsTiles = (props: {
   useEffect(() => {
     if (studentsList && studentsList.length > 0) {
       const filtered = studentsList.filter(
-        ({student}: any) => student.id !== user.authId
+        ({student}: any) => student && student.id !== user.authId
       );
       setList(
         filtered.map((item: any) => {
@@ -89,11 +92,9 @@ const StudentsTiles = (props: {
             {isTeacher && (
               <div className="w-auto">
                 <SearchInput
-                  dataCy="student-loookup-search"
                   value={searchInput.value}
                   onChange={setSearch}
                   onKeyDown={searchStudents}
-                  isActive={searchInput.isActive}
                   closeAction={removeSearchAction}
                 />
               </div>
@@ -147,19 +148,16 @@ const StudentsTiles = (props: {
                             }
                           }}>
                           <div className="space-y-4">
-                            {student.image ? (
-                              <img
-                                className="transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
-                                src={student?.image}
-                                alt=""
-                              />
-                            ) : (
-                              <ImageAlternate
-                                user={student}
-                                textSize={'text-3xl'}
-                                styleClass="transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
-                              />
-                            )}
+                            <Placeholder
+                              image={
+                                student?.image
+                                  ? (getImageFromS3(student?.image) as string)
+                                  : null
+                              }
+                              name={student.firstName + ' ' + student.lastName}
+                              size="h-20 w-20 rounded-full lg:w-24 lg:h-24 transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out"
+                            />
+
                             <div className="space-y-2">
                               <div className="text-xs font-medium lg:text-sm">
                                 <h3 className="font-medium">
@@ -181,9 +179,7 @@ const StudentsTiles = (props: {
                 <Loader className="w-auto text-gray-400" withText="Loading students..." />
               </div>
             ) : (
-              <div className="grid justify-center text-gray-500 items-center">
-                {StudentDict[userLanguage].NO_STUDENT}
-              </div>
+              <Empty description={StudentDict[userLanguage].NO_STUDENT} />
             )}
           </div>
         </div>

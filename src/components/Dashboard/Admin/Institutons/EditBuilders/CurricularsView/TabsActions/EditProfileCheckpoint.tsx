@@ -18,6 +18,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import {languageList, scopeList} from '@utilities/staticData';
 
 const EditProfileCheckpoint = () => {
   const history = useHistory();
@@ -62,24 +63,19 @@ const EditProfileCheckpoint = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddChekpoint'],
-      url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
+      href: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
       last: true
     }
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const onInputChange = (e: any) => {
@@ -96,27 +92,18 @@ const EditProfileCheckpoint = () => {
     }
   };
 
-  const selectLanguage = (value: string, name: string, id: string) => {
+  const selectLanguage = (value: string, option: any) => {
     setCheckpointData({
       ...checkpointData,
       language: {
-        id,
-        name,
+        id: option.id,
+        name: option.label,
         value
       }
     });
   };
-
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigner(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigner(option);
   };
 
   const showOptions = (quesId: string, options: any[]) => {
@@ -217,7 +204,7 @@ const EditProfileCheckpoint = () => {
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
-      msgs.message = EditProfileCheckpointDict[userLanguage]['messages']['onequestion'];
+      msgs.message = EditProfileCheckpointDict[userLanguage]['messages'].onequetion;
     } else {
       msgs.message = '';
     }
@@ -364,11 +351,6 @@ const EditProfileCheckpoint = () => {
     fetchCheckpointDetails();
   }, []);
 
-  const scopeList = [
-    {id: 0, name: 'public', value: 'public'},
-    {id: 1, name: 'private', value: 'private'}
-  ];
-
   const handleRemoveQuestionFromCheckpoint = (questionID: string) => {
     removeCheckpointQuestion(questionID, fetchCheckpointDetails);
   };
@@ -386,7 +368,6 @@ const EditProfileCheckpoint = () => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
             onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -469,7 +450,7 @@ const EditProfileCheckpoint = () => {
                       selectedItem={checkpointData.scope || 'public'}
                       placeholder="Update scope"
                       list={scopeList}
-                      onChange={(_, name) =>
+                      onChange={(name) =>
                         setCheckpointData({...checkpointData, scope: name})
                       }
                     />
@@ -500,12 +481,10 @@ const EditProfileCheckpoint = () => {
                       </p>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
-                          btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
                           label={EditProfileCheckpointDict[userLanguage]['addexist']}
                         />
                         <Buttons
-                          btnClass="ml-4"
                           onClick={() => setCurrentState('addQuestion')}
                           label={EditProfileCheckpointDict[userLanguage]['addnew']}
                         />
@@ -599,12 +578,10 @@ const EditProfileCheckpoint = () => {
                       </div>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
-                          btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
                           label={EditProfileCheckpointDict[userLanguage]['addexist']}
                         />
                         <Buttons
-                          btnClass="ml-4"
                           onClick={() => setCurrentState('addQuestion')}
                           label={EditProfileCheckpointDict[userLanguage]['addnew']}
                         />
@@ -623,14 +600,8 @@ const EditProfileCheckpoint = () => {
               </div>
             )}
             <div className="flex my-8 justify-center">
+              <Buttons label="Cancel" onClick={history.goBack} transparent />
               <Buttons
-                btnClass="py-3 px-10 mr-4"
-                label="Cancel"
-                onClick={history.goBack}
-                transparent
-              />
-              <Buttons
-                btnClass="py-3 px-10 ml-4"
                 label={
                   loading
                     ? EditProfileCheckpointDict[userLanguage]['saving']

@@ -1,17 +1,20 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { Dialog } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
-import React, { memo, useEffect, useRef, useState } from "react";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Dialog} from '@headlessui/react';
 
-import { getAsset } from "assets";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
+import React, {memo, useEffect, useRef, useState} from 'react';
 
-import CheckBox from "atoms/Form/CheckBox";
-import FormInput from "atoms/Form/FormInput";
-import Selector from "atoms/Form/Selector";
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from '@components/Atoms/Buttons';
+import {Divider} from 'antd';
+import {CloseOutlined} from '@ant-design/icons';
 
 interface IClassroomStudents {
   id?: string;
@@ -27,12 +30,12 @@ interface IGroupFields {
   groupName: string;
   groupLocation: string;
   classroomGroupsStudents: Array<IClassroomStudents>;
-  groupAdvisor: { id: string; name: string };
+  groupAdvisor: {id: string; name: string};
 }
 
 interface IGroupFormProps {
   groupData: any;
-  groupType: "Proficiency" | "Partner";
+  groupType: 'Proficiency' | 'Partner';
   onCancel: () => void;
   open: boolean;
   postMutation: (data: any) => void;
@@ -45,27 +48,27 @@ const GroupFormComponent = ({
   onCancel,
   open,
   postMutation,
-  roomData,
+  roomData
 }: IGroupFormProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
   const cancelButtonRef = useRef<any>(null);
-  const { advisorOptions = [] } = roomData || {};
-  const { clientKey, userLanguage } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
+  const {advisorOptions = []} = roomData || {};
+  const {clientKey, userLanguage} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const { BUTTONS, GroupFormDict } = useDictionary();
+  const {BUTTONS, GroupFormDict} = useDictionary();
 
   const [saving, setSaving] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<IGroupFields>({
-    groupName: "",
-    groupAdvisor: { id: "", name: "" },
-    groupLocation: "",
-    classroomGroupsStudents: [],
+    groupName: '',
+    groupAdvisor: {id: '', name: ''},
+    groupLocation: '',
+    classroomGroupsStudents: []
   });
   const [errors, setErrors] = useState({
-    groupName: "",
-    groupAdvisor: "",
+    groupName: '',
+    groupAdvisor: ''
   });
   const [classStudents, setClassStudents] = useState<any>([]);
 
@@ -86,7 +89,7 @@ const GroupFormComponent = ({
         groupName: groupData.groupName,
         groupAdvisor: {
           id: groupData.groupAdvisor?.id,
-          name: `${groupData.groupAdvisor?.firstName} ${groupData.groupAdvisor?.lastName}`,
+          name: `${groupData.groupAdvisor?.firstName} ${groupData.groupAdvisor?.lastName}`
         },
         groupLocation: groupData.groupLocation,
         classroomGroupsStudents: groupData?.classroomGroupsStudents.items?.map(
@@ -94,16 +97,16 @@ const GroupFormComponent = ({
             id: student.id,
             checked: true,
             studentAuthId: student.studentAuthId,
-            studentEmail: student.studentEmail,
+            studentEmail: student.studentEmail
           })
-        ),
+        )
       });
     } else {
       setFormValues({
-        groupName: "",
-        groupAdvisor: { id: "", name: "" },
-        groupLocation: "",
-        classroomGroupsStudents: [],
+        groupName: '',
+        groupAdvisor: {id: '', name: ''},
+        groupLocation: '',
+        classroomGroupsStudents: []
       });
     }
   }, [groupData]);
@@ -111,7 +114,7 @@ const GroupFormComponent = ({
   const fetchClassStudents = async (id: string) => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getClassDetails, { id })
+        graphqlOperation(customQueries.getClassDetails, {id})
       );
       const students = result.data.getClass?.students?.items;
       setClassStudents(students);
@@ -124,14 +127,14 @@ const GroupFormComponent = ({
 
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleAdvisorChange = (_: string, name: string, id: string) => {
+  const handleAdvisorChange = (name: string, option: any) => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      groupAdvisor: { name, id },
+      groupAdvisor: {name, id: option.id}
     }));
   };
 
@@ -143,12 +146,10 @@ const GroupFormComponent = ({
     setFormValues((prevValues) => ({
       ...prevValues,
       classroomGroupsStudents: checked
-        ? [...prevValues.classroomGroupsStudents, { ...data, checked }]
+        ? [...prevValues.classroomGroupsStudents, {...data, checked}]
         : prevValues.classroomGroupsStudents.map((student) =>
-            student.studentAuthId === data.studentAuthId
-              ? { ...student, checked }
-              : student
-          ),
+            student.studentAuthId === data.studentAuthId ? {...student, checked} : student
+          )
     }));
   };
 
@@ -156,13 +157,12 @@ const GroupFormComponent = ({
     const errorMessages: any = {};
     let isValid: boolean = true;
     if (!formValues.groupName) {
-      errorMessages.groupName =
-        GroupFormDict[userLanguage]["MESSAGES"]["GROUP_NAME"];
+      errorMessages.groupName = GroupFormDict[userLanguage]['MESSAGES']['GROUP_NAME'];
       isValid = false;
     }
     if (!formValues.groupAdvisor?.id) {
       errorMessages.groupAdvisor =
-        GroupFormDict[userLanguage]["MESSAGES"]["GROUP_ADVISOR"];
+        GroupFormDict[userLanguage]['MESSAGES']['GROUP_ADVISOR'];
       isValid = false;
     }
     setErrors(errorMessages);
@@ -187,16 +187,14 @@ const GroupFormComponent = ({
                 groupType,
                 advisorEmail: advisorData?.email,
                 advisorAuthId: advisorData?.authId,
-                groupLocation: formValues.groupLocation,
-              },
+                groupLocation: formValues.groupLocation
+              }
             })
           );
-          const classRoomGroupStudents = await updateGroupStudents(
-            formValues.groupId
-          );
+          const classRoomGroupStudents = await updateGroupStudents(formValues.groupId);
           postMutation({
             ...result.data?.updateClassroomGroups,
-            classroomGroupsStudents: classRoomGroupStudents,
+            classroomGroupsStudents: classRoomGroupStudents
           });
         } else {
           const result: any = await API.graphql(
@@ -207,8 +205,8 @@ const GroupFormComponent = ({
                 groupType,
                 advisorEmail: advisorData?.email,
                 advisorAuthId: advisorData?.authId,
-                groupLocation: formValues.groupLocation,
-              },
+                groupLocation: formValues.groupLocation
+              }
             })
           );
           const classRoomGroupStudents = await updateGroupStudents(
@@ -216,7 +214,7 @@ const GroupFormComponent = ({
           );
           postMutation({
             ...result.data?.createClassroomGroups,
-            classroomGroupsStudents: classRoomGroupStudents,
+            classroomGroupsStudents: classRoomGroupStudents
           });
         }
         setSaving(false);
@@ -238,10 +236,10 @@ const GroupFormComponent = ({
                   input: {
                     classRoomGroupID: groupId,
                     studentEmail: student.studentEmail,
-                    studentAuthId: student.studentAuthId,
+                    studentAuthId: student.studentAuthId
                     // studentType: string | null,
                     // studentNote: string | null,
-                  },
+                  }
                 })
               );
               classRoomGroupStudents =
@@ -252,8 +250,8 @@ const GroupFormComponent = ({
             const result: any = await API.graphql(
               graphqlOperation(customMutations.deleteClassroomGroupStudents, {
                 input: {
-                  id: student.id, // Database generated unique id
-                },
+                  id: student.id // Database generated unique id
+                }
               })
             );
             classRoomGroupStudents =
@@ -278,16 +276,11 @@ const GroupFormComponent = ({
       className={`
             fixed inset-0 transition-all ease-in-out duration-300 
             z-100
-            ${
-              open
-                ? "w-auto"
-                : "w-0 opacity-0 overflow-hidden bg-black bg-opacity-50"
-            }
+            ${open ? 'w-auto' : 'w-0 opacity-0 overflow-hidden bg-black bg-opacity-50'}
 `}
       initialFocus={cancelButtonRef}
       open={open}
-      onClose={onCancel}
-    >
+      onClose={onCancel}>
       <div className="absolute inset-0 overflow-hidden">
         <Dialog.Overlay className="absolute inset-0 w-auto" />
 
@@ -295,9 +288,8 @@ const GroupFormComponent = ({
           className={` 
               fixed w-auto inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16
               transform transition ease-in-out duration-500 sm:duration-700
-              ${open ? "translate-x-0" : "translate-x-full"}
-              `}
-        >
+              ${open ? 'translate-x-0' : 'translate-x-full'}
+              `}>
           <div className="w-auto max-w-2xl">
             <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
               <div className="flex-1">
@@ -306,7 +298,7 @@ const GroupFormComponent = ({
                   <div className="flex items-start justify-between space-x-3">
                     <div className="space-y-1">
                       <Dialog.Title className="text-lg font-medium text-gray-900">
-                        {GroupFormDict[userLanguage]["HEADING"]}
+                        {GroupFormDict[userLanguage]['HEADING']}
                       </Dialog.Title>
                     </div>
                     <div className="h-7 w-auto flex items-center">
@@ -314,40 +306,26 @@ const GroupFormComponent = ({
                         ref={cancelButtonRef}
                         type="button"
                         className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        onClick={onCancel}
-                      >
+                        onClick={onCancel}>
                         <span className="sr-only">Close panel</span>
-                        <XIcon className="h-6 w-6" aria-hidden="true" />
+                        <CloseOutlined />
                       </button>
                     </div>
                   </div>
                 </div>
 
                 {/* Divider container */}
-                <div style={{ minHeight: "calc(100vh - 170px)" }}>
-                  <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
-                    <div
-                      className={
-                        "space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-6 sm:py-5"
-                      }
-                    >
-                      <div>
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                        >
-                          {GroupFormDict[userLanguage]["LABELS"]["GROUP_NAME"]}{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                      </div>
+                <div style={{minHeight: 'calc(100vh - 170px)'}}>
+                  <div className="p-6 gap-6 flex flex-col sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
+                    <div className={'space-y-1  sm:space-y-0 sm:grid sm:grid-cols-4 '}>
                       <div className="sm:col-span-3">
                         <FormInput
                           name="groupName"
                           placeHolder={
-                            GroupFormDict[userLanguage]["PLACEHOLDERS"][
-                              "GROUP_NAME"
-                            ]
+                            GroupFormDict[userLanguage]['PLACEHOLDERS']['GROUP_NAME']
                           }
+                          isRequired
+                          label={GroupFormDict[userLanguage]['LABELS']['GROUP_NAME']}
                           value={formValues.groupName}
                           onChange={handleInputChange}
                           id="name"
@@ -355,51 +333,29 @@ const GroupFormComponent = ({
                         />
                       </div>
                     </div>
-                    <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-                      <div>
-                        <label
-                          htmlFor="project-name"
-                          className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                        >
-                          {GroupFormDict[userLanguage]["LABELS"]["ADVISOR"]}{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                      </div>
+                    <div className="space-y-1 sm:space-y-0 sm:grid sm:grid-cols-4 ">
                       <div className="sm:col-span-3">
                         <Selector
+                          label={GroupFormDict[userLanguage]['LABELS']['ADVISOR']}
+                          isRequired
                           onChange={handleAdvisorChange}
                           selectedItem={formValues.groupAdvisor?.name}
                           list={advisorOptions}
                           placeholder={
-                            GroupFormDict[userLanguage]["PLACEHOLDERS"][
-                              "ADVISOR"
-                            ]
+                            GroupFormDict[userLanguage]['PLACEHOLDERS']['ADVISOR']
                           }
                           error={errors?.groupAdvisor}
                         />
                       </div>
                     </div>
 
-                    <div
-                      className={
-                        "space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5"
-                      }
-                    >
-                      <div>
-                        <label
-                          htmlFor="location"
-                          className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2"
-                        >
-                          {GroupFormDict[userLanguage]["LABELS"]["LOCATION"]}
-                        </label>
-                      </div>
+                    <div className={'space-y-1  sm:space-y-0 sm:grid sm:grid-cols-4 '}>
                       <div className="sm:col-span-3">
                         <FormInput
+                          label={GroupFormDict[userLanguage]['LABELS']['LOCATION']}
                           name="groupLocation"
                           placeHolder={
-                            GroupFormDict[userLanguage]["PLACEHOLDERS"][
-                              "LOCATION"
-                            ]
+                            GroupFormDict[userLanguage]['PLACEHOLDERS']['LOCATION']
                           }
                           value={formValues.groupLocation}
                           onChange={handleInputChange}
@@ -408,13 +364,12 @@ const GroupFormComponent = ({
                       </div>
                     </div>
                   </div>
-                  <div className={"space-y-1 px-6 sm:space-y-0 sm:px-10 mt-6"}>
+                  <div className={'space-y-1 px-6 sm:space-y-0 sm:px-10 mt-6'}>
                     <div
                       className={`text-lg font-medium mb-1 border-b-0 border-${
-                        themeColor === "iconoclastIndigo" ? "indigo" : "blue"
-                      }-500`}
-                    >
-                      {GroupFormDict[userLanguage]["LABELS"]["STUDENTS"]}
+                        themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                      }-500`}>
+                      {GroupFormDict[userLanguage]['LABELS']['STUDENTS']}
                     </div>
                     <div className="mt-6">
                       <ul className="">
@@ -423,8 +378,7 @@ const GroupFormComponent = ({
                             {classStudents.map((student: any) => (
                               <li
                                 className="flex justify-between items-center truncate"
-                                key={student.id}
-                              >
+                                key={student.id}>
                                 <span className="pr-2 text-lg truncate">
                                   {`${student.student?.lastName}, ${
                                     student.student?.preferredName
@@ -437,14 +391,13 @@ const GroupFormComponent = ({
                                     value={Boolean(
                                       formValues.classroomGroupsStudents.find(
                                         (item) =>
-                                          item.studentAuthId ===
-                                          student.studentAuthID
+                                          item.studentAuthId === student.studentAuthID
                                       )?.checked
                                     )}
                                     onChange={(event) =>
                                       handleStudentSelectionDeselection(event, {
                                         studentAuthId: student.studentAuthID,
-                                        studentEmail: student.studentEmail,
+                                        studentEmail: student.studentEmail
                                       })
                                     }
                                     name="studentId"
@@ -460,27 +413,26 @@ const GroupFormComponent = ({
                     </div>
                   </div>
                 </div>
-                <hr className="my-2 text-gray-500" />
+                <Divider />
 
                 {/* Action buttons */}
                 <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                   <div className="space-x-3 flex justify-end">
-                    <button
-                      type="button"
-                      className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    <Buttons
+                      label={BUTTONS[userLanguage]['CANCEL']}
                       onClick={onCancel}
-                    >
-                      {BUTTONS[userLanguage]["CANCEL"]}
-                    </button>
-                    <button
                       disabled={saving}
+                      variant="default"
+                    />
+                    <Buttons
+                      disabled={saving}
+                      label={
+                        saving
+                          ? BUTTONS[userLanguage]['SAVING']
+                          : BUTTONS[userLanguage]['SAVE']
+                      }
                       onClick={handleSubmit}
-                      className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      {saving
-                        ? BUTTONS[userLanguage]["SAVING"]
-                        : BUTTONS[userLanguage]["SAVE"]}
-                    </button>
+                    />
                   </div>
                 </div>
               </div>

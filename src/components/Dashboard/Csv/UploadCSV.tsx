@@ -1,15 +1,14 @@
-import {API, graphqlOperation} from 'aws-amplify';
 import Buttons from '@components/Atoms/Buttons';
 import {logError, uploadImageToS3} from '@graphql/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
+import {API, graphqlOperation} from 'aws-amplify';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
-import {Transition} from '@headlessui/react';
 import {
   focusOn,
   getExtension,
@@ -34,28 +33,12 @@ import * as queries from 'graphql/queries';
 import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useEffect, useRef, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
 
 interface ICsvProps {
   institutionId?: string;
 }
-
-const DataValue = ({
-  title,
-  content
-}: {
-  title: string;
-  content: string | React.ReactNode;
-}) => {
-  return (
-    <div className="w-auto flex mb-2 flex-col items-start justify-start">
-      <p className="text-sm text-gray-500">{title}</p>
-      <div className="text-dark-gray font-medium text-left w-auto text-sm">{content}</div>
-    </div>
-  );
-};
 
 type IModal = {
   show: boolean;
@@ -112,7 +95,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [selectedCurriculum, setSelectedCurriculum] = useState<any | null>(null);
 
   const [selectedUnit, setSelectedUnit] = useState<any | null>(null);
-  const [activeUnits, setActiveUnits] = useState<any[]>([]);
+  const [__, setActiveUnits] = useState<any[]>([]);
   const [uploadingCSV, setUploadingCSV] = useState(false);
 
   const [surveys, setSurveys] = useState<any[]>([]);
@@ -131,12 +114,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const reasonDropdown = [
     {
       id: 1,
-      name: 'Paper Survey',
+      label: 'Paper Survey',
       value: 'paper-survey'
     },
     {
       id: 2,
-      name: 'User Update Survey',
+      label: 'User Update Survey',
       value: 'user-update'
     }
   ];
@@ -1218,7 +1201,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             return {
               id: cr.id,
 
-              name: cr.name,
+              label: cr.name,
               value: cr.name,
               class: {...cr.class},
               curriculum,
@@ -1228,6 +1211,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           return null;
         })
         .filter(Boolean);
+
+      console.log(instCRs);
 
       setClassRoomsList(classrooms);
       setInstClassRooms(removeDuplicates(instCRs));
@@ -1284,10 +1269,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const onClassRoomSelect = async (id: string, name: string, value: string) => {
+  const onClassRoomSelect = async (id: string, label: string, value: string) => {
     try {
       let sCR = selectedClassRoom;
-      let cr = {id, name, value};
+      let cr = {id, label, value};
       resetFile();
       setSelectedClassRoom(cr);
       setUnits([]);
@@ -1320,16 +1305,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     setSelectedSurvey(null);
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
-
-  const currentSelectedClassroomData =
-    hoveringItem &&
-    hoveringItem?.name &&
-    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
-
-  const currentActiveUnit =
-    currentSelectedClassroomData &&
-    activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
+  const [_, setHoveringItem] = useState<{name?: string}>({});
 
   const getMappedValues = (input: any) => {
     if (input) {
@@ -1365,6 +1341,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const dataList = getMappedValues(parsedObj).map((listItem, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     id: listItem['AuthId'],
     name: `${listItem['First Name']} ${listItem['Last Name']}`,
 
@@ -1372,42 +1349,32 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     takenSurvey: listItem['UniversalSurveyStudentID'] === 'Not-taken-yet' ? 'No' : 'Yes'
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Id', 'Name', 'Email', 'Taken Survey'],
     dataList,
     config: {
-      isFirstIndex: true,
       dataList: {
-        loading: isEmpty(parsedObj),
-
-        emptyText: 'no data found',
-        customWidth: {
-          id: 'w-72',
-          takenSurvey: 'w-48',
-
-          email: 'w-72 break-all'
-        },
-        maxHeight: 'max-h-196'
+        loading: isEmpty(parsedObj)
       }
     }
   };
 
   return (
     <>
-      {showModal.show && (
-        <Modal
-          showHeader
-          title={showModal.title}
-          closeAction={clearModal}
-          saveAction={showModal.saveAction}
-          closeOnBackdrop
-          saveElement={showModal?.saveElement}
-          closeLabel={showModal.closeLabel}
-          saveLabel={showModal?.saveLabel}
-          showFooter={Boolean(showModal.closeLabel)}>
-          {showModal.element}
-        </Modal>
-      )}
+      <Modal
+        open={showModal.show}
+        showHeader
+        title={showModal.title}
+        closeAction={clearModal}
+        saveAction={showModal.saveAction}
+        closeOnBackdrop
+        saveElement={showModal?.saveElement}
+        closeLabel={showModal.closeLabel}
+        saveLabel={showModal?.saveLabel}
+        showFooter={Boolean(showModal.closeLabel)}>
+        {showModal.element}
+      </Modal>
+
       <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 justify-start">
@@ -1420,105 +1387,41 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       <Selector
                         dataCy="upload-analytics-classroom"
                         loading={classRoomLoading}
-                        selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-                        placeholder="select classroom"
-                        width="xl:w-64"
-                        setHoveringItem={setHoveringItem}
+                        selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
+                        placeholder="Select Classroom"
+                        width={250}
                         list={instClassRooms}
-                        onChange={(value, name, id) => {
+                        onChange={(value, option: any) => {
                           setHoveringItem({});
-                          onClassRoomSelect(id, name, value);
+                          onClassRoomSelect(option.id, value, value);
                           focusOn('upload-analytics-unit');
                         }}
                       />
-                      {currentSelectedClassroomData && (
-                        <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-                          <Transition
-                            style={{
-                              top: '0rem',
-                              bottom: '1.5rem',
-                              right: '-110%',
-                              zIndex: 999999
-                            }}
-                            className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                            show={Boolean(hoveringItem && hoveringItem.name)}>
-                            <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                              <DataValue
-                                title={'Institution Name'}
-                                content={currentSelectedClassroomData?.institutionName}
-                              />
-                              <DataValue
-                                title={'Clasroom Name'}
-                                content={currentSelectedClassroomData?.name}
-                              />
-                              <DataValue
-                                title={'Status'}
-                                content={
-                                  <p
-                                    className={`${
-                                      currentSelectedClassroomData.status === 'ACTIVE'
-                                        ? 'text-green-500'
-                                        : 'text-yellow-500'
-                                    } lowercase`}>
-                                    {currentSelectedClassroomData.status}
-                                  </p>
-                                }
-                              />
-                              <DataValue
-                                title={'Teacher'}
-                                content={
-                                  <div className="flex items-center justify-center w-auto">
-                                    <span className="w-auto">
-                                      <img
-                                        src={currentSelectedClassroomData.teacher.image}
-                                        className="h-6 w-6 rounded-full"
-                                      />
-                                    </span>
-                                    <p className="w-auto ml-2">
-                                      {currentSelectedClassroomData.teacher.name}
-                                    </p>
-                                  </div>
-                                }
-                              />
-                              <DataValue
-                                title={'Course Name'}
-                                content={currentSelectedClassroomData?.courseName || '--'}
-                              />
-                              <DataValue
-                                title={'Active Unit'}
-                                content={currentActiveUnit?.name || '--'}
-                              />
-                            </div>
-                          </Transition>
-                        </ClickAwayListener>
-                      )}
                     </div>
                     <Selector
                       dataCy="upload-analytics-unit"
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
-                      placeholder="select unit"
-                      btnId="upload-analytics-unit"
+                      placeholder="Select Unit"
                       list={units}
-                      width="xl:w-64"
+                      width={250}
                       disabled={!selectedCurriculum}
-                      onChange={(value, name, id) => {
-                        onUnitSelect(id, name, value);
+                      onChange={(value, option: any) => {
+                        onUnitSelect(option.id, value, value);
                         focusOn('analytics-survey');
                       }}
                     />
 
                     <Selector
                       dataCy="analytics-survey"
-                      btnId="analytics-survey"
                       loading={surveysLoading}
-                      width="xl:w-64"
-                      direction="left"
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-                      placeholder="select survey"
+                      placeholder="Select Survey"
                       list={surveys}
-                      onChange={(value, name, id) => onChangeSurvey(id, name, value)}
+                      onChange={(value, option: any) =>
+                        onChangeSurvey(option.id, value, value)
+                      }
                     />
                   </div>
                 }
@@ -1528,7 +1431,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-start  gap-x-4 border-t-0 border-gray-400 border-dashed py-4 mb-4">
+        <div className="flex items-center justify-start  gap-x-4  py-4 mb-4">
           <UploadButton
             disabled={isMapping || !Boolean(selectedSurvey)}
             label={file ? 'Change file' : 'Choose file'}
@@ -1539,15 +1442,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           />
 
           <Selector
-            additionalClass="w-auto"
-            btnClass={!file ? 'cursor-not-allowed' : ''}
             disabled={!file}
-            dropdownWidth="w-96"
-            btnId="reason-button"
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
-            onChange={(value, name, id) => onReasonSelected(id, name, value)}
+            width={250}
+            onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
           />
         </div>
         <AnimatedContainer show={checkingCsvFile} animationType="translateY">

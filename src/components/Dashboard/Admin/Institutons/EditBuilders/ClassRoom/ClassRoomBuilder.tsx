@@ -9,7 +9,6 @@ import {getLocalStorageData} from '@utilities/localStorage';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
 import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {BsArrowLeft} from 'react-icons/bs';
@@ -46,7 +45,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     isError: false
   });
 
-  const {CommonlyUsedDict, RoomEDITdict} = useDictionary();
+  const {CommonlyUsedDict, LessonEditDict, RoomEDITdict} = useDictionary();
 
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -279,22 +278,19 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       title: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_DESCRIPTION,
       stepValue: 'students',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     }
   ];
 
@@ -339,7 +335,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       <div className="">
         <div className="w-full m-auto">
           <StepComponent
-            dataCy="classroom-builder"
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
@@ -357,14 +352,14 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             </p>
           </div>
         ) : null}
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={onModalSave}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
-        )}
+
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={toggleModal}
+          saveAction={onModalSave}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
       </div>
     </div>
   );

@@ -11,7 +11,9 @@ import * as customQueries from 'customGraphql/customQueries';
 import queryString from 'query-string';
 import {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
-const InstitutionInfo = lazy(() => import('dashboard/Admin/Institutons/InstitutionInfo'));
+const InstitutionInfoComponent = lazy(
+  () => import('dashboard/Admin/Institutons/InstitutionInfo')
+);
 
 interface InstitutionProps {
   tabProps?: any;
@@ -63,8 +65,6 @@ interface IInstitution extends InstInfo {
 }
 
 const Institution = (props: InstitutionProps) => {
-  // const {institutionId}: any = useParams();
-
   const {instId: institutionId} = useAuth();
 
   const [fetchingDetails, setFetchingDetails] = useState(false);
@@ -136,8 +136,6 @@ const Institution = (props: InstitutionProps) => {
         }
         setFetchingDetails(false);
         setISNewUpdate(false);
-      } else {
-        // history.push('/dashboard/manage-institutions');
       }
     } catch (error) {
       logError(error, {authId: authId, email: email}, 'Institution');
@@ -177,14 +175,14 @@ const Institution = (props: InstitutionProps) => {
         institutionId={institutionId}
         forInstitution
       />
-      <div className="px-2 py-8 md:px-4 lg:p-8">
+      <div className="">
         <PageWrapper>
           <Switch>
             <Route
               path={`${match.url}/`}
               render={() => (
                 <ErrorBoundary componentName="InstitutionInfo">
-                  <InstitutionInfo
+                  <InstitutionInfoComponent
                     institute={institutionData}
                     loading={fetchingDetails}
                     postInfoUpdate={postInfoUpdate}

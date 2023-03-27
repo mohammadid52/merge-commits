@@ -1,6 +1,8 @@
 import useAuth from '@customHooks/useAuth';
+import useTheme from '@customHooks/useTheme';
 import {getInstInfo, getPerson} from '@graphql/functions';
 import {getUserInfo} from '@utilities/functions';
+import {ConfigProvider} from 'antd';
 import {getAsset} from 'assets';
 import {Auth} from 'aws-amplify';
 import MobileOops from 'components/Error/MobileOops';
@@ -13,46 +15,46 @@ import React, {lazy, Suspense, useEffect} from 'react';
 const AuthRoutes = lazy(() => import('components/AppRoutes/AuthRoutes'));
 const UnauthRoutes = lazy(() => import('components/AppRoutes/UnauthRoutes'));
 
+const setupAppHeaders = async (clientKey: string) => {
+  document.title = getAsset(clientKey, 'appTitle');
+  const favicon: any = document.getElementById('faviconDefault');
+  const favicon32x32: any = document.getElementById('favicon32x32');
+  const favicon16x16: any = document.getElementById('favicon16x16');
+  const manifest: any = document.getElementById('manifest');
+  const maskIcon: any = document.getElementById('maskIcon');
+  favicon.href = getAsset(clientKey, 'faviconDefault');
+  favicon32x32.href = getAsset(clientKey, 'favicon32x32');
+  favicon16x16.href = getAsset(clientKey, 'favicon16x16');
+  manifest.href = getAsset(clientKey, 'manifest');
+  maskIcon.href = getAsset(clientKey, 'maskIcon');
+
+  const metaTags = [
+    {name: 'apple-mobile-web-app-title', content: 'webAppTitle'},
+    {name: 'application-name', content: 'appName'},
+    {name: 'msapplication-TileImage', content: 'tileImage'},
+    {name: 'msapplication-config', content: 'msapplicationConfig'}
+  ];
+
+  forEach(metaTags, (meta) => {
+    if (document !== null) {
+      const element = document?.querySelector(`meta[name="${meta.name}"]`);
+      element?.setAttribute('content', getAsset(clientKey, meta.content));
+    }
+  });
+
+  const html = document?.querySelector('html');
+  html?.classList?.add?.(clientKey === 'demo' ? 'curate' : clientKey);
+};
+
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
 
-  const {theme, authState, setAuthState, clientKey} = useGlobalContext();
+  const {authState, setAuthState, clientKey} = useGlobalContext();
 
   useEffect(() => {
-    setupAppHeaders();
+    setupAppHeaders(clientKey);
     checkUserAuthenticated();
-  }, []);
-
-  const setupAppHeaders = async () => {
-    document.title = getAsset(clientKey, 'appTitle');
-    const favicon: any = document.getElementById('faviconDefault');
-    const favicon32x32: any = document.getElementById('favicon32x32');
-    const favicon16x16: any = document.getElementById('favicon16x16');
-    const manifest: any = document.getElementById('manifest');
-    const maskIcon: any = document.getElementById('maskIcon');
-    favicon.href = getAsset(clientKey, 'faviconDefault');
-    favicon32x32.href = getAsset(clientKey, 'favicon32x32');
-    favicon16x16.href = getAsset(clientKey, 'favicon16x16');
-    manifest.href = getAsset(clientKey, 'manifest');
-    maskIcon.href = getAsset(clientKey, 'maskIcon');
-
-    const metaTags = [
-      {name: 'apple-mobile-web-app-title', content: 'webAppTitle'},
-      {name: 'application-name', content: 'appName'},
-      {name: 'msapplication-TileImage', content: 'tileImage'},
-      {name: 'msapplication-config', content: 'msapplicationConfig'}
-    ];
-
-    forEach(metaTags, (meta) => {
-      if (document !== null) {
-        const element = document?.querySelector(`meta[name="${meta.name}"]`);
-        element?.setAttribute('content', getAsset(clientKey, meta.content));
-      }
-    });
-
-    const html = document?.querySelector('html');
-    html?.classList?.add?.(clientKey === 'demo' ? 'curate' : clientKey);
-  };
+  }, [clientKey]);
 
   const {setUser, removeAuthToken} = useAuth();
 
@@ -88,24 +90,33 @@ const MainRouter: React.FC = () => {
     }
   };
 
+  const theme = useTheme();
+
   return (
-    <div
-      className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
-      {deviceDetected.mobile ? (
-        <MobileOops userAgent={deviceDetected.device} />
-      ) : (
-        <Suspense
-          fallback={
-            <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
-              <ComponentLoading />
-            </div>
-          }>
-          {authState === 'loading' && <ComponentLoading />}
-          {authState === 'loggedIn' && <AuthRoutes />}
-          {authState === 'notLoggedIn' && <UnauthRoutes />}
-        </Suspense>
-      )}
-    </div>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: clientKey === 'iconoclast' ? theme.iconoclast : theme.curate
+        }
+      }}>
+      <div
+        className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
+        {deviceDetected.mobile ? (
+          <MobileOops userAgent={deviceDetected.device} />
+        ) : (
+          <Suspense
+            fallback={
+              <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
+                <ComponentLoading />
+              </div>
+            }>
+            {authState === 'loading' && <ComponentLoading />}
+            {authState === 'loggedIn' && <AuthRoutes />}
+            {authState === 'notLoggedIn' && <UnauthRoutes />}
+          </Suspense>
+        )}
+      </div>
+    </ConfigProvider>
   );
 };
 

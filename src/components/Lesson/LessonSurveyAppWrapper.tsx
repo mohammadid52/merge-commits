@@ -1,7 +1,8 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonHeaderBar from '@components/Header/LessonHeaderBar';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import React, {useEffect, useRef, useState} from 'react';
+import {notification} from 'antd';
+import {useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
@@ -31,13 +32,11 @@ const LessonSurveyAppWrapper = ({
 }: LessonSurveyAppWrapper) => {
   const {
     lessonState,
-    theme,
+
     lessonDispatch,
     state: {user}
   } = useGlobalContext();
 
-  const [showRequiredNotification, setShowRequiredNotification] =
-    useState<boolean>(false);
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
 
@@ -60,13 +59,13 @@ const LessonSurveyAppWrapper = ({
     }
   }, [personLoading]);
 
+  const [notificationApi, contextHolder] = notification.useNotification();
+
   const handleRequiredNotification = () => {
-    if (!showRequiredNotification) {
-      setShowRequiredNotification(true);
-      setTimeout(() => {
-        setShowRequiredNotification(false);
-      }, 1250);
-    }
+    notificationApi.error({
+      message: 'Please complete all required fields before continuing.',
+      placement: 'bottomRight'
+    });
   };
 
   const NAME = lessonState?.lessonData?.title;
@@ -74,23 +73,14 @@ const LessonSurveyAppWrapper = ({
   return (
     <div
       id={type === 'survey' ? 'survey-app-container' : 'lesson-app-container'}
-      className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
+      className={`bg-dark-blue w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
       ref={topLessonRef}>
-      <div
-        className={`opacity-${
-          showRequiredNotification
-            ? '100 translate-x-0 transform z-100'
-            : '0 translate-x-10 transform'
-        } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
-        <p className="text-white font-medium tracking-wide">
-          <span className="text-red-500">*</span>Please fill all the required fields
-        </p>
-      </div>
+      {contextHolder}
       <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
         <h6 className="text-xs text-shadow text-gray-500">{NAME}</h6>
       </div>
 
-      <div className="fixed " style={{zIndex: 5000}}>
+      <div className="fixed w-full" style={{zIndex: 5000}}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
@@ -110,7 +100,7 @@ const LessonSurveyAppWrapper = ({
           }}
         />
       </div>
-      <div className={`top-2 lg:top-6 relative lesson-body-container`}>
+      <div className={`top-2 lg:top-6 relative lesson-body-container w-full`}>
         {!lessonDataLoaded ? (
           <div className="mt-4 mb-8 lesson-page-container">
             <LessonPageLoader />

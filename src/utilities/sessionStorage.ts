@@ -1,5 +1,5 @@
 export const getSessionStorageData = (key: string) => {
-  const toParse = window?.sessionStorage?.getItem?.(key) || "";
+  const toParse = window?.sessionStorage?.getItem?.(key) || '{}';
   return JSON.parse(toParse);
 };
 

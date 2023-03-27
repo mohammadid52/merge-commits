@@ -1,14 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
+import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
-import {getFormatedDate} from '@utilities/utils';
+import {getFormatedDate} from '@utilities/time';
+import {Card, Col, Divider, Row, Statistic} from 'antd';
+import {PersonStatus, UniversalLessonPlan} from 'API';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import * as queries from 'graphql/queries';
-import React, {lazy, useEffect, useState} from 'react';
+import React, {lazy, useEffect, useRef, useState} from 'react';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import useCsv from './Hooks/useCsv';
@@ -43,21 +47,8 @@ export const DataValue = ({
   );
 };
 
-const Card = ({keyItem, value}: any) => {
-  return (
-    <div className="flex relative bg-white rounded-lg  justify-center items-center h-20 shadow inner_card">
-      <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
-        {keyItem}:
-      </p>
-      <p className={`text-dark-gray font-medium text-center w-auto text-md`}>{value}</p>
-    </div>
-  );
-};
-
 const Csv = () => {
   const [selectedInst, setSelectedInst] = useState<any>(null);
-
-  const [classRoomsList, setClassRoomsList] = useState<any[]>([]);
 
   const [selectedClassRoom, setSelectedClassRoom] = useState<any>(null);
   const [selectedCurriculum, setSelectedCurriculum] = useState<any>(null);
@@ -69,18 +60,23 @@ const Csv = () => {
   const [selectedSurvey, setSelectedsurvey] = useState<any>(null);
 
   const [surveyQuestions, setSurveyQuestions] = useState<any[]>([]);
+
   const [demographicsQuestions, setDemographicsQuestions] = useState<any[]>([]);
 
   const [classStudents, setClassStudents] = useState<any[]>([]);
 
-  const [isCSVReady, setIsCSVReady] = useState(false);
+  const [isCSVReady, setIsCSVReady] = useState<any>(false);
 
   const [lessonPDFData, setLessonPDFData] = useState<any[]>([]);
 
   const [SCQAnswers, setSCQAnswers] = useState<any[]>([]);
+
   const [DCQAnswers, setDCQAnswers] = useState<any[]>([]);
 
-  const [_3, setCsvGettingReady] = useState(false);
+  const [_3, setCsvGettingReady] = useState<any>(false);
+
+  const [showTestData, setShowTestData] = useState(false);
+  const [responseValue, setResponseValue] = useState(true);
 
   // methods to clear state data
   const resetInstitution = () => {
@@ -95,7 +91,6 @@ const Csv = () => {
   };
 
   const clearClassRooms = () => {
-    setClassRoomsList([]);
     setSelectedClassRoom(null);
   };
   const clearClass = () => {
@@ -121,7 +116,7 @@ const Csv = () => {
           syllabusLessonID: {eq: syllabusLessonID},
           ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email')
         },
-        limit: 1000
+        limit: 2000
       })
     );
     let studentsAnswersDemographicsCheckpointsQuestions =
@@ -139,26 +134,18 @@ const Csv = () => {
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
       setLessonPDFData(lessonObject.lessonPlan);
-      let questionsListdata = await getQuestionListFromLesson(lessonObject);
-      let questionList = questionsListdata.questionList;
-      // console.log('questionList', questionList)
-      let questions: any = [];
-      if (questionList) {
-        questionList.map((listItem: any) => {
-          listItem.map((item: any) => {
-            questions.push({
-              question: {
-                id: item.questionID,
-                question: item.questionString,
-                type: item.type,
-                options: item.options
-              }
-            });
-          });
-        });
+
+      let questionsListdata = getQuestionListFromLesson(lessonObject);
+
+      let sanitizedQuestions = questionsListdata.flat(2).filter(Boolean).flat();
+
+      if (sanitizedQuestions) {
+        sanitizedQuestions = sanitizedQuestions.map((item: any) => ({
+          question: item
+        }));
       }
 
-      setSurveyQuestions(questions);
+      setSurveyQuestions(sanitizedQuestions);
 
       if (classStudents) {
         let response = await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
@@ -187,103 +174,42 @@ const Csv = () => {
   // ##################################################################### //
   // ########## LOOP OVER LESSONPLAN AND GENERATE QUESTION LIST ########## //
   // ##################################################################### //
-  const getQuestionListFromLesson = async (lessonObj: any) => {
+  const getQuestionListFromLesson = (lessonObj: any) => {
     if (lessonObj?.lessonPlan) {
-      const mappedPages = lessonObj?.lessonPlan.reduce(
-        (
-          inputs: {
-            questionList: any[];
-          },
-          page: any
-        ) => {
-          const pageParts = page.pageContent;
-          const reducedPageInputs = pageParts.reduce(
-            (
-              pageInputsAcc: {
-                pageInputAcc: any[];
-              },
-              pagePart: any
-            ) => {
-              if (pagePart.hasOwnProperty('partContent')) {
-                const partInputs = pagePart.partContent.reduce(
-                  (
-                    partInputAcc: {
-                      pageInputAcc: any[];
-                    },
-                    partContent: any
-                  ) => {
-                    //  CHECK WHICH INPUT TYPE  //
-                    const isForm = /form/g.test(partContent.type);
-                    const isOtherInput = /input/g.test(partContent.type);
-
-                    // -------- IF FORM ------- //
-                    if (isForm) {
-                      const formSubInputs = partContent.value.reduce(
-                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
-                          return {
-                            ...subPartAcc,
-
-                            pgInput: [
-                              ...subPartAcc.pgInput,
-                              {
-                                questionID: partContentSub.id,
-                                type: partContentSub.type,
-                                questionString: partContentSub.label,
-                                options: partContentSub.options
-                              }
-                            ]
-                          };
-                        },
-                        {pgInput: []}
-                      );
-
-                      return {
-                        pageInputAcc: [
-                          ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput
-                        ]
-                      };
-                    }
-                    // ---- IF OTHER INPUT ---- //
-                    else if (isOtherInput) {
-                      return {
-                        pageInputAcc: [
-                          ...partInputAcc.pageInputAcc,
-                          {
-                            questionID: partContent.id,
-                            type: partContent.type,
-                            questionString: partContent.label,
-                            options: partContent.options
-                          }
-                        ]
-                      };
-                    } else {
-                      return partInputAcc;
-                    }
-                  },
-                  {pageInputAcc: []}
-                );
-
+      const mappedPages = lessonObj?.lessonPlan.map((page: UniversalLessonPlan) => {
+        const pageParts = page.pageContent;
+        const mappedPageParts = pageParts?.map((pagePart: any) => {
+          if (pagePart?.partContent) {
+            const partInputs = pagePart.partContent.map((partContent: any) => {
+              const isForm = /form/g.test(partContent.type);
+              const isOtherInput = /input/g.test(partContent.type);
+              if (isForm) {
+                return partContent.value.map((formInput: any) => {
+                  return {
+                    id: formInput.id,
+                    question: formInput.label,
+                    type: formInput.type,
+                    options: formInput.options
+                  };
+                });
+              } else if (isOtherInput) {
                 return {
-                  pageInputAcc: [
-                    ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc
-                  ]
+                  id: partContent.id,
+                  question: partContent.label,
+                  type: partContent.type,
+                  options: partContent.options
                 };
               } else {
-                return pageInputsAcc;
+                return null;
               }
-            },
-            {pageInputAcc: []}
-          );
+            });
 
-          return {
-            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
-          };
-        },
+            return partInputs;
+          }
+        });
 
-        {questionList: []}
-      );
+        return mappedPageParts;
+      });
 
       return mappedPages;
     }
@@ -298,7 +224,7 @@ const Csv = () => {
   // ##################################################################### //
 
   const getStudentsSurveyQuestionsResponse = async (
-    lessonId: String,
+    lessonId: string,
     nextToken?: string,
     outArray = []
   ) => {
@@ -307,7 +233,7 @@ const Csv = () => {
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalSurveyStudentData, {
         nextToken: nextToken,
-        limit: 200,
+        limit: 2000,
         filter: {
           lessonID: {eq: lessonId},
           ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
@@ -317,11 +243,23 @@ const Csv = () => {
     let studentsAnswersSurveyQuestionsData =
       universalSurveyStudentData.data.listUniversalSurveyStudentData.items;
 
+    let newNextToken =
+      universalSurveyStudentData.data.listUniversalSurveyStudentData.nextToken;
+
+    let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
+
+    if (Boolean(newNextToken)) {
+      combined = await getStudentsSurveyQuestionsResponse(
+        lessonId,
+        newNextToken,
+        combined
+      );
+    }
+
     /**
      * combination of last fetch results
      * && current fetch results
      */
-    let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
     return combined;
   };
@@ -336,7 +274,7 @@ const Csv = () => {
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalArchiveData, {
         nextToken: nextToken,
-        limit: 200,
+        limit: 2000,
         filter: {
           lessonID: {eq: lessonId},
           ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
@@ -346,21 +284,24 @@ const Csv = () => {
     let studentsAnswersSurveyQuestionsData =
       universalSurveyStudentData.data.listUniversalArchiveData.items;
 
+    let newNextToken = universalSurveyStudentData.data.listUniversalArchiveData.nextToken;
+
     /**
      * combination of last fetch results
      * && current fetch results
      */
     let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
+    if (Boolean(newNextToken)) {
+      combined = await getStudentsSurveyQuestionsResponseFromArchiveTable(
+        lessonId,
+        newNextToken,
+        combined
+      );
+    }
+
     return combined;
   };
-
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
-
-  const currentSelectedClassroomData =
-    hoveringItem &&
-    hoveringItem?.name &&
-    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
 
   useEffect(() => {
     const el = document?.getElementById('csv-download-button');
@@ -370,9 +311,16 @@ const Csv = () => {
     });
   }, []);
 
-  const [showWarnModal, setShowWarnModal] = useState(false);
+  const [showWarnModal, setShowWarnModal] = useState<any>(false);
 
-  const {clearCSVData, mappedHeaders, isCSVDownloadReady, statistics, CSVData} = useCsv({
+  const {
+    clearCSVData,
+    mappedHeaders,
+    isCSVDownloadReady,
+    setCSVData,
+    statistics,
+    CSVData
+  } = useCsv({
     classStudents,
     isCSVReady,
     setIsCSVReady,
@@ -389,6 +337,7 @@ const Csv = () => {
 
   const dataList = CSVData.map((listItem, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     id: listItem.id,
     name: `${listItem.firstName} ${listItem.lastName}`,
 
@@ -397,61 +346,88 @@ const Csv = () => {
     completedDate: getFormatedDate(listItem?.last)
   }));
 
-  const tableConfig = {
+  const {allAsProps} = usePagination(CSVData, CSVData.length);
+
+  const tableConfig: ITableProps = {
     headers: ['No', 'Id', 'Name', 'Email', 'Completed Date', 'Taken Survey'],
     dataList,
     config: {
-      isFirstIndex: true,
       dataList: {
-        loading: !isCSVDownloadReady || !isCSVReady,
-
-        emptyText: 'no data found',
-        customWidth: {
-          id: 'w-72',
-          takenSurvey: 'w-48',
-          completedDate: 'w-48',
-          email: 'w-72 break-all'
+        pagination: {
+          showPagination: true,
+          config: {
+            allAsProps: {
+              ...allAsProps,
+              pageCount: 20
+            }
+          }
         },
-        maxHeight: 'max-h-196'
+        loading: !isCSVDownloadReady || !isCSVReady
       }
+    }
+  };
+
+  const instituteDropdownRef = useRef<any>(null);
+  const classroomDropdownRef = useRef<any>(null);
+  const unitDropdownRef = useRef<any>(null);
+  const surveyDropdownRef = useRef<any>(null);
+
+  const triggerDropdown = () => {
+    const currentStepRef = getCurrentStep().ref;
+    if (currentStepRef && currentStepRef?.current) {
+      currentStepRef?.current.focus();
+    }
+  };
+
+  const getCurrentStep = () => {
+    if (selectedInst && selectedClassRoom && selectedUnit) {
+      return {label: 'Select survey', ref: surveyDropdownRef};
+    } else if (selectedInst && selectedClassRoom) {
+      return {label: 'Select curriculum unit', ref: unitDropdownRef};
+    } else if (selectedInst) {
+      return {label: 'Select classroom', ref: classroomDropdownRef};
+    } else {
+      return {label: 'Select Institute', ref: instituteDropdownRef};
     }
   };
 
   return (
     <>
-      {showWarnModal && (
-        <Modal
-          closeAction={() => setShowWarnModal(false)}
-          closeOnBackdrop
-          showFooter={false}
-          showHeader={true}
-          title="Csv Download">
-          <div className="flex flex-col justify-center items-center gap-y-4">
-            <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
-            <hr />
-            <p className="text-gray-600 pt-0 p-4 text-center">
-              If you will be using this file to upload results to the app, please do not
-              change column header or tab names
-            </p>
-          </div>
-        </Modal>
-      )}
+      <Modal
+        open={showWarnModal}
+        closeAction={() => setShowWarnModal(false)}
+        closeOnBackdrop
+        showFooter={false}
+        showHeader={true}
+        title="Csv Download">
+        <div className="flex flex-col justify-center items-center gap-y-4">
+          <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
+          <hr />
+          <p className="text-gray-600 pt-0 p-4 text-center">
+            If you will be using this file to upload results to the app, please do not
+            change column header or tab names
+          </p>
+        </div>
+      </Modal>
+
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <DownloadCsvTitleComponent
           setSCQAnswers={setSCQAnswers}
           listQuestions={listQuestions}
           selectedClassRoom={selectedClassRoom}
-          selectedCurriculum={selectedCurriculum}
           selectedUnit={selectedUnit}
           selectedSurvey={selectedSurvey}
           selectedInst={selectedInst}
-          currentSelectedClassroomData={currentSelectedClassroomData}
           surveys={surveys}
           setSelectedCurriculum={setSelectedCurriculum}
           setSelectedClassRoom={setSelectedClassRoom}
           getStudentsDemographicsQuestionsResponse={
             getStudentsDemographicsQuestionsResponse
           }
+          instituteDropdownRef={instituteDropdownRef}
+          classroomDropdownRef={classroomDropdownRef}
+          unitDropdownRef={unitDropdownRef}
+          surveyDropdownRef={surveyDropdownRef}
           setSurveys={setSurveys}
           setSelectedsurvey={setSelectedsurvey}
           setDemographicsQuestions={setDemographicsQuestions}
@@ -459,10 +435,10 @@ const Csv = () => {
           setSelectedInst={setSelectedInst}
           resetInstitution={resetInstitution}
           setSelectedUnit={setSelectedUnit}
-          hoveringItem={hoveringItem}
-          setHoveringItem={setHoveringItem}
           clearCSVData={clearCSVData}
         />
+
+        <Divider />
 
         <DownloadCsvButtons
           isCSVDownloadReady={isCSVDownloadReady}
@@ -471,8 +447,12 @@ const Csv = () => {
           CSVData={CSVData}
           mappedHeaders={mappedHeaders}
           lessonPDFData={lessonPDFData}
+          setShowTestData={setShowTestData}
+          setResponseValue={setResponseValue}
+          showTestData={showTestData}
+          responseValue={responseValue}
         />
-
+        <Divider />
         <div className="w-full">
           <div className="w-auto my-4">
             <SectionTitleV3 title={'Survey Results'} />
@@ -480,39 +460,42 @@ const Csv = () => {
           {Boolean(selectedSurvey) ? (
             <Table {...tableConfig} />
           ) : (
-            <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                <div className="w-5/10">
-                  <p className="mt-2 text-center text-lg text-gray-500">
-                    Select filters options to populate data
-                  </p>
-                </div>
-              </div>
-            </div>
+            <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
+              <p>Select filters options to populate data</p>
+              <Buttons
+                className="w-full"
+                onClick={triggerDropdown}
+                label={getCurrentStep().label}
+              />
+            </Card>
           )}
         </div>
-        <AnimatedContainer show={isCSVDownloadReady}>
-          {isCSVDownloadReady && (
-            <div className="w-full">
-              <div className="w-auto my-4">
-                <SectionTitleV3 title={'Statistics'} />
-              </div>
 
-              <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
-                {/* @Aman change the value:{value} */}
-                <Card
-                  keyItem="Survey First"
+        <AnimatedContainer show={isCSVDownloadReady}>
+          <SectionTitleV3 title={'Statistics'} />
+
+          <Card>
+            <Row gutter={16}>
+              <Col span={6}>
+                <Statistic
+                  title="Survey First"
                   value={getFormatedDate(statistics.surveyFirst)}
                 />
-                <Card
-                  keyItem="Survey Last"
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="Survey Last"
                   value={getFormatedDate(statistics.surveyLast)}
                 />
-                <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
-                <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
-              </div>
-            </div>
-          )}
+              </Col>
+              <Col span={6}>
+                <Statistic title="Taken Survey" value={statistics.takenSurvey} />
+              </Col>
+              <Col span={6}>
+                <Statistic title="Not Taken Survey" value={statistics.notTakenSurvey} />
+              </Col>
+            </Row>
+          </Card>
         </AnimatedContainer>
       </div>
     </>

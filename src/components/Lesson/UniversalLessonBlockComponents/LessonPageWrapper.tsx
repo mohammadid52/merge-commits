@@ -10,7 +10,7 @@ export const LessonPageWrapper = (props: PageWrapperProps) => {
 
   return (
     <div className={`w-full  mt-4 flex flex-col justify-between items-center`}>
-      <div className={`text-white`}>{children}</div>
+      <div className={`text-white w-full`}>{children}</div>
     </div>
   );
 };

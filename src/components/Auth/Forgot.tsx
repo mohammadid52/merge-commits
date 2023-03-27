@@ -128,8 +128,6 @@ const Forgot = () => {
         <div className="">
           <Buttons
             disabled={isLoading}
-            dataCy="forgot-button"
-            btnClass="w-full"
             type="submit"
             loading={isLoading}
             label={'Submit'}

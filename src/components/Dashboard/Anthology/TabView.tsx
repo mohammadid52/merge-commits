@@ -238,12 +238,12 @@ const TabView = ({
               className={`relative border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
               <IoIosJournal
                 style={{color: stringToHslColor(sectionRoomID)}}
-                className="absolute my-auto mr-2 w-auto h-auto fill-current"
+                className=" my-auto mr-2 w-auto h-auto fill-current"
                 size={24}
               />
 
               <h2
-                className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
+                className={`text-sm mb-0 md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
                 {getTitle()}
               </h2>
             </div>
@@ -253,7 +253,6 @@ const TabView = ({
               {subSection === 'Journal' && tab === 1 && (
                 <Buttons
                   Icon={FaEdit}
-                  btnClass="mb-2 px-8"
                   label={anthologyDict[userLanguage].ACTIONS.CREATE}
                   onClick={() => handleEditToggle?.('create', '')}
                   type="button"

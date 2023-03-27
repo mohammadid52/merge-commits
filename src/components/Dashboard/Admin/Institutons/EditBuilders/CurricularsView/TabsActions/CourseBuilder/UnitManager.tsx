@@ -12,15 +12,13 @@ import * as mutations from 'graphql/mutations';
 import Buttons from '@components/Atoms/Buttons';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import Table from '@components/Molecules/Table';
-import {BUTTONS} from '@dictionary/dictionary.iconoclast';
+import Table, {ITableProps} from '@components/Molecules/Table';
+
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {reorder} from 'utilities/strings';
 
 interface UIMessages {
   show: boolean;
@@ -41,7 +39,7 @@ const UnitManager = ({
   const history = useHistory();
 
   const {userLanguage} = useGlobalContext();
-  const {CourseBuilderDict} = useDictionary();
+  const {CourseBuilderDict, BUTTONS} = useDictionary();
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(false);
@@ -60,7 +58,7 @@ const UnitManager = ({
     show: false,
     lessonPlan: false,
     lessonEdit: false,
-    message: CourseBuilderDict[userLanguage]['MESSAGES']['wantsave']
+    message: ''
   });
   const [warnModal2, setWarnModal2] = useState({
     show: false,
@@ -95,8 +93,8 @@ const UnitManager = ({
     history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/add`);
   };
 
-  const handleSelectSyllabus = (value: string, name: string, id: string) => {
-    setSelectedSyllabus({id, name, value});
+  const handleSelectSyllabus = (value: string, option: any) => {
+    setSelectedSyllabus({id: option.id, name: value, value});
   };
 
   const addNewSyllabusToCourse = async () => {
@@ -126,7 +124,7 @@ const UnitManager = ({
       setAddingSyllabus(false);
       setMessages({
         show: true,
-        message: CourseBuilderDict[userLanguage]['MESSAGES']['UPDATE_ERROR'],
+        message: CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['UPDATE_ERROR'],
         isError: true,
         lessonError: true
       });
@@ -210,7 +208,7 @@ const UnitManager = ({
     } catch {
       setMessages({
         show: true,
-        message: CourseBuilderDict[userLanguage]['MESSAGES']['fetchlist'],
+        message: CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['fetchlist'],
         isError: true,
         lessonError: true
       });
@@ -241,18 +239,6 @@ const UnitManager = ({
     message: '',
     action: () => {}
   });
-
-  const checkIfRemovable = (unitObj: any, curriculumObj: any) => {
-    if (
-      curriculumObj?.syllabiHistory &&
-      curriculumObj?.syllabiHistory?.length > 0 &&
-      curriculumObj?.syllabiHistory.includes(unitObj.unitId)
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
     if (!deleteModal.show) {
@@ -292,28 +278,6 @@ const UnitManager = ({
     }
   };
 
-  // ~~~~~~~~~~~~~~ DRAG & NAV ~~~~~~~~~~~~~ //
-  const onDragEnd = async (result: any) => {
-    if (result.source.index !== result.destination.index) {
-      const list: any = reorder(
-        syllabusIds,
-        result.source.index,
-        result.destination.index
-      );
-      setSyllabusIds(list);
-      let syllabusList = selectedSyllabusList
-        .map((t: any) => {
-          let index = list.indexOf(t.unitId);
-          return {...t, index};
-        })
-        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-
-      setSelectedSyllabusList(syllabusList);
-      // Graphql mutation to update syllabus lesson seq
-      updateSyllabusSequence(list);
-    }
-  };
-
   const closeLessonAction = () => {
     setWarnModal2({...warnModal2, show: false});
   };
@@ -339,50 +303,24 @@ const UnitManager = ({
   const dataList = map(selectedSyllabusList, (item, idx) => ({
     no: idx + 1,
     id: item.id,
-    unitName: (
-      <div
-        onClick={() => goToUnitBuilder(item.unitId, item.type)}
-        className="cursor-pointer">
-        {item.name ? item.name : ''}
-      </div>
-    ),
-    actions: (
-      <CommonActionsBtns
-        button1Label="View"
-        isDeletable={checkIfRemovable(item, courseData)}
-        button1Action={() => goToUnitBuilder(item.unitId, item.type)}
-        button2Action={() => handleToggleDelete(item.name, item)}
-      />
-    )
+    onClick: () => goToUnitBuilder(item.unitId, item.type),
+    unitName: item?.name
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Label="View"
+    //     isDeletable={checkIfRemovable(item, courseData)}
+    //     button1Action={() => goToUnitBuilder(item.unitId, item.type)}
+    //     button2Action={() => handleToggleDelete(item.name, item)}
+    //   />
+    // )
   }));
 
-  const tableConfig = {
-    headers: [dict['NUMBER'], dict['UNIT_NAME'], dict['ACTION']],
+  const tableConfig: ITableProps = {
+    headers: [dict['NUMBER'], dict['UNIT_NAME']],
     dataList,
     config: {
-      dark: false,
-
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        emptyText: `${CourseBuilderDict[userLanguage]['NO_UNIT']} - current status of course is ${courseData.status}`,
-        loading,
-        droppable: {
-          isDroppable: true,
-          droppableId: 'unitList',
-          onDragEnd
-        },
-        customWidth: {
-          no: 'w-12',
-          unitName: 'w-7/10',
-          actions: 'w-auto'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
-        }
+        loading
       }
     }
   };
@@ -407,7 +345,6 @@ const UnitManager = ({
               list={allSyllabusList}
               placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
               onChange={handleSelectSyllabus}
-              additionalClass="w-auto "
               width="w-96"
               disabled={isInactive}
             />
@@ -444,15 +381,15 @@ const UnitManager = ({
         {/* *************** SYLLABUS LIST ************ */}
         <Table {...tableConfig} />
       </div>
-      {deleteModal.show && (
-        <ModalPopUp
-          closeAction={handleToggleDelete}
-          saveAction={deleting ? () => {} : deleteModal.action}
-          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-          cancelLabel="CANCEL"
-          message={deleteModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={deleteModal.show}
+        closeAction={handleToggleDelete}
+        saveAction={deleting ? () => {} : deleteModal.action}
+        saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+        cancelLabel="CANCEL"
+        message={deleteModal.message}
+      />
 
       <AnimatedContainer show={isInactive}>
         {isInactive && (
@@ -461,15 +398,15 @@ const UnitManager = ({
           </p>
         )}
       </AnimatedContainer>
-      {warnModal2.show && (
-        <ModalPopUp
-          closeAction={closeLessonAction}
-          saveAction={warnModal2.action}
-          saveLabel="Yes"
-          message={warnModal2.message}
-          loading={deleting}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal2.show}
+        closeAction={closeLessonAction}
+        saveAction={warnModal2.action}
+        saveLabel="Yes"
+        message={warnModal2.message}
+        loading={deleting}
+      />
     </div>
   );
 };

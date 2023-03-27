@@ -9,7 +9,11 @@ import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from 'utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
-import DatePicker from 'react-datepicker';
+import {DatePicker} from 'antd';
+
+import type {DatePickerProps, RangePickerProps} from 'antd/es/date-picker';
+
+const {RangePicker} = DatePicker;
 
 const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile | any>();
@@ -96,20 +100,6 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
     }
   };
 
-  const handleDateChange = (data: any, type: string) => {
-    setError('');
-
-    if (type === 'startTime') {
-      setDetails({...details, startTime: data});
-    } else if (type === 'endTime') {
-      setDetails({...details, endTime: data});
-    } else if (type === 'date') {
-      setDetails({...details, date: data});
-    } else {
-      setDetails({...details, address: data});
-    }
-  };
-
   const validateFields = () => {
     let isValid = true;
     if (!editMode && isEmpty(file)) {
@@ -125,6 +115,22 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       setError('');
     }
     return isValid;
+  };
+
+  const onChange = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
+    // @ts-ignore
+    const startTime = value?.[0]?.$d as Date;
+    // @ts-ignore
+    const endTime = value?.[1]?.$d as Date;
+    setDetails({
+      ...details,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString()
+    });
+  };
+
+  const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
+    console.log('onOk: ', value);
   };
 
   return (
@@ -193,68 +199,24 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       <div className="px-3 py-4">
         <Label label="Step 4: Provide details about the event" />
 
-        <div className="grid grid-cols-2 mt-4 gap-6">
-          <div className="relative event-details-datepicker">
-            <Label label="Start Time" />
-            <DatePicker
-              // @ts-ignore
-              selected={details.startTime}
-              onChange={(date) => handleDateChange(date, 'startTime')}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption="Time"
-              placeholderText={'Start Time'}
-              isClearable={true}
-              dateFormat="h:mm aa"
-            />
-          </div>
-          <div className="relative event-details-datepicker">
-            <Label label="Date" />
-
-            <DatePicker
-              dateFormat={'dd/MM/yyyy'}
-              // @ts-ignore
-              selected={details.date}
-              placeholderText={'Date'}
-              onChange={(date: any) => handleDateChange(date, 'date')}
-              isClearable={true}
-            />
-          </div>
-          <div className="relative event-details-datepicker">
-            <Label label="End Time" />
-
-            <DatePicker
-              // @ts-ignore
-              selected={details.endTime}
-              onChange={(date) => handleDateChange(date, 'endTime')}
-              showTimeSelect
-              showTimeSelectOnly
-              placeholderText={'End Time'}
-              timeIntervals={15}
-              timeCaption="Time"
-              isClearable={true}
-              dateFormat="h:mm aa"
-            />
-          </div>
-        </div>
+        <RangePicker
+          className="w-full"
+          showTime={{format: 'HH:mm'}}
+          format="YYYY-MM-DD HH:mm"
+          onChange={onChange}
+          onOk={onOk}
+        />
       </div>
 
       <AnimatedContainer show={Boolean(error)}>
         {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
-            onClick={onCancel}
-            transparent
-          />
+        <div className="flex justify-end gap-4">
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
           <Buttons
             dataCy="save-event-button"
             loading={isLoading}
-            btnClass="py-1 px-8 text-xs ml-2"
             disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
             label={'Save'}
             onClick={_onSubmit}

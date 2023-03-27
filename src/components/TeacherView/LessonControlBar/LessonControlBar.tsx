@@ -35,7 +35,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
   return (
     <div className="relative h-full w-full flex flex-col items-center z-100">
       <nav
-        className="relative bg-white rounded shadow-sm h-16 lg:h-12 flex"
+        className="relative bg-white w-full rounded shadow-sm h-16 lg:h-12 flex"
         aria-label="Breadcrumb">
         {anyoneIsShared && !isPresenting && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 disabled z-50">
@@ -45,7 +45,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
           </div>
         )}
         <ol
-          className={`max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto ${
+          className={`h-full max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto ${
             anyoneIsShared ? 'z-40' : ''
           }`}>
           <li className="flex w-auto">

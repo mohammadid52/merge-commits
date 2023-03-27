@@ -1,17 +1,17 @@
-import Buttons from "@components/Atoms/Buttons";
-import Tooltip from "@components/Atoms/Tooltip";
-import LocationBadge from "@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge";
-import { API, graphqlOperation } from "aws-amplify";
-import * as customSubscriptions from "customGraphql/customSubscriptions";
+import Buttons from '@components/Atoms/Buttons';
+import Tooltip from '@components/Atoms/Tooltip';
+import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
+import {API, graphqlOperation} from 'aws-amplify';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 
-import { formatPageName } from "@components/Dashboard/Admin/UserManagement/List";
-import { UserPageState } from "API";
-import { useGlobalContext } from "contexts/GlobalContext";
-import React, { useEffect, useState } from "react";
-import { MdOutlineScreenShare, MdOutlineStopScreenShare } from "react-icons/md";
-import { VscScreenFull } from "react-icons/vsc";
-import DotMenu from "./RosterRow/DotMenu";
-import { IRosterSectionProps } from "./RosterSection";
+import {UserPageState} from 'API';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React, {useEffect, useState} from 'react';
+import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
+import {VscScreenFull} from 'react-icons/vsc';
+import DotMenu from './RosterRow/DotMenu';
+import {IRosterSectionProps} from './RosterSection';
+import {formatPageName} from '@utilities/functions';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -49,27 +49,27 @@ const RosterRow: React.FC<RosterRowProps> = ({
   personEmail,
   hot,
   setRecordPrevPage,
-  recordPrevPage,
+  recordPrevPage
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
 
-  const { lessonData, displayData, currentPage } = lessonState;
+  const {lessonData, displayData, currentPage} = lessonState;
 
   // ##################################################################### //
   // ########################### SHARING CHECKS ########################## //
   // ##################################################################### //
 
-  const isLessonSurvey = lessonData?.type === "survey";
-  const anyoneIsShared = displayData[0].studentAuthID !== "";
+  const isLessonSurvey = lessonData?.type === 'survey';
+  const anyoneIsShared = displayData[0].studentAuthID !== '';
 
   const studentIsInLesson = () => {
     const findInRoster = controlState.roster.find(
       (rosterStudent: any) => rosterStudent.personAuthID === personAuthID
     );
-    if (typeof findInRoster !== "undefined") {
+    if (typeof findInRoster !== 'undefined') {
       return true;
     } else {
       return false;
@@ -90,7 +90,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
       handleViewStudentData?.(personAuthID);
       handlePageChange(parseInt(currentLocation));
     } else {
-      if (lessonData?.type !== "survey") {
+      if (lessonData?.type !== 'survey') {
         handleViewStudentData?.(personAuthID);
       }
       if (!studentIsViewed()) {
@@ -107,7 +107,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
    *  USER IS SHAREDSTUDENT.THIS WILL  *
    *      PREVENT LABEL SWITCHING      *
    *************************************/
-  const [frozenPage, setFrozenPage] = useState<string>("");
+  const [frozenPage, setFrozenPage] = useState<string>('');
 
   useEffect(() => {
     if (!studentIsShared()) {
@@ -133,8 +133,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
   const getPageLabel = (locationIndex: string) => {
     if (lessonData && lessonData?.lessonPlan) {
-      if (locationIndex === "") {
-        return "--";
+      if (locationIndex === '') {
+        return '--';
       } else {
         return lessonData.lessonPlan[parseInt(locationIndex)]?.label;
       }
@@ -143,30 +143,23 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
   const getPageID = (locationIndex: string) => {
     if (lessonData && lessonData?.lessonPlan) {
-      if (locationIndex === "") {
-        return "n/a";
+      if (locationIndex === '') {
+        return 'n/a';
       } else {
         return lessonData.lessonPlan[parseInt(locationIndex)]?.id;
       }
     }
   };
 
-  const activeHoverClass = "hover:font-semibold cursor-pointer";
-  const inactiveTextClass = "text-gray-600 text-opacity-20";
+  const activeHoverClass = 'hover:font-semibold cursor-pointer';
+  const inactiveTextClass = 'text-gray-600 text-opacity-20';
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
   const disabledShareButton = (
-    <Buttons
-      size="small"
-      btnClass="mx-2"
-      iconSize="w-4 h-6"
-      transparent
-      Icon={MdOutlineScreenShare}
-      disabled
-    />
+    <Buttons size="small" transparent Icon={MdOutlineScreenShare} disabled />
   );
 
   const active = false;
@@ -176,11 +169,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
       studentIsShared() ? (
         <Buttons
           size="small"
-          btnClass="text-white outline-none   mx-2"
           Icon={MdOutlineStopScreenShare}
           greenBtn
-          iconSize="w-4 h-6"
-          title="Unshare screen"
           onClick={() => {
             // terminateSound.play();
             unshareScreen();
@@ -195,9 +185,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
       <Buttons
         size="small"
-        btnClass="text-white outline-none  mx-2"
-        iconSize="w-4 h-6"
-        title="share screen"
         transparent={!studentIsViewed()}
         Icon={MdOutlineScreenShare}
         onClick={shareScreen}
@@ -213,13 +200,13 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
   const [localPageState, setLocalPageState] = useState({
     pageState: UserPageState.NOT_LOGGED_IN,
-    lastPageStateUpdate: new Date().toISOString(),
+    lastPageStateUpdate: new Date().toISOString()
   });
 
   const subscribeToLocation = () => {
     const personLocationSub = API.graphql(
       graphqlOperation(customSubscriptions.onUpdatePerson, {
-        authId: personAuthID,
+        authId: personAuthID
       })
       //@ts-ignore
     ).subscribe({
@@ -228,10 +215,10 @@ const RosterRow: React.FC<RosterRowProps> = ({
         if (updatedStudent) {
           setLocalPageState({
             pageState: updatedStudent.pageState,
-            lastPageStateUpdate: updatedStudent.lastPageStateUpdate,
+            lastPageStateUpdate: updatedStudent.lastPageStateUpdate
           });
         }
-      },
+      }
     });
     return personLocationSub;
   };
@@ -248,89 +235,81 @@ const RosterRow: React.FC<RosterRowProps> = ({
   return (
     <>
       {/* <div className="" /> */}
-      <div className="roster-row">
+      <div className="roster-row w-full">
         <div
           draggable={false}
           className={`w-full px-4 flex py-2 transition-all duration-300 items-center ${
             active && activeHoverClass
           }  ${!active && inactiveTextClass} ${
-            number % 2 === 0 ? "bg-gray-200 bg-opacity-50" : ""
+            number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
           } ${
             studentIsViewed()
               ? `theme-card-shadow border-l-4 iconoclast:border-500 curate:border-500 bg-opacity-50 iconoclast:bg-200 curate:bg-200`
-              : ""
+              : ''
           } ${
             studentIsShared()
-              ? "border-l-4 border-green-600 bg-opacity-50 bg-green-200"
-              : ""
+              ? 'border-l-4 border-green-600 bg-opacity-50 bg-green-200'
+              : ''
           } ${
             removing === personAuthID
-              ? "bg-opacity-50 pointer-events-none filter blur-sm"
-              : ""
-          }`}
-        >
+              ? 'bg-opacity-50 pointer-events-none filter blur-sm'
+              : ''
+          }`}>
           {/* STUDENT NAME */}
           <div
             draggable={false}
-            className={`${
-              hot ? "w-5/10" : "w-7/10"
-            }  flex flex-row select-none ${active && activeHoverClass} `}
-          >
+            className={`${hot ? 'w-5/10' : 'w-7/10'}  flex flex-row select-none ${
+              active && activeHoverClass
+            } `}>
             <div
               id={`${personAuthID}`}
               draggable={false}
               title={`${preferredName ? preferredName : firstName} ${lastName}`}
               className={`text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate  ${
                 active && activeHoverClass
-              } `}
-            >
-              {preferredName ? preferredName : firstName} {lastName}{" "}
+              } `}>
+              {preferredName ? preferredName : firstName} {lastName}{' '}
               <LocationBadge
-                style={onDemand ? {} : { fontSize: ".5rem" }}
-                customText={onDemand ? "SP" : "CLSRM"}
+                style={onDemand ? {} : {fontSize: '.5rem'}}
+                customText={onDemand ? 'SP' : 'CLSRM'}
                 onDemand={Boolean(onDemand)}
               />
             </div>
           </div>
-          <div className={hot ? "w-3/10 " : "w-2/10"}>
+          <div className={hot ? 'w-3/10 ' : 'w-2/10'}>
             {hot && (
               <div
                 draggable={false}
                 className={`flex justify-start items-center pointer-events-none overflow-hidden text-gray-600 text-xs text-left ${
                   active && activeHoverClass
-                }`}
-              >
+                }`}>
                 <div
                   id={personAuthID}
                   draggable={false}
-                  className={`pointer-events-none`}
-                >
-                  {studentIsShared()
-                    ? frozenPage
-                    : getPageLabel(currentLocation)}
+                  className={`pointer-events-none`}>
+                  {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
                 </div>
               </div>
             )}
           </div>
 
-          <div className={`${hot ? "w-2.5/10" : "w-3/10"} flex items-center`}>
+          <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} gap-2 flex items-center`}>
             <Buttons
-              iconSize="w-4 h-6"
               disabled={!hot}
               variant={
                 studentIsShared()
-                  ? "primary"
+                  ? 'primary'
                   : studentIsInLesson() && !studentIsViewed()
-                  ? "secondary"
-                  : "primary"
+                  ? 'dashed'
+                  : 'primary'
               }
               transparent={!hot}
               greenBtn={studentIsViewed() && !studentIsShared()}
               onClick={handleRowSelection}
-              title={
+              tooltip={
                 studentIsViewed()
-                  ? "Cancel viewing student screen"
-                  : "View student screen"
+                  ? 'Cancel viewing student screen'
+                  : 'View student screen'
               }
               size="small"
               Icon={VscScreenFull}
@@ -353,41 +332,40 @@ const RosterRow: React.FC<RosterRowProps> = ({
             }`}
             onClick={() =>
               handleShareStudentData?.(personAuthID, getPageID(currentLocation))
-            }
-          >
+            }>
             <div className={`dot-menu transition duration-150`}>
               <DotMenu
                 extraContent={
                   !hot && (
                     <div className="border-t-0 border-gray-500 mt-1 pt-1 text-sm capitalize text-gray-600 text-center">
-                      {formatPageName(localPageState.pageState) || "--"}
+                      {formatPageName(localPageState.pageState) || '--'}
                     </div>
                   )
                 }
                 // @ts-ignore
                 menuItems={[
                   {
-                    label: "Profile",
+                    label: 'Profile',
                     action: () =>
                       handleToggleRightView?.({
-                        view: "profile",
-                        option: personAuthID,
-                      }),
+                        view: 'profile',
+                        option: personAuthID
+                      })
                   },
                   {
-                    label: "Attendance",
+                    label: 'Attendance',
                     action: () =>
                       handleToggleRightView?.({
-                        view: "attendance",
-                        option: personAuthID,
-                      }),
+                        view: 'attendance',
+                        option: personAuthID
+                      })
                   },
                   hot && {
-                    label: "Remove",
+                    label: 'Remove',
                     action: () => {
                       kickoutStudent?.(personAuthID, personEmail);
-                    },
-                  },
+                    }
+                  }
                 ].filter(Boolean)}
               />
             </div>

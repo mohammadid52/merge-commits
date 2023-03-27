@@ -1,38 +1,30 @@
-import { DIVIDER, EMOTIONS, FORM_TYPES, TABLE } from "@UlbUI/common/constants";
-import { classNames } from "@UlbUI/FormElements/TextInput";
-import Buttons from "atoms/Buttons";
-import { cardsList } from "components/Dashboard/GameChangers/__contstants";
-import { useOverlayContext } from "contexts/OverlayContext";
-import { usePageBuilderContext } from "contexts/PageBuilderContext";
-import { isEmpty } from "lodash";
-import React, { useEffect } from "react";
+import {DIVIDER, EMOTIONS, FORM_TYPES} from '@UlbUI/common/constants';
+import {classNames} from '@UlbUI/FormElements/TextInput';
+import Buttons from 'atoms/Buttons';
+import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import {isEmpty} from 'lodash';
+import React, {useEffect} from 'react';
 import {
   AiFillCloseCircle,
-  AiOutlineBorderlessTable,
   AiOutlineFileImage,
   AiOutlineHighlight,
   AiOutlineLink,
   AiOutlineMinus,
   AiOutlineQuestionCircle,
   AiOutlineVideoCameraAdd,
-  AiOutlineYoutube,
-} from "react-icons/ai";
-import {
-  BiCheckboxChecked,
-  BiRadioCircleMarked,
-  BiSlider,
-} from "react-icons/bi";
-import { BsCloudDownload, BsImages, BsNewspaper } from "react-icons/bs";
-import { CgNotes } from "react-icons/cg";
-import { HiOutlineArrowRight, HiOutlineExternalLink } from "react-icons/hi";
-import {
-  IoDocumentAttachOutline,
-  IoDocumentTextOutline,
-} from "react-icons/io5";
-import { MdTitle } from "react-icons/md";
-import { VscSymbolKeyword, VscSymbolParameter } from "react-icons/vsc";
-import AnimatedContainer from "uiComponents/Tabs/AnimatedContainer";
-import Tabs, { useTabs } from "uiComponents/Tabs/Tabs";
+  AiOutlineYoutube
+} from 'react-icons/ai';
+import {BiCheckboxChecked, BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
+import {BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
+import {CgNotes} from 'react-icons/cg';
+import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
+import {IoDocumentAttachOutline, IoDocumentTextOutline} from 'react-icons/io5';
+import {MdTitle} from 'react-icons/md';
+import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
@@ -44,13 +36,13 @@ interface AddContentDialog {
 const AddContentDialog = ({
   onItemClick = () => {},
   isSurvey = false,
-  setCurrentHelpStep = () => {},
+  setCurrentHelpStep = () => {}
 }: AddContentDialog) => {
   const tabs = [
-    { name: "Text Content", current: true },
-    { name: "Media", current: false },
-    { name: "User Interaction", current: false },
-    { name: "Game Changers", current: false },
+    {name: 'Text Content', current: true},
+    {name: 'Media', current: false},
+    {name: 'User Interaction', current: false},
+    {name: 'Game Changers', current: false}
   ];
 
   const {
@@ -58,158 +50,158 @@ const AddContentDialog = ({
     setShowingPin,
     activeContentItem,
     setActiveContentItem,
-    showingPin,
+
     setSelectedType,
     emotionComponentExists,
-    actionMode,
+    actionMode
   } = usePageBuilderContext();
 
-  const { addContentModal } = useOverlayContext();
+  const {addContentModal} = useOverlayContext();
 
   const textContent = [
     {
-      name: "Title",
-      type: "header",
-      subtitle: "Add title",
+      name: 'Title',
+      type: 'header',
+      subtitle: 'Add title',
       icon: MdTitle,
-      iconForeground: "text-teal-700",
-      iconBackground: "bg-teal-100",
+      iconForeground: 'text-teal-700',
+      iconBackground: 'bg-teal-100'
     },
     {
-      name: "Paragraph",
-      subtitle: "Add paragraph",
-      type: "paragraph",
+      name: 'Paragraph',
+      subtitle: 'Add paragraph',
+      type: 'paragraph',
       icon: VscSymbolParameter,
-      iconForeground: "text-red-700",
-      iconBackground: "bg-red-100",
+      iconForeground: 'text-red-700',
+      iconBackground: 'bg-red-100'
     },
     {
-      name: "Jumbotron",
+      name: 'Jumbotron',
       type: FORM_TYPES.JUMBOTRON,
-      subtitle: "Add image with details",
+      subtitle: 'Add image with details',
       icon: BsImages,
-      iconForeground: "text-yellow-700",
-      iconBackground: "bg-yellow-100",
+      iconForeground: 'text-yellow-700',
+      iconBackground: 'bg-yellow-100'
     },
     !isSurvey && {
-      name: "Word Tiles",
-      subtitle: "Add keywords",
+      name: 'Word Tiles',
+      subtitle: 'Add keywords',
       type: FORM_TYPES.KEYWORDS,
       icon: VscSymbolKeyword,
-      iconForeground: "text-blue-700",
-      iconBackground: "bg-blue-100",
+      iconForeground: 'text-blue-700',
+      iconBackground: 'bg-blue-100'
     },
     !isSurvey && {
-      name: "Links",
-      subtitle: "Add links",
+      name: 'Links',
+      subtitle: 'Add links',
       type: FORM_TYPES.LINKS,
 
       icon: AiOutlineLink,
-      iconForeground: "text-pink-700",
-      iconBackground: "bg-pink-100",
+      iconForeground: 'text-pink-700',
+      iconBackground: 'bg-pink-100'
     },
     {
-      name: "Divider",
-      subtitle: "Add custom divider",
+      name: 'Divider',
+      subtitle: 'Add custom divider',
       type: DIVIDER,
       icon: AiOutlineMinus,
-      iconForeground: "text-purple-700",
-      iconBackground: "bg-purple-100",
-    },
-    !isSurvey && {
-      name: "Table",
-      subtitle: "Add table",
-      type: TABLE,
-      icon: AiOutlineBorderlessTable,
-      iconForeground: "text-purple-700",
-      iconBackground: "bg-purple-100",
-    },
+      iconForeground: 'text-purple-700',
+      iconBackground: 'bg-purple-100'
+    }
+    // !isSurvey && {
+    //   name: 'Table',
+    //   subtitle: 'Add table',
+    //   type: TABLE,
+    //   icon: AiOutlineBorderlessTable,
+    //   iconForeground: 'text-purple-700',
+    //   iconBackground: 'bg-purple-100'
+    // }
   ].filter(Boolean);
 
   const mediaContent = [
     {
-      name: "Docs",
-      subtitle: "Integrate .pdf .docx",
+      name: 'Docs',
+      subtitle: 'Integrate .pdf .docx',
       type: FORM_TYPES.DOCS,
       icon: IoDocumentTextOutline,
-      iconForeground: "text-green-700",
-      iconBackground: "bg-green-100",
+      iconForeground: 'text-green-700',
+      iconBackground: 'bg-green-100'
     },
     {
-      subtitle: "Add image",
-      name: "Image",
-      type: "image",
+      subtitle: 'Add image',
+      name: 'Image',
+      type: 'image',
       icon: AiOutlineFileImage,
-      iconForeground: "text-teal-700",
-      iconBackground: "bg-teal-100",
+      iconForeground: 'text-teal-700',
+      iconBackground: 'bg-teal-100'
     },
     {
-      subtitle: "Add Video",
-      name: "Video",
+      subtitle: 'Add Video',
+      name: 'Video',
       type: FORM_TYPES.CUSTOM_VIDEO,
       icon: AiOutlineVideoCameraAdd,
-      iconForeground: "text-pink-700",
-      iconBackground: "bg-pink-100",
+      iconForeground: 'text-pink-700',
+      iconBackground: 'bg-pink-100'
     },
     {
-      name: "Youtube Video",
-      subtitle: "Add youtube video link",
+      name: 'Youtube Video',
+      subtitle: 'Add youtube video link',
       type: FORM_TYPES.VIDEO,
 
       icon: AiOutlineYoutube,
-      iconForeground: "text-red-700",
-      iconBackground: "bg-red-100",
+      iconForeground: 'text-red-700',
+      iconBackground: 'bg-red-100'
     },
     !isSurvey && {
-      name: "Attachments",
+      name: 'Attachments',
       type: FORM_TYPES.ATTACHMENTS,
-      subtitle: "Students can upload",
+      subtitle: 'Students can upload',
       icon: IoDocumentAttachOutline,
-      iconForeground: "text-yellow-700",
-      iconBackground: "bg-yellow-100",
+      iconForeground: 'text-yellow-700',
+      iconBackground: 'bg-yellow-100'
     },
     {
-      name: "Download",
+      name: 'Download',
       type: FORM_TYPES.DOWNLOAD,
-      subtitle: "Students can download",
+      subtitle: 'Students can download',
       icon: BsCloudDownload,
-      iconForeground: "text-purple-700",
-      iconBackground: "bg-purple-100",
+      iconForeground: 'text-purple-700',
+      iconBackground: 'bg-purple-100'
     },
     {
-      name: "Link",
-      subtitle: "Add link",
+      name: 'Link',
+      subtitle: 'Add link',
       type: FORM_TYPES.LINK,
       icon: HiOutlineExternalLink,
-      iconForeground: "text-blue-700",
-      iconBackground: "bg-blue-100",
-    },
+      iconForeground: 'text-blue-700',
+      iconBackground: 'bg-blue-100'
+    }
   ].filter(Boolean);
 
   const userInterfaceContent = [
     !isSurvey && {
-      name: "Notes ⭐",
-      type: "notes-form",
-      subtitle: "Interactive notes for students",
+      name: 'Notes ⭐',
+      type: 'notes-form',
+      subtitle: 'Interactive notes for students',
       icon: CgNotes,
-      iconForeground: "text-blue-700",
-      iconBackground: "bg-blue-100",
+      iconForeground: 'text-blue-700',
+      iconBackground: 'bg-blue-100'
     },
     {
-      name: "Review slider",
+      name: 'Review slider',
       type: FORM_TYPES.REVIEW_SLIDER,
-      subtitle: "Add review slider",
+      subtitle: 'Add review slider',
       icon: BiSlider,
-      iconForeground: "text-teal-700",
-      iconBackground: "bg-teal-100",
+      iconForeground: 'text-teal-700',
+      iconBackground: 'bg-teal-100'
     },
     !isSurvey && {
-      name: "Highlighter",
+      name: 'Highlighter',
       type: FORM_TYPES.HIGHLIGHTER,
-      subtitle: "Add highlighter",
+      subtitle: 'Add highlighter',
       icon: AiOutlineHighlight,
-      iconForeground: "text-yellow-700",
-      iconBackground: "bg-yellow-100",
+      iconForeground: 'text-yellow-700',
+      iconBackground: 'bg-yellow-100'
     },
     // {
     //   name: 'Linestarter',
@@ -220,43 +212,42 @@ const AddContentDialog = ({
     //   iconBackground: 'bg-red-100',
     // },
     {
-      name: "Writing Exercise ⭐",
-      subtitle: "Add Writing Exercise",
+      name: 'Writing Exercise ⭐',
+      subtitle: 'Add Writing Exercise',
       type: FORM_TYPES.WRITING_EXERCISE,
       icon: BsNewspaper,
-      iconForeground: "text-red-700",
-      iconBackground: "bg-red-100",
+      iconForeground: 'text-red-700',
+      iconBackground: 'bg-red-100'
     },
 
     {
-      name: "Radio",
-      subtitle: "Add select one question field",
+      name: 'Radio',
+      subtitle: 'Add select one question field',
       type: FORM_TYPES.RADIO,
       icon: BiRadioCircleMarked,
-      iconForeground: "text-purple-700",
-      iconBackground: "bg-purple-100",
+      iconForeground: 'text-purple-700',
+      iconBackground: 'bg-purple-100'
     },
     {
-      name: "Text Responses",
-      subtitle: "Written answers to questions",
+      name: 'Text Responses',
+      subtitle: 'Written answers to questions',
       type: FORM_TYPES.TEXT,
       icon: AiOutlineQuestionCircle,
-      iconForeground: "text-pink-700",
-      iconBackground: "bg-pink-100",
+      iconForeground: 'text-pink-700',
+      iconBackground: 'bg-pink-100'
     },
     {
-      name: "Checkbox",
-      subtitle: "Add multiple option field",
+      name: 'Checkbox',
+      subtitle: 'Add multiple option field',
       type: FORM_TYPES.MULTIPLE,
       icon: BiCheckboxChecked,
-      iconForeground: "text-green-700",
-      iconBackground: "bg-green-100",
-    },
+      iconForeground: 'text-green-700',
+      iconBackground: 'bg-green-100'
+    }
   ].filter(Boolean);
 
-  const { curTab, setCurTab, helpers } = useTabs(tabs);
+  const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab, onGameChangersTab] = helpers;
-  const btnClass = `font-semibold hover:text-gray-600 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
 
   const onCustomPositionClick = (e: any) => {
     e.stopPropagation();
@@ -290,13 +281,12 @@ const AddContentDialog = ({
     onBottomClick(e);
   };
 
-  const Item = ({ content }: { content: any }) => {
-    const currentType =
-      activeContentItem && activeContentItem?.type === content.type;
+  const Item = ({content}: {content: any}) => {
+    const currentType = activeContentItem && activeContentItem?.type === content.type;
 
     const onFinalStep =
       currentType && !isEmpty(selectedComponent) && !addContentModal.show;
-    const onReplace = currentType && actionMode === "replace";
+    const onReplace = currentType && actionMode === 'replace';
     const onOptions = currentType && !onFinalStep && !onReplace;
     const onInit = !currentType && !onFinalStep && !onReplace;
 
@@ -310,13 +300,12 @@ const AddContentDialog = ({
           setSelectedType(content.type);
         }}
         className={`relative ${
-          addContentModal.show ? "pointer-events-none cursor-not-allowed" : ""
+          addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
         } ${
-          isDisabled ? "opacity-60 pointer-events-none" : "pointer-events-auto"
-        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
+          isDisabled ? 'opacity-60 pointer-events-none' : 'pointer-events-auto'
+        } form-button rounded-lg border-0 border-gray-300  bg-dark-blue p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
-        }  transition-all focus-within:ring-2`}
-      >
+        }  transition-all focus-within:ring-2`}>
         <>
           {onInit && (
             <>
@@ -324,18 +313,17 @@ const AddContentDialog = ({
                 className={classNames(
                   content.iconBackground,
                   content.iconForeground,
-                  "rounded-lg inline-flex p-1.5 2xl:p-3 w-auto"
-                )}
-              >
+                  'rounded-lg inline-flex p-1.5 2xl:p-3 w-auto'
+                )}>
                 <content.icon className="h-6 w-6" aria-hidden="true" />
               </span>
               <div className="flex-1 min-w-0 flex items-center justify-between">
                 <div className="focus:outline-none cursor-pointer">
                   <span className="absolute inset-0" aria-hidden="true" />
-                  <p className="text-xs 2xl:text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-xs mb-0 2xl:text-sm font-medium text-white">
                     {content.name}
                   </p>
-                  <p className="text-xs 2xl:text-sm text-gray-500 truncate">
+                  <p className="text-xs mb-0 2xl:text-sm text-gray-500 truncate">
                     {content.subtitle}
                   </p>
                 </div>
@@ -351,24 +339,18 @@ const AddContentDialog = ({
         </>
         <>
           {onOptions && (
-            <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
+            <div className="px-2 dark:text-gray-500 flex  w-full flex-col gap-2">
               <Buttons
                 onClick={onCustomPositionClick}
-                overrideClass
-                transparent
-                btnClass={`${
-                  showingPin
-                    ? "iconoclast:border-main border-0 curate:border-main"
-                    : ""
-                } ${btnClass}`}
+                variant="primary"
+                size="middle"
                 label="Custom position"
               />
 
               <Buttons
-                overrideClass
                 onClick={onBottomClick}
-                btnClass={btnClass}
                 transparent
+                size="middle"
                 label="Add to Botom"
               />
             </div>
@@ -376,9 +358,7 @@ const AddContentDialog = ({
           {onReplace && (
             <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
               <Buttons
-                overrideClass
                 onClick={handleReplace}
-                btnClass={btnClass}
                 transparent
                 label="Replace with selected component"
               />
@@ -389,9 +369,8 @@ const AddContentDialog = ({
         {activeContentItem && (
           <span
             onClick={onCancel}
-            style={{ top: "-.5rem", right: "-.5rem" }}
-            className="absolute cursor-pointer -top-1 w-auto -right-1 p-1 rounded-full transition-all"
-          >
+            style={{top: '-.5rem', right: '-.5rem'}}
+            className="absolute cursor-pointer -top-1 w-auto -right-1 p-1 rounded-full transition-all">
             <AiFillCloseCircle className="text-white text-base" />
           </span>
         )}
@@ -401,13 +380,10 @@ const AddContentDialog = ({
 
   return (
     <>
-      {!activeContentItem && (
-        <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
-      )}
+      {!activeContentItem && <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />}
       <AnimatedContainer
         show={onTextTab && isEmpty(activeContentItem)}
-        animationType="translateY"
-      >
+        animationType="translateY">
         {onTextTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1  px-2 my-4">
             {textContent.map((content, idx) => (
@@ -418,8 +394,7 @@ const AddContentDialog = ({
       </AnimatedContainer>
       <AnimatedContainer
         show={onMediaTab && isEmpty(activeContentItem)}
-        animationType="translateY"
-      >
+        animationType="translateY">
         {onMediaTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
             {mediaContent.map((content, idx) => (
@@ -430,8 +405,7 @@ const AddContentDialog = ({
       </AnimatedContainer>
       <AnimatedContainer
         show={onUIContentTab && isEmpty(activeContentItem)}
-        animationType="translateY"
-      >
+        animationType="translateY">
         {onUIContentTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
             {userInterfaceContent.map((content, idx) => (
@@ -442,8 +416,7 @@ const AddContentDialog = ({
       </AnimatedContainer>
       <AnimatedContainer
         show={onGameChangersTab && isEmpty(activeContentItem)}
-        animationType="translateY"
-      >
+        animationType="translateY">
         {onGameChangersTab && isEmpty(activeContentItem) && (
           <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
             {cardsList.map((content, idx) => (
@@ -452,13 +425,10 @@ const AddContentDialog = ({
           </div>
         )}
       </AnimatedContainer>
-      <AnimatedContainer
-        show={!isEmpty(activeContentItem)}
-        animationType="translateY"
-      >
+      <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
         {!isEmpty(activeContentItem) && (
           <>
-            <h4 className="dark:text-white m-4 text-base font-medium capitalize">
+            <h4 className="text-white m-4 text-base font-medium capitalize">
               {activeContentItem.name} Component
             </h4>
             <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">

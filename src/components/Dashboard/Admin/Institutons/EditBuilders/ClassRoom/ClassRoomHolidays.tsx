@@ -67,7 +67,8 @@ const ClassRoomHolidays = ({
   const onDelete = (index: number) => {
     const onDrop = async () => {
       setDeleting(true);
-      const dateToUpdate = lessonImpactLogs.filter((_: any, i: number) => index !== i);
+      // @ts-ignore
+      const dateToUpdate = lessonImpactLogs.filter((i: number) => index !== i);
       const result: any = await API.graphql(
         graphqlOperation(mutation.updateRoom, {
           input: {
@@ -205,31 +206,31 @@ const ClassRoomHolidays = ({
           </div>
         )}
       </div>
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeDeleteModal}
-          saveAction={warnModal.action}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={deleting}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeDeleteModal}
+        saveAction={warnModal.action}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={deleting}
+      />
+
+      <Modal
+        open={formOpen}
+        showHeader={true}
+        title={'Add holiday'}
+        showHeaderBorder={true}
+        showFooter={false}
+        closeAction={handleCancel}>
+        <HolidayFormComponent
+          activeIndex={activeIndex || 0}
+          roomId={roomId}
+          lessonImpactLogs={lessonImpactLogs}
+          postMutation={postMutation}
+          handleCancel={handleCancel}
         />
-      )}
-      {formOpen && (
-        <Modal
-          showHeader={true}
-          title={'Add holiday'}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={handleCancel}>
-          <HolidayFormComponent
-            activeIndex={activeIndex || 0}
-            roomId={roomId}
-            lessonImpactLogs={lessonImpactLogs}
-            postMutation={postMutation}
-            handleCancel={handleCancel}
-          />
-        </Modal>
-      )}
+      </Modal>
     </div>
   );
 };

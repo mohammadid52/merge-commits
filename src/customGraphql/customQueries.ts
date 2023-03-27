@@ -1160,6 +1160,7 @@ export const listRooms = /* GraphQL */ `
               authId
               id
               role
+              image
               lastName
               firstName
               status
@@ -1170,6 +1171,7 @@ export const listRooms = /* GraphQL */ `
           firstName
           preferredName
           lastName
+          image
         }
         activeLessonId
         activeLessons
@@ -4982,7 +4984,9 @@ export const fetchClassStudents = /* GraphQL */ `
           student {
             id
             authId
+            isZoiq
             email
+            status
             firstName
             lastName
           }
