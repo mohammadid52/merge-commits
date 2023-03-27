@@ -1,5 +1,4 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
@@ -7,7 +6,7 @@ import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import {getFormatedDate} from '@utilities/time';
 import {Card, Col, Divider, Row, Statistic} from 'antd';
-import {PersonStatus, UniversalLessonPlan} from 'API';
+import {UniversalLessonPlan} from 'API';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
@@ -313,20 +312,15 @@ const Csv = () => {
 
   const [showWarnModal, setShowWarnModal] = useState<any>(false);
 
-  const {
-    clearCSVData,
-    mappedHeaders,
-    isCSVDownloadReady,
-    setCSVData,
-    statistics,
-    CSVData
-  } = useCsv({
+  const {clearCSVData, mappedHeaders, isCSVDownloadReady, statistics, CSVData} = useCsv({
     classStudents,
     isCSVReady,
     setIsCSVReady,
     DCQAnswers,
     selectedInst,
     selectedClassRoom,
+    showTestData,
+    responseValue,
     selectedCurriculum,
     selectedSurvey,
     selectedUnit,
@@ -340,7 +334,6 @@ const Csv = () => {
     onClick: () => {},
     id: listItem.id,
     name: `${listItem.firstName} ${listItem.lastName}`,
-
     email: listItem.email,
     takenSurvey: listItem?.hasTakenSurvey ? 'Yes' : 'No',
     completedDate: getFormatedDate(listItem?.last)
@@ -371,25 +364,6 @@ const Csv = () => {
   const classroomDropdownRef = useRef<any>(null);
   const unitDropdownRef = useRef<any>(null);
   const surveyDropdownRef = useRef<any>(null);
-
-  const triggerDropdown = () => {
-    const currentStepRef = getCurrentStep().ref;
-    if (currentStepRef && currentStepRef?.current) {
-      currentStepRef?.current.focus();
-    }
-  };
-
-  const getCurrentStep = () => {
-    if (selectedInst && selectedClassRoom && selectedUnit) {
-      return {label: 'Select survey', ref: surveyDropdownRef};
-    } else if (selectedInst && selectedClassRoom) {
-      return {label: 'Select curriculum unit', ref: unitDropdownRef};
-    } else if (selectedInst) {
-      return {label: 'Select classroom', ref: classroomDropdownRef};
-    } else {
-      return {label: 'Select Institute', ref: instituteDropdownRef};
-    }
-  };
 
   return (
     <>
@@ -462,11 +436,6 @@ const Csv = () => {
           ) : (
             <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
               <p>Select filters options to populate data</p>
-              <Buttons
-                className="w-full"
-                onClick={triggerDropdown}
-                label={getCurrentStep().label}
-              />
             </Card>
           )}
         </div>

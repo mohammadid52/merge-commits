@@ -14,7 +14,7 @@ branch=$(git symbolic-ref --short HEAD)
 
 
 git checkout master
-git pull origin new-dev
+git pull origin ts-dev
 cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
 npm run build
 

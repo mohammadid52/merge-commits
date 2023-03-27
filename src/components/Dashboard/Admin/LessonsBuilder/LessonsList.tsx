@@ -150,7 +150,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
               ...lesson,
               institutionName: lesson?.institution?.name,
               institutionId: lesson?.institution?.id,
-              status: status || RoomStatus.ACTIVE
+              status: lesson?.status || RoomStatus.ACTIVE
             };
           }
         );
@@ -373,7 +373,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
       setFilteredList([]);
     } else {
       setSearchInput({...searchInput, isActive: true});
-      const filtered = currentList.filter((_d: any) => filterName === _d.status);
+
+      const filtered = lessonsData.filter((_d: any) => filterName === _d.status);
       setFilteredList(filtered);
       setFilters(filterName);
       setSelectedInstitution({});
@@ -388,34 +389,36 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setShowCloneModal({show: true, lessonId: id});
   };
 
-  const dataList = map(finalList, (item: any, index: number) => ({
-    no: getIndex(index),
-    onClick: () => handleLessonsEdit(item.id),
-    instituteName: isSuperAdmin && item.institution.name,
-    status: <Status status={item.status} useDefault />,
-    lessonTitle: (
-      <div onClick={() => handleLessonsEdit(item.id)} className="w-auto cursor-pointer">
-        <Highlighted text={item?.title} highlight={searchInput.value} />
-      </div>
-    ),
-    type: item.type,
-    targetAudience: item.targetAudience || '--',
-    lastEditDate: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : '--',
-    actions: (
-      <CommonActionsBtns
-        button1Label="Clone Lesson"
-        isDeletable={checkIfRemovable(item)}
-        button1Action={(e) => {
-          e.stopPropagation();
-          onCloneLesson(item.id);
-        }}
-        button2Action={(e) => {
-          e.stopPropagation();
-          handleToggleDelete(item?.title, item);
-        }}
-      />
-    )
-  }));
+  const dataList = map(finalList, (item: any, index: number) => {
+    return {
+      no: getIndex(index),
+      onClick: () => handleLessonsEdit(item.id),
+      instituteName: isSuperAdmin && item.institution.name,
+      status: <Status status={item.status} useDefault />,
+      lessonTitle: (
+        <div onClick={() => handleLessonsEdit(item.id)} className="w-auto cursor-pointer">
+          <Highlighted text={item?.title} highlight={searchInput.value} />
+        </div>
+      ),
+      type: item.type,
+      targetAudience: item.targetAudience || '--',
+      lastEditDate: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : '--'
+      // actions: (
+      //   <CommonActionsBtns
+      //     button1Label="Clone Lesson"
+      //     isDeletable={checkIfRemovable(item)}
+      //     button1Action={(e) => {
+      //       e.stopPropagation();
+      //       onCloneLesson(item.id);
+      //     }}
+      //     button2Action={(e) => {
+      //       e.stopPropagation();
+      //       handleToggleDelete(item?.title, item);
+      //     }}
+      //   />
+      // )
+    };
+  });
 
   const tableConfig: ITableProps = {
     headers: [
