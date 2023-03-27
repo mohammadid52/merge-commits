@@ -18,7 +18,6 @@ export default defineConfig({
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js'
       },
-      external: ['@react-pdf', '@react-pdf/pdfkit'],
 
       plugins: [
         // Enable rollup polyfills plugin

@@ -2,7 +2,7 @@
 
 git checkout master-curate
 git pull origin master-curate
-git pull origin new-dev
+git pull origin ts-dev
 cp ./src/config/aws-exports.pc.js ./src/aws-exports.js
 npm run build
 
