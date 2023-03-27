@@ -1,11 +1,10 @@
 import Loader from '@components/Atoms/Loader';
+import Placeholder from '@components/Atoms/Placeholder';
 import useAuth from '@customHooks/useAuth';
 import {Empty} from 'antd';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
-import ImageAlternate from 'atoms/ImageAlternative';
 import {filter, map, orderBy} from 'lodash';
-import React from 'react';
 import {useHistory} from 'react-router';
 
 export interface Teacher {
@@ -103,7 +102,7 @@ const TeacherRows = (props: {
             {attachedClasses.map((teacher, idx: number) => {
               return (
                 <li
-                  key={teacher?.authId}
+                  key={teacher?.firstName + teacher?.lastName}
                   style={
                     teacher.status === PersonStatus.INACTIVE
                       ? {borderLeftWidth: '2px', borderLeftColor: 'red'}
@@ -118,31 +117,25 @@ const TeacherRows = (props: {
                         ? '#'
                         : `/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`
                     }
-                    className={`block hover:bg-gray-200 ${
+                    className={`block no-underline hover:bg-gray-200 ${
                       isStudent ? 'pointer-events-none' : ''
                     }`}
                     style={{borderRadius: 'inherit'}}>
                     <div className="flex items-center px-4 py-4 sm:px-6">
                       <div className="min-w-0 flex-1 flex items-center">
-                        {teacher.image ? (
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src={teacher?.image}
-                            alt=""
-                          />
-                        ) : (
-                          <ImageAlternate
-                            user={teacher}
-                            styleClass="h-12 w-12 rounded-full"
-                          />
-                        )}
+                        <Placeholder
+                          size=" h-8 w-8 lg:h-12 lg:w-12"
+                          firstName={teacher?.firstName}
+                          lastName={teacher?.lastName}
+                          image={teacher?.image}
+                        />
 
                         <div className="min-w-0 flex-1 px-4">
                           <div>
-                            <p className="text-sm font-medium text-indigo-600 truncate">
+                            <h4 className="text-sm mb-0 font-medium text-indigo-600 truncate">
                               {teacher.firstName + ' ' + teacher.lastName}
-                            </p>
-                            <p className="mt-2 flex items-center text-sm text-gray-500">
+                            </h4>
+                            <p className="mt-2 flex mb-0 items-center text-sm text-gray-500">
                               <svg
                                 className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -166,19 +159,17 @@ const TeacherRows = (props: {
                               teacher?.classes?.length > 1 ? 'list-disc' : ''
                             }`}>
                             {teacher?.classes?.map((d: any) => (
-                              <>
-                                <li
-                                  key={d.name}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    history.push(
-                                      `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
-                                    );
-                                  }}
-                                  className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
-                                  {d.name}
-                                </li>
-                              </>
+                              <li
+                                key={d.name}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  history.push(
+                                    `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
+                                  );
+                                }}
+                                className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                                {d.name}
+                              </li>
                             ))}
                           </ul>
                         </div>

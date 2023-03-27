@@ -73,8 +73,6 @@ const RoomView = ({
     });
     Promise.all(curriculumMap)
       .then((responseArray: any[]) => {
-        // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-        // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
         setFilteredRooms(responseArray);
       })
       .finally(() => {
@@ -116,9 +114,6 @@ const RoomView = ({
 
   // if nothing works call this
   const checkFromState = () => {
-    // if (studentAuthId && studentEmail) {
-    //   getDashboardData(studentAuthId, studentEmail);
-    // }
     if (state?.temp?.roomData) {
       mapData(state?.temp?.roomData);
     } else {
@@ -230,7 +225,7 @@ const RoomView = ({
               transition: 'width 2s',
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
-            className="mt-0 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
+            className="mt-2 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             <RoomViewCard
               roomID={'private'}
               mainSection={mainSection}

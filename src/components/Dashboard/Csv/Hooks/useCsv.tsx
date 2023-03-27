@@ -264,6 +264,7 @@ const useCsv = ({
     mappedHeaders,
     isCSVDownloadReady,
     csvGettingReady,
+    setCSVData,
     clearCSVData,
     statistics,
     CSVData

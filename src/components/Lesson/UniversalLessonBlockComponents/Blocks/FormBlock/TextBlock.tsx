@@ -4,6 +4,7 @@ import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
 import React from 'react';
+import {FormLabel} from '../FormBlock';
 
 interface TextBlockProps extends IFormBlockProps {
   textarea?: boolean;
@@ -17,6 +18,8 @@ const TextBlock = (props: TextBlockProps) => {
     label = '',
     mode,
     isStudent,
+    numbered,
+    index = '',
 
     value = '',
     inputID,
@@ -41,21 +44,30 @@ const TextBlock = (props: TextBlockProps) => {
   const placeHolder = value || 'Enter your answer here';
 
   return (
-    <FormInput
-      key={id}
-      inputClassName="mt-2"
-      textarea={textarea}
-      tooltip={mode === 'building' ? 'Disabled in building mode' : undefined}
-      rows={textarea ? 4 : undefined}
-      label={label}
-      id={inputID}
-      className="lesson-form-block "
-      type={'text'}
-      isRequired={required}
-      placeHolder={placeHolder}
-      onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-      value={isInLesson ? studentValue : value}
-    />
+    <>
+      {label && (
+        <FormLabel
+          label={label}
+          required={required}
+          numbered={Boolean(numbered)}
+          index={index}
+        />
+      )}
+      <FormInput
+        key={id}
+        inputClassName="mt-2"
+        textarea={textarea}
+        tooltip={mode === 'building' ? 'Disabled in building mode' : undefined}
+        rows={textarea ? 4 : undefined}
+        id={inputID}
+        className="lesson-form-block "
+        type={'text'}
+        isRequired={required}
+        placeHolder={placeHolder}
+        onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+        value={isInLesson ? studentValue : value}
+      />
+    </>
   );
 };
 

@@ -50,11 +50,13 @@ const DownloadCsvTitleComponent = ({
   classroomDropdownRef: any;
   unitDropdownRef: any;
   surveyDropdownRef: any;
+
   setSelectedsurvey: any;
   setSCQAnswers: any;
   setSurveys: any;
   setSelectedUnit: any;
   setClassStudents: any;
+
   setDemographicsQuestions: any;
   setSelectedClassRoom: any;
 
@@ -144,18 +146,12 @@ const DownloadCsvTitleComponent = ({
       })
     );
     let students = classData?.data?.getClass?.students?.items || [];
+
     let classStudents = students.map((stu: any) => stu.student);
 
-    let uniqIds: any[] = [];
+    // remove duplicates
+    classStudents = uniqBy(classStudents, (stu: any) => stu.id);
 
-    classStudents = classStudents.filter((stu: any) => {
-      if (!uniqIds.includes(stu?.authId)) {
-        uniqIds.push(stu?.authId);
-        return true;
-      } else {
-        return false;
-      }
-    });
     let studentsEmails = classStudents.map((stu: any) => stu?.email).filter(Boolean);
 
     setClassStudents(classStudents);
@@ -214,7 +210,7 @@ const DownloadCsvTitleComponent = ({
           id: curriculumId
         })
       );
-      // console.log('curriculumData', curriculumData);
+
       let curricularCheckpoints =
         curriculumData?.data.getCurriculum.checkpoints?.items || [];
       let demographicsQues: any = [];
@@ -280,7 +276,6 @@ const DownloadCsvTitleComponent = ({
       clearCSVData();
     }
     setSCQAnswers([]);
-    // getReason();
 
     setSelectedsurvey(survey);
     await listQuestions(survey.id);

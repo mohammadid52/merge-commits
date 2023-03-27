@@ -103,17 +103,14 @@ const LessonHeaderBar = ({
   useEffect(() => {
     if (!lessonState.updated) {
       if (safeToLeave === false) {
-        // setWaiting(false);
         setSafeToLeave(true);
       } else {
-        // setWaiting(null);
         setSafeToLeave(null);
       }
     }
   }, [lessonState.updated]);
 
   useEffect(() => {
-    // console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
       handleLeavePopup();
       goToClassRoom();
@@ -151,10 +148,8 @@ const LessonHeaderBar = ({
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
   const handleVideoLinkPopup = (_?: string) => {
     if (videoLinkModalVisible) {
-      // setVideoLink('');
       setVideoLinkModalVisible(false);
     } else {
-      // setVideoLink(url);
       setVideoLinkModalVisible(true);
     }
   };
@@ -209,13 +204,12 @@ const LessonHeaderBar = ({
   const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const presentedPageID = lessonState.displayData[0].lessonPageID;
   useEffect(() => {
-    // console.log(getPageIndex(presentedPageID, lessonState.lessonData.lessonPlan));
     if (teacherIsPresenting && presentedPageID) {
       const getPresentedPagedIndex = getPageIndex(
         presentedPageID,
         lessonState.lessonData.lessonPlan
       );
-      // console.log('getPresentedPageIndex - ', getPresentedPagedIndex);
+
       if (typeof getPresentedPagedIndex === 'number' && getPresentedPagedIndex >= 0) {
         history.push(`${match.url}/${getPresentedPagedIndex}`);
         lessonDispatch({
@@ -306,6 +300,7 @@ const LessonHeaderBar = ({
             extra={[
               <Buttons
                 size="middle"
+                key="leave"
                 className="w-full mb-2"
                 variant="dashed"
                 onClick={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
@@ -318,6 +313,7 @@ const LessonHeaderBar = ({
               <Buttons
                 onClick={handleNotebookSave}
                 size="middle"
+                key="save"
                 className="w-full"
                 label={
                   isLesson

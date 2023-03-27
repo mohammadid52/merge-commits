@@ -115,7 +115,7 @@ const ClassroomsList: React.FC<LessonProps> = ({
                   if (lesson?.lesson?.id) {
                     return (
                       <div
-                        id={`todayLesson_${lesson.lesson.id}_wrapper`}
+                        id={`lesson-${lesson.lesson.id}`}
                         key={`todayLesson_${lesson.lesson.id}_wrapper`}>
                         <StandardLessonCard
                           roomID={getRoomData?.id}

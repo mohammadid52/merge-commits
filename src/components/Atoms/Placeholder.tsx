@@ -1,3 +1,4 @@
+import {getImageFromS3} from '@utilities/services';
 import {initials, stringToHslColor} from '@utilities/strings';
 import {Avatar, Image} from 'antd';
 
@@ -20,13 +21,17 @@ const Placeholder = ({
   useAntdImage?: boolean;
 }) => {
   if (image) {
+    // if image includes "https" don't use s3
+    const shouldUseS3 = !image.includes('https');
+    const finalImage = shouldUseS3 ? (getImageFromS3(image) as string) : image;
+
     const imageClass = 'rounded-full w-full h-full  customShadow bg-gray-500';
     return (
       <div className={`${size} rounded-full flex justify-center items-center`}>
         {useAntdImage ? (
-          <Image src={image} className={imageClass} />
+          <Image src={finalImage} className={imageClass} />
         ) : (
-          <img src={image} className={imageClass} />
+          <img src={finalImage} className={imageClass} />
         )}
       </div>
     );

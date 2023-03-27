@@ -307,17 +307,18 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     setLoading(true);
 
     try {
-      const response: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
-        })
-      );
-      const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-          filter: {teacherAuthID: {eq: state.user.authId}}
-        })
-      );
-
+      const [response, assignedRoomsAsCoTeacher] = await Promise.all<any>([
+        API.graphql(
+          graphqlOperation(customQueries.getDashboardDataForTeachers, {
+            filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
+          })
+        ),
+        API.graphql(
+          graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+            filter: {teacherAuthID: {eq: state.user.authId}}
+          })
+        )
+      ]);
       let students1: any[] = [];
       let students2: any[] = [];
 

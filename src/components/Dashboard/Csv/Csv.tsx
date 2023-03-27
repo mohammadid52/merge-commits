@@ -7,7 +7,7 @@ import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import {getFormatedDate} from '@utilities/time';
 import {Card, Col, Divider, Row, Statistic} from 'antd';
-import {UniversalLessonPlan} from 'API';
+import {PersonStatus, UniversalLessonPlan} from 'API';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
@@ -74,6 +74,9 @@ const Csv = () => {
   const [DCQAnswers, setDCQAnswers] = useState<any[]>([]);
 
   const [_3, setCsvGettingReady] = useState<any>(false);
+
+  const [showTestData, setShowTestData] = useState(false);
+  const [responseValue, setResponseValue] = useState(true);
 
   // methods to clear state data
   const resetInstitution = () => {
@@ -221,7 +224,7 @@ const Csv = () => {
   // ##################################################################### //
 
   const getStudentsSurveyQuestionsResponse = async (
-    lessonId: String,
+    lessonId: string,
     nextToken?: string,
     outArray = []
   ) => {
@@ -310,7 +313,14 @@ const Csv = () => {
 
   const [showWarnModal, setShowWarnModal] = useState<any>(false);
 
-  const {clearCSVData, mappedHeaders, isCSVDownloadReady, statistics, CSVData} = useCsv({
+  const {
+    clearCSVData,
+    mappedHeaders,
+    isCSVDownloadReady,
+    setCSVData,
+    statistics,
+    CSVData
+  } = useCsv({
     classStudents,
     isCSVReady,
     setIsCSVReady,
@@ -437,6 +447,10 @@ const Csv = () => {
           CSVData={CSVData}
           mappedHeaders={mappedHeaders}
           lessonPDFData={lessonPDFData}
+          setShowTestData={setShowTestData}
+          setResponseValue={setResponseValue}
+          showTestData={showTestData}
+          responseValue={responseValue}
         />
         <Divider />
         <div className="w-full">

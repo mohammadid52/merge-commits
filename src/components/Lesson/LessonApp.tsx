@@ -1,5 +1,9 @@
 import {API, graphqlOperation} from 'aws-amplify';
-import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
+import {
+  CreateUniversalArchiveDataInput,
+  CreateUniversalLessonWritingExcercisesInput,
+  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI
+} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -462,8 +466,6 @@ const LessonApp = (props: ILessonSurveyApp) => {
         {required: [], initialized: [], exercises: []}
       );
 
-      // console.log('mappedPages - ', mappedPages);
-
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
@@ -566,7 +568,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
   const getOrCreateStudentData = async () => {
     try {
       // existing student rowss
-      const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
+      const studentDataRows: UniversalLessonStudentDataFromAPI[] = (
         await _loopFetchStudentData()
       ).filter(Boolean);
 
@@ -755,7 +757,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
     const currentPageLocation = await getLessonCurrentPage();
 
     const result = studentDataRows.map(async (item: any) => {
-      const input = {
+      const input: CreateUniversalLessonWritingExcercisesInput = {
         id: uuidV4(),
         syllabusLessonID: item.syllabusLessonID,
         lessonID: item.lessonID,
@@ -768,25 +770,31 @@ const LessonApp = (props: ILessonSurveyApp) => {
         lessonProgress: item.lessonProgress,
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
-        exerciseData: item.exerciseData,
-        lessonName: lessonState?.lessonData?.title || '',
-        fromLesson: true
+        exerciseData: item.exerciseData
       };
       let newStudentData: any;
       let returnedData: any;
 
       if (item.hasExerciseData) {
+        // adding lesson name to writing exercise table
+        input.lessonName = lessonState?.lessonData?.title || '';
+
         console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
+
         newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
             input
           })
         );
       } else {
-        delete input.lessonName;
+        const inputForArchive: CreateUniversalArchiveDataInput = {
+          // Everything is the same
+          ...input
+        };
+
         newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalArchiveData, {
-            input
+            input: inputForArchive
           })
         );
         console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');

@@ -831,7 +831,6 @@ const Anthology = ({
                 ? 'This Notebook is Passcode Protected'
                 : 'Change Your Passcode!'
             }`}
-            width="w-132"
             showHeader={true}
             showHeaderBorder={false}
             showFooter={false}
@@ -841,9 +840,9 @@ const Anthology = ({
               setForgotPrompt(false);
               setAccessMessage({message: ''});
             }}>
-            <div className=" flex justify-center">
+            <div className="w-full flex justify-center">
               {!forgotPrompt ? (
-                <div>
+                <div className="w-full">
                   <FormInput
                     dataCy="notebook-passcode-input"
                     value={passcodeInput}
@@ -858,14 +857,29 @@ const Anthology = ({
                     className={`w-full my-2`}
                     isRequired
                   />
-                  {Boolean(accessMessage.message) && (
-                    <Error message={accessMessage.message} />
-                  )}
-                  <Buttons
-                    dataCy="notebook-passcode-submit"
-                    label={'Submit'}
-                    onClick={handlePrivateSectionAccess}
-                  />
+                  {Boolean(accessMessage.message) &&
+                    Boolean(accessMessage.textClass.startsWith('text-red')) && (
+                      <Error message={accessMessage.message} />
+                    )}
+                  <div className="flex items-center mt-2 gap-4 justify-end">
+                    <Buttons
+                      dataCy="notebook-passcode-cancel"
+                      label={'Cancel'}
+                      transparent
+                      size="middle"
+                      onClick={() => {
+                        setShowPasscodeEntry(false);
+                        setForgotPrompt(false);
+                        setAccessMessage({message: ''});
+                      }}
+                    />
+                    <Buttons
+                      dataCy="notebook-passcode-submit"
+                      label={'Submit'}
+                      size="middle"
+                      onClick={handlePrivateSectionAccess}
+                    />
+                  </div>
                   <p
                     onClick={() => handleForgotPasscode()}
                     className={`cursor-pointer hover:underline hover:iconoclast:text-500 hover:curate:text-500 mt-4 mb-2 text-center text-xs iconoclast:text-main curate:text-main`}>

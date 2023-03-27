@@ -4984,7 +4984,9 @@ export const fetchClassStudents = /* GraphQL */ `
           student {
             id
             authId
+            isZoiq
             email
+            status
             firstName
             lastName
           }

@@ -436,80 +436,70 @@ export const UnitList = ({
   const currentSelectedItem = (name: string) =>
     allUnits?.find((_c: any) => _c.name === name);
 
-  const dataList = map(finalList, (item: any, index: number) => ({
-    no: getIndex(index),
-    onClick: () => handleView(item.id),
-    instituteName: isSuperAdmin && item.institution.name,
-    status: <Status status={item.status} useDefault />,
-    content: (
-      <>
-        <Descriptions title="Unit Details">
-          <Descriptions.Item label="Status">
-            {<Status status={currentSelectedItem(item.name).status} useDefault />}
-          </Descriptions.Item>
-          <Descriptions.Item label="Created date">
-            {moment(item.createdAt).format('ll')}
-          </Descriptions.Item>
-          <Descriptions.Item label="Last update">
-            {moment(item.updatedAt).format('ll')}
-          </Descriptions.Item>
-          <Descriptions.Item label="Description">
-            {currentSelectedItem(item.name)?.description || 'n/a'}
-          </Descriptions.Item>
-          <Descriptions.Item label="Attached courses">
-            <AttachedCourses curricular={curricular} unitId={item.id} />
-          </Descriptions.Item>
-        </Descriptions>
-      </>
-    ),
-    unitName: (
-      <UnitName searchTerm={searchInput.value} editCurrentUnit={handleView} item={item} />
-    ),
+  const dataList = map(finalList, (item: any, index: number) => {
+    return {
+      no: getIndex(index),
+      onClick: () => handleView(item.id),
+      instituteName: isSuperAdmin && item.institution.name,
+      status: <Status status={item.status} useDefault />,
+      content: (
+        <>
+          <Descriptions title="Unit Details">
+            <Descriptions.Item label="Status">
+              {<Status status={currentSelectedItem(item.name).status} useDefault />}
+            </Descriptions.Item>
+            <Descriptions.Item label="Created date">
+              {moment(item.createdAt).format('ll')}
+            </Descriptions.Item>
+            <Descriptions.Item label="Last update">
+              {moment(item.updatedAt).format('ll')}
+            </Descriptions.Item>
+            <Descriptions.Item label="Description">
+              {currentSelectedItem(item.name)?.description || 'n/a'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Attached courses">
+              <AttachedCourses curricular={curricular} unitId={item.id} />
+            </Descriptions.Item>
+          </Descriptions>
+        </>
+      ),
+      unitName: (
+        <UnitName
+          searchTerm={searchInput.value}
+          editCurrentUnit={handleView}
+          item={item}
+        />
+      ),
 
-    lessonPlan: (
-      <div>
-        {item.lessons?.items?.length > 0 ? (
-          <List size="small">
-            {item.lessons?.items?.map(
-              (
-                lesson: {id: string; lesson: {id: string; title: string}},
-                index: number
-              ) => {
-                if (lesson) {
-                  return (
-                    <Tooltip
-                      title={`Go to ${lesson.lesson.title}`}
-                      placement="left"
-                      key={lesson.id}>
-                      <List.Item
-                        className="cursor-pointer hover:underline hover:theme-text:400"
-                        key={lesson.lesson.id}
-                        onClick={() =>
-                          redirectToLesson(item.institution.id, lesson.lesson.id)
-                        }>
-                        {index + 1}. {lesson.lesson.title}
-                      </List.Item>
-                    </Tooltip>
-                  );
-                }
-                return <div key="dfdmf" className="hidden w-auto" />;
-              }
-            )}
-          </List>
-        ) : (
-          <p className="">No lesson plan</p>
-        )}
-      </div>
-    )
-    // action: (
-    //   <CommonActionsBtns
-    //     button1Label="View"
-    //     isDeletable={checkIfRemovable(item)}
-    //     button1Action={() => handleView(item.id)}
-    //     button2Action={() => handleToggleDelete(item.name, item)}
-    //   />
-    // )
-  }));
+      lessonPlan: (
+        <List
+          size="small"
+          className="table-list"
+          dataSource={item.lessons?.items?.filter(Boolean)}
+          renderItem={(lesson: any, index: number) => (
+            <Tooltip
+              key={lesson.lesson.id}
+              title={`Go to ${lesson.lesson.title}`}
+              placement="left">
+              <List.Item
+                className="cursor-pointer hover:underline hover:theme-text:400"
+                onClick={() => redirectToLesson(item.institution.id, lesson.lesson.id)}>
+                {index + 1}. {lesson.lesson.title}
+              </List.Item>
+            </Tooltip>
+          )}
+        />
+      )
+      // action: (
+      //   <CommonActionsBtns
+      //     button1Label="View"
+      //     isDeletable={checkIfRemovable(item)}
+      //     button1Action={() => handleView(item.id)}
+      //     button2Action={() => handleToggleDelete(item.name, item)}
+      //   />
+      // )
+    };
+  });
 
   const tableConfig: ITableProps = {
     headers: [

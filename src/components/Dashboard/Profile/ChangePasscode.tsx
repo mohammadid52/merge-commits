@@ -114,6 +114,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
               message: 'The email or password you entered was not correct'
             };
           }
+
         case 'UserNotConfirmedException':
           return {
             show: true,
@@ -262,9 +263,10 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         ) : null}
       </div>
 
-      <div className="pt-4 w-full  flex justify-center flex-col-reverse md:flex-row gap-2">
+      <div className="pt-4 w-full  flex justify-center flex-col-reverse md:flex-row gap-4">
         <Buttons
           label={dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['CANCEL']}
+          size="middle"
           onClick={
             fromWhere !== 'notebook'
               ? () => history.goBack()
@@ -273,6 +275,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
           transparent
         />
         <Buttons
+          size="middle"
           label={
             loading
               ? 'Verifying...'

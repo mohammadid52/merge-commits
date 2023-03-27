@@ -1,6 +1,5 @@
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle} from 'API';
-// import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
   PagePart,
@@ -62,17 +61,18 @@ const LessonRowComposer = () => {
 
   const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
-    activePageData && activePageData?.pageContent && activePageData.pageContent.length > 0
-      ? activePageData?.pageContent?.forEach((a) => {
-          const objArray: any[] = [];
-          a.partContent.forEach((b) => {
-            if (!b?.type?.includes('Download')) {
-              objArray.push(b);
-            }
-          });
-          removeDownloadablesFromlist.push({...a, partContent: objArray});
-        })
-      : [];
+    activePageData &&
+      activePageData?.pageContent &&
+      activePageData.pageContent.length > 0 &&
+      activePageData?.pageContent?.forEach((a) => {
+        const objArray: any[] = [];
+        a.partContent.forEach((b) => {
+          if (!b?.type?.includes('Download')) {
+            objArray.push(b);
+          }
+        });
+        removeDownloadablesFromlist.push({...a, partContent: objArray});
+      });
 
     return removeDownloadablesFromlist;
   }, [activePageData]);
@@ -99,8 +99,6 @@ const LessonRowComposer = () => {
 
   const lessonState = gContext.lessonState;
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
-
-  // const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
 
   useEffect(() => {
     if (PAGES) {
@@ -207,8 +205,6 @@ const LessonRowComposer = () => {
           </div>
         ))}
 
-      {/* {isLastPage && <AllEmotions />} */}
-
       {isStudent && (
         <>
           <div className="fab-container space-y-4 w-16  lg:w-18 xl:w-20 z-50 flex flex-col fixed bottom-5 right-8">
@@ -230,7 +226,6 @@ const LessonRowComposer = () => {
       )}
 
       {user.role === 'ST' && <TranslationModule />}
-      {/* {isStudent && <PageTimer startTime={estTimeInSeconds} />} */}
     </div>
   );
 };

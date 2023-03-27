@@ -15,7 +15,7 @@ interface IConfig {
     expandable?: boolean;
     pagination?: {
       showPagination: boolean;
-      config: {
+      config?: {
         allAsProps: IListBottomBar;
       };
     };

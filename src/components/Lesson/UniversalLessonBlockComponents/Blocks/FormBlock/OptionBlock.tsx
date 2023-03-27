@@ -1,21 +1,26 @@
-import Label from '@components/Atoms/Form/Label';
 import {Checkbox, Radio, Space} from 'antd';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
+import {FormLabel} from '../FormBlock';
+
+interface ISelectProps {
+  onChange: (e: any) => void;
+  getCheckValue: (id: string) => boolean;
+  shouldBeVertical: boolean;
+  value: any;
+}
+
+interface IOptionProps extends IFormBlockProps {
+  options: any;
+}
 
 const SelectMany = ({
   onChange,
 
   value
-}: {
-  onChange: (e: any) => void;
-
-  getCheckValue: (id: string) => boolean;
-  shouldBeVertical: boolean;
-  value: any;
-}) => {
+}: ISelectProps) => {
   // map id into value and text as label and return new array
   const mappedOptions = value.map((item: {text: any; id: any}) => {
     const {text, id} = item;
@@ -31,17 +36,7 @@ const SelectMany = ({
   );
 };
 
-const SelectOne = ({
-  onChange,
-  getCheckValue,
-  shouldBeVertical,
-  value
-}: {
-  onChange: (e: any) => void;
-  getCheckValue: (id: string) => boolean;
-  shouldBeVertical: boolean;
-  value: any;
-}) => {
+const SelectOne = ({onChange, getCheckValue, shouldBeVertical, value}: ISelectProps) => {
   return (
     <Radio.Group className="">
       <Space direction={shouldBeVertical ? 'vertical' : 'horizontal'} className="w-full">
@@ -64,17 +59,14 @@ const SelectOne = ({
   );
 };
 
-interface IOptionProps extends IFormBlockProps {
-  options: any;
-}
-
 const OptionBlock = (props: IOptionProps) => {
   const {
     id = '',
     required = false,
-
+    index,
     label,
     classString,
+    numbered,
 
     type,
     options,
@@ -110,7 +102,7 @@ const OptionBlock = (props: IOptionProps) => {
           setDataValue(inputID, [...selectedOptionList]);
         }
       };
-      const shouldBeVertical = Boolean(classString?.includes('flex-row'));
+      const shouldBeVertical = Boolean(!classString?.includes('flex-row items-center'));
       return (
         <div className="mt-2">
           {selectMany ? (
@@ -141,7 +133,14 @@ const OptionBlock = (props: IOptionProps) => {
       key={inputID}
       id={`${inputID}_for_error`}
       className={`questionItemChild lesson-form-block`}>
-      {label && <Label isRequired={required} label={label} />}
+      {label && (
+        <FormLabel
+          label={label}
+          required={required}
+          numbered={Boolean(numbered)}
+          index={index || ''}
+        />
+      )}
 
       {generateCheckbox(options, type === FORM_TYPES.MULTIPLE ? true : false, inputID)}
     </div>

@@ -84,17 +84,23 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   const [classList, setClassList] = useState<any[]>([]);
 
   const fetchAndProcessDashboardData = () => {
-    teacherListWithImages();
-    studentsListWithImages();
-    coTeacherListWithImages();
     getClassList();
+    teacherListWithImages();
+    coTeacherListWithImages();
+    loadStudents();
   };
 
   useEffect(() => {
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
     }
-  }, [homeData]);
+  }, [
+    homeData,
+    classList.length,
+    teacherList.length,
+    coTeachersList.length,
+    studentsList.length
+  ]);
 
   const getStudentsList = () => {
     let list: any[] = [];
@@ -102,7 +108,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
     homeData[0]?.class?.rooms?.items.forEach((item: any) => {
       item?.class?.students?.items.forEach((student: any) => {
-        if (!uniqIds.includes(student?.student?.id)) {
+        if (student?.student && !uniqIds.includes(student?.student?.id)) {
           list.push(student);
           uniqIds.push(student?.student?.id);
         }
@@ -112,46 +118,39 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     return list;
   };
 
-  const getImageURL = async (uniqKey: string) => {
-    const imageUrl: any = await getImageFromS3(uniqKey);
-    if (imageUrl) {
-      return imageUrl;
-    } else {
-      return '';
-    }
-  };
-
-  const getTeacherList = homeData?.length
-    ? homeData[0]?.class?.rooms?.items.reduce((acc: any[], dataObj: any) => {
-        const teacherObj = dataObj?.teacher;
-        const allRooms = homeData[0]?.class?.rooms?.items;
-        if (teacherObj) {
-          const teacherIsPresent = acc?.find(
-            (teacher: any) =>
-              teacher?.firstName === teacherObj?.firstName &&
-              teacher?.lastName === teacherObj?.lastName
-          );
-          if (teacherIsPresent) {
-            return acc;
-          } else {
-            // find rooms that has this teacher;
-            // it could be a teacher or co teacher
-            try {
-              const rooms = findRooms(teacherObj.authId, allRooms);
-              return [...acc, {...teacherObj, room: dataObj, rooms}];
-            } catch (error) {
-              console.error(error);
-              logError(
-                error,
-                {authId: teacherObj.authId, email: teacherObj.email},
-                'HomeForTeachers #getTeacherList'
-              );
+  const getTeacherList = () => {
+    return homeData?.length
+      ? homeData[0]?.class?.rooms?.items.reduce((acc: any[], dataObj: any) => {
+          const teacherObj = dataObj?.teacher;
+          const allRooms = homeData[0]?.class?.rooms?.items;
+          if (teacherObj) {
+            const teacherIsPresent = acc?.find(
+              (teacher: any) =>
+                teacher?.firstName === teacherObj?.firstName &&
+                teacher?.lastName === teacherObj?.lastName
+            );
+            if (teacherIsPresent) {
+              return acc;
+            } else {
+              // find rooms that has this teacher;
+              // it could be a teacher or co teacher
+              try {
+                const rooms = findRooms(teacherObj.authId, allRooms);
+                return [...acc, {...teacherObj, room: dataObj, rooms}];
+              } catch (error) {
+                console.error(error);
+                logError(
+                  error,
+                  {authId: teacherObj.authId, email: teacherObj.email},
+                  'HomeForTeachers #getTeacherList'
+                );
+              }
             }
           }
-        }
-        return acc;
-      }, [])
-    : [];
+          return acc;
+        }, [])
+      : [];
+  };
 
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
@@ -178,45 +177,20 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   };
 
   const teacherListWithImages = async () => {
-    let data: any[] = await Promise.all(
-      getTeacherList.map(async (teacherObj: any) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
-        };
-      })
-    );
+    let data: any[] = getTeacherList();
     data = data.filter((d: any) => d.id !== state.user.id);
     setTeacherList(data);
   };
 
   const coTeacherListWithImages = async () => {
-    let data: any[] = await Promise.all(
-      getCoTeacherList().map(async (teacherObj: any) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
-        };
-      })
-    );
+    let data: any[] = getCoTeacherList();
     data = data.filter((d: any) => d.id !== state.user.id);
     setCoTeachersList(data);
   };
 
-  const studentsListWithImages = async () => {
-    const data = await Promise.all(
-      getStudentsList().map(async (studentObj: any) => {
-        return {
-          ...studentObj,
-          student: {
-            ...studentObj?.student,
-            image: await (studentObj?.student?.image
-              ? getImageURL(studentObj?.student?.image)
-              : null)
-          }
-        };
-      })
-    );
+  const loadStudents = async () => {
+    const data = getStudentsList();
+
     setStudentsList(data);
     setLocalStorageData('student_list', data);
   };
@@ -284,7 +258,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <HeaderTextBar>
-              <p className={`text-sm 2xl:text-base text-center font-normal`}>
+              <p className={`text-sm mb-0 2xl:text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}

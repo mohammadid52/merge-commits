@@ -1776,8 +1776,63 @@ $translation-fab-width: 50px;
   color: $gray-500 !important;
 }
 
+// To center icon in button
 .ant-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+// removing bottom border from list items
+.table-list .ant-list-items li {
+  border-block-end: 0;
+}
+
+// Styles For Dark Modal
+.dark-modal .ant-modal-content,
+.dark-modal .ant-modal-header {
+  color: white;
+  background-color: rgba(28, 44, 66, 1);
+  .ant-modal-title,
+  button {
+    color: white;
+  }
+}
+
+.dark-modal .ant-table-pagination {
+  display: none;
+}
+
+// Styles for dark table
+
+.dark-table {
+  .ant-table-tbody > tr > td {
+    background-color: $gray-800;
+    color: white;
+  }
+  .ant-table-tbody > tr > .ant-table-cell {
+    border-bottom: 1px solid $gray-700 !important;
+  }
+  // change bg color on hover of row
+  .ant-table-tbody > tr:hover > .ant-table-cell {
+    background-color: $gray-700 !important;
+  }
+}
+
+// Styles for dark selector
+
+.dark-selector {
+  .ant-select-selector {
+    background-color: $theme-500 !important;
+    color: white;
+    border-color: $gray-700 !important;
+    // placeholder color
+    & .ant-select-selection-placeholder {
+      color: white;
+    }
+  }
+
+  .ant-select-arrow {
+    color: white;
+  }
 }

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import * as mutations from "graphql/mutations";
-import { API, graphqlOperation } from "aws-amplify";
-import { ITabViewProps } from "../TabView";
+import React, {useState} from 'react';
+import * as mutations from 'graphql/mutations';
+import {API, graphqlOperation} from 'aws-amplify';
+import {ITabViewProps} from '../TabView';
+import {Switch} from 'antd';
 
 interface IToggleProps extends ITabViewProps {
   toggled?: boolean;
@@ -14,7 +15,7 @@ const Toggle = ({
   label,
 
   currentContentObj,
-  addToJournalUpdateQueue,
+  addToJournalUpdateQueue
 }: IToggleProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const updateJournalShare = async () => {
@@ -26,28 +27,34 @@ const Toggle = ({
         graphqlOperation(mutations.updateUniversalJournalData, {
           input: {
             id: currentContentObj?.id,
-            shared: currentContentObj?.hasOwnProperty("shared")
+            shared: currentContentObj?.hasOwnProperty('shared')
               ? // @ts-ignore
                 !currentContentObj?.shared
-              : true,
-          },
+              : true
+          }
         })
       );
     } catch (e) {
-      console.error("error updating sharing - ", e);
+      console.error('error updating sharing - ', e);
     } finally {
       //
     }
   };
 
   const handleToggler = () => {
-    updateJournalShare().then((_: void) => setUpdating(false));
+    if (!updating) {
+      setIsToggled(!isToggled);
+      updateJournalShare().then((_: void) => setUpdating(false));
+    }
   };
+
+  const [isToggled, setIsToggled] = useState(Boolean(toggled));
 
   return (
     <div className="mt-4 mb-2 ml-2 w-auto flex items-center">
-      {/* <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" --> */}
-      <button
+      <Switch checked={isToggled} onChange={handleToggler} />
+
+      {/* <button
         onClick={!updating ? () => handleToggler() : () => {}}
         type="button"
         className={`${
@@ -57,14 +64,14 @@ const Toggle = ({
         aria-checked="false"
         aria-labelledby="annual-billing-label"
       >
-        {/* <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" --> */}
+
         <span
           aria-hidden="true"
           className={`${
             toggled ? "translate-x-5" : "translate-x-0"
           } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}
         ></span>
-      </button>
+      </button> */}
 
       {label && (
         <span className="mx-2" id="shared-label">

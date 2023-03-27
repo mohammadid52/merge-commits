@@ -4,7 +4,7 @@ import SignOutButton from '@components/Auth/SignOut';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3} from '@utilities/services';
 import {Divider, Dropdown, Space, theme} from 'antd';
 import {ItemType} from 'rc-menu/lib/interface';
 import React from 'react';
@@ -98,7 +98,7 @@ const DropDownMenu = () => {
               <img
                 className="inline-block rounded-full border-0 theme-border w-6 h-6"
                 // style={{width: 48, height: 48}}
-                src={getImageFromS3Static(image)}
+                src={getImageFromS3(image) as string}
                 alt=""
               />
             ) : (

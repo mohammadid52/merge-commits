@@ -100,7 +100,6 @@ export const FormBlock = ({
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    console.log(e.target);
 
     setDataValue(id, [value]);
   };
