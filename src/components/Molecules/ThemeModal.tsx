@@ -1,7 +1,8 @@
+import {CloseOutlined} from '@ant-design/icons';
 import {Dialog, Transition} from '@headlessui/react';
-import {XIcon} from '@heroicons/react/outline';
-import React, {Fragment} from 'react';
+
 import {children, setState} from 'interfaces';
+import {Fragment} from 'react';
 
 interface IModal {
   open: boolean;
@@ -21,7 +22,7 @@ const ThemeModal = ({
   children,
   header,
   dark = true,
-  overflowClass = 'overflow-y-auto overflow-x-hidden',
+
   max = {w: 256, h: 256}
 }: IModal) => {
   return (
@@ -71,7 +72,7 @@ const ThemeModal = ({
                   } w-auto  rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                   onClick={() => setOpen(false)}>
                   <span className="sr-only">Close</span>
-                  <XIcon className="h-6 w-6" aria-hidden="true" />
+                  <CloseOutlined />
                 </button>
               </div>
               {header && (

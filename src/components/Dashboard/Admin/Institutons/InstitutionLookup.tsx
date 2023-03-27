@@ -1,18 +1,18 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {CloseOutlined} from '@ant-design/icons';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import InstituteName from '@components/MicroComponents/InstituteName';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
-import {XIcon} from '@heroicons/react/outline';
+
 import {withZoiqFilter} from '@utilities/functions';
 import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import SearchInput from 'atoms/Form/SearchInput';
+import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
@@ -37,7 +37,7 @@ const InstitutionLookup: React.FC = () => {
   const {InstitutionDict, BreadcrumsTitles} = useDictionary();
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const [status, setStatus] = useState('');
-  const [institutionsData, setInstitutionsData] = useState([]);
+  const [institutionsData, setInstitutionsData] = useState<any[]>([]);
 
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -58,31 +58,24 @@ const InstitutionLookup: React.FC = () => {
     value: '',
     isActive: false
   });
-  const [sortingType, setSortingType] = useState({
+  const [sortingType] = useState({
     value: '',
     name: '',
     asc: true
   });
 
   const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: `${match.url}`,
+      href: `${match.url}`,
       last: true
     }
   ];
-
-  // const sortByList = [
-  //   {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
-  //   {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
-  //   {
-  //     id: 3,
-  //     name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
-  //     value: 'website'
-  //   },
-  //   {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'}
-  // ];
 
   const addNewInstitution = () => {
     history.push(`${match.url}/add`);
@@ -92,7 +85,9 @@ const InstitutionLookup: React.FC = () => {
 
   async function fetchInstListForAdmin() {
     const fetchInstitutionData: any = await API.graphql(
-      graphqlOperation(customQueries.getInstListForAdmin, {filter: withZoiqFilter({})})
+      graphqlOperation(customQueries.getInstListForAdmin, {
+        filter: withZoiqFilter({})
+      })
     );
     return fetchInstitutionData.data?.listInstitutions?.items || [];
   }
@@ -177,13 +172,6 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
-  // const toggleSortDimension = () => {
-  //   setSortingType({
-  //     ...sortingType,
-  //     asc: !sortingType.asc
-  //   });
-  // };
-
   const removeSearchAction = () => {
     resetPagination();
     setSearchInput({value: '', isActive: false});
@@ -198,14 +186,6 @@ const InstitutionLookup: React.FC = () => {
     );
     setInstitutionsData(newInstList);
   };
-
-  // const setSortingValue = (str: string, name: string) => {
-  //   setSortingType({
-  //     ...sortingType,
-  //     value: str,
-  //     name: name
-  //   });
-  // };
 
   useEffect(() => {
     if (alert) {
@@ -244,43 +224,35 @@ const InstitutionLookup: React.FC = () => {
     name: instituteObject.name,
     type: instituteObject.type || '--',
     website: instituteObject.website ? getHostNameFromUrl(instituteObject.website) : '--',
-    contactNo: instituteObject.phone ? formatPhoneNumber(instituteObject.phone) : '--',
-    actions: (
-      <CommonActionsBtns
-        button1Label="Edit"
-        button1Action={() => handleInstitutionView(instituteObject.id)}
-      />
-    )
+    contactNo: instituteObject.phone ? formatPhoneNumber(instituteObject.phone) : '--'
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Label="Edit"
+    //     button1Action={() => hand∏leInstitutionView(instituteObject.id)}
+    //   />
+    // )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       'No',
       dictionary['NAME'],
       dictionary['TYPE'],
       dictionary['WEBSITE'],
-      dictionary['CONTACT'],
-      dictionary['ACTION']
+      dictionary['CONTACT']
+      // dictionary['ACTION']
     ],
     dataList,
     config: {
-      isFirstIndex: true,
-      isLastAction: true,
-
       dataList: {
         loading: status !== 'done',
-        emptyText: dictionary['NORESULT'],
+
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          instituteName: 'w-72 -ml-8',
-          no: 'w-20'
-        },
-        maxHeight: 'max-h-196'
+        }
       }
     }
   };
@@ -308,7 +280,6 @@ const InstitutionLookup: React.FC = () => {
                     onChange={setSearch}
                     onKeyDown={searchUserFromList}
                     closeAction={removeSearchAction}
-                    style="mr-4 w-auto"
                   />
 
                   {state.user.role === 'SUP' && (
@@ -332,7 +303,7 @@ const InstitutionLookup: React.FC = () => {
                 <span
                   className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
                   onClick={() => setShowAlert(false)}>
-                  <XIcon className="h-6 w-6" aria-hidden="true" />
+                  <CloseOutlined />
                 </span>
               </div>
             )}

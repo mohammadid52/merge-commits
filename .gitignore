@@ -10,7 +10,6 @@ zjunk
 inspiration
 workspace.xml
 tsconfig.json
-src/aws-exports.js
 amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*

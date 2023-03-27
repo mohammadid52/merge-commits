@@ -1,32 +1,35 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from 'atoms/Buttons/AddButton';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
-import Buttons from '@components/Atoms/Buttons';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import Modal from '@components/Atoms/Modal';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Tooltip from '@components/Atoms/Tooltip';
-import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import UnitName from '@components/MicroComponents/UnitName';
-import Table from '@components/Molecules/Table';
-import usePagination from '@customHooks/usePagination';
-import useSearch from '@customHooks/useSearch';
-import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import Buttons from 'components/Atoms/Buttons';
+import Filters, {SortType} from 'components/Atoms/Filters';
+import Modal from 'components/Atoms/Modal';
+import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
+
+import {Descriptions, List, Tooltip} from 'antd';
 import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
+import UnitName from 'components/MicroComponents/UnitName';
+import Table, {ITableProps} from 'components/Molecules/Table';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
+import useAuth from 'customHooks/useAuth';
+import usePagination from 'customHooks/usePagination';
+import useSearch from 'customHooks/useSearch';
+import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
 import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
+import moment from 'moment';
+import {withZoiqFilter} from 'utilities/functions';
+import AttachedCourses from './AttachedCourses';
 import UnitFormComponent from './UnitFormComponent';
-import {withZoiqFilter} from '@utilities/functions';
 
 export const UnitList = ({
   instId,
@@ -40,15 +43,11 @@ export const UnitList = ({
 }: any) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const {
-    state: {
-      user: {isSuperAdmin, authId, email}
-    },
+  const {userLanguage} = useGlobalContext();
 
-    userLanguage
-  } = useContext(GlobalContext);
+  const {isSuperAdmin} = useAuth();
 
-  const {CommonlyUsedDict, UnitLookupDict} = useDictionary();
+  const {UnitLookupDict} = useDictionary();
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -203,18 +202,6 @@ export const UnitList = ({
     action: () => {}
   });
 
-  const checkIfRemovable = (unitObj: any) => {
-    if (
-      unitObj.lessons?.items?.length > 0 ||
-      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0) ||
-      unitObj?.isUsed
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
     if (!deleteModal.show) {
       setDeleteModal({
@@ -280,20 +267,9 @@ export const UnitList = ({
     }
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string, option: any) => {
+    setSelectedInstitution({name: value, id: option.id});
     updateRoomList(value);
-  };
-
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-    // onSearch(searchInput, '');
-  };
-
-  const redirectToInstitution = (institutionId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
-    );
   };
 
   const redirectToLesson = (institutionId: string, lessonId: string) => {
@@ -346,7 +322,7 @@ export const UnitList = ({
     ['asc']
   );
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -392,15 +368,15 @@ export const UnitList = ({
       const input = {
         syllabusID: unitId,
         lessonID: lessonId,
-        displayData: {
-          breakdownComponent: lessonType
-        },
+
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
         status: 'ACTIVE'
       };
       setSaving(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createUniversalSyllabusLesson, {input: input})
+        graphqlOperation(customMutations.createUniversalSyllabusLesson, {
+          input: input
+        })
       );
       const newLesson = result.data?.createUniversalSyllabusLesson;
       if (newLesson?.id) {
@@ -457,88 +433,87 @@ export const UnitList = ({
     setAddModalShow(false);
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+  const currentSelectedItem = (name: string) =>
+    allUnits?.find((_c: any) => _c.name === name);
 
-  const currentSelectedItem =
-    hoveringItem &&
-    hoveringItem?.name &&
-    allUnits?.find((_c: any) => _c.name === hoveringItem?.name);
+  const dataList = map(finalList, (item: any, index: number) => {
+    return {
+      no: getIndex(index),
+      onClick: () => handleView(item.id),
+      instituteName: isSuperAdmin && item.institution.name,
+      status: <Status status={item.status} useDefault />,
+      content: (
+        <>
+          <Descriptions title="Unit Details">
+            <Descriptions.Item label="Status">
+              {<Status status={currentSelectedItem(item.name).status} useDefault />}
+            </Descriptions.Item>
+            <Descriptions.Item label="Created date">
+              {moment(item.createdAt).format('ll')}
+            </Descriptions.Item>
+            <Descriptions.Item label="Last update">
+              {moment(item.updatedAt).format('ll')}
+            </Descriptions.Item>
+            <Descriptions.Item label="Description">
+              {currentSelectedItem(item.name)?.description || 'n/a'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Attached courses">
+              <AttachedCourses curricular={curricular} unitId={item.id} />
+            </Descriptions.Item>
+          </Descriptions>
+        </>
+      ),
+      unitName: (
+        <UnitName
+          searchTerm={searchInput.value}
+          editCurrentUnit={handleView}
+          item={item}
+        />
+      ),
 
-  const dataList = map(finalList, (item: any, index: number) => ({
-    no: getIndex(index),
-    instituteName: isSuperAdmin && item.institution.name,
-    status: <Status status={item.status} useDefault />,
-    unitName: (
-      <UnitName
-        currentSelectedItem={currentSelectedItem}
-        hoveringItem={hoveringItem}
-        searchTerm={searchInput.value}
-        editCurrentUnit={handleView}
-        isLast={finalList.length - 5 <= index}
-        curricular={curricular}
-        setHoveringItem={setHoveringItem}
-        isSuperAdmin={isSuperAdmin}
-        item={item}
-      />
-    ),
+      lessonPlan: (
+        <List
+          size="small"
+          className="table-list"
+          dataSource={item.lessons?.items?.filter(Boolean)}
+          renderItem={(lesson: any, index: number) => (
+            <Tooltip
+              key={lesson.lesson.id}
+              title={`Go to ${lesson.lesson.title}`}
+              placement="left">
+              <List.Item
+                className="cursor-pointer hover:underline hover:theme-text:400"
+                onClick={() => redirectToLesson(item.institution.id, lesson.lesson.id)}>
+                {index + 1}. {lesson.lesson.title}
+              </List.Item>
+            </Tooltip>
+          )}
+        />
+      )
+      // action: (
+      //   <CommonActionsBtns
+      //     button1Label="View"
+      //     isDeletable={checkIfRemovable(item)}
+      //     button1Action={() => handleView(item.id)}
+      //     button2Action={() => handleToggleDelete(item.name, item)}
+      //   />
+      // )
+    };
+  });
 
-    lessonPlan: (
-      <div>
-        {item.lessons?.items?.length > 0 ? (
-          <ol className="list-decimal">
-            {item.lessons?.items?.map(
-              (lesson: {id: string; lesson: {id: string; title: string}}) => {
-                if (lesson) {
-                  return (
-                    <Tooltip
-                      text={`Go to ${lesson.lesson.title}`}
-                      placement="left"
-                      key={lesson.id}>
-                      <li
-                        className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
-                        key={lesson.lesson.id}
-                        onClick={() =>
-                          redirectToLesson(item.institution.id, lesson.lesson.id)
-                        }>
-                        {lesson.lesson.title}
-                      </li>
-                    </Tooltip>
-                  );
-                }
-              }
-            )}
-          </ol>
-        ) : (
-          <p className="">No lesson plan</p>
-        )}
-      </div>
-    ),
-    action: (
-      <CommonActionsBtns
-        button1Label="View"
-        isDeletable={checkIfRemovable(item)}
-        button1Action={() => handleView(item.id)}
-        button2Action={() => handleToggleDelete(item.name, item)}
-      />
-    )
-  }));
-
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
-      UnitLookupDict[userLanguage]['NO'],
+      UnitLookupDict[userLanguage].NO,
       UnitLookupDict[userLanguage]['NAME'],
       isSuperAdmin && UnitLookupDict[userLanguage]['INSTITUTION_NAME'],
       UnitLookupDict[userLanguage]['LESSONS'],
-      InstitueRomms[userLanguage]['STATUS'],
-      UnitLookupDict[userLanguage]['ACTION']
+      InstitueRomms[userLanguage]['STATUS']
+      // UnitLookupDict[userLanguage]['ACTION']
     ],
     dataList,
     config: {
-      dark: false,
-
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
+        expandable: true,
         loading,
         pagination: {
           showPagination:
@@ -546,20 +521,7 @@ export const UnitList = ({
           config: {
             allAsProps
           }
-        },
-        emptyText:
-          searchInput.isActive || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-            : UnitLookupDict[userLanguage]['INFO'],
-        customWidth: {
-          no: 'w-12',
-          unitName: 'w-96',
-          lessonPlan: 'w-96',
-          action: 'w0'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        }
       }
     }
   };
@@ -570,7 +532,7 @@ export const UnitList = ({
 
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <SectionTitleV3
           title={'Unit List'}
           fontSize="xl"
@@ -586,10 +548,6 @@ export const UnitList = ({
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
                 />
               )}
 
@@ -599,7 +557,9 @@ export const UnitList = ({
                     selectedItem={unitInput.name}
                     list={units}
                     placeholder="Select Unit"
-                    onChange={(val, name, id) => setUnitInput({name, id})}
+                    onChange={(name: string, option: any) =>
+                      setUnitInput({name, id: option.id})
+                    }
                   />
                   <Buttons
                     label={BUTTONS[userLanguage]['ADD']}
@@ -614,10 +574,8 @@ export const UnitList = ({
               ) : null}
               {!showAddSection && (
                 <SearchInput
-                  dataCy="unit-search-input"
                   value={searchInput.value}
                   onChange={setSearch}
-                  isActive={searchInput.isActive}
                   disabled={loading}
                   onKeyDown={searchRoom}
                   closeAction={removeSearchAction}
@@ -659,38 +617,37 @@ export const UnitList = ({
 
         <Table {...tableConfig} />
 
-        {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Lesson to Syllabus'}
-            closeOnBackdrop
-            closeAction={onAddModalClose}>
-            <div
-              className="min-w-180 lg:min-w-256"
-              style={{
-                height: 'calc(100vh - 150px)'
-              }}>
-              <UnitFormComponent
-                isInModal={true}
-                instId={instId}
-                postAddSyllabus={postAddSyllabus}
-                onCancel={() => setAddModalShow(false)}
-              />
-            </div>
-          </Modal>
-        )}
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            cancelLabel="CANCEL"
-            loading={deleting}
-            message={deleteModal.message}
-          />
-        )}
+        <Modal
+          open={addModalShow}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Add Lesson to Syllabus'}
+          closeOnBackdrop
+          closeAction={onAddModalClose}>
+          <div
+            className="min-w-180 lg:min-w-256"
+            style={{
+              height: 'calc(100vh - 150px)'
+            }}>
+            <UnitFormComponent
+              isInModal={true}
+              instId={instId}
+              postAddSyllabus={postAddSyllabus}
+              onCancel={() => setAddModalShow(false)}
+            />
+          </div>
+        </Modal>
+
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          loading={deleting}
+          message={deleteModal.message}
+        />
       </div>
     </div>
   );

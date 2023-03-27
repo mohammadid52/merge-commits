@@ -1,17 +1,16 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {setLocalStorageData} from '@utilities/localStorage';
-import {ListPersonLessonsDataQuery, PersonLessonsData} from 'API';
+import {PersonLessonsData} from 'API';
 import {map} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 const SurveyList = ({
   studentAuthID,
-  studentEmail,
-  insideModalPopUp
+  studentEmail
 }: {
   studentEmail: string;
   insideModalPopUp?: boolean;
@@ -24,10 +23,7 @@ const SurveyList = ({
     roomId: {eq: room.id}
   }));
 
-  const {data, isLoading, isFetched} = useGraphqlQuery<
-    any,
-    ListPersonLessonsDataQuery['listPersonLessonsData']['items']
-  >(
+  const {data, isLoading, isFetched} = useGraphqlQuery<any, PersonLessonsData[]>(
     'listPersonLessonsData',
     {
       limit: 500,
@@ -80,6 +76,7 @@ const SurveyList = ({
 
   const dataList = map(surveyList, (survey, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     surveyName: <Highlighted text={survey?.lesson?.title} highlight={searchInput} />,
     classroom: survey?.room?.name,
     completedAt: new Date(survey.updatedAt).toLocaleDateString(),
@@ -92,28 +89,12 @@ const SurveyList = ({
     )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Survey Name', 'Classroom', 'Completed At', 'Actions'],
     dataList,
     config: {
-      dark: false,
-      isFirstIndex: true,
-      isLastActions: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        loading: isLoading,
-        emptyText: 'No completed surveys found',
-        customWidth: insideModalPopUp
-          ? {}
-          : {
-              no: 'w-12',
-              surveyName: 'w-84',
-              classroom: 'w-84',
-              completedAt: 'w-48'
-            },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        loading: isLoading
       }
     }
   };
@@ -127,7 +108,6 @@ const SurveyList = ({
             onChange={(str) => setSearchInput(str)}
             onKeyDown={searchSurveyFromList}
             closeAction={removeSearchAction}
-            style={`mr-4 w-full`}
           />
         )}
 

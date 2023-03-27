@@ -1,18 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
-import Buttons from 'atoms/Buttons';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
-import {removeExtension} from 'utilities/functions';
-import {getImageFromS3Static} from 'utilities/services';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import {Storage} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import {getAsset} from 'assets';
-import * as mutations from 'graphql/mutations';
+import {removeExtension} from 'utilities/functions';
+import {getImageFromS3Static} from 'utilities/services';
 import {UPLOAD_KEYS} from '../../../Lesson/constants';
 
 // ##################################################################### //
@@ -41,7 +41,7 @@ const File = ({
   _status,
   progress,
   fileName,
-  deleteImage,
+
   fileKey,
   file,
   updateFilename,
@@ -116,11 +116,11 @@ const File = ({
     </span>
   );
 
-  const [_fileName, setFileName] = useState(removeExtension(fileName) || '');
+  const [_fileName, setFileName] = useState(removeExtension(fileName || '') || '');
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
-    updateFilename(id, removeExtension(_fileName));
+    id && updateFilename(id, removeExtension(_fileName));
     setEditingFilename(false);
   };
 
@@ -161,7 +161,7 @@ const File = ({
                 <Btn
                   color="red"
                   onClick={() => {
-                    setFileName(fileName);
+                    fileName && setFileName(fileName);
                     setEditingFilename(false);
                   }}
                   label={'Cancel'}
@@ -250,20 +250,20 @@ interface IUploadAttachmentProps {
 const UploadAttachment = ({
   personFilesID,
   updateLoadedFilesList,
-  filesArray,
+  filesArray = [],
   lessonPageID,
   lessonID,
   syllabusLessonID,
-  roomID,
+
   toggleDialog
 }: IUploadAttachmentProps) => {
-  const gContext = useContext(GlobalContext);
-  const state = gContext.state;
+  const gContext = useGlobalContext();
+
   const user = gContext.state.user;
   const userLanguage = gContext.userLanguage;
 
   const isStudent = user.role === 'ST';
-  const inputOther = useRef(null);
+  const inputOther = useRef<any>(null);
 
   const openFilesExplorer = () => inputOther.current.click();
   // For Attachments - 31
@@ -315,7 +315,7 @@ const UploadAttachment = ({
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        contentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
 
@@ -342,7 +342,7 @@ const UploadAttachment = ({
     });
   };
 
-  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user.id, lessonID);
+  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user.id, lessonID || '');
 
   const {authId, email} = user;
 
@@ -378,10 +378,8 @@ const UploadAttachment = ({
         syllabusLessonID: syllabusLessonID
       };
 
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonFiles, {input: payload})
-      );
-      await updateLoadedFilesList(personFilesID, payload.files);
+      await API.graphql(graphqlOperation(mutations.updatePersonFiles, {input: payload}));
+      personFilesID && updateLoadedFilesList?.(personFilesID, payload.files);
       resetAll();
     } catch (error) {
       console.error('@uploadFileDataToTable: ', error.message);
@@ -438,7 +436,7 @@ const UploadAttachment = ({
   };
 
   const uploadFile = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles: any) => {
       mapNewFiles(acceptedFiles);
       await uploadNewFiles();
     },
@@ -464,7 +462,7 @@ const UploadAttachment = ({
   const resetAll = () => {
     setUploading(false);
     setFilesUploading([]);
-    toggleDialog();
+    toggleDialog?.();
   };
 
   return (
@@ -525,7 +523,6 @@ const UploadAttachment = ({
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={resetAll}
               disabled={uploading}
@@ -533,7 +530,6 @@ const UploadAttachment = ({
             />
             <Buttons
               disabled={uploading || filesUploading.length === 0}
-              btnClass="py-1 px-8 text-xs ml-2"
               label={uploading ? 'Uploading...' : 'Save'}
               onClick={onUploadAllFiles}
             />

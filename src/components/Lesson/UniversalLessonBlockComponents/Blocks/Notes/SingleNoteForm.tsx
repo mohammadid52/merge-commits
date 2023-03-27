@@ -8,8 +8,7 @@ const SingleNote = ({
   idx,
   removeItemFromList,
   onChange,
-  onFieldUpdate,
-  isEditingMode
+  onFieldUpdate
 }: any) => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   return (
@@ -75,16 +74,15 @@ const SingleNote = ({
             </label>
             <Selector
               width="w-56"
-              dropdownWidth="w-56"
               placeholder="Select size"
               selectedItem={
                 singleNoteData.size !== 'undefined' ? singleNoteData.size : 'large'
               }
-              onChange={(_, name) => onFieldUpdate('size', name, idx)}
+              onChange={(name) => onFieldUpdate('size', name, idx)}
               list={[
-                {id: 0, name: 'small'},
-                {id: 1, name: 'medium'},
-                {id: 2, name: 'large'}
+                {id: 0, value: 'small', label: 'small'},
+                {id: 1, value: 'medium', label: 'medium'},
+                {id: 2, value: 'large', label: 'large'}
               ]}
             />
           </div>

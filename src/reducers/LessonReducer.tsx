@@ -1,7 +1,7 @@
+import {UniversalLesson} from 'API';
 import {
   StudentExerciseData,
   StudentPageInput,
-  UniversalLesson,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
 import {lessonState as initialLessonState} from 'state/LessonState';
@@ -38,7 +38,9 @@ const LESSON_REDUCER_TYPES = {
   SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
   SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA',
   SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE',
-  SET_IS_VALID: 'SET_IS_VALID'
+  SET_IS_VALID: 'SET_IS_VALID',
+  UPDATE_TIMER_FOR_PAGE: 'UPDATE_TIMER_FOR_PAGE',
+  RESET_TIMER_FOR_PAGE: 'RESET_TIMER_FOR_PAGE'
 };
 
 export type LessonActions =
@@ -75,7 +77,7 @@ export type LessonActions =
           studentAuthID?: string;
           lessonPageID?: string;
         }[];
-        id: string;
+        id?: string;
         studentViewing?: string | '';
         updatedAt?: string;
       };
@@ -83,6 +85,10 @@ export type LessonActions =
   | {
       type: 'SET_LESSON_DATA';
       payload: UniversalLesson;
+    }
+  | {
+      type: 'LESSON_LOADED';
+      payload: boolean;
     }
   | {
       type: 'SET_INITIAL_STUDENT_DATA';
@@ -202,8 +208,24 @@ export type LessonActions =
       payload?: {
         lessonPayload?: any;
       };
+    }
+  | {
+      type: 'RESET_TIMER_FOR_PAGE';
+      payload?: any;
+    }
+  | {
+      type: 'SET_LEAVE_MODAL_VISIBLE_STATE';
+      payload: boolean;
+    }
+  | {
+      type: 'UPDATE_TIMER_FOR_PAGE';
+      payload: {
+        currentPage?: any;
+        remainingTime?: number;
+      };
     };
 
+// @ts-ignore
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
     case LESSON_REDUCER_TYPES.TEST:
@@ -212,6 +234,34 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         universalLessonID: action.payload.universalLessonID
+      };
+
+    case LESSON_REDUCER_TYPES.UPDATE_TIMER_FOR_PAGE:
+      const payload = action.payload;
+      let pageTimers = state.pageTimers;
+
+      const {currentPage} = payload;
+
+      const currentPageObjIdx = pageTimers.findIndex(
+        (t: {currentPage: any}) => t.currentPage === currentPage
+      );
+
+      if (currentPageObjIdx > -1) {
+        pageTimers[currentPageObjIdx] = {
+          ...payload
+        };
+      } else {
+        pageTimers.push({...payload});
+      }
+
+      return {
+        ...state,
+        pageTimers
+      };
+    case LESSON_REDUCER_TYPES.RESET_TIMER_FOR_PAGE:
+      return {
+        ...state,
+        pageTimers: []
       };
 
     case LESSON_REDUCER_TYPES.SET_LAST_PAGE:
@@ -237,7 +287,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case LESSON_REDUCER_TYPES.SET_ROOM_SUBSCRIPTION_DATA:
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
-        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
+        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage) => {
             if (action.payload.ClosedPages?.includes(page.id)) {
               return {...page, open: false};
             } else {
@@ -281,7 +331,10 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       };
     case LESSON_REDUCER_TYPES.ADD_NEW_INPUT:
       let oldStudentData = [...state.studentData];
-      const _newInput = {domID: action.payload.domID, input: action.payload.input};
+      const _newInput = {
+        domID: action.payload.domID,
+        input: action.payload.input
+      };
       const currentPageStudentData = [...oldStudentData[state.currentPage], _newInput];
 
       oldStudentData[state.currentPage] = currentPageStudentData;
@@ -475,7 +528,10 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           }
         }
       );
-      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedOpenPages}};
+      return {
+        ...state,
+        lessonData: {...state.lessonData, lessonPlan: mappedOpenPages}
+      };
     case LESSON_REDUCER_TYPES.TOGGLE_CLOSE_PAGE:
       const mappedClosePages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
@@ -486,7 +542,10 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           }
         }
       );
-      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedClosePages}};
+      return {
+        ...state,
+        lessonData: {...state.lessonData, lessonPlan: mappedClosePages}
+      };
     case LESSON_REDUCER_TYPES.INCREMENT_SAVE_COUNT:
       return {...state, saveCount: state.saveCount + 1};
     case LESSON_REDUCER_TYPES.CLEANUP:

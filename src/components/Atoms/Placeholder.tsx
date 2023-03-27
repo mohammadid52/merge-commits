@@ -1,14 +1,15 @@
+import {getImageFromS3} from '@utilities/services';
 import {initials, stringToHslColor} from '@utilities/strings';
-import React from 'react';
+import {Avatar, Image} from 'antd';
 
 const Placeholder = ({
   name = ' ',
   size = 'w-10 h-10 md:w-12 md:h-12',
-  textSize = '',
-  className,
+  textSize,
   firstName = '',
   lastName = '',
-  image = null
+  image = null,
+  useAntdImage
 }: {
   name?: string;
   textSize?: string;
@@ -17,11 +18,21 @@ const Placeholder = ({
   firstName?: string;
   lastName?: string;
   image?: string | null;
+  useAntdImage?: boolean;
 }) => {
   if (image) {
+    // if image includes "https" don't use s3
+    const shouldUseS3 = !image.includes('https');
+    const finalImage = shouldUseS3 ? (getImageFromS3(image) as string) : image;
+
+    const imageClass = 'rounded-full w-full h-full  customShadow bg-gray-500';
     return (
       <div className={`${size} rounded-full flex justify-center items-center`}>
-        <img src={image} className="rounded-full  customShadow bg-gray-500" />
+        {useAntdImage ? (
+          <Image src={finalImage} className={imageClass} />
+        ) : (
+          <img src={finalImage} className={imageClass} />
+        )}
       </div>
     );
   } else {
@@ -31,17 +42,11 @@ const Placeholder = ({
     const _l = lastName || _lastName;
 
     return (
-      <div
-        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
-        <div
-          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full text-shadow`}
-          style={{
-            /*  stylelint-disable */
-            background: `${_f ? stringToHslColor(_f + ' ' + _l) : null}`
-          }}>
-          {_f && initials(_f, _l)}
-        </div>
-      </div>
+      <Avatar
+        className={`${size} ${textSize} flex items-center justify-center`}
+        style={{background: `${_f ? stringToHslColor(_f + ' ' + _l) : null}`}}>
+        {_f && initials(_f, _l)}
+      </Avatar>
     );
   }
 };

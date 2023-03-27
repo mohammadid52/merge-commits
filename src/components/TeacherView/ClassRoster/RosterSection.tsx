@@ -1,11 +1,10 @@
 import {PersonStatus} from 'API';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import gsap from 'gsap/all';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {GoChevronDown, GoChevronUp} from 'react-icons/go';
 import {IoMdRefresh} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import RosterRow from './RosterRow';
 import RosterRowEmpty from './RosterRowEmpty';
 
@@ -13,7 +12,7 @@ export interface IRosterSectionProps {
   hot?: boolean;
   handleManualRefresh?: () => void;
   loading?: boolean;
-  handleToggleRightView?: (rightViewObj: {view: string; option?: string}) => void;
+  handleToggleRightView: (rightViewObj: {view: string; option: string}) => void;
   rightView?: {view: string; option?: string};
   setRightView?: any;
   studentList?: any[];
@@ -25,7 +24,7 @@ export interface IRosterSectionProps {
   handlePageChange?: any;
   sectionTitle?: string;
   emptyMessage?: string;
-  setRecordPrevPage?: React.SetStateAction<React.Dispatch<number>>;
+  setRecordPrevPage?: React.Dispatch<React.SetStateAction<number>>;
   recordPrevPage?: number;
   removing?: string | null;
   kickoutStudent?: (authId: string, email: string) => void;
@@ -52,7 +51,7 @@ const RosterSection = ({
   recordPrevPage
 }: IRosterSectionProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
 
   const userLanguage = gContext.userLanguage;
 
@@ -65,10 +64,10 @@ const RosterSection = ({
     );
   };
 
-  const activeStudentList = removeInactiveStudents(studentList);
+  const activeStudentList = removeInactiveStudents(studentList || []);
 
   // ~~~~~~~~~ MINIMIZE / ANIMATION ~~~~~~~~ //
-  const listRef = useRef();
+  const listRef = useRef<any>(null);
 
   const [minimized, setMinimized] = useState<boolean>(false);
 
@@ -116,7 +115,7 @@ const RosterSection = ({
             {hot && (
               <span
                 title="refresh list"
-                className={`w-auto cursor-pointer iconoclast:text-500 curate:text-500 rounded-full ml-2 iconoclast:bg-100 curate:bg-100 p-0.5`}
+                className={`w-auto cursor-pointer flex items-center justify-center iconoclast:text-500 curate:text-500 rounded-full ml-2 iconoclast:bg-100 curate:bg-100 p-0.5`}
                 onClick={handleManualRefresh}>
                 <IoMdRefresh
                   size={20}

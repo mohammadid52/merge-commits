@@ -1,15 +1,14 @@
-import React, {useContext} from 'react';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 
 interface StageButtonProps {
   iconID?: number;
   active?: boolean;
   open?: boolean;
   disabled?: boolean;
-  label?: string;
-  id?: string;
+  label?: string | null;
+  id?: string | null;
   breakdown?: boolean;
   menuOpen?: boolean;
   handleOpenMenu?: (stage: string) => void;
@@ -20,13 +19,13 @@ interface StageButtonProps {
 
 const StageButton = (props: StageButtonProps) => {
   const {
-    iconID,
+    iconID = 0,
 
     handlePageChange,
 
     page
   } = props;
-  const {lessonState, controlDispatch} = useContext(GlobalContext);
+  const {lessonState} = useGlobalContext();
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -38,8 +37,6 @@ const StageButton = (props: StageButtonProps) => {
   const stageIsClosed = PAGES[iconID].open === false;
 
   const handleView = () => {
-    controlDispatch({type: 'QUIT_STUDENT_VIEWING'});
-
     /**
      *
      * SET CURRENT VIEWED PAGE FOR
@@ -67,14 +64,14 @@ const StageButton = (props: StageButtonProps) => {
           </svg>
 
           <a
-            href={page.href}
+            href={page?.href}
             className={` ${
               stageIsViewed && !stageIsClosed && !stageIsDisabled
                 ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
                 : null
             }    ${stageIsDisabled ? null : 'text-gray-500 '}
       ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-            {page.label}
+            {page?.label}
           </a>
         </div>
       );
@@ -92,7 +89,7 @@ const StageButton = (props: StageButtonProps) => {
           </svg>
 
           <a
-            href={page.href}
+            href={page?.href}
             className={`${
               stageIsDisabled || stageIsClosed ? 'line-through text-gray-500' : null
             }
@@ -106,7 +103,7 @@ const StageButton = (props: StageButtonProps) => {
           : null
       }
       ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-            {page.label}
+            {page?.label}
           </a>
         </div>
       );
@@ -124,7 +121,7 @@ const StageButton = (props: StageButtonProps) => {
           </svg>
 
           <a
-            href={page.href}
+            href={page?.href}
             className={`${
               stageIsViewed && !stageIsClosed && !stageIsDisabled
                 ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
@@ -134,7 +131,7 @@ const StageButton = (props: StageButtonProps) => {
                 ? 'line-through text-gray-500'
                 : 'text-gray-500'
             } ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-            {page.label}
+            {page?.label}
           </a>
         </div>
       );

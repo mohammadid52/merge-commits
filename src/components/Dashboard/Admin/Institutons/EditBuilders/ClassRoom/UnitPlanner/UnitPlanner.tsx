@@ -1,25 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import moment, {Moment} from 'moment';
 
 import * as customQueries from 'customGraphql/customQueries';
 
 import Buttons from 'atoms/Buttons';
-// import DatePickerInput from 'atoms/Form/DatePickerInput';
 import Loader from 'atoms/Loader';
 import {IImpactLog} from '../ClassRoomHolidays';
-
-const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
-  Weekly: {unit: 'week', step: 1},
-  Monthly: {unit: 'month', step: 1},
-  Trimestral: {unit: 'month', step: 4},
-  Quarterly: {unit: 'month', step: 3},
-  Semestral: {unit: 'month', step: 6},
-  'M/W/F': {unit: 'day', step: 1},
-  'Tu/Th': {unit: 'day', step: 1},
-  'One Time': {unit: 'day', step: 1},
-  Daily: {unit: 'day', step: 1}
-};
+import {frequencyMapping} from '@utilities/staticData';
 
 interface IUnitPlannerProps {
   isDetailsComplete: boolean;
@@ -41,7 +29,7 @@ const UnitPlanner = ({
   isDetailsComplete
 }: IUnitPlannerProps) => {
   const [loading, setLoading] = useState(roomData.curricular?.id);
-  const [syllabusList, setSyllabusList] = useState([]);
+  const [syllabusList, setSyllabusList] = useState<any[]>([]);
 
   useEffect(() => {
     if (roomData.curricular?.id) {
@@ -175,30 +163,6 @@ const UnitPlanner = ({
               item.startDate = startDate;
               item.estEndDate = estEndDate;
 
-              // item.startDate = calculateAvailableStartDate(
-              //   moment(lastOccupiedDate),
-              //   7,
-              //   item.lesson.duration,
-              //   scheduleDates
-              // );
-              // item.estEndDate = moment(item.startDate).add(
-              //   Math.ceil(count - 1),
-              //   'day'
-              // );
-              // const datesBetweenSchedules = scheduleDates.filter(
-              //   (ele) =>
-              //     new Date(new Date(ele).toDateString()).getTime() >=
-              //       new Date(item.startDate).getTime() &&
-              //     new Date(new Date(ele).toDateString()).getTime() <=
-              //       new Date(item.estEndDate).getTime()
-              // );
-
-              // if (datesBetweenSchedules.length) {
-              //   item.estEndDate = moment(item.estEndDate).add(
-              //     datesBetweenSchedules.length,
-              //     'day'
-              //   );
-              // }
               lastOccupiedDate = Number.isInteger(count)
                 ? moment(item.estEndDate).add(
                     frequencyMapping[roomData.frequency].step,
@@ -211,23 +175,18 @@ const UnitPlanner = ({
         }
       }))
     );
-    // saveRoomDetails();
+
     setLogsChanged(false);
   };
 
-  const validateAllRequiredFields = (ifAllGood: () => void) => {};
+  const validateAllRequiredFields = (_: () => void) => {
+    // do something
+  };
 
   return (
     <div className="py-8">
       <div className="flex my-4">
         <h3 className="text-xl leading-6 font-bold text-gray-900">Schedule</h3>
-        {/* <div className="w-68">
-          <Buttons
-            btnClass="py-3 text-sm"
-            label={'Calculate Schedule'}
-            onClick={calculateSchedule}
-          />
-        </div> */}
       </div>
       <div className="my-8">
         {loading ? (
@@ -255,18 +214,6 @@ const UnitPlanner = ({
                         : '-'}
                     </div>
                   </div>
-                  {/* <div className="inline-flex">
-                <span className="w-30 inline-flex items-center">Start Date:</span>
-                <div className="px-4 py-2">
-                  {roomData.startDate}
-                  <DatePickerInput
-                    date={syllabus.startDate}
-                    placeholder={'Start Date'}
-                    minDate={new Date()}
-                    onChange={(date: Date | null) => handleDateChange(date, index)}
-                  />
-                </div>
-              </div> */}
                 </div>
                 <div>
                   <div className="w-full flex justify-between mt-4">
@@ -340,14 +287,12 @@ const UnitPlanner = ({
       </div>
       <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
-          btnClass="py-3 px-12 text-sm mr-4"
           label={'Cancel'}
           // onClick={history.goBack}
           transparent
         />
         <Buttons
           disabled={saving || !logsChanged}
-          btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
           onClick={() => {
             validateAllRequiredFields(() => {

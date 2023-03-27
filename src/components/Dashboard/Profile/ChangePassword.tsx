@@ -1,36 +1,29 @@
-import React, {useContext, useState} from 'react';
-import {useCookies} from 'react-cookie';
-import API, {graphqlOperation} from '@aws-amplify/api';
 import {Auth} from '@aws-amplify/auth';
-import {FaKey} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useState} from 'react';
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {useHistory, NavLink} from 'react-router-dom';
+import {FaKey} from 'react-icons/fa';
+import {useHistory} from 'react-router-dom';
 
-import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 import Buttons from 'atoms/Buttons';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import ModalPopUp from 'molecules/ModalPopUp';
+import ErrorNote from '../Admin/UserManagement/ErrorNote';
 
-import * as customMutations from 'customGraphql/customMutations';
-import FormInput from 'atoms/Form/FormInput';
 import {UserPageState} from 'API';
+import FormInput from 'atoms/Form/FormInput';
+import * as customMutations from 'customGraphql/customMutations';
 
-interface ChangePasswordProps {
-  updateAuthState: Function;
-}
-
-const ChangePassword = (props: ChangePasswordProps) => {
-  const {updateAuthState} = props;
+const ChangePassword = () => {
   const [oldPassToggle, setOldPassToggle] = useState(false);
   const [passToggle, setPassToggle] = useState(false);
   const [passMatchToggle, setPassMatchToggle] = useState(false);
-  const [cookies, , removeCookie] = useCookies();
+
   const history = useHistory();
 
-  const {userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
-  const {dashboardProfileDict} = useDictionary(clientKey);
+  const {userLanguage, updateAuthState, state} = useGlobalContext();
+  const {dashboardProfileDict} = useDictionary();
   const dictionary = dashboardProfileDict[userLanguage];
 
   const [warningModal, setWarningModal] = useState({
@@ -38,7 +31,11 @@ const ChangePassword = (props: ChangePasswordProps) => {
     message: dictionary['CHANGE_PASSWORD']['WARN_MSG']
   });
 
-  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{
+    show: boolean;
+    type: string;
+    message: string;
+  }>({
     show: false,
     type: '',
     message: ''
@@ -81,7 +78,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
 
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const passwordChange = await Auth.changePassword(user, oldPassword, newPassword);
+      await Auth.changePassword(user, oldPassword, newPassword);
       history.push('/dashboard/profile');
     } catch (error) {
       console.error('error signing in', error);
@@ -175,12 +172,6 @@ const ChangePassword = (props: ChangePasswordProps) => {
     });
   };
 
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
-      change();
-    }
-  };
-
   const handleSubmit = () => {
     validation();
   };
@@ -206,24 +197,15 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     onClick={() => setOldPassToggle(!oldPassToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEye />
-                      </IconContext.Provider>
+                      <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
+                      <AiOutlineEyeInvisible size="1rem" className="w-auto" />
                     )}
                   </div>
                 </div>
                 <div className="absolute left-1 w-auto mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
-                      <FaKey />
-                    </IconContext.Provider>
+                    <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
                 <label className="hidden" htmlFor="oldPassword">
@@ -238,7 +220,6 @@ const ChangePassword = (props: ChangePasswordProps) => {
                   name="password"
                   value={input.oldPassword}
                   onChange={handleChange}
-                  onKeyDown={handleEnter}
                 />
               </div>
             </div>
@@ -250,24 +231,15 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     onClick={() => setPassToggle(!passToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEye />
-                      </IconContext.Provider>
+                      <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
+                      <AiOutlineEyeInvisible size="1rem" className="w-auto" />
                     )}
                   </div>
                 </div>
                 <div className="w-auto absolute left-1 mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
-                      <FaKey />
-                    </IconContext.Provider>
+                    <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
                 <label className="hidden" htmlFor="password">
@@ -293,24 +265,15 @@ const ChangePassword = (props: ChangePasswordProps) => {
                     onClick={() => setPassMatchToggle(!passMatchToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passMatchToggle ? (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEye />
-                      </IconContext.Provider>
+                      <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
-                      <IconContext.Provider
-                        value={{size: '1rem', style: {width: 'auto'}}}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
+                      <AiOutlineEyeInvisible size="1rem" className="w-auto" />
                     )}
                   </div>
                 </div>
                 <div className="w-auto absolute left-1">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{size: '0.8rem', style: {width: 'auto'}}}>
-                      <FaKey />
-                    </IconContext.Provider>
+                    <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
                 <label className="hidden" htmlFor="match">
@@ -334,14 +297,14 @@ const ChangePassword = (props: ChangePasswordProps) => {
             <p className={`hover:text-blue-500 cursor-pointer`} onClick={toggleModal}>
               {dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}
             </p>
-            {warningModal.show && (
-              <ModalPopUp
-                closeAction={toggleModal}
-                saveAction={gotoPasswordReset}
-                saveLabel={dictionary['CHANGE_PASSWORD']['CONTINUE_BTN']}
-                message={warningModal.message}
-              />
-            )}
+
+            <ModalPopUp
+              open={warningModal.show}
+              closeAction={toggleModal}
+              saveAction={gotoPasswordReset}
+              saveLabel={dictionary['CHANGE_PASSWORD']['CONTINUE_BTN']}
+              message={warningModal.message}
+            />
           </div>
         </div>
       </div>
@@ -353,16 +316,14 @@ const ChangePassword = (props: ChangePasswordProps) => {
         ) : null}
       </div>
 
-      <div className="px-4 pt-4 w-full flex justify-center">
+      <div className="px-4 pt-4 w-full gap-4 flex justify-center">
         <Buttons
-          btnClass="py-2 w-auto md:w-2.5/10 px-4 text-xs mr-2"
           label={dictionary['CHANGE_PASSWORD']['CANCEL']}
           onClick={() => history.goBack()}
           transparent
         />
         <Buttons
           dataCy="change-password-save-button"
-          btnClass="py-2 w-auto px-4 text-xs ml-2"
           label={dictionary['CHANGE_PASSWORD']['SAVE']}
           onClick={handleSubmit}
         />

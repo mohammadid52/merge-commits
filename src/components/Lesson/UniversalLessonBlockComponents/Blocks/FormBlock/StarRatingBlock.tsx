@@ -1,23 +1,23 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {FormControlProps, FormLabel} from '../FormBlock';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useStudentDataValue from 'customHooks/studentDataValue';
+import React, {useEffect, useMemo, useState} from 'react';
+import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {FormControlProps, FormLabel} from '../FormBlock';
 
 const StarRatingBlock = ({
   id,
-  inputID,
-  label,
-  numbered,
-  index,
-  required
+  inputID = '',
+  label = '',
+  numbered = false,
+  index = '',
+  required = false
 }: FormControlProps) => {
   const [whichStarHovered, setWhichStarHovered] = useState<number>(0);
   const {
     state: {lessonPage: {theme: lessonPageTheme = ''} = {}},
     lessonState
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 
@@ -54,7 +54,10 @@ const StarRatingBlock = ({
     }
   };
 
-  const iconColor = lessonPageTheme === 'light' ? 'gray' : '#ffffff';
+  const iconValue = useMemo(
+    () => ({color: lessonPageTheme === 'light' ? 'gray' : '#ffffff'}),
+    [lessonPageTheme]
+  );
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
       <FormLabel label={label} required={required} numbered={numbered} index={index} />
@@ -64,7 +67,7 @@ const StarRatingBlock = ({
         onPointerLeave={handleStarLeave}
         onClick={handleStarRate}>
         <div id={`1`} className={`w-auto`}>
-          <IconContext.Provider value={{color: iconColor}}>
+          <IconContext.Provider value={iconValue}>
             {whichStarHovered >= 1 || (isRated && rating >= 1) ? (
               <AiFillStar size={24} id="1" style={{pointerEvents: 'none'}} />
             ) : (
@@ -74,7 +77,7 @@ const StarRatingBlock = ({
         </div>
 
         <div id={`2`} className={`w-auto`}>
-          <IconContext.Provider value={{color: iconColor}}>
+          <IconContext.Provider value={iconValue}>
             {whichStarHovered >= 2 || (isRated && rating >= 2) ? (
               <AiFillStar size={24} id="2" style={{pointerEvents: 'none'}} />
             ) : (
@@ -84,7 +87,7 @@ const StarRatingBlock = ({
         </div>
 
         <div id={`3`} className={`w-auto`}>
-          <IconContext.Provider value={{color: iconColor}}>
+          <IconContext.Provider value={iconValue}>
             {whichStarHovered >= 3 || (isRated && rating >= 3) ? (
               <AiFillStar size={24} id="3" style={{pointerEvents: 'none'}} />
             ) : (
@@ -94,7 +97,7 @@ const StarRatingBlock = ({
         </div>
 
         <div id={`4`} className={`w-auto`}>
-          <IconContext.Provider value={{color: iconColor}}>
+          <IconContext.Provider value={iconValue}>
             {whichStarHovered >= 4 || (isRated && rating >= 4) ? (
               <AiFillStar size={24} id="4" style={{pointerEvents: 'none'}} />
             ) : (
@@ -104,7 +107,7 @@ const StarRatingBlock = ({
         </div>
 
         <div id={`5`} className={`w-auto`}>
-          <IconContext.Provider value={{color: iconColor}}>
+          <IconContext.Provider value={iconValue}>
             {whichStarHovered >= 5 || (isRated && rating >= 5) ? (
               <AiFillStar size={24} id="5" style={{pointerEvents: 'none'}} />
             ) : (

@@ -1,10 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
-import {getDictionaries, logError} from '@graphql/functions';
+import {logError} from '@graphql/functions';
 import {RoomStatus, UpdateUniversalLessonInput} from 'API';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
@@ -12,8 +12,9 @@ import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
 import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
+import {uniqBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
 import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
@@ -37,7 +38,7 @@ export interface InitialData {
   status: RoomStatus;
   notes?: string;
   notesHtml?: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {label: string; value: string}[];
   institution?: InputValueObject;
   language: string[];
   imageCaption?: string;
@@ -49,7 +50,7 @@ export interface InitialData {
 }
 export interface InputValueObject {
   id: string;
-  name: string;
+  label: string;
   value: string;
 }
 interface LessonBuilderProps {
@@ -65,17 +66,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
   const lessonIdFromUrl = (useParams() as any).lessonId;
-  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
-    GlobalContext
-  );
+  const {userLanguage, scanLessonAndFindComplicatedWord} = useGlobalContext();
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
+  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary();
 
   const initialData = {
     name: '',
     status: RoomStatus.ACTIVE,
     id: '',
-    type: {id: '', name: '', value: ''},
+    type: {id: '', label: 'Lesson', value: ''},
     duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',
@@ -84,14 +83,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     objectiveHtml: '<p></p>',
     notes: '',
     notesHtml: '<p></p>',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
-    institution: {id: instId, name: '', value: instId},
+    languages: [{label: 'English', value: 'EN'}],
+    institution: {id: instId, label: '', value: instId},
     language: [''],
     imageUrl: '',
     imageCaption: '',
     studentSummary: '',
     lessonPlan: [{}],
-    targetAudience: ''
+    targetAudience: 'All'
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -113,27 +112,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true}
   ];
 
-  const [designersList, setDesignersList] = useState([]);
+  const [designersList, setDesignersList] = useState<any[]>([]);
   const [designerListLoading, setDesignersListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [curriculumLoading, setCurriculumLoading] = useState(false);
+
   const [formData, setFormData] = useState<InitialData>(initialData);
-  const [measurementList, setMeasurementList] = useState([]);
-  const [selectedMeasurements, setSelectedMeasurements] = useState([]);
+
+  const [selectedMeasurements, setSelectedMeasurements] = useState<any[]>([]);
   const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
     lessonPlans: null,
     lessonInstructions: instructionInitialState
   });
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [curriculumList, setCurriculumList] = useState([]);
+  const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
+  const [curriculumList, setCurriculumList] = useState<any[]>([]);
 
-  const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [addedSyllabus, setAddedSyllabus] = useState([]);
+  const [addedSyllabus, setAddedSyllabus] = useState<any[]>([]);
   const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
-  const [institutionData, setInstitutionData] = useState<any>(null);
+
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -154,13 +152,25 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           filter: {institutionID: {eq: institutionID}}
         })
       );
-      const listStaffs = staffList.data.listStaff;
-      const updatedList = listStaffs?.items.map((item: any) => ({
-        id: item?.id,
-        name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`
-      }));
-      setDesignersList(updatedList);
+      const listStaffs = staffList.data.listStaff?.items || [];
+      const updatedList = listStaffs
+        ?.map((item: any) => {
+          if (Boolean(item?.staffMember)) {
+            return {
+              id: item?.id,
+              label: `${item?.staffMember?.firstName || ''} ${
+                item?.staffMember.lastName || ''
+              }`,
+              value: `${item?.staffMember?.firstName || ''} ${
+                item?.staffMember.lastName || ''
+              }`
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
+
+      setDesignersList(uniqBy(updatedList, 'label'));
       setDesignersListLoading(false);
     } catch (error) {
       setDesignersListLoading(false);
@@ -182,11 +192,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
-  const [selDesigners, setSelDesigners] = useState<any>([]);
-  const [showModal, setShowModal] = useState(false);
+
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
-  const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
-  const [institutionCollection, setInstitutionCollection] = useState([]);
 
   const getInstitutionByID = async (id: string) => {
     try {
@@ -217,19 +224,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       );
       const savedData = result.data.getUniversalLesson;
 
-      const dictionaries = await getDictionaries();
-
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        savedData.lessonPlan,
-        dictionaries
-      );
-      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      setUniversalLessonDetails({
+        ...savedData,
+        lessonPlan: updatedLessonPlan
+      });
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
 
-        setInstitutionData(institution);
-        setSelectedMeasurements(getRubricsData(savedData?.rubrics || []));
+        setSelectedMeasurements(getRubricsData?.(savedData?.rubrics || []));
         setFormData({
           ...formData,
           ...savedData,
@@ -327,19 +331,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         questionID: quesId,
         required: required ? required : false
       };
-      const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.createCheckpointQuestions, {
+          input: input
+        })
       );
-    } catch {
-      // setValidation({
-      //   title: '',
-      //   label: '',
-      //   estTime: '',
-      //   message: AddNewCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-      //   isError: true,
-      // });
+    } catch (error) {
+      console.error(error);
     }
   };
+
+  const selDesigners: any[] = [];
 
   const saveNewCheckPoint = async () => {
     setSavingUnsavedCP(true);
@@ -386,7 +388,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 stage: 'checkpoint'
               }
             ];
-        let [lessonCheckpoint, lesson]: any = await Promise.all([
+        let [_, lesson]: any = await Promise.all([
           await API.graphql(
             graphqlOperation(customMutations.createLessonCheckpoint, {
               input: lessonCheckpointInput
@@ -401,24 +403,25 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             })
           )
         ]);
-        let questions = Promise.all(
+        Promise.all(
           checkpQuestions.map(async (item: any) =>
             addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
           )
         );
         let checkpQuestionsIds = checkpQuestions.map((item: any) => item.id);
-        let seqItem: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.createCSequences, {
-            input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds}
+            input: {
+              id: `Ch_Ques_${newCheckpoint.id}`,
+              sequence: checkpQuestionsIds
+            }
           })
         );
 
         const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
         updateLessonPlan(newLessonPlans);
-      } else {
       }
       onCheckpointModalClose(false);
-      setShowModal(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -444,16 +447,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         show: false,
         message: ''
       });
-      setShowModal(false);
+
       setUnsavedChanges(false);
       setUnsavedCheckPData({});
       setCheckpQuestions([]);
     }
   };
 
-  const fetchCurriculum = async (assignedSyllabus: any = addedSyllabus) => {
+  const fetchCurriculum = async (_: any = addedSyllabus) => {
     try {
-      setCurriculumLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculaForLesson, {
           filter: {
@@ -465,52 +467,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       const curriculums = list?.data?.listCurricula?.items || [];
 
       setCurriculumList(curriculums);
-
-      const institutionRooms: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionsForCurricula)
-      );
-
-      const curriculumIds: any[] = [];
-
-      institutionRooms?.data?.listInstitutions?.items.forEach((item: any) => {
-        item?.rooms?.items?.forEach((item2: any) => {
-          item2?.curricula?.items?.forEach((item3: any) => {
-            curriculumIds.push({
-              teacher: item2?.teacher,
-              institutionId: item?.id,
-              institutionName: item?.name,
-              curriculumId: item3?.curriculum?.id,
-              curriculumName: item3?.curriculum?.name,
-              roomName: item2.name,
-              roomId: item2.id
-            });
-          });
-        });
-      });
-
-      setInstitutionCollection(curriculumIds);
-
-      // let selectedCurriculums: any = [];
-
-      // curriculums.forEach((curriculum: any) => {
-      //   const addedSyllabusIds = assignedSyllabus.map((item: any) => item.syllabusID);
-      //   const assignedSyllabi = curriculum.universalSyllabus?.items.find(
-      //     (syllabus: any) => addedSyllabusIds.includes(syllabus.unitId)
-      //   );
-      //   const isCourseAdded = Boolean(assignedSyllabi);
-      //   if (isCourseAdded) {
-      //     selectedCurriculums.push({
-      //       ...curriculum,
-      //       assignedSyllabi,
-      //       // : assignedSyllabi.map((syllabus: any) => syllabus.name),
-      //       assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId)
-      //     });
-      //   }
-      // });
-      // setSelectedCurriculumList(selectedCurriculums);
-      setCurriculumLoading(false);
     } catch (error) {
-      setCurriculumLoading(false);
+      console.error(error);
     }
   };
 
@@ -533,14 +491,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   };
 
   const {authId, email} = useAuth();
-  const updateMeasurementList = async (rubrics: any[] | null) => {
+
+  const updateMeasurementList = async (rubrics: any[]) => {
     try {
       setUpdating(true);
-
-      // setServerMessage({
-      //   isError: false,
-      //   message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
-      // });
 
       setUnsavedChanges(false);
       setUpdating(false);
@@ -552,7 +506,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       };
 
       await API.graphql(
-        graphqlOperation(customMutations.updateUniversalLesson, {input: input})
+        graphqlOperation(customMutations.updateUniversalLesson, {
+          input: input
+        })
       );
     } catch (error) {
       logError(error, {authId, email}, 'LessonBuilder @updateMeasurementList');
@@ -583,7 +539,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             selectedDesigners={selectedDesigners}
             setSelectedDesigners={setSelectedDesigners}
             postLessonCreation={postLessonCreation}
-            allMeasurement={measurementList}
+            allMeasurement={[]}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
             fetchStaffByInstitution={fetchStaffByInstitution}
@@ -602,8 +558,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         return (
           <UnitList
             curricular={curriculumList}
-            instId={formData?.institution.id}
-            instName={formData?.institution.name}
+            instId={formData?.institution?.id}
+            instName={formData?.institution?.label}
             addedSyllabus={addedSyllabus}
             isFromLesson
             setAddedSyllabus={setAddedSyllabus}
@@ -613,7 +569,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         return (
           <LearningEvidence
             fetchLessonRubrics={fetchLessonRubrics}
-            institutionId={formData?.institution?.id}
+            institutionId={formData?.institution?.id || ''}
             lessonId={lessonId}
             selectedMeasurements={selectedMeasurements}
             setSelectedMeasurements={setSelectedMeasurements}
@@ -623,6 +579,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             updateMeasurementList={updateMeasurementList}
           />
         );
+
+      default:
+        return null;
     }
   };
 
@@ -652,36 +611,21 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   };
 
   const fetchLessonRubrics = async () => {
-    try {
-      // const result: any = await API.graphql(
-      //   graphqlOperation(customQueries.listLessonRubricss, {
-      //     filter: {
-      //       lessonID: {eq: lessonId},
-      //     },
-      //   })
-      // );
-      // const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
-      //   ...rubric,
-      //   checked: true,
-      // }));
-      // setSelectedMeasurements(rubricList);
-    } catch (error) {}
+    // do something
   };
 
   const postLessonCreation = (lessonId: string, action?: string) => {
     const currentSteps = [...lessonBuilderSteps];
-    const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
+    const updatedState = currentSteps.map((item) => ({
+      ...item,
+      isDisabled: false
+    }));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
     if (action === 'add') {
       const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=activities`;
       history.push(redirectionUrl);
     }
-    // if (formData.type?.id === '1') {
-    //   setActiveStep('Preview Details');
-    // } else {
-    //   setActiveStep('Instructions');
-    // }
   };
 
   const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
@@ -706,27 +650,21 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {
       title: LessonBuilderDict[userLanguage]['OVEVIEW_TITLE'],
       description: LessonBuilderDict[userLanguage]['OVERVIEW_DESCRIPTION'],
-      stepValue: 'overview',
-      icon: <IoCardSharp />,
-      isComplete: true
+      stepValue: 'overview'
     },
     {
       title: LessonBuilderDict[userLanguage]['ACTIVITY_TITLE'],
       description: LessonBuilderDict[userLanguage]['ACTIVITY_DESCRIPTION'],
       stepValue: 'activities',
-      icon: <FaQuestionCircle />,
-      disabled: !Boolean(lessonId),
-      isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['ACTIVITY_TOOLTIP']
+
+      disabled: !Boolean(lessonId)
     },
     {
       title: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TITLE'],
       description: LessonBuilderDict[userLanguage]['UNIT_MANAGER_DESCRIPTION'],
       stepValue: 'courses',
-      icon: <FaQuestionCircle />,
-      disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
-      isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP']
+
+      disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length)
     },
     {
       title:
@@ -735,10 +673,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         ],
       description: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_DESCRIPTION'],
       stepValue: 'learning-evidence',
-      icon: <FaQuestionCircle />,
-      disabled: !(Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length)),
-      isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP']
+
+      disabled: !(Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length))
     }
   ];
 
@@ -754,7 +690,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           handleTabSwitch={handleTabSwitch}
         />
 
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
+        <div className="grid mt-4 grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
           {loading ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
@@ -770,46 +706,46 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           )}
         </div>
       </div>
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={discardChanges}
-          saveAction={saveBeforeLeave}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={updating}
-        />
-      )}
-      {warnModal2.show && (
-        <ModalPopUp
-          noButton="No"
-          noButtonAction={() => onCheckpointModalClose(false)}
-          closeAction={onCheckpointModalClose}
-          saveAction={saveNewCheckPoint}
-          saveLabel="Yes"
-          cancelLabel="Cancel"
-          message={warnModal2.message}
-          loading={savingUnsavedCP}
-          saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
-          noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
-          cancelTooltip={'Continue Editing'}
-        />
-      )}
-      {warnModal2.show && warnModal2.message.includes('required fields') && (
-        <ModalPopUp
-          closeAction={() => {
-            setActiveStep(warnModal2.stepOnHold);
 
-            setWarnModal2({show: false, message: '', stepOnHold: ''});
-            setIndividualFieldEmpty(false);
-          }}
-          saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
-          saveLabel="Sure"
-          saveTooltip="Fill up required fields"
-          cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
-          cancelLabel="Discard"
-          message={warnModal2.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={discardChanges}
+        saveAction={saveBeforeLeave}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={updating}
+      />
+
+      <ModalPopUp
+        open={warnModal2.show}
+        noButton="No"
+        noButtonAction={() => onCheckpointModalClose(false)}
+        closeAction={onCheckpointModalClose}
+        saveAction={saveNewCheckPoint}
+        saveLabel="Yes"
+        cancelLabel="Cancel"
+        message={warnModal2.message}
+        loading={savingUnsavedCP}
+        saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
+        noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
+        cancelTooltip={'Continue Editing'}
+      />
+
+      <ModalPopUp
+        open={warnModal2.show && warnModal2.message.includes('required fields')}
+        closeAction={() => {
+          setActiveStep(warnModal2.stepOnHold);
+
+          setWarnModal2({show: false, message: '', stepOnHold: ''});
+        }}
+        saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
+        saveLabel="Sure"
+        saveTooltip="Fill up required fields"
+        cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
+        cancelLabel="Discard"
+        message={warnModal2.message}
+      />
+
       {/* </PageWrapper> */}
     </div>
   );

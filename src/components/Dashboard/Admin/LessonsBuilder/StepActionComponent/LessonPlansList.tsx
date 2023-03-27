@@ -1,15 +1,17 @@
-import React, {Fragment, useContext} from 'react';
-import {useHistory} from 'react-router';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import PageWrapper from 'atoms/PageWrapper';
 import Buttons from 'atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
 
+import {Fragment} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {useHistory} from 'react-router';
+
+import useAuth from '@customHooks/useAuth';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import Loader from 'atoms/Loader';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import useDictionary from 'customHooks/dictionary';
-import Loader from 'atoms/Loader';
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -28,15 +30,15 @@ const LessonPlansList = ({
   const history = useHistory();
   const {
     clientKey,
-    state: {
-      user: {isSuperAdmin}
-    },
+
     theme,
     userLanguage
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  const {BUTTONS, LessonBuilderDict} = useDictionary();
   const {setPreviewMode, updateMovableList} = useULBContext();
+
+  const {isSuperAdmin} = useAuth();
 
   const pages = universalLessonDetails.lessonPlan;
 
@@ -95,7 +97,6 @@ const LessonPlansList = ({
             <Fragment>
               <div className="flex justify-end w-full m-auto ">
                 <Buttons
-                  btnClass="mx-4"
                   label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                   onClick={addNewLessonPlan}
                 />
@@ -148,7 +149,6 @@ const LessonPlansList = ({
                             key={`${page.id}`}>
                             {(provided) => (
                               <div
-                                key={index}
                                 className="flex justify-between bg-white w-full border-b-0 border-gray-200"
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
@@ -200,7 +200,6 @@ const LessonPlansList = ({
               </div>
               <div className="flex justify-center my-4">
                 <Buttons
-                  btnClass="mx-4"
                   label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                   onClick={addNewLessonPlan}
                 />

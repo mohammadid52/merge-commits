@@ -22,21 +22,6 @@ export interface UniversalLesson {
   darkMode?: boolean;
 }
 
-export interface UniversalLessonPlanStage {
-  enabled: boolean;
-  open: boolean;
-  active: boolean;
-  label: string;
-  displayMode: string;
-}
-
-//  USED FOR LINKING UNIVERSAL-LESSON-PAGE TO UNIVERSAL-LESSON
-interface UniversalLessonPages {
-  universalLessonID: string;
-  universalLessonPageID: string;
-}
-
-//
 export interface UniversalLessonPage {
   id: string;
   enabled?: boolean;
@@ -62,10 +47,10 @@ export interface PagePart {
 
 export interface PartContent {
   id: string;
-  type?: string;
+  type: string;
   value: PartContentSub[];
-  label?: string; // its not correct. There is no property like label in API.ts
-  class?: string;
+
+  class: string;
   [key: string]: any;
 }
 
@@ -118,7 +103,7 @@ export interface StudentExerciseData {
   shared?: boolean;
 }
 
-export interface TeacherStudentComments {
+interface TeacherStudentComments {
   commentBy: string;
   comment: string;
 }

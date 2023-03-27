@@ -1,103 +1,3 @@
-interface PatternObject {
-  [key: string]: string;
-}
-
-/**
- * Function to rearrange strings based on a pattern/separator
- * @param pattern
- * @param separator
- * @param inputPattern
- * @param outputPattern
- */
-export const formatPattern = (
-  pattern: string,
-  separator: string,
-  inputPattern: string,
-  outputPattern: string
-) => {
-  if (
-    typeof pattern === 'undefined' ||
-    typeof separator === 'undefined' ||
-    typeof inputPattern === 'undefined' ||
-    typeof outputPattern === 'undefined'
-  ) {
-    return 'param undefined...';
-  }
-
-  const patternStringObject = pattern.split(separator);
-  const originalTime = inputPattern
-    .split(separator)
-    .reduce((acc: PatternObject, val: string, i: number) => {
-      return {...acc, [`${val}`]: patternStringObject[i]};
-    }, {});
-  const outputTime = outputPattern
-    .split(separator)
-    .map((val: string, i: number) => originalTime[val]);
-
-  return outputTime.join(separator);
-};
-
-/**
- * Parses linebreak characters \n and
- * replaces them with a html break <br>
- * @param inputText
- */
-export const parseBlankLines = (inputText: string) => {
-  if (typeof inputText !== 'undefined') {
-    return inputText.replace(/(\n)+/g, '<br/>');
-  } else {
-    return 'No input text...';
-  }
-};
-
-/**
- * Returns text as lowercase
- * @param inputText
- */
-export const lc = (inputText: string): string => {
-  return inputText.toLowerCase();
-};
-
-/**
- * Function used in multiple places to
- * capitalize the first letter of a word
- * @param str
- */
-export const firstInitialFunc = (str: string) => {
-  if (typeof str !== 'string' || str === '') {
-    return 'Profile';
-  }
-  let firstInitial = str.charAt(0);
-  firstInitial = firstInitial.toUpperCase() + '.';
-  return firstInitial;
-};
-
-/**
- * Function used in multiple places
- * Unsure what it does exactly??
- * @param str
- */
-export const keywordParser = (str: string) => {
-  if (typeof str !== 'string') {
-    return null;
-  }
-  let tempWord = '';
-  let initialArray = Array.from(str);
-  let finalArray = [];
-  initialArray.forEach((letter) => {
-    if (letter !== ',') {
-      tempWord = tempWord + letter;
-    } else {
-      finalArray.push(tempWord + ',');
-      tempWord = '';
-    }
-  });
-
-  finalArray.push(tempWord);
-
-  return finalArray;
-};
-
 export const keywordCapitilizer = (str: string) => {
   let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
   return capitalizedStr;
@@ -134,20 +34,7 @@ export const initials = (firstName: string, lastName: string) => {
   return firstInitial + lastInitial;
 };
 
-export const getInitialsFromString = (str: string) => {
-  /**
-   * This will retun first two initials from string of multiple words
-   * or first two characters of single word.
-   */
-  const splitedWords = str.split(' ');
-  if (splitedWords.length > 1) {
-    return splitedWords;
-  } else {
-    return str.split('');
-  }
-};
-
-export const stringToHslColor = (str: string) => {
+export const stringToHslColor = (str: string = '') => {
   let hash = 0;
   let i;
   for (i = 0; i < str.length; i++) {
@@ -256,7 +143,7 @@ export const getClientKey = () => {
   if (hostname.indexOf('demo') >= 0) return 'demo';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
   if (hostname.indexOf('curate') >= 0) return 'curate';
-  else return 'demo';
+  else return 'iconoclast';
 };
 
 /**
@@ -283,12 +170,15 @@ export const convertArrayIntoObj = (answerArray: any[]) => {
   }, {});
 };
 
-export const getLanguageString = (language: string) => {
+export const getLanguageString = (language: string): 'English' | 'Spanish' => {
   switch (language) {
     case 'EN':
       return 'English';
     case 'ES':
       return 'Spanish';
+
+    default:
+      return 'English';
   }
 };
 
@@ -315,7 +205,7 @@ export const getTypeString = (type: string) => {
   }
 };
 
-export const getLessonType = (type: string) => {
+export const getLessonType = (type: string): string => {
   switch (type) {
     case 'lesson':
       return 'Lesson';
@@ -323,10 +213,12 @@ export const getLessonType = (type: string) => {
       return 'Survey';
     case 'assessment':
       return 'Assessment';
+    default:
+      return 'Lesson';
   }
 };
 
-export const getUserRoleString = (role: string) => {
+export const getUserRoleString = (role: string): string => {
   switch (role) {
     case 'SUP':
       return 'Super Admin';
@@ -336,15 +228,16 @@ export const getUserRoleString = (role: string) => {
       return 'Builder';
     case 'FLW':
       return 'Fellow';
-    case 'CRD':
-      return 'Coordinator';
+
     case 'TR':
       return 'Teacher';
     case 'ST':
       return 'Student';
+    default:
+      return 'Student';
   }
 };
-export const getReverseUserRoleString = (role: string) => {
+export const getReverseUserRoleString = (role: string): string => {
   switch (role) {
     case 'Super Admin':
       return 'SUP';
@@ -354,49 +247,12 @@ export const getReverseUserRoleString = (role: string) => {
       return 'BLD';
     case 'Fellow':
       return 'FLW';
-    case 'Coordinator':
-      return 'CRD';
     case 'Teacher':
       return 'TR';
     case 'Student':
       return 'ST';
-  }
-};
-/**
- * Function which returns TRUE if the current string is different
- * from the one preceding it
- * USEFUL to determine if a specific label should be shown or not
- * in a map sequence over an array
- * @param before
- * @param current
- * @param after
- */
-export const checkIfFirstNewInSequence = (
-  before: string,
-  current: string,
-  after: string
-) => {
-  const notSameAsBefore = current !== before;
-  const sameAsAfter = current === after;
-
-  if (notSameAsBefore && sameAsAfter) {
-    return true;
-  } else {
-    if (typeof before === 'undefined') {
-      return true;
-    } else if (notSameAsBefore && typeof after === 'undefined') {
-      return true;
-    } else {
-      return false;
-    }
-  }
-};
-
-export const stripStyleFromHTML = (str: string) => {
-  if (typeof str === 'string') {
-    return str.replace(/style="(.*?)"/g, 'style=""');
-  } else {
-    return str;
+    default:
+      return 'ST';
   }
 };
 
@@ -408,4 +264,25 @@ export const replaceAll = (content: string, replaceObj: any) => {
     }
   }
   return content;
+};
+
+// regex match double spaces and replace with single space
+const removeDoubleSpaces = (str: string) => {
+  if (!str) return '';
+  return str.replace(/\s{2,}/g, ' ');
+};
+
+// regex match double quotations and replace with single quotations
+const removeDoubleQuotes = (str: string) => {
+  if (!str) return '';
+  return str.replace(/\"/g, "'");
+};
+
+const pipeFn =
+  (...fns: any[]) =>
+  (arg: any) =>
+    fns.reduce((acc, fn) => fn(acc), arg);
+
+export const cleanString = (str: string) => {
+  return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
 };

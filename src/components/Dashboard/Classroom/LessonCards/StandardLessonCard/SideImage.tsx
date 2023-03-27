@@ -1,11 +1,10 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {LessonCardProps} from '@interfaces/ClassroomInterface';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3Static} from 'utilities/services';
-import {LessonCardProps} from '../../Classroom';
 
 const SideImage = (props: LessonCardProps) => {
   const {lessonProps, getImageFromS3 = true} = props;
-  const {theme} = useContext(GlobalContext);
+  const {theme} = useGlobalContext();
 
   return (
     <div

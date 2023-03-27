@@ -4,13 +4,11 @@ import React from 'react';
 const StudentName = ({
   user,
   onHover,
-  item,
-  onClick
+  item
 }: {
   item: any;
   onHover?: boolean;
   user?: any;
-  onClick: any;
 }) => {
   return (
     <div
@@ -18,8 +16,7 @@ const StudentName = ({
         onHover
           ? 'hover:theme-bg:200 px-4 py-2 hover:theme-border:400 hover:theme-text:400 '
           : ''
-      } ${user?.role !== 'BLD' ? 'cursor-pointer' : 'cursor-pointer'} `}
-      onClick={onClick}>
+      } ${user?.role !== 'BLD' ? 'cursor-pointer' : 'cursor-pointer'} `}>
       <div className="flex-shrink-0 h-10 w-10 flex items-center">
         {item.student.avatar ? (
           <img src={item.student.avatar} className="h-8 w-8 rounded-full" />

@@ -1,16 +1,15 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import React, {useContext, useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
+import {Error} from '@components/Atoms/Alerts/Info';
+import {UserPageState} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import ErrorNote from '../Admin/UserManagement/ErrorNote';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import SuccessMessage from '../Admin/UserManagement/SuccessMessage';
-import {UserPageState} from 'API';
-import {Error} from '@components/Atoms/Alerts/Info';
 
 interface ChangePasscodeProps {
   fromWhere?: string;
@@ -21,10 +20,14 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
   const [loading, setLoading] = useState<boolean>(false);
   const history = useHistory();
 
-  const {userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
-  const {dashboardProfileDict} = useDictionary(clientKey);
+  const {userLanguage, state} = useGlobalContext();
+  const {dashboardProfileDict} = useDictionary();
 
-  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{
+    show: boolean;
+    type: string;
+    message: string;
+  }>({
     show: false,
     type: '',
     message: ''
@@ -49,9 +52,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       lastPageStateUpdate: time
     };
     try {
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
-      );
+      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
 
       if (fromWhere === 'notebook') {
         setMessage({
@@ -60,7 +61,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
           message: 'Passcode changed successfully!'
         });
         setTimeout(() => {
-          handleForgotPasscode(true);
+          handleForgotPasscode?.(true);
         }, 1000);
       } else {
         history.goBack();
@@ -75,8 +76,8 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
     let password = input.oldPassword;
 
     try {
-      const user = await Auth.signIn(username, password);
-      const update = await UpdatePersonPasscode(input.newPasscode);
+      await Auth.signIn(username, password);
+      await UpdatePersonPasscode(input.newPasscode);
     } catch (error) {
       console.log('error', error);
       const errMsg = {show: true, type: 'error'};
@@ -113,6 +114,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
               message: 'The email or password you entered was not correct'
             };
           }
+
         case 'UserNotConfirmedException':
           return {
             show: true,
@@ -181,13 +183,6 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
     });
   };
 
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
-      setLoading(true);
-      AuthenticateLoginPassword();
-    }
-  };
-
   const handleSubmit = () => {
     setLoading(true);
     validation();
@@ -230,7 +225,6 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
                   className={`w-full`}
                   value={input.oldPassword}
                   onChange={handleChange}
-                  onKeyDown={handleEnter}
                 />
               </div>
             </div>
@@ -269,17 +263,19 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         ) : null}
       </div>
 
-      <div className="pt-4 w-full flex justify-center flex-col-reverse md:flex-row gap-2">
+      <div className="pt-4 w-full  flex justify-center flex-col-reverse md:flex-row gap-4">
         <Buttons
           label={dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['CANCEL']}
+          size="middle"
           onClick={
             fromWhere !== 'notebook'
               ? () => history.goBack()
-              : () => handleForgotPasscode()
+              : () => handleForgotPasscode?.()
           }
           transparent
         />
         <Buttons
+          size="middle"
           label={
             loading
               ? 'Verifying...'

@@ -1,23 +1,22 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {Fragment, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
-import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
-
 import {getImageFromS3} from 'utilities/services';
-import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
 
+import {PlusCircleOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
 import Filters, {SortType} from '@components/Atoms/Filters';
+import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StudentName from '@components/MicroComponents/StudentName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
-import {PersonStatus} from 'API';
+import {Divider} from 'antd';
+import {PersonStatus, Role} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
@@ -42,37 +41,43 @@ interface EditClassProps {
 
 const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProps) => {
   const history = useHistory();
-  const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
-  const defaultNewMember = {
+  const classData = {
     id: '',
     name: '',
+    institute: {id: '', name: '', value: ''}
+  };
+  const defaultNewMember = {
+    id: '',
+    label: '',
     value: '',
     avatar: '',
     group: {id: '', name: ''}
   };
 
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  const [classData, setClassData] = useState(initialData);
-  const [messages, setMessages] = useState({show: false, message: '', isError: false});
-  const [addMessage, setAddMessage] = useState({message: '', isError: false});
-  const [classStudents, setClassStudents] = useState([]);
-  const [allStudents, setAllStudents] = useState([]);
 
-  const [searching, setSearching] = useState<boolean>(false);
+  const [messages, setMessages] = useState({
+    show: false,
+    message: '',
+    isError: false
+  });
+  const [addMessage, setAddMessage] = useState({message: '', isError: false});
+  const [classStudents, setClassStudents] = useState<any[]>([]);
+  const [allStudents, setAllStudents] = useState<any[]>([]);
+
   const [userModalOpen, setUserModalFormOpen] = useState<boolean>(false);
-  const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
-  const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
-  const [groups, setGroups] = useState([]);
-  const [saving, setSaving] = useState<boolean>(false);
 
-  const [deleting, setDeleting] = useState(false);
+  const [_2, setGroups] = useState<any[]>([]);
+  const [_3, setSaving] = useState<boolean>(false);
+
+  const [deleting] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [adding, setAdding] = useState(false);
+  const [_4, setAdding] = useState(false);
 
-  const [warnModal, setWarnModal] = useState({
+  const [warnModal] = useState({
     show: false,
     profile: false,
     profileId: '',
@@ -105,8 +110,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const getAllClassStudentByClassId = async (
     filter: any,
-    nextToken: string,
-    outArray: any[]
+    nextToken?: string,
+    outArray = []
   ): Promise<any> => {
     let combined: any[];
     try {
@@ -131,23 +136,19 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
-  const recursiveFetchAllStudents = async (
-    neqList: any[],
-    outArray: any[],
-    nextToken: string | null
-  ) => {
+  const recursiveFetchAllStudents = async (outArray: any[], nextToken: string | null) => {
     try {
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
           limit: 500,
           filter: {
-            role: {eq: 'ST'},
+            role: {eq: Role.ST},
             or: [
               {status: {eq: PersonStatus.ACTIVE}},
               {status: {eq: PersonStatus.TRAINING}}
-            ],
-            ...createFilterToFetchAllItemsExcept(neqList, 'id')
+            ]
+            // ...createFilterToFetchAllItemsExcept(neqList, 'id')
           },
           nextToken
         })
@@ -160,10 +161,12 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       return combined;
     } catch (error) {
       console.error(error);
+      return null;
     }
   };
 
   const fetchClassData = async (classId: string) => {
+    setClassStudentsLoading(true);
     try {
       const classFilter = {
         filter: {
@@ -175,36 +178,35 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
       const result = await getAllClassStudentByClassId(classFilter, undefined, []);
 
-      const selectedStudentsIds: any = [];
       const selectedStudents = result?.map((stu: any) => {
-        selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
           group: {name: stu.group, id: ''},
           status: stu.status,
           createAt: stu.createdAt,
           studentAuthID: stu.studentAuthID,
-          name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
+          name: `${stu?.student?.firstName || ''} ${stu?.student?.lastName || ''}`,
           student: {
             ...stu.student,
-            email: stu.studentEmail,
-            name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
-            avatar: stu.student.image ? getImageFromS3(stu.student.image) : ''
+            email: stu?.studentEmail,
+            name: `${stu?.student?.firstName || ''} ${stu?.student?.lastName || ''}`,
+            avatar: stu?.student?.image ? getImageFromS3(stu?.student?.image) : ''
           }
         };
       });
 
-      let students: any = await recursiveFetchAllStudents(selectedStudentsIds, [], null);
-      students = students.map((item: any, i: any) => ({
-        id: item.id,
-        name: `${item.firstName || ''} ${item.lastName || ''}`,
-        value: `${item.firstName || ''} ${item.lastName || ''}`,
-        avatar: item.image ? getImageFromS3(item.image) : '',
-        status: item.status || 'Inactive',
-        email: item.email || '',
-        authId: item.authId || '',
-        firstName: item.firstName || '',
-        lastName: item.lastName || ''
+      let students: any = await recursiveFetchAllStudents([], null);
+
+      students = students.map((item: any) => ({
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item?.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item?.lastName || ''}`,
+        avatar: item?.image ? getImageFromS3(item?.image) : '',
+        status: item?.status || 'Inactive',
+        email: item?.email || '',
+        authId: item?.authId || '',
+        firstName: item?.firstName || '',
+        lastName: item?.lastName || ''
       }));
       await getClassRoomGroups(roomData.id || room.id);
       setClassStudents(sortStudents(selectedStudents));
@@ -218,37 +220,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         isError: true
       });
     } finally {
+      setClassStudentsLoading(false);
       setLoading(false);
     }
-  };
-
-  const fetchStudentList = async (searchQuery: string) => {
-    // filter allStudents by searchQuery
-
-    //"fb4788ad-86fc-4693-b41b-71bad6378980"
-    //"f4c48396-b0ee-41b3-b067-2ebce47c49c7"
-    let _allStudents = allStudents.filter((d) => {
-      return !classStudents.find((e) => e.student.authId === d.authId);
-    });
-    console.log(
-      _allStudents.filter((d: {firstName: string}) => d.firstName.startsWith('J'))
-    );
-
-    //"f0de27e9-3a7f-4fc4-88c9-b52e0fcdc9fe"
-    const filteredStudents = _allStudents.filter((student: any) => {
-      const {firstName, lastName, name} = student;
-
-      const searchValue = searchQuery.toLowerCase();
-
-      return (
-        firstName?.toLowerCase().includes(searchValue) ||
-        lastName?.toLowerCase().includes(searchValue) ||
-        name?.toLowerCase().includes(searchValue)
-      );
-    });
-
-    setFilteredStudents(sortStudents(filteredStudents));
-    setSearching(false);
   };
 
   const sortStudents = (studentList: any) => {
@@ -258,7 +232,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   const room = getLocalStorageData('room_info');
-  const withbackupClassId = classId || room.classID;
+  const withbackupClassId = classId;
+
+  const [classStudentsLoading, setClassStudentsLoading] = useState(false);
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
@@ -279,16 +255,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     } catch (error) {}
   };
 
-  const clearFilteredStudents = () => {
-    setFilteredStudents([]);
-  };
-
-  const onStudentSelect = (str: string, name: string, id: string, avatar: string) => {
+  const onStudentSelect = (_: string, option: any) => {
     setNewMember({
-      id: id,
-      name: name,
-      value: str,
-      avatar: avatar,
+      ...option,
       group: {id: '', name: ''}
     });
     if (addMessage.message) {
@@ -309,7 +278,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       await saveClassStudent(id);
       setNewMember(defaultNewMember);
     }
-    setFilteredStudents([]);
   };
 
   const {setNotification} = useNotifications();
@@ -348,15 +316,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         group: newStudent.group,
         status: newStudent.status,
 
-        student: {...selected, onDemand: Boolean(newStudent?.student?.onDemand)}
+        student: {
+          ...selected,
+          onDemand: Boolean(newStudent?.student?.onDemand)
+        }
       };
 
       classStudents.push(updatedStudent);
 
       setClassStudents([...classStudents]);
-      setAllStudents((prevStudents) =>
-        prevStudents.filter((student) => student.id !== newMember.id)
-      );
 
       setAdding(false);
 
@@ -367,55 +335,16 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       });
     } catch (err) {
       console.error('saveClassStudent', err);
-      setNotification({title: `Something went wrong`, type: 'error', show: true});
+      setNotification({
+        title: `Something went wrong`,
+        type: 'error',
+        show: true
+      });
       setAddMessage({
         message: dictionary.messages.errorstudentadd,
         isError: true
       });
     }
-  };
-
-  const onDelete = (id: any) => {
-    const onDrop = async () => {
-      setDeleting(true);
-      await API.graphql(
-        graphqlOperation(customMutations.deleteClassStudent, {
-          input: {id}
-        })
-      );
-      const deletedStudentData = classStudents.find((item) => item.id === id);
-      setAllStudents((prevStudent) => [
-        ...prevStudent,
-        {
-          id: deletedStudentData.id,
-          name: `${deletedStudentData.student?.firstName || ''} ${
-            deletedStudentData.student?.lastName || ''
-          }`,
-          value: `${deletedStudentData.student?.firstName || ''} ${
-            deletedStudentData.student?.lastName || ''
-          }`,
-          avatar: deletedStudentData.student?.image
-            ? getImageFromS3(deletedStudentData.student?.image)
-            : '',
-          status: deletedStudentData.status || 'Inactive',
-          email: deletedStudentData.student?.email || '',
-          authId: deletedStudentData.studentAuthID || ''
-        }
-      ]);
-      setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
-      closeDeleteModal();
-      setDeleting(false);
-      setNotification({
-        title: `Student removed from classroom - ${deletedStudentData.student?.email}`,
-        type: 'success',
-        show: true
-      });
-    };
-    setWarnModal2({
-      show: true,
-      message: `Are you sure you want to remove this student from class?`,
-      action: onDrop
-    });
   };
 
   useEffect(() => {
@@ -429,7 +358,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   }, [withbackupClassId]);
 
-  const validateForm = async () => {
+  const validateForm = () => {
     if (classData.name.trim() === '') {
       setMessages({
         show: true,
@@ -460,7 +389,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           institutionID: classData.institute.id
         };
         await API.graphql(graphqlOperation(mutations.updateClass, {input: input}));
-        toggleUpdateState();
+        toggleUpdateState?.();
         setMessages({
           show: true,
           message: dictionary.messages.classupdate,
@@ -483,7 +412,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     fetchClassData(withbackupClassId);
   };
 
-  const DiscardChanges = () => {
+  const discardChanges = () => {
     if (warnModal.goBack) {
       history.goBack();
     } else if (warnModal.profile) {
@@ -505,7 +434,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     setWarnModal2({...warnModal2, show: false});
   };
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
   const [filteredList, setFilteredList] = useState([...classStudents]);
 
   const {setSearchInput, searchInput} = useSearch(classStudents, ['name']);
@@ -530,93 +459,100 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const dataList = map(sortByName(addName(finalList)), (item: any, index: number) => ({
     no: index + 1,
-    participantName: (
-      <StudentName
-        item={item}
-        user={user}
-        onClick={() => {
-          user.role !== 'BLD' && setStudentProfileID(item.student.id);
-          user.role !== 'BLD' && setUserModalFormOpen(true);
-        }}
-      />
-    ),
+    onClick: () => {
+      user.role !== 'BLD' && setStudentProfileID(item.student.id);
+      user.role !== 'BLD' && setUserModalFormOpen(true);
+    },
+    participantName: <StudentName item={item} user={user} />,
 
     status: <Status useDefault status={item?.student?.status} />,
     location: <UserLookupLocation item={item} idx={index} />,
     type: <LocationBadge onDemand={item?.student?.onDemand} />,
-    dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--',
-    actions: (
-      <CommonActionsBtns
-        button1Action={() => {
-          user.role !== 'BLD' && setStudentProfileID(item.student.id);
-          user.role !== 'BLD' && setUserModalFormOpen(true);
-          user.role !== 'BLD' && setStudentIdToEdit(item.id);
-        }}
-        button2Action={() => onDelete(item.id)}
-      />
-    )
+    dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--'
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Action={() => {
+    //       user.role !== 'BLD' && setStudentProfileID(item.student.id);
+    //       user.role !== 'BLD' && setUserModalFormOpen(true);
+    //       user.role !== 'BLD' && setStudentIdToEdit(item.id);
+    //     }}
+    //     button2Action={() => onDelete(item.id)}
+    //   />
+    // )
   }));
 
   const dict = dictionary.TABLE;
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       dict['SNO'],
       dict['NAME'],
       dict['TYPE'],
       dict['STATUS'],
       dict['LOCATION'],
-      dict['DATE'],
-      dict['ACTIONS']
+      dict['DATE']
+      // dict['ACTIONS']
     ],
     dataList,
     config: {
-      dark: false,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        loading: loading,
-        emptyText: dictionary.NOSTUDENT,
-        customWidth: {
-          no: 'w-12',
-          participantName: 'w-96',
-          status: 'w-40',
-          type: 'w-40',
-          location: 'w-40',
-          actions: 'w0'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        loading: classStudentsLoading || loading
       }
+    }
+  };
+
+  /**
+   * Takes allStudents and classStudents arrays and returns a new array of students, with a new `disabled` property added.
+   *
+   * @returns {Array} - An array of student objects. Each object has an added 'disabled' property which is a boolean indicating whether or not the student is already in the classStudents array.
+   */
+
+  const addDisablePropertyToAlreadySelectedStudents = () => {
+    if (
+      allStudents && // check if allStudents is not null
+      classStudents && // check if classStudents is not null
+      allStudents.length > 0 && // check if allStudents is not empty
+      classStudents.length > 0 // check if classStudents is not empty
+    ) {
+      const isStudentAlreadyAdded = (student: any) =>
+        classStudents.find(
+          (classStudent) => classStudent.student.authId === student.authId
+        );
+      return allStudents.map((student) => {
+        return {
+          ...student,
+          disabled: Boolean(isStudentAlreadyAdded(student))
+        };
+      });
+    } else {
+      return [];
     }
   };
 
   return (
     <div className="">
-      {addStudentModal && (
-        <Modal
-          saveAction={addStudentInClass}
-          closeAction={() => {
-            setAddStudentModal(false);
-            setNewMember(defaultNewMember);
-          }}
-          showHeader={false}
-          showFooter={false}>
-          <p>Do you want to add {newMember.name}?</p>
-          <div className="w-full flex items-center justify-end gap-4 mt-2">
-            <Buttons
-              label={'Cancel'}
-              transparent
-              onClick={() => {
-                setAddStudentModal(false);
-                setNewMember(defaultNewMember);
-              }}
-            />
-            <Buttons label={'Add'} onClick={addStudentInClass} />
-          </div>
-        </Modal>
-      )}
+      <Modal
+        open={addStudentModal}
+        saveAction={addStudentInClass}
+        closeAction={() => {
+          setAddStudentModal(false);
+          setNewMember(defaultNewMember);
+        }}
+        showHeader={false}
+        showFooter={false}>
+        <p>Do you want to add {newMember.label}?</p>
+        <div className="w-full flex items-center justify-end gap-4 mt-2">
+          <Buttons
+            label={'Cancel'}
+            transparent
+            onClick={() => {
+              setAddStudentModal(false);
+              setNewMember(defaultNewMember);
+            }}
+          />
+          <Buttons label={'Add'} onClick={addStudentInClass} />
+        </div>
+      </Modal>
 
       <SectionTitleV3
         fontSize="xl"
@@ -627,21 +563,31 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         title={roomData.name}
         withButton={
           <div className={`w-auto flex gap-x-4 justify-end items-center`}>
-            <SearchSelectorWithAvatar
+            <Selector
+              width={300}
               dataCy="edit-class"
-              width="w-96"
-              selectedItem={newMember}
-              list={filteredStudents.length > 0 ? filteredStudents : allStudents}
+              selectedItem={newMember.label}
+              showSearch
+              disabled={classStudentsLoading || loading}
+              list={addDisablePropertyToAlreadySelectedStudents()}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
               onChange={onStudentSelect}
-              fetchStudentList={fetchStudentList}
-              clearFilteredStudents={clearFilteredStudents}
-              searchStatus={searching}
-              searchCallback={setSearching}
-              imageFromS3={false}
-              creatable
-              creatableLabel={'Add students from register to class'}
-              onCreate={() => setShowRegistrationForm(true)}
+              dropdownRender={(menu) => {
+                return (
+                  <>
+                    {menu}
+                    <Divider style={{margin: '8px 0'}} />
+                    <Buttons
+                      onClick={() => setShowRegistrationForm(true)}
+                      label={'Add students from register to class'}
+                      className="w-full"
+                      size="middle"
+                      Icon={PlusCircleOutlined}
+                      variant="dashed"
+                    />
+                  </>
+                );
+              }}
             />
           </div>
         }
@@ -672,63 +618,66 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 <div className="py-2 m-auto text-center">
                   <p
                     className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-                    {messages.message && messages.message}
+                    {messages.message ? messages.message : ''}
                   </p>
                 </div>
               )}
-              {warnModal.show && (
-                <ModalPopUp
-                  closeAction={DiscardChanges}
-                  saveAction={saveAndMove}
-                  saveLabel="SAVE"
-                  cancelLabel="DISCARD"
-                  message={warnModal.message}
+
+              <ModalPopUp
+                open={warnModal.show}
+                closeAction={discardChanges}
+                saveAction={saveAndMove}
+                saveLabel="SAVE"
+                cancelLabel="DISCARD"
+                message={warnModal.message}
+              />
+
+              <ModalPopUp
+                open={warnModal2.show}
+                dataCy="edit-class-delete-student-modal"
+                closeAction={closeDeleteModal}
+                saveAction={warnModal2.action}
+                saveLabel="Yes"
+                message={warnModal2.message}
+                loading={deleting}
+              />
+
+              <Modal
+                open={showRegistrationForm}
+                showHeader={true}
+                title={RegistrationDict[userLanguage]['title']}
+                showHeaderBorder={true}
+                showFooter={false}
+                closeAction={() => setShowRegistrationForm(false)}>
+                <Registration
+                  classData={{
+                    classId: withbackupClassId,
+                    roomId: roomData.id
+                  }}
+                  isInInstitute
+                  isInModalPopup
+                  postMutation={postMutation}
+                  instId={instId}
                 />
-              )}
-              {warnModal2.show && (
-                <ModalPopUp
-                  dataCy="edit-class-delete-student-modal"
-                  closeAction={closeDeleteModal}
-                  saveAction={warnModal2.action}
-                  saveLabel="Yes"
-                  message={warnModal2.message}
-                  loading={deleting}
+              </Modal>
+
+              <Modal
+                open={userModalOpen}
+                title={UserDict[userLanguage]['title']}
+                showHeader={true}
+                showHeaderBorder={false}
+                showFooter={false}
+                maxWidth="min-w-256"
+                scrollHidden={true}
+                closeAction={() => setUserModalFormOpen(false)}>
+                <User
+                  shouldNavigate={false}
+                  onSuccessCallback={() => setUserModalFormOpen(false)}
+                  instituteId={instId}
+                  userId={studentProfileID}
+                  insideModalPopUp={true}
                 />
-              )}
-              {showRegistrationForm && (
-                <Modal
-                  showHeader={true}
-                  title={RegistrationDict[userLanguage]['title']}
-                  showHeaderBorder={true}
-                  showFooter={false}
-                  closeAction={() => setShowRegistrationForm(false)}>
-                  <Registration
-                    classData={{classId: withbackupClassId, roomId: roomData.id}}
-                    isInInstitute
-                    isInModalPopup
-                    postMutation={postMutation}
-                    instId={instId}
-                  />
-                </Modal>
-              )}
-              {userModalOpen && (
-                <Modal
-                  title={UserDict[userLanguage]['title']}
-                  showHeader={true}
-                  showHeaderBorder={false}
-                  showFooter={false}
-                  maxWidth="min-w-256"
-                  scrollHidden={true}
-                  closeAction={() => setUserModalFormOpen(false)}>
-                  <User
-                    shouldNavigate={false}
-                    onSuccessCallback={() => setUserModalFormOpen(false)}
-                    instituteId={instId}
-                    userId={studentProfileID}
-                    insideModalPopUp={true}
-                  />
-                </Modal>
-              )}
+              </Modal>
             </Fragment>
           ) : null}
         </div>

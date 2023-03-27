@@ -1,4 +1,4 @@
-import {escapeRegExp} from 'lodash';
+import escapeRegExp from 'lodash/escapeRegExp';
 import React from 'react';
 
 const Highlighted = ({text = '', highlight = ''}) => {
@@ -11,13 +11,13 @@ const Highlighted = ({text = '', highlight = ''}) => {
     <span>
       {parts
         .filter((part) => part)
-        .map((part, i) =>
+        .map((part, idx) =>
           regex.test(part) ? (
-            <mark className="iconoclast:bg-main text-white curate:bg-main" key={i}>
+            <mark className="iconoclast:bg-main text-white curate:bg-main" key={idx}>
               {part}
             </mark>
           ) : (
-            <span key={i}>{part}</span>
+            <span key={idx}>{part}</span>
           )
         )}
     </span>

@@ -1,17 +1,18 @@
-import React, {useState, useEffect, useContext} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
 import AddButton from 'atoms/Buttons/AddButton';
 import Loader from 'atoms/Loader';
 import ModalPopUp from 'molecules/ModalPopUp';
 
+import {useGlobalContext} from 'contexts/GlobalContext';
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {Empty} from 'antd';
 
 interface ICoursePartnerProps {
   roomData: any;
@@ -21,7 +22,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
   const history = useHistory();
   const {
     state: {user}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const isSuperAdmin = user.role === 'SUP';
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -165,7 +166,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
             ))}
           </div>
         ) : (
-          <div className="flex justify-center items-center">No group added</div>
+          <Empty description="No group added" />
         )}
       </div>
       <div className="py-2 m-auto text-center">
@@ -180,15 +181,14 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
         roomData={roomData}
       />
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeDeleteModal}
-          saveAction={warnModal.action}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={deleting}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeDeleteModal}
+        saveAction={warnModal.action}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={deleting}
+      />
     </div>
   );
 };

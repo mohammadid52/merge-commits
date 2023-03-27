@@ -6,7 +6,7 @@
 // ~~~~~~~~~~~~~~~ DEMOSITE ~~~~~~~~~~~~~~ //
 // ~~~~~~~~~~~~~~~~ UATENV ~~~~~~~~~~~~~~~ //
 
-export const getCorrectUrl = (clientKey: string) => {
+const getCorrectUrl = (clientKey: string) => {
   switch (clientKey) {
     case 'iconoclast':
       return {
@@ -17,7 +17,7 @@ export const getCorrectUrl = (clientKey: string) => {
         tableCleanupUrl:
           'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast'
       };
-      break;
+
     case 'demo':
       return {
         createUserUrl:
@@ -26,7 +26,7 @@ export const getCorrectUrl = (clientKey: string) => {
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-efprod',
         tableCleanupUrl: ''
       };
-      break;
+
     case 'curate':
       return {
         createUserUrl:
@@ -35,8 +35,18 @@ export const getCorrectUrl = (clientKey: string) => {
           'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/demosite-request-reset-password',
         tableCleanupUrl: ''
       };
-      break;
+
     case 'localhost':
+      return {
+        createUserUrl:
+          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user',
+        requestResetPassword:
+          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password',
+        tableCleanupUrl:
+          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson'
+      };
+
+    default:
       return {
         createUserUrl:
           'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user',
@@ -53,10 +63,10 @@ export const getCorrectUrl = (clientKey: string) => {
  * @param configJson - imported aws config file
  * @returns
  */
-
+// @ts-ignore
 import * as awsconfig2 from '../aws-exports';
 
-export const getBackendKey = (input: any) => {
+const getBackendKey = (input: any) => {
   if (input) {
     //@ts-ignore
     let configJson = input['default'];
@@ -71,6 +81,7 @@ export const getBackendKey = (input: any) => {
     } else if (/(-uatenv)/.test(s3BucketName)) {
       return 'localhost';
     }
+    return 'localhost';
   } else {
     return 'localhost';
   }

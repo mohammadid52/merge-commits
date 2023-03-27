@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import React from 'react';
 
 interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
@@ -13,7 +13,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const {id, value} = props;
   const {
     state: {lessonPage: {themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
@@ -22,7 +22,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
           key={inputID}
           id={inputID}
           dangerouslySetInnerHTML={{__html: inputValue?.value || '<p></p>'}}
-          className={`whitespace-pre-wrap remove-draft-styles  ${themeTextColor}`}></p>
+          className={`whitespace-pre-wrap leading-5 remove-draft-styles  ${themeTextColor}`}></p>
       </div>
     );
   };
@@ -33,7 +33,6 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
         value.length > 0 &&
         value.map((v: any, i: number) => (
           <React.Fragment key={`paragraphBlock_${i}`}>
-            {/* {composeParagraph(id, v, type)} */}
             <Paragraph inputID={id} inputValue={v} />
           </React.Fragment>
         ))}

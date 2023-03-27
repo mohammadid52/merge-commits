@@ -1,12 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {Fragment, useEffect, useState} from 'react';
 import {getTypeString} from 'utilities/strings';
-import Buttons from 'atoms/Buttons';
 
 interface CheckPointContentProps {
   changeStep?: (step?: string) => void;
@@ -17,21 +14,14 @@ interface CheckPointContentProps {
 }
 
 const CheckpointQueTable = (props: CheckPointContentProps) => {
-  const {
-    changeStep,
-    checkpointId,
-    showActionIcons,
-    DeleteCheckpoint,
-    editCheckPoint
-  } = props;
+  const {changeStep, checkpointId, showActionIcons, DeleteCheckpoint, editCheckPoint} =
+    props;
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {CheckpointQueTableDict} = useDictionary(clientKey);
+  const {CheckpointQueTableDict, userLanguage} = useDictionary();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [questionsList, setQuestionsList] = useState([]);
+  const [questionsList, setQuestionsList] = useState<any[]>([]);
 
   const fetchCheckpointQuestions = async () => {
     try {
@@ -76,8 +66,8 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
     }
   };
   const editCurrentCheckp = () => {
-    editCheckPoint(checkpointId);
-    changeStep('EditCheckPoint');
+    editCheckPoint?.(checkpointId);
+    changeStep?.('EditCheckPoint');
   };
 
   useEffect(() => {
@@ -90,15 +80,13 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
         <div className="w-full mx-auto my-4 flex justify-end">
           <div className="flex justify-end w-6/10 items-center">
             <Buttons
-              btnClass={`py-1 px-4 text-xs mr-2 hover:bg-gray-100 ${theme.btnTransparent[themeColor]}`}
               label={CheckpointQueTableDict[userLanguage]['BUTTON']['EDIT']}
               onClick={editCurrentCheckp}
               transparent
             />
             <Buttons
-              btnClass="py-1 px-4 text-xs ml-2 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500"
               label={CheckpointQueTableDict[userLanguage]['BUTTON']['REMOVE']}
-              onClick={() => DeleteCheckpoint(checkpointId)}
+              onClick={() => DeleteCheckpoint?.(checkpointId)}
               transparent
             />
           </div>

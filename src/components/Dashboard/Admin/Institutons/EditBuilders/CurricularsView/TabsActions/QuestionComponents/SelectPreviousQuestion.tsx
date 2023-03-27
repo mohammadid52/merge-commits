@@ -1,14 +1,14 @@
-import React, {useState, Fragment, useEffect, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {API, graphqlOperation} from 'aws-amplify';
+import {Fragment, useEffect, useState} from 'react';
 
-import SearchInput from 'atoms/Form/SearchInput';
-import CheckBox from 'atoms/Form/CheckBox';
 import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import SearchInput from 'atoms/Form/SearchInput';
 
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 import {getLanguageString, getTypeString} from 'utilities/strings';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 
 interface SelectPreviousQuestionProps {
   goBackToPreviousStep: () => void;
@@ -18,14 +18,14 @@ interface SelectPreviousQuestionProps {
 
 const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
   const {goBackToPreviousStep, setCheckpQuestions, selectedList} = props;
-  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
-  const [questionsList, setQuestionsList] = useState([]);
-  const [allQuestionsList, setAllQuestionsList] = useState([]);
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState<any[]>([]);
+  const [questionsList, setQuestionsList] = useState<any[]>([]);
+  const [allQuestionsList, setAllQuestionsList] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {SelectPreviousQuestionDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {SelectPreviousQuestionDict} = useDictionary();
 
   const selectItem = (questId: string) => {
     const selectedItem = selectedQuestionIds.find((id) => id === questId);
@@ -105,14 +105,13 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
             <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14">
               {' '}
               {selectedQuestionIds?.length}{' '}
-              {SelectPreviousQuestionDict[userLanguage]['qselected']}
+              {SelectPreviousQuestionDict[userLanguage]['qselectd']}
             </p>
             <SearchInput
               value={searchInput}
               onChange={(val: string) => setSearchInput(val)}
               onKeyDown={searchFromList}
               closeAction={removeSearchAction}
-              style="w-2/4"
             />
           </div>
           <div>
@@ -186,13 +185,11 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
           <div className="flex mt-8 justify-center px-6 pb-4">
             <div className="flex justify-center my-6">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={SelectPreviousQuestionDict[userLanguage]['button']['cancel']}
                 onClick={goBackToPreviousStep}
                 transparent
               />
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={SelectPreviousQuestionDict[userLanguage]['button']['save']}
                 onClick={onQuestionSave}
               />

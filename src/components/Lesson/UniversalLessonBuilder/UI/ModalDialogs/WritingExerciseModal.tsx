@@ -1,19 +1,19 @@
-import {remove} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import Toggle from '../Toggle';
-import {v4 as uuidv4} from 'uuid';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {useEffect, useState} from 'react';
 import {FaTrashAlt} from 'react-icons/fa';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
 import {FORM_TYPES} from '../common/constants';
-import {nanoid} from 'nanoid';
+import Toggle from '../Toggle';
 
 interface WEProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -67,7 +67,10 @@ const WritingExerciseModal = (props: WEProps) => {
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   // states here
-  const [enable, setEnable] = useState<{title: boolean; lineStarter: boolean}>({
+  const [enable, setEnable] = useState<{
+    title: boolean;
+    lineStarter: boolean;
+  }>({
     title: true,
     lineStarter: false
   });
@@ -103,8 +106,8 @@ const WritingExerciseModal = (props: WEProps) => {
     const {value, id} = event.target;
     setFields({...fields, [id]: value});
   };
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditQuestionModalDict} = useDictionary();
 
   const [inputFieldsArray, setInputFieldsArray] = useState<Options[]>(
     initialInputFieldsState
@@ -223,7 +226,7 @@ const WritingExerciseModal = (props: WEProps) => {
                 aria-describedby="show_title"
                 name="show_title"
                 checked={enable.title}
-                onChange={(e) => setEnable({...enable, title: !enable.title})}
+                onChange={() => setEnable({...enable, title: !enable.title})}
                 type="checkbox"
                 className="pointer-events-auto  h-4 w-4 text-indigo-600 border-gray-500 rounded"
               />
@@ -259,7 +262,7 @@ const WritingExerciseModal = (props: WEProps) => {
                   />
 
                   <span
-                    onClick={() => removeItemFromList(inputObj.id)}
+                    onClick={() => removeItemFromList(inputObj?.id || '')}
                     className="w-auto absolute right-0 top-0 pr-3 pt-3 text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
                   ">
                     <FaTrashAlt />
@@ -282,7 +285,6 @@ const WritingExerciseModal = (props: WEProps) => {
 
           {enable.lineStarter && (
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
               label={'+ Add field'}
               onClick={handleAddNewLinestarter}
               transparent
@@ -292,18 +294,18 @@ const WritingExerciseModal = (props: WEProps) => {
       </div>
 
       <div className="flex mt-4 justify-end px-6 pb-4">
-        <div className="flex items-center w-auto">
+        <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={on_WE_Create}
+            size="middle"
           />
         </div>
       </div>

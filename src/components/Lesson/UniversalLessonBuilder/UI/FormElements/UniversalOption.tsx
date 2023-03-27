@@ -1,20 +1,19 @@
-import {isEmpty} from '@aws-amplify/core';
-import {Switch} from '@headlessui/react';
-import {filter, map, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {Checkbox} from 'antd';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {optionResponses} from 'utilities/staticData';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {filter, map, remove, isEmpty, update} from 'lodash';
+import {useEffect, useState} from 'react';
+import {optionResponses} from 'utilities/staticData';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
+import ToggleForModal from '../common/ToggleForModals';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
-import {classNames} from './TextInput';
+import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
 
 const InputContainer = ({
   shouldShowActions,
@@ -44,7 +43,7 @@ const InputContainer = ({
         <div className="mb-2">
           <FormInput
             onChange={(e) => onChange(e, idx)}
-            label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+            label={`${numbered ? idx + 1 : ''}Label`}
             isRequired
             value={input.label}
             id={`formField_${input.id}`}
@@ -115,20 +114,6 @@ const InputContainer = ({
                           : 'Add'}{' '}
                         none of the above option
                       </p>
-                      {/* <p
-                        onClick={() => {
-                          if (input.options.find((item: any) => item.label === 'other')) {
-                            removeExtraOption(idx, 'other');
-                          } else {
-                            addExtraOption(idx, 'other', 'Other');
-                          }
-                        }}
-                        className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
-                        {input.options.find((item: any) => item.label === 'other')
-                          ? 'Remove'
-                          : 'Add'}{' '}
-                        'other' option
-                      </p> */}
                     </div>
                   )}
                 </div>
@@ -166,40 +151,24 @@ const InputContainer = ({
         {idx !== 0 ? (
           <div className="flex my-2 items-center justify-between w-auto">
             <div className="flex items-center w-auto mt-4 ">
-              <div className="flex items-center text-xs w-auto">
-                List
-                <Toggle
-                  checked={input.inLine}
-                  onClick={() => {
-                    changeBool(idx, 'inLine', input.inLine);
-                  }}
-                />
-                Inline
-              </div>
-              <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-              <div className="flex items-center text-xs w-auto">
+              <Checkbox
+                checked={input.required}
+                onClick={() => changeBool(idx, 'required', input.required)}>
                 Make this required
-                <Toggle
-                  checked={input.required}
-                  onClick={() => changeBool(idx, 'required', input.required)}
-                />
-              </div>
-              <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-              <div className="flex items-center text-xs w-auto">
-                Single response
-                <Toggle
-                  checked={input.type === SELECT_MANY}
-                  onClick={() => {
-                    setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
-                    changeValue(
-                      idx,
-                      'type',
-                      input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
-                    );
-                  }}
-                />
-                Multiple response
-              </div>
+              </Checkbox>
+
+              <ToggleForModal
+                label="Multiple answers"
+                checked={input.type === SELECT_MANY}
+                onClick={() => {
+                  setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
+                  changeValue(
+                    idx,
+                    'type',
+                    input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                  );
+                }}
+              />
             </div>
 
             <button
@@ -210,40 +179,24 @@ const InputContainer = ({
           </div>
         ) : (
           <div className="flex items-center w-auto mt-4 ">
-            <div className="flex items-center text-xs w-auto">
-              List
-              <Toggle
-                checked={input.inLine}
-                onClick={() => changeBool(idx, 'inLine', input.inLine)}
-              />
-              Inline
-            </div>
-            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-            <div className="flex items-center text-xs w-auto">
+            <Checkbox
+              checked={input.required}
+              onClick={() => changeBool(idx, 'required', input.required)}>
               Make this required
-              <Toggle
-                checked={input.required}
-                onClick={() => changeBool(idx, 'required', input.required)}
-              />
-            </div>
+            </Checkbox>
 
-            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-            <div className="flex items-center text-xs w-auto">
-              Single response
-              <Toggle
-                checked={input.type === SELECT_MANY}
-                onClick={() => {
-                  setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
-
-                  changeValue(
-                    idx,
-                    'type',
-                    input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
-                  );
-                }}
-              />
-              Multiple response
-            </div>
+            <ToggleForModal
+              label="Multiple answers"
+              checked={input.type === SELECT_MANY}
+              onClick={() => {
+                setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
+                changeValue(
+                  idx,
+                  'type',
+                  input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                );
+              }}
+            />
           </div>
         )}
       </div>
@@ -254,40 +207,11 @@ const InputContainer = ({
   );
 };
 
-const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
-  return (
-    <Switch
-      checked={checked}
-      onChange={onClick}
-      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-      <span className="sr-only">Text response type</span>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bg-white w-full h-full rounded-md"
-      />
-      <span
-        aria-hidden="true"
-        className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
-          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
-        )}
-      />
-      <span
-        aria-hidden="true"
-        className={classNames(
-          checked ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
-        )}
-      />
-    </Switch>
-  );
-};
-
 const UniversalOption = ({
   numbered,
   closeAction,
   isEditingMode,
-  setNumbered,
+
   selectedForm,
   list,
   setList,
@@ -300,7 +224,7 @@ const UniversalOption = ({
     clientKey,
     userLanguage,
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {suggestionModal, setSuggestionModal} = useULBContext();
 
@@ -400,7 +324,11 @@ const UniversalOption = ({
 
   const onOptionAdd = (idx: number, idx2: number) => {
     const currentOptions = [...list[idx].options];
-    const newItem = {label: (idx2 + 2).toString(), text: '', id: uuidv4().toString()};
+    const newItem = {
+      label: (idx2 + 2).toString(),
+      text: '',
+      id: uuidv4().toString()
+    };
     currentOptions.splice(idx2 + 1, 0, newItem);
     let updatedOptions = currentOptions.map((item, i) => {
       if (i > idx2 + 1) {
@@ -489,7 +417,7 @@ const UniversalOption = ({
     const {
       theme,
       state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-    } = useContext(GlobalContext);
+    } = useGlobalContext();
 
     const themePlaceholderColor =
       lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
@@ -580,6 +508,7 @@ const UniversalOption = ({
         </div>
       );
     }
+    return <div className="w-auto hidden" />;
   };
 
   const filterCompleteQuestions = filter(list, (q) => q.label.length > 0);
@@ -622,37 +551,31 @@ const UniversalOption = ({
                 );
               })}
             </div>
-            <div className="flex mt-8 justify-between px-6 pb-4">
-              <div className="flex items-center w-auto">
-                <button
-                  onClick={addOneLinkField}
-                  className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-                  + Add Field
-                </button>
-                <button
-                  onClick={() => setNumbered(!numbered)}
-                  className={`${
-                    numbered
-                      ? 'border-indigo-500 text-white bg-indigo-400'
-                      : 'border-gray-300 text-dark'
-                  } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-                  {numbered ? 'Numbered' : 'Unnumbered'}
-                </button>
-                <button
-                  onClick={() => setCurTab(toPreviewTab)}
-                  className={` text-white bg-indigo-600 w-auto p-2 px-4  text-tiny rounded-md  transition-all duration-300 mr-4`}>
-                  See the preview
-                </button>
-              </div>
-              <div className="flex items-center w-auto">
+            <div className="flex flex-col mt-8 gap-4">
+              <div className="flex items-center gap-4 w-auto">
                 <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
+                  label={'+ Add Field'}
+                  onClick={addOneLinkField}
+                  size="small"
+                  variant="dashed"
+                />
+
+                <Buttons
+                  label={'See the preview'}
+                  onClick={() => setCurTab(toPreviewTab)}
+                  size="small"
+                  variant="dashed"
+                />
+              </div>
+              <div className="flex items-center justify-end w-auto gap-4">
+                <Buttons
+                  size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2"
+                  size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                   onClick={onRadioCreate}
                 />
@@ -707,15 +630,14 @@ const UniversalOption = ({
               )}
             </div>
             <div className="flex mt-8 justify-end px-6 pb-4">
-              <div className="flex items-center w-auto">
+              <div className="flex items-center w-auto gap-4">
                 <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
+                  size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
-                  transparent
                 />
                 <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2"
+                  size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                   onClick={onRadioCreate}
                 />

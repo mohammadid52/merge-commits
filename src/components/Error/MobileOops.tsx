@@ -1,14 +1,13 @@
-import React, {useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {VscSmiley} from 'react-icons/vsc';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React from 'react';
+import {VscSmiley} from 'react-icons/vsc';
 interface MobileOops {
   userAgent: string;
 }
 
 const MobileOops: React.FC<MobileOops> = (props: MobileOops) => {
-  const {clientKey} = useContext(GlobalContext);
+  const {clientKey} = useGlobalContext();
   return (
     <div className="fixed w-screen h-screen flex items-center justify-center bg-light-gray bg-opacity-20 p-4 rounded-xl">
       <div className="h-1/2 max-h-80 max-w-80 my-auto mx-auto shadow-xl rounded-xl">
@@ -25,11 +24,10 @@ const MobileOops: React.FC<MobileOops> = (props: MobileOops) => {
             <p className="text-dark-gray text-center text-lg">
               Classes are currently only available on PC / Laptop...
             </p>
-            <IconContext.Provider value={{color: '#0b0b0b', size: '2rem'}}>
-              <div className="w-full mx-auto flex justify-center">
-                <VscSmiley />
-              </div>
-            </IconContext.Provider>
+
+            <div className="w-full mx-auto flex justify-center">
+              <VscSmiley color="#0b0b0b" size={'2rem'} />
+            </div>
           </div>
           <p className="text-gray-500 text-xs mt-auto mb-0">
             Your device: {props.userAgent}

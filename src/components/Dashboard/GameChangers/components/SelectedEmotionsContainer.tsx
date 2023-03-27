@@ -1,29 +1,32 @@
-import Popover from 'atoms/Popover';
-import Loader from 'atoms/Loader';
-import Tooltip from 'atoms/Tooltip';
-import ThemeModal from 'molecules/ThemeModal';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {useNotifications} from 'contexts/NotificationContext';
-import useInLessonCheck from 'customHooks/checkIfInLesson';
-import useAuth from 'customHooks/useAuth';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from 'utilities/time';
+import Popover from "atoms/Popover";
+import Loader from "atoms/Loader";
+import Tooltip from "atoms/Tooltip";
+import ThemeModal from "molecules/ThemeModal";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useNotifications } from "contexts/NotificationContext";
+import useInLessonCheck from "customHooks/checkIfInLesson";
+import useAuth from "customHooks/useAuth";
+import useGraphqlMutation from "customHooks/useGraphqlMutation";
+import { awsFormatDate, dateString } from "utilities/time";
 import {
   CreateFeelingsArchiveInput,
   CreateFeelingsArchiveMutationVariables,
-  FeelingsArchive
-} from 'API';
-import {remove} from 'lodash';
-import {nanoid} from 'nanoid';
-import React, {useState} from 'react';
-import {FiEdit, FiTrash2} from 'react-icons/fi';
-import {useRouteMatch} from 'react-router';
-import {SelectedEmotion, useGameChangers} from '../context/GameChangersContext';
-import Button from './Button';
+  FeelingsArchive,
+} from "API";
+import { remove } from "lodash";
+import { nanoid } from "nanoid";
+import React, { useState } from "react";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { useRouteMatch } from "react-router";
+import {
+  SelectedEmotion,
+  useGameChangers,
+} from "../context/GameChangersContext";
+import Button from "./Button";
 const Emotion = ({
   selectedEmotion,
   removeEmotion,
-  idx
+  idx = 0,
 }: {
   selectedEmotion: SelectedEmotion;
   removeEmotion: any;
@@ -31,12 +34,12 @@ const Emotion = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const {setReplaceIdx, setPrimaryEmotion} = useGameChangers();
+  const { setReplaceIdx, setPrimaryEmotion } = useGameChangers();
 
   const className =
-    'cursor-pointer hover:bg-white p-2 rounded-md text-white hover:bg-opacity-20 transition-all';
+    "cursor-pointer hover:bg-white p-2 rounded-md text-white hover:bg-opacity-20 transition-all";
 
-  const {setNotification} = useNotifications();
+  const { setNotification } = useNotifications();
 
   return (
     <>
@@ -45,8 +48,8 @@ const Emotion = ({
         show={showMenu}
         bottom={2.5}
         minWidth={32}
-        minHeight={'none'}
-        dir={'top'}
+        minHeight={"none"}
+        dir={"top"}
         padding={2}
         containerClass={`bg-gray-800 border-gray-800 flex items-center`}
         rounded="lg"
@@ -58,11 +61,12 @@ const Emotion = ({
                 setReplaceIdx(idx);
                 setNotification({
                   title: `Now select another emotion`,
-                  show: true
+                  show: true,
                 });
                 setPrimaryEmotion(selectedEmotion.primary);
               }}
-              className={`${className} `}>
+              className={`${className} `}
+            >
               <FiEdit />
             </dt>
 
@@ -71,14 +75,17 @@ const Emotion = ({
                 setShowMenu(false);
                 removeEmotion(selectedEmotion.secondary);
               }}
-              className={`${className} `}>
+              className={`${className} `}
+            >
               <FiTrash2 />
             </dt>
           </dl>
-        }>
+        }
+      >
         <Tooltip show={!showMenu} placement="top" text="Click to edit">
           <div
-            className={`${selectedEmotion.primary.toLowerCase()}_card  cursor-pointer py-1 px-2 rounded-md text-white`}>
+            className={`${selectedEmotion.primary.toLowerCase()}_card  cursor-pointer py-1 px-2 rounded-md text-white`}
+          >
             {selectedEmotion.secondary}
           </div>
         </Tooltip>
@@ -96,7 +103,7 @@ const SelectedEmotionsContainer = () => {
     setSecondaryEmotion,
     setPrimaryEmotion,
     setShowFinalStep,
-    showFinalStep
+    showFinalStep,
   } = useGameChangers();
 
   const removeEmotion = (emName: string) => {
@@ -104,14 +111,14 @@ const SelectedEmotionsContainer = () => {
     setSelectedEmotions([...selectedEmotions]);
   };
 
-  const [changesSaved, setChangesSaved] = useState(false);
+  const [_, setChangesSaved] = useState(false);
 
-  const {authId, email, isStudent} = useAuth();
+  const { authId, email, isStudent } = useAuth();
 
-  const {mutate, isLoading} = useGraphqlMutation<
+  const { mutate, isLoading } = useGraphqlMutation<
     CreateFeelingsArchiveMutationVariables,
     FeelingsArchive
-  >('createFeelingsArchive');
+  >("createFeelingsArchive");
 
   const onSave = () => {
     try {
@@ -122,13 +129,13 @@ const SelectedEmotionsContainer = () => {
         id: nanoid(24),
         sentimentName: selectedEmotions.map((em) => em.secondary),
 
-        time: new Date().toTimeString().split(' ')[0],
-        date: awsFormatDate(dateString('-', 'WORLD')),
+        time: new Date().toTimeString().split(" ")[0],
+        date: awsFormatDate(dateString("-", "WORLD")),
         classRoomID: classId,
         lessonID: lessonId,
-        comments: lessonState.currentPage.toString()
+        comments: lessonState.currentPage.toString(),
       };
-      mutate({input: payload});
+      mutate({ input: payload });
       setShowFinalStep(true);
     } catch (error) {
       console.error(error);
@@ -138,18 +145,18 @@ const SelectedEmotionsContainer = () => {
     }
   };
 
-  const {lessonState} = useGlobalContext();
+  const { lessonState } = useGlobalContext();
 
   const isInLesson = useInLessonCheck();
   const router = useRouteMatch();
 
   // @ts-ignore
-  let lessonId = isInLesson ? router.params.lessonID : '999';
-  let classId = '999';
+  let lessonId = isInLesson ? router.params.lessonID : "999";
+  let classId = "999";
 
   const onBack = () => {
-    setSecondaryEmotion('');
-    setPrimaryEmotion('');
+    setSecondaryEmotion("");
+    setPrimaryEmotion("");
   };
 
   const [visible, setVisible] = useState(false);
@@ -158,7 +165,7 @@ const SelectedEmotionsContainer = () => {
 
   return (
     <>
-      <ThemeModal open={visible} max={{w: 132}} setOpen={setVisible}>
+      <ThemeModal open={visible} max={{ w: 132 }} setOpen={setVisible}>
         <div className="w-auto">
           <div className="mt-2">
             <p className="text-lg leading-5 text-white text-center">
@@ -171,9 +178,10 @@ const SelectedEmotionsContainer = () => {
               <button
                 type="button"
                 disabled={isLoading}
-                className={`${'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'} inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
-                onClick={onSave}>
-                {isLoading ? <Loader color="#fff" /> : 'Yes, Save It!'}
+                className={`${"bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo"} inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                onClick={onSave}
+              >
+                {isLoading ? <Loader color="#fff" /> : "Yes, Save It!"}
               </button>
             </p>
 
@@ -183,7 +191,8 @@ const SelectedEmotionsContainer = () => {
                 disabled={isLoading}
                 type="button"
                 className={`text-gray-500 hover:text-white w-full inline-flex justify-center  rounded-md px-4 py-2 text-base leading-6 font-medium transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
-                onClick={() => setVisible(false)}>
+                onClick={() => setVisible(false)}
+              >
                 No, Don't Save It
               </button>
             </p>
@@ -206,10 +215,20 @@ const SelectedEmotionsContainer = () => {
           </div>
           <div className="flex flex-row items-center justify-center w-auto gap-x-4">
             {primaryEmotion && (
-              <Button mt="none" width="w-auto" onClick={onBack} text="Select another" />
+              <Button
+                mt="none"
+                width="w-auto"
+                onClick={onBack}
+                text="Select another"
+              />
             )}
             {isStudent && (
-              <Button mt="none" width="w-auto" onClick={handlePopup} text={'Save'} />
+              <Button
+                mt="none"
+                width="w-auto"
+                onClick={handlePopup}
+                text={"Save"}
+              />
             )}
           </div>
         </div>

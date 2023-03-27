@@ -118,7 +118,7 @@
     top: 12px;
     left: 0;
     right: 0;
-    font-size: 80px;
+    font-size: 40px;
     font-weight: 900;
     opacity: 0.4;
     text-align: center;
@@ -138,6 +138,7 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
+    transform: scale(0.7);
     z-index: 1;
     margin: 60px auto 0 auto;
     position: relative;
@@ -163,7 +164,7 @@
       backface-visibility: hidden;
       transform: translateZ(0);
       fill: var(--mouth-fill, var(--awful-mouth-fill));
-
+      margin-bottom: 0;
       &.eye {
         width: 18px;
         height: 22px;
@@ -222,6 +223,8 @@
       -webkit-appearance: none;
       border: 0;
       margin: 0;
+      display: flex;
+      align-items: center;
       padding: 0 12px;
       line-height: 25px;
       height: 25px;
@@ -245,8 +248,8 @@
 
 .flip-card {
   perspective: 1000px;
-  width: 300px;
-  height: 290px;
+  width: 200px;
+  height: 190px;
 }
 
 .flip-card-inner {

@@ -1,22 +1,22 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
-import axios from 'axios';
-import {requestResetPassword} from 'utilities/urls';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import axios from 'axios';
+import UserTabs from 'components/Dashboard/Admin/UserManagement/User/UserTabs';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
-import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
-import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
-import Buttons from 'atoms/Buttons';
 import {FaEdit} from 'react-icons/fa';
-import Modal from 'atoms/Modal';
-import UserTabs from 'components/Dashboard/Admin/UserManagement/User/UserTabs';
+import {requestResetPassword} from 'utilities/urls';
 import ProfileFrameDemographics from './ProfileFrame/ProfileFrameDemographics';
+import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
+import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
 
 interface IProfileFrame {
-  personAuthID: string;
+  personAuthID?: string;
   roster: any[];
   children?: React.ReactNode;
   fullscreen?: boolean;
@@ -35,11 +35,11 @@ const ProfileFrame = ({
   setRightView
 }: IProfileFrame) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
-  const {state, theme, userLanguage, clientKey} = gContext;
+  const gContext = useGlobalContext();
+  const {state, theme, userLanguage} = gContext;
   const stateUser = state.user;
-  const {dashboardProfileDict, BreadcrumsTitles} = useDictionary(clientKey);
-  const {UserInformationDict} = useDictionary(clientKey);
+
+  const {UserInformationDict} = useDictionary();
 
   // ~~~~~~~~~~~~~~~~ THEME ~~~~~~~~~~~~~~~~ //
 
@@ -105,15 +105,14 @@ const ProfileFrame = ({
       id: user.id,
       authId: user.authId,
       firstName: user.firstName,
-      grade: user.grade,
+
       image: user.image,
       language: user.language,
       lastName: user.lastName,
       preferredName: user.preferredName,
       role: user.role,
       status: user.status,
-      phone: user.phone,
-      birthdate: user.birthdate,
+
       email: user.email
     };
 
@@ -143,25 +142,14 @@ const ProfileFrame = ({
     });
   };
 
-  const handleChangeLanguage = (lang: {name: string; code: string}) => {
+  const handleChangeLanguage = (lang: {label: string; value: string}) => {
     setUser(() => {
       return {
         ...user,
-        language: lang.code
+        language: lang.value
       };
     });
   };
-
-  const language = [
-    {
-      code: 'EN',
-      name: 'English'
-    },
-    {
-      code: 'ES',
-      name: 'Spanish'
-    }
-  ];
 
   // ⬆️ Ends here ⬆️
 
@@ -178,7 +166,7 @@ const ProfileFrame = ({
   const openTab = tabs.find((tabObj: any) => tabObj.current);
 
   const handleSetCurrentTab = (tabName: string) => {
-    let updatedTabs = tabs.map((tabObj: any, idx: number) => {
+    let updatedTabs = tabs.map((tabObj: any) => {
       if (tabObj.name === tabName) {
         return {
           ...tabObj,
@@ -216,7 +204,7 @@ const ProfileFrame = ({
   // ##################################################################### //
   // ########################### ANIMATION REF ########################### //
   // ##################################################################### //
-  const frameRef = useRef();
+  const frameRef = useRef<any>(null);
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
@@ -230,30 +218,17 @@ const ProfileFrame = ({
         width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
       }}
       className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
-      {rightView.view === 'profile' && (
+      {rightView?.view === 'profile' && (
         <>
-          <div
-            onClick={() => setRightView({view: 'lesson', option: ''})}
-            className="absolute cursor-pointer w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
-
           <Modal
+            open={rightView?.view === 'profile'}
             customTitle={user ? getTitle(user.preferredName, isEditing) : ''}
             showHeader={true}
             showHeaderBorder={false}
             showFooter={false}
             scrollHidden={true}
-            closeAction={() => setRightView({view: 'lesson', option: ''})}
-            position={'absolute'}>
-            <div
-              className={`${
-                breakpoint === '2xl'
-                  ? 'h-96 w-192'
-                  : breakpoint === 'xl'
-                  ? 'h-88 w-176'
-                  : breakpoint === 'lg'
-                  ? 'h-80 w-160'
-                  : 'h-64 w-128'
-              }`}>
+            closeAction={() => setRightView({view: 'lesson', option: ''})}>
+            <div>
               <UserTabs
                 tabs={tabs}
                 currentTab={openTab?.name}
@@ -281,7 +256,6 @@ const ProfileFrame = ({
                     handleChangeLanguage={handleChangeLanguage}
                     gobackToPreviousStep={() => setIsEditing(false)}
                     saveProfileInformation={saveProfileInformation}
-                    language={language}
                   />
                 )
               ) : null}

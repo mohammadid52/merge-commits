@@ -9,15 +9,19 @@ interface ImageBlockProps extends RowWrapperProps {
   customVideo?: boolean;
 }
 
-export const CustomVideoBlock = (props: ImageBlockProps) => {
+const CustomVideoBlock = (props: ImageBlockProps) => {
   const {id, dataIdAttribute, value} = props;
 
-  const {value: url, width = '', height = '', caption = ''} =
-    Array.isArray(value) && value?.length ? value[0] : value;
+  const {
+    value: url,
+    width = '100%',
+    height = '',
+    caption = ''
+  } = Array.isArray(value) && value?.length ? value[0] : value;
 
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const videoRef = React.useRef(null);
+  const videoRef = React.useRef<any>(null);
   const isVideoOnScreen = useOnScreen(videoRef);
 
   const [showPIP, setShowPIP] = useState(false);
@@ -72,7 +76,7 @@ export const CustomVideoBlock = (props: ImageBlockProps) => {
         ref={videoRef}
         height={height}
         controls
-        className="rounded-lg"
+        className="rounded-lg w-full"
         src={getImageFromS3Static(url)}>
         <source />
         Your browser does not support the video tag.

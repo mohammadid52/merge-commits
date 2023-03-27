@@ -1,44 +1,41 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
-import Selector from 'atoms/Form/Selector';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {reorder} from 'utilities/strings';
+import {getUserRoleString} from 'utilities/strings';
 
 import {getImageFromS3} from 'utilities/services';
-import {statusList} from 'utilities/staticData';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
+import {withZoiqFilter} from '@utilities/functions';
+import {Tag} from 'antd';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
+import moment from 'moment';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
-import {withZoiqFilter} from '@utilities/functions';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -57,63 +54,31 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const user = gContext.state.user;
 
+  const {isSuperAdmin} = useAuth();
+
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
 
   const history = useHistory();
-  const match = useRouteMatch();
+
   const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary();
   const dictionary = staffBuilderDict[userLanguage];
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showSuperAdmin, setShowSuperAdmin] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  const [availableUsers, setAvailableUsers] = useState([]);
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [showAddSection, setShowAddSection] = useState(false);
-  const [newMember, setNewMember] = useState({id: '', name: '', value: '', avatar: ''});
-  const [activeStaffList, setActiveStaffList] = useState([]);
+  const [newMember, setNewMember] = useState({
+    id: '',
+    name: '',
+    value: '',
+    avatar: ''
+  });
+  const [activeStaffList, setActiveStaffList] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const [statusEdit, setStatusEdit] = useState('');
-  const [updateStatus, setUpdateStatus] = useState(false);
 
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({id, name, value: str, avatar});
-  };
-
-  const getStaffRole = (role: string) => {
-    switch (role) {
-      case 'CRD':
-        return 'Coordinator';
-      case 'TR':
-        return 'Teacher';
-      case 'FLW':
-        return 'Fellow';
-      case 'BLD':
-        return 'Builder';
-      case 'ADM':
-        return 'Admin';
-
-      case 'SUP':
-        return 'Super Admin';
-    }
-  };
-
-  const onDragEnd = async (result: any) => {
-    // Change staff sequence
-    if (result.source && result.destination) {
-      if (result.source.index !== result.destination.index) {
-        const previousList = [...activeStaffList];
-        let staffIDs = previousList?.map((item) => item.userId);
-        const list = reorder(staffIDs, result.source.index, result.destination.index);
-        let updatedList = previousList
-          .map((t: any) => {
-            let index = list.indexOf(t.userId);
-            return {...t, index};
-          })
-          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-        setActiveStaffList(updatedList);
-        updateStaffSequence(list);
-      }
-    }
   };
 
   const getPersonsList = async (role: string) => {
@@ -128,7 +93,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         ? {role: {eq: role}}
         : user.role === 'SUP'
         ? {role: {eq: 'SUP'}}
-        : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]};
+        : {
+            and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]
+          };
 
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
@@ -140,7 +107,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const sortedList = data.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
-      const personsList = sortedList.map((item: any, i: any) => ({
+      const personsList = sortedList.map((item: any) => ({
         id: item.id,
         name: `${item.firstName || ''} ${item.lastName || ''}`,
         value: `${item.firstName || ''} ${item.lastName || ''}`,
@@ -180,7 +147,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const getStaff = async () => {
     try {
       // get service providers of the institute and create a list and fetch the staff
-      const {serviceProviders: {items} = {}, instituteId} = props;
+      const {instituteId} = props;
       const institutions =
         user.role === 'SUP'
           ? user.associateInstitute.length
@@ -303,11 +270,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    let part1 = user.isSuperAdmin
+    let part1 = isSuperAdmin
       ? '/dashboard/manage-institutions'
       : `/dashboard/manage-institutions/institution/${instituteId}`;
     let part2 = `/manage-users/${profileId}/staff`;
-    // console.log(`${part1}${part2}`);
+
     history.push(`${part1}${part2}`);
   };
 
@@ -370,46 +337,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   }, [instituteId]);
 
-  const onStaffStatusChange = async (
-    status: string,
-    staffId: string,
-    currentStatus: string,
-    authId: string,
-    email: string
-  ) => {
-    if (currentStatus !== status) {
-      setUpdateStatus(true);
-      const updatedStaff = activeStaffList.map((staff) => {
-        if (staff.id === staffId) {
-          staff.staffMember.status = status;
-        }
-        return staff;
-      });
-      setActiveStaffList(updatedStaff);
-      await API.graphql(
-        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
-      );
-      await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {
-          input: {authId: authId, email: email, status}
-        })
-      );
-      setUpdateStatus(false);
-    }
-    setStatusEdit('');
-  };
-
   const showAddStaffSection = async (role?: string) => {
     if (role === 'SUP') {
       setShowRegistrationForm(true);
     } else {
-      let users = await getPersonsList(role);
-      const staffMembersIds = activeStaffList.map((item: any) => item.userId);
-      let availableUsersList = users.filter(
-        (item: any) => staffMembersIds.indexOf(item.id) < 0
-      );
-      setAvailableUsers(availableUsersList);
-      setShowAddSection(true);
+      if (role) {
+        let users = await getPersonsList(role);
+        const staffMembersIds = activeStaffList.map((item: any) => item.userId);
+        let availableUsersList = users.filter(
+          (item: any) => staffMembersIds.indexOf(item.id) < 0
+        );
+        setAvailableUsers(availableUsersList);
+        setShowAddSection(true);
+      }
     }
   };
 
@@ -426,7 +366,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   } = useSearch([...activeStaffList], ['name', 'email'], 'name');
 
   const [totalNum, setTotalNum] = useState(0);
-  const [totalList, setTotalList] = useState([]);
+  const [__, setTotalList] = useState<any[]>([]);
 
   const {
     currentList,
@@ -467,6 +407,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const dataList = map(finalList, (item: any, index) => ({
     id: item.id,
     no: getIndex(index),
+    onClick: () => gotoProfilePage(item.userId),
     name: (
       <StaffBuilderName
         item={item}
@@ -476,48 +417,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     ),
 
     role: (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
-        {item.staffMember.role ? getStaffRole(item.staffMember.role) : ''}
-      </span>
+      <Tag color="default">
+        {item.staffMember.role ? getUserRoleString(item.staffMember.role) : ''}
+      </Tag>
     ),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
-    status:
-      statusEdit === item.id ? (
-        <div className="">
-          <Selector
-            selectedItem={item?.status?.toUpperCase()}
-            placeholder="Select Status"
-            dropdownWidth="w-48"
-            list={statusList}
-            onChange={(val, name, id) =>
-              onStaffStatusChange(
-                val,
-                item.id,
-                item?.status,
-                item?.staffMember?.authId,
-                item?.staffMember?.email
-              )
-            }
-          />
-        </div>
-      ) : (
-        <Status useDefault status={item?.status} />
-      ),
-    actions:
-      statusEdit === item.id ? (
-        <CommonActionsBtns
-          button1Action={() => setStatusEdit('')}
-          button1Label={updateStatus ? 'updating...' : 'Cancel'}
-        />
-      ) : (
-        <CommonActionsBtns
-          button1Label="Edit"
-          button1Action={() => setStatusEdit(item.id)}
-        />
-      )
+    addedDate: moment(item.staffMember?.createdAt).format('ll'),
+    status: <Status useDefault status={item?.status} />
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       dictionary['NO'],
       dictionary['NAME'],
@@ -525,42 +434,24 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       dictionary['ROLE'],
       dictionary['STATUS'],
       'Login Status',
-      dictionary['ACTION']
+      'Added date'
     ],
     dataList,
     config: {
-      isFirstIndex: true,
-      isLastAction: true,
       dataList: {
         loading: dataLoading,
-        emptyText: 'No staff found',
-        droppable: {
-          isDroppable: true,
-          onDragEnd: onDragEnd,
-          droppableId: 'staffList'
-        },
+
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          loginStatus: 'w-48',
-          no: 'w-12',
-          name: 'w-72 break-all',
-          status: 'w-36',
-          flow: 'w-36',
-          role: 'w-36',
-          location: 'w-72',
-          actions: 'w-aut'
-        },
-        maxHeight: 'max-h-196'
+        }
       }
     }
   };
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -597,17 +488,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     onChange={setSearch}
                     disabled={dataLoading}
                     onKeyDown={searchStaff}
-                    isActive={searchInput.isActive}
                     closeAction={removeSearchAction}
                   />
                   <AddButton
                     label={'Staff member'}
-                    onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
+                    onClick={() => showAddStaffSection(!isSuperAdmin ? 'SUP' : '')}
                   />
                 </div>
               ) : (
                 <Buttons
-                  btnClass="ml-4 py-1"
                   label={BUTTONS[userLanguage]['CANCEL']}
                   onClick={() => setShowAddSection(false)}
                 />
@@ -626,11 +515,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     }
                     onChange={onChange}
                   />
-                  <Buttons
-                    btnClass="ml-4 py-1"
-                    label={dictionary['ADD_BUTTON']}
-                    onClick={addStaffMember}
-                  />
+                  <Buttons label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
                 </div>
               ) : null}
             </div>
@@ -654,21 +539,20 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
         <Table {...tableConfig} />
 
-        {showRegistrationForm && (
-          <Modal
-            showHeader={true}
-            title={RegistrationDict[userLanguage]['title']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={() => setShowRegistrationForm(false)}>
-            <Registration
-              isInInstitute
-              isInModalPopup
-              postMutation={postMutation}
-              instId={instituteId}
-            />
-          </Modal>
-        )}
+        <Modal
+          open={showRegistrationForm}
+          showHeader={true}
+          title={RegistrationDict[userLanguage]['title']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={() => setShowRegistrationForm(false)}>
+          <Registration
+            isInInstitute
+            isInModalPopup
+            postMutation={postMutation}
+            instId={instituteId}
+          />
+        </Modal>
       </div>
     </div>
   );

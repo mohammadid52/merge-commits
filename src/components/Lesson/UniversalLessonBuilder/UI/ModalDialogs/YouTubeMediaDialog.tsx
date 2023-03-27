@@ -1,24 +1,25 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 
+import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
 
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {
-  UniversalBuilderDict,
-  EditQuestionModalDict
+  EditQuestionModalDict,
+  UniversalBuilderDict
 } from 'dictionary/dictionary.iconoclast';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
-const youTubeVideoRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+const youTubeVideoRegex =
+  /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
 const videoSizeOptions = [
-  {id: 1, name: '560 x 315'},
-  {id: 2, name: '640 x 360'},
-  {id: 3, name: '835 x 480'},
-  {id: 4, name: '1280 x 720'}
+  {id: 1, label: '560 x 315', value: '560 x 315'},
+  {id: 2, label: '640 x 360', value: '640 x 360'},
+  {id: 3, label: '835 x 480', value: '835 x 480'},
+  {id: 4, label: '1280 x 720', value: '1280 x 720'}
 ];
 
 interface IVideoInput {
@@ -39,7 +40,7 @@ const YouTubeMediaDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler
 }: IVideoDialogProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [videoInputs, setVideoInputs] = useState<IVideoInput>({
     value: '',
@@ -61,7 +62,7 @@ const YouTubeMediaDialog = ({
     setVideoInputs((prevValues) => ({...prevValues, [name]: value}));
     setError('');
   };
-  const onChangeVideoSize = (_: string, name: string) => {
+  const onChangeVideoSize = (name: string) => {
     const height = name.split(' x ')[1];
     const width = name.split(' x ')[0];
     setVideoInputs((prevValues) => ({...prevValues, height, width}));
@@ -134,16 +135,16 @@ const YouTubeMediaDialog = ({
             />
           </div>
         </div>
-        <div className="flex mt-8 justify-center px-6 pb-4">
-          <div className="flex justify-end">
+        <div className="flex mt-8 justify-end px-6 pb-4">
+          <div className="flex justify-end gap-4">
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
+              size="middle"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={askBeforeClose}
               transparent
             />
             <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
+              size="middle"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
               type="submit"
               onClick={onSave}

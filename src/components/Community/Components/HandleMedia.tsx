@@ -3,6 +3,7 @@ import {ICommunityCard} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import React from 'react';
 import ReactPlayer from 'react-player';
+import {Image} from 'antd';
 
 const HandleMedia = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   const media = React.useMemo(
@@ -22,7 +23,7 @@ const HandleMedia = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   );
 
   return media ? (
-    <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
+    <Image src={media} className="w-full" style={{width: '100%', maxHeight: '40rem'}} />
   ) : (
     <div className="h-132 max-h-132">
       {externalMedia && (

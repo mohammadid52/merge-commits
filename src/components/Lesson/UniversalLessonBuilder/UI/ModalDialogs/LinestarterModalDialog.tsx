@@ -1,14 +1,14 @@
-import {remove} from 'lodash';
-import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaTrashAlt} from 'react-icons/fa';
-import {GlobalContext} from 'contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {useEffect, useState} from 'react';
+import {FaTrashAlt} from 'react-icons/fa';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
 import {FORM_TYPES} from '../common/constants';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
@@ -59,7 +59,7 @@ const LinestarterModalDialog = ({
   askBeforeClose,
   setUnsavedChanges
 }: ILinestarterModalDialogProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -120,33 +120,6 @@ const LinestarterModalDialog = ({
 
     await updateLessonPageToDB(input);
   };
-  // const onLineCreate = async () => {
-  //   if (isEditingMode) {
-  //     const updatedList = updateBlockContentULBHandler(
-  //       '',
-  //       '',
-  //       FORM_TYPES.POEM,
-  //       enable.lineStarter ? inputFieldsArray : [{}],
-  //       0,
-  //       enable.title ? fields.title : ''
-  //     );
-  //     await addToDB(updatedList);
-  //   } else {
-  //     const updatedList = createNewBlockULBHandler(
-  //       '',
-  //       '',
-  //       FORM_TYPES.POEM,
-  //       enable.lineStarter ? inputFieldsArray : [{}],
-  //       0,
-  //       enable.title ? fields.title : ''
-  //     );
-  //     await addToDB(updatedList);
-  //   }
-
-  //   // clear fields
-  //   setInputFieldsArray(initialInputFieldsState);
-  //   setUnsavedChanges(false);
-  // };
 
   const onLineCreate = async () => {
     const lineStarterObject = {
@@ -211,7 +184,7 @@ const LinestarterModalDialog = ({
                   />
 
                   <span
-                    onClick={() => removeItemFromList(inputObj.id)}
+                    onClick={() => removeItemFromList(inputObj?.id || '')}
                     className="w-auto absolute right-0 top-0 pr-3 pt-3 text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
                   ">
                     <FaTrashAlt />
@@ -222,28 +195,23 @@ const LinestarterModalDialog = ({
           })}
         </div>
         <div className="col-span-2 mt-1 mb-4 flex items-center justify-between">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2 self-end"
-            label={'+ Add field'}
-            onClick={handleAddNewLinestarter}
-            transparent
-          />
+          <Buttons label={'+ Add field'} onClick={handleAddNewLinestarter} transparent />
         </div>
       </div>
 
       <div className="flex mt-4 justify-end px-6 pb-4">
-        <div className="flex items-center w-auto">
+        <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onLineCreate}
+            size="middle"
           />
         </div>
       </div>

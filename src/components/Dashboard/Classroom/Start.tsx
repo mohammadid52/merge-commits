@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import useAuth from '@customHooks/useAuth';
 import {TeachingStyle} from 'API';
 import Buttons from 'atoms/Buttons';
@@ -121,7 +121,7 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
-  const recordAttendance = async (lessonObj: any) => {
+  const recordAttendance = async (_: any) => {
     try {
       setLoading(true);
       const syllabusData = state.roomData.syllabus.find(
@@ -178,20 +178,24 @@ const Start: React.FC<StartProps> = ({
   const goBackUrl = `/lesson-control/${lessonKey}`;
 
   const handleLink = async () => {
+    const url = `/lesson/${lessonKey}/${lessonProgress}`;
     if (!isTeacher && accessible && open) {
       if (!isCompleted) {
         try {
           if (!attendanceRecorded) {
             await recordAttendance(lessonProps);
           }
-          // await getLessonCurrentPage(lessonKey, user.email, user.authId);
-          const url = `/lesson/${lessonKey}/${lessonProgress}`;
+
           history.push(url);
         } catch (error) {
           setLoading(false);
         }
       } else {
-        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        if (user.role === 'ST') {
+          history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        } else {
+          history.push(url);
+        }
       }
     } else if (isTeacher) {
       if (isActive) {
@@ -294,7 +298,7 @@ const Start: React.FC<StartProps> = ({
           return classRoomDict[userLanguage]['BOTTOM_BAR']['UPCOMING'];
         }
       } else {
-        if (isCompleted) {
+        if (isCompleted && user.role === 'ST') {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK'];
         } else if (isActive) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
@@ -359,7 +363,9 @@ const Start: React.FC<StartProps> = ({
       case 'START LESSON':
         return 'GO TO LESSON';
       case 'Lesson Completed':
-        return classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK'];
+        return user.role === 'ST'
+          ? classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK']
+          : 'GO TO LESSON';
 
       default:
         return buttonText;
@@ -373,7 +379,8 @@ const Start: React.FC<StartProps> = ({
   return (
     <div data-cy="survey-button">
       <Buttons
-        title={showNotebookBtn ? `See your notebook` : updateBtnText()}
+        size="middle"
+        tooltip={showNotebookBtn ? `See your notebook` : updateBtnText()}
         type="submit"
         onClick={!preview ? handleLink : noop}
         label={
@@ -386,25 +393,22 @@ const Start: React.FC<StartProps> = ({
           (isCompleted && type === 'survey') ||
           (isCompleted && isTeacher)
         }
-        btnClass={` h-full w-full text-xs focus:outline-none ${
-          !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
-        }`}
         greenBtn={
           showNotebookBtn ||
           (isCompleted && isTeacher) ||
           (isActive && isTeacher && isLesson)
         }
       />
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={onCloseModal}
-          cancelAction={discardChanges}
-          saveAction={handleMarkAsCompleteClick}
-          saveLabel={isLoading ? 'Processing...' : 'Yes'}
-          cancelLabel="No"
-          message={warnModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={onCloseModal}
+        cancelAction={discardChanges}
+        saveAction={handleMarkAsCompleteClick}
+        saveLabel={isLoading ? 'Processing...' : 'Yes'}
+        cancelLabel="No"
+        message={warnModal.message}
+      />
     </div>
   );
 };

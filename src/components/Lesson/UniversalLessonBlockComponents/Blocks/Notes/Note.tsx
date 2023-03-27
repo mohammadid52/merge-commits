@@ -43,8 +43,7 @@ const InnerNote = React.memo(
     onEditBtnClick,
     idx,
     updateText,
-    size,
-    preview = false
+    size
   }: any) => {
     let angle = useMemo(() => randomNumber(-3, 3), []);
 
@@ -65,7 +64,7 @@ const InnerNote = React.memo(
         style={{transform: 'rotate(' + angle + 'deg)'}}
         className={`_sticky ${genSize(
           size
-        )}  group bg-gradient-to-t text-gray-900 from-${bgColor}-500 to-${bgColor}-300 rounded leading-8 p-6`}>
+        )}  group bg-gradient-to-t text-gray-900 note-${bgColor} rounded leading-8 p-6`}>
         <textarea
           data-cy={`input-note-${note.id}`}
           style={{fontSize: `${genFontSize(size)}px`}}
@@ -130,12 +129,12 @@ const Note = ({
 
   // Just show delete modal
   const onDeleteBtnClick = (noteId: string) => {
-    setShowDeleteModal({show: true, id: noteId});
+    setShowDeleteModal?.({show: true, id: noteId});
   };
 
   // Just show edit modal
   const onEditBtnClick = (noteId: string) => {
-    setShowEditModal({show: true, id: noteId, value: ''});
+    setShowEditModal?.({show: true, id: noteId, value: ''});
   };
 
   return (

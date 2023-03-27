@@ -20,16 +20,18 @@ const PageWrapper: React.FC<PageWrapperProps> = (pageWrapperProps: PageWrapperPr
     pageName && setPageTitle(pageName);
 
     return () => {
-      setPageTitle(null);
+      setPageTitle('');
     };
   }, [pageName]);
 
   return (
-    <div
-      className={`w-full py-8 ${defaultClass} relative mb-0 ${
-        wrapClass ? wrapClass : ''
-      }`}>
-      {children}
+    <div className="px-2 py-8 md:px-4 lg:p-8">
+      <div
+        className={`w-full py-8 ${defaultClass} relative mb-0 ${
+          wrapClass ? wrapClass : ''
+        }`}>
+        {children}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React, {useCallback} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -6,6 +5,7 @@ import useDictionary from 'customHooks/dictionary';
 
 import Buttons from 'atoms/Buttons';
 
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {getAsset} from 'assets';
 import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
 import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
@@ -17,11 +17,9 @@ import {
   UniversalJournalData,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import {IoIosJournal} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib';
-import {stringToHslColor} from 'utilities/strings';
 import {filter, orderBy} from 'lodash';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {IoIosJournal} from 'react-icons/io';
+import {stringToHslColor} from 'utilities/strings';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -87,11 +85,7 @@ const TabView = ({
   setAllUniversalClassData
 }: ITabViewProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useGlobalContext();
-  const state = gContext.state;
-  const userLanguage = gContext.userLanguage;
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
+  const {clientKey, state, userLanguage, theme} = useGlobalContext();
 
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {anthologyDict} = useDictionary();
@@ -99,7 +93,7 @@ const TabView = ({
   // ~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~ //
 
   const filteredJournalContent =
-    allUniversalJournalData?.length > 0
+    allUniversalJournalData && allUniversalJournalData?.length > 0
       ? allUniversalJournalData.reduce(
           (acc: UniversalJournalData[], data: UniversalJournalData) => {
             if (subSection === 'Journal' && data.type === 'journal-entry') {
@@ -241,20 +235,15 @@ const TabView = ({
           <div
             className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
             <div
-              className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
-              <IconContext.Provider
-                value={{
-                  className: `relative`
-                }}>
-                <IoIosJournal
-                  style={{color: stringToHslColor(sectionRoomID)}}
-                  className="absolute my-auto mr-2 w-auto h-auto fill-current"
-                  size={24}
-                />
-              </IconContext.Provider>
+              className={`relative border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+              <IoIosJournal
+                style={{color: stringToHslColor(sectionRoomID)}}
+                className=" my-auto mr-2 w-auto h-auto fill-current"
+                size={24}
+              />
 
               <h2
-                className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
+                className={`text-sm mb-0 md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
                 {getTitle()}
               </h2>
             </div>
@@ -264,9 +253,8 @@ const TabView = ({
               {subSection === 'Journal' && tab === 1 && (
                 <Buttons
                   Icon={FaEdit}
-                  btnClass="mb-2 px-8"
                   label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                  onClick={() => handleEditToggle('create', '')}
+                  onClick={() => handleEditToggle?.('create', '')}
                   type="button"
                 />
               )}

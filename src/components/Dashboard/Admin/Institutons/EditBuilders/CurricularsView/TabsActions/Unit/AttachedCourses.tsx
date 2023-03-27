@@ -73,6 +73,7 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
               </Tooltip>
             );
           }
+          return <div key={'key'} className="w-auto hidden" />;
         })
       ) : (
         <p className="text-gray-600 text-xs">no attached course found</p>

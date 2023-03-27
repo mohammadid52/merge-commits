@@ -71,7 +71,7 @@ export const getDashboardData = /* GraphQL */ `
                 image
                 email
                 role
-                phone
+
                 id
                 authId
               }
@@ -86,7 +86,6 @@ export const getDashboardData = /* GraphQL */ `
                     image
                     email
                     role
-                    phone
                   }
                 }
               }
@@ -188,7 +187,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
@@ -268,7 +267,6 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
               status
               authId
               role
-              phone
             }
           }
         }
@@ -484,16 +482,9 @@ export const listRoomCoTeachers = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -571,7 +562,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
@@ -590,16 +581,11 @@ export const getRoomCoTeachers = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
+
           inactiveStatusDate
           image
           language
-          filters
+
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -672,16 +658,11 @@ export const getRoomCoTeachers = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
+
         inactiveStatusDate
         image
         language
-        filters
+
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -1179,6 +1160,7 @@ export const listRooms = /* GraphQL */ `
               authId
               id
               role
+              image
               lastName
               firstName
               status
@@ -1189,6 +1171,7 @@ export const listRooms = /* GraphQL */ `
           firstName
           preferredName
           lastName
+          image
         }
         activeLessonId
         activeLessons
@@ -1234,7 +1217,7 @@ export const getRoom = /* GraphQL */ `
         city
         state
         zip
-        phone
+
         website
         image
         isServiceProvider
@@ -1270,15 +1253,10 @@ export const getRoom = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
+
         image
         language
-        filters
+
         lastLoggedIn
         lastLoggedOut
         classes {
@@ -1302,7 +1280,7 @@ export const getRoom = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
@@ -1472,7 +1450,7 @@ export const listRoomsDashboard = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
@@ -3009,7 +2987,7 @@ export const listInstitutions = /* GraphQL */ `
         city
         state
         zip
-        phone
+
         website
         image
         isServiceProvider
@@ -3021,7 +2999,7 @@ export const listInstitutions = /* GraphQL */ `
               id
               isServiceProvider
               name
-              phone
+
               type
               state
               rooms {
@@ -3486,7 +3464,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
       city
       state
       zip
-      phone
+
       website
       image
       isServiceProvider
@@ -3507,7 +3485,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
             city
             state
             zip
-            phone
+
             website
             image
           }
@@ -4074,16 +4052,11 @@ export const userById = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
+
         image
         isZoiq
         language
-        filters
+
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -4215,16 +4188,12 @@ export const getUserProfile = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
+
         inactiveStatusDate
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
+
         image
         language
-        filters
+
         statusReason
         lastLoggedIn
         isZoiq
@@ -4347,15 +4316,10 @@ export const getPersonData = /* GraphQL */ `
       firstName
       preferredName
       lastName
-      externalId
-      grade
-      onBoardSurvey
-      offBoardSurvey
-      phone
-      birthdate
+
       image
       language
-      filters
+
       lastLoggedIn
 
       lastLoggedOut
@@ -4526,15 +4490,8 @@ export const listQuestionDatas = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           createdAt
@@ -4566,7 +4523,7 @@ export const getCompleteLesson = /* GraphQL */ `
       label
       instructions
       instructionsTitle
-      grades
+      s
       artistID
       language
       SELStructure
@@ -4905,7 +4862,7 @@ export const getCurriculumCheckpointsData = /* GraphQL */ `
         city
         state
         zip
-        phone
+
         website
         image
         isServiceProvider
@@ -5027,7 +4984,9 @@ export const fetchClassStudents = /* GraphQL */ `
           student {
             id
             authId
+            isZoiq
             email
+            status
             firstName
             lastName
           }
@@ -5083,7 +5042,7 @@ export const getInstListForAdmin = /* GraphQL */ `
         id
         name
         type
-        phone
+
         isZoiq
         website
         image
@@ -5110,7 +5069,7 @@ export const getInstListForNonAdmin = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
@@ -5352,7 +5311,7 @@ export const getAssignedInstitutionToStaff = /* GraphQL */ `
         institution {
           id
           name
-          phone
+
           image
           isServiceProvider
           website
@@ -5434,7 +5393,7 @@ export const getCurriculumForClasses = /* GraphQL */ `
         city
         state
         zip
-        phone
+
         website
         image
         isServiceProvider
@@ -5920,15 +5879,10 @@ export const listFeelingsArchives = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
+
           image
           language
-          filters
+
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -6247,7 +6201,7 @@ export const listCurricula = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
@@ -6419,7 +6373,7 @@ export const listCurriculaForLesson = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider

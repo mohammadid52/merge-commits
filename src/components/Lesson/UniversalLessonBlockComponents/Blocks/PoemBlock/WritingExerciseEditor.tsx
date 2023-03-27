@@ -11,7 +11,7 @@ const WritingExerciseEditor = ({
   editorState,
   setEditorState,
   onChangeCallback,
-  initialValue,
+  initialValue = '',
   minHeight,
   isStudentViewing
 }: {
@@ -92,7 +92,7 @@ const WritingExerciseEditor = ({
   }, [minHeight]);
 
   return (
-    <div>
+    <div className="w-full">
       <Editor
         stripPastedStyles
         ariaLabel="draftEditor"

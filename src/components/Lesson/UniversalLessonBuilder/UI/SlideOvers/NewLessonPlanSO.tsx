@@ -1,7 +1,7 @@
+import Buttons from '@components/Atoms/Buttons';
 import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
-import {XIcon} from '@heroicons/react/outline';
-import '@pathofdev/react-tag-input/build/index.css';
-import {getAsset} from 'assets';
+import useAuth from '@customHooks/useAuth';
+import {Button, Divider, Drawer, Space} from 'antd';
 import FormInput from 'atoms/Form/FormInput';
 import Label from 'atoms/Form/Label';
 import Selector from 'atoms/Form/Selector';
@@ -9,7 +9,6 @@ import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
 import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
@@ -19,9 +18,9 @@ import {findIndex, isEmpty, remove, update} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UploadMedia from 'molecules/UploadMedia';
 import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import {getImageFromS3Static} from 'utilities/services';
+import {deleteImageFromS3, getImageFromS3Static} from 'utilities/services';
 import {estimatedTimeList} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 const features: string[] = ['colorPicker', 'inline'];
@@ -68,20 +67,23 @@ const VideoUploadComponent = ({
   closeAction,
   file,
   setFile,
-  setFields
+  setFields,
+  open
 }: {
   customRef: any;
   closeAction: () => void;
   file: IFile;
+  open: boolean;
   setFields: any;
-  setFile: React.Dispatch<React.SetStateAction<IFile>>;
+  setFile: React.Dispatch<React.SetStateAction<IFile | null>>;
 }) => {
   const [error, setError] = useState('');
   const showCloseButton = isEmpty(file) || (!isEmpty(file) && file._status === 'success');
 
   return (
     <Modal
-      closeAction={showCloseButton && closeAction}
+      open={open}
+      closeAction={showCloseButton ? closeAction : () => {}}
       showHeader={showCloseButton}
       showFooter={false}>
       <div>
@@ -103,72 +105,10 @@ const VideoUploadComponent = ({
   );
 };
 
-const InputTag = ({
-  tags,
-  setTags
-}: {
-  tags: string[];
-  // setTags: React.Dispatch<React.SetStateAction<string[]>>;
-  setTags: any;
-}) => {
-  const removeTag = (i: any) => {
-    const newTags = [...tags];
-    newTags.splice(i, 1);
-    setTags(newTags);
-  };
-
-  let tagInput: any = React.useRef(null).current;
-
-  const inputKeyDown = (e: any) => {
-    const val = e.target.value;
-    if (e.key === 'Enter' && val) {
-      if (tags.find((tag) => tag.toLowerCase() === val.toLowerCase())) {
-        return;
-      }
-      setTags([...tags, val]);
-      tagInput.value = null;
-    } else if (e.key === 'Backspace' && !val) {
-      removeTag(tags.length - 1);
-    }
-  };
-
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-md flex-wrap">
-      <ul className="inline-flex flex-wrap m-0 p-1 w-full" style={{maxWidth: '36rem'}}>
-        {tags.map((tag, i) => (
-          <li
-            className={
-              'items-center bg-indigo-600 rounded-md text-white font-light list-none mb-1.5 mr-1.5 py-1.5 px-2.5 w-auto'
-            }
-            key={tag}>
-            {tag}
-            <button
-              className={
-                'items-center appearance-none bg-gray-700 border-none text-white rounded-full cursor-pointer inline-flex text-xs h-4 justify-center ml-2 p-0 transform rotate-45 w-4'
-              }
-              type="button"
-              onClick={() => {
-                removeTag(i);
-              }}>
-              +
-            </button>
-          </li>
-        ))}
-        <li className="bg-transparent flex-grow-1 p-0">
-          <input
-            className={`block dark:text-white w-full dark:bg-gray-800 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:border-gray-700 border-gray-300 rounded-md`}
-            type="text"
-            placeholder="Add tags here..."
-            onKeyDown={inputKeyDown}
-            ref={(c) => {
-              tagInput = c;
-            }}
-          />
-        </li>
-      </ul>
-    </div>
-  );
-};
+interface ITag {
+  label: string;
+  value: string;
+}
 
 interface FieldsInterface {
   description: string;
@@ -177,7 +117,7 @@ interface FieldsInterface {
   instructions: string;
   instructionsHtml: any;
   interactionType: string[];
-  tags?: string[];
+  tags?: ITag[];
   estTime: string;
   videoLink?: string;
   classwork: boolean;
@@ -206,7 +146,12 @@ const INITIAL_STATE: FieldsInterface = {
   instructionsHtml: '',
   description: '', // ignore this field
   interactionType: [],
-  tags: [],
+  tags: [
+    {
+      label: 'lesson',
+      value: 'lesson'
+    }
+  ],
   estTime: '1 min',
   classwork: true,
   videoLink: ''
@@ -231,19 +176,10 @@ const NewLessonPlanSO = ({
   instId,
   open,
   setOpen,
-  pageDetails,
-  dark
+  pageDetails
 }: NewLessonPlanSOInterface) => {
-  const {
-    clientKey,
-    state: {
-      user: {isSuperAdmin}
-    },
-    userLanguage
-  } = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
-  const {BUTTONS} = useDictionary(clientKey);
+  const {isSuperAdmin} = useAuth();
+  const {BUTTONS, userLanguage} = useDictionary();
 
   const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
@@ -253,7 +189,7 @@ const NewLessonPlanSO = ({
     setEditMode,
     universalLessonDetails,
     setSelectedPageID,
-    newLessonPlanShow,
+
     setNewLessonPlanShow,
     setUniversalLessonDetails
   } = useULBContext();
@@ -281,12 +217,6 @@ const NewLessonPlanSO = ({
   const params = useQuery(location.search);
 
   const pageId = params.get('pageId');
-  const hideCloseButtons = pageId === 'open-overlay';
-
-  const handleAddTags = (tags: string[]) => {
-    setUnsavedChanges(true);
-    setFields((prevInputs) => ({...prevInputs, tags}));
-  };
 
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
@@ -314,12 +244,12 @@ const NewLessonPlanSO = ({
     }
   };
 
-  const onSelectOption = (_: any, name: string) => {
+  const onSelectOption = (value: string) => {
     setUnsavedChanges(true);
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      estTime: name
+      estTime: value
     }));
   };
 
@@ -353,7 +283,7 @@ const NewLessonPlanSO = ({
 
   const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
-  const [file, setFile] = useState<IFile>();
+  const [file, setFile] = useState<IFile | null>(null);
 
   const uploadedVideoLink =
     !isEmpty(file) && file._status === 'success'
@@ -363,7 +293,7 @@ const NewLessonPlanSO = ({
 
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
-    const isValidUrl = REGEX.Youtube.test(fields.videoLink);
+
     let isValid = true;
 
     if (trimmedLen(title) <= 0) {
@@ -371,14 +301,12 @@ const NewLessonPlanSO = ({
       isValid = false;
     } else {
       errors.title = '';
-      // isValid = true;
     }
     if (trimmedLen(label) <= 0) {
       errors.label = 'Label is mandatory';
       isValid = false;
     } else {
       errors.label = '';
-      // isValid = true;
     }
 
     setErrors({...errors});
@@ -398,6 +326,7 @@ const NewLessonPlanSO = ({
       onTopRightButtonClick();
       return 'You have unsaved changes on this page.';
     }
+    return '';
   };
 
   useEffect(() => {
@@ -504,7 +433,6 @@ const NewLessonPlanSO = ({
   };
 
   const {
-    tags,
     label,
     title,
     instructions,
@@ -584,249 +512,203 @@ const NewLessonPlanSO = ({
     onSaveClick(undefined);
   };
 
-  const shouldBeDark = !location.search.includes('&step=activities');
+  const shouldBeDark = false;
+  const onClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-      {showModal.show && (
-        <div className={`${showModal.show ? 'z-1000' : ''}`}>
-          <ModalPopUp
-            noButton="No"
-            noTooltip="Continue Activity"
-            cancelLabel="Yes"
-            className=""
-            cancelTooltip="Discard changes and go back"
-            noButtonAction={onModalCancelClick}
-            message={showModal.msg}
-            closeAction={() => {
-              setShowModal({show: false, msg: ''});
-            }}
-            cancelAction={onModalYesClick}
-          />
-        </div>
-      )}
-      {videoUploadModal && (
+      <Drawer
+        title={'Activity Details'}
+        width={400}
+        onClose={onClose}
+        open={open}
+        bodyStyle={{paddingBottom: 80}}
+        extra={
+          <Space>
+            <Button onClick={onTopRightButtonClick}>Cancel</Button>
+            <Buttons
+              size="middle"
+              onClick={(e) => onSaveClick(e)}
+              label={
+                loading
+                  ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
+                  : BUTTONS[userLanguage][editMode ? 'SAVE' : 'CREATE']
+              }
+            />
+          </Space>
+        }>
+        <ModalPopUp
+          open={showModal.show}
+          noButton="No"
+          noTooltip="Continue Activity"
+          cancelLabel="Yes"
+          className=""
+          cancelTooltip="Discard changes and go back"
+          noButtonAction={onModalCancelClick}
+          message={showModal.msg}
+          closeAction={() => {
+            setShowModal({show: false, msg: ''});
+          }}
+          cancelAction={onModalYesClick}
+        />
+
         <VideoUploadComponent
           setFields={setFields}
           closeAction={() => closeVideoUploadModal()}
+          // @ts-ignore
           file={file}
+          open={Boolean(videoUploadModal)}
           setFile={setFile}
           customRef={customRef}
         />
-      )}
-      <div className="flex-1">
-        {/* Header */}
-        <div className="px-4 py-6 dark:bg-gray-800 bg-gray-50 sm:px-6">
-          <div
-            onClick={onTopRightButtonClick}
-            className="cursor-pointer hover:underline text-right text-sm mb-2 text-gray-500">
-            return to editor
-          </div>
-          <div className="flex items-start justify-between space-x-3">
-            <div className="space-y-1 dark:text-white">
-              Activity Details
-              <p className="text-sm my-2 text-gray-500">
-                Get started by filling in the information below to create your new lesson
-                plan.
-              </p>
-              <div
-                style={{height: 1}}
-                className={`mt-2 w-full bg-${
-                  themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                }-500`}
+
+        <div className="flex-1">
+          {/* Header */}
+
+          <Container>
+            {/* Activity name */}
+            <Block>
+              <FormInput
+                placeHolder="eg. What is Javascript?"
+                value={title}
+                label="Activity name"
+                isRequired
+                onChange={onFieldChange}
+                id="title"
+                error={errors?.title}
               />
-            </div>
+            </Block>
+            {/* Activity label */}
+            <Block>
+              <FormInput
+                showCharacterUsage
+                label="Activity label"
+                maxLength={12}
+                isRequired
+                placeHolder="eg. Let's learn what is javascript"
+                value={label}
+                error={errors?.label}
+                onChange={onFieldChange}
+                id="label"
+              />
+            </Block>
+            {/* Video Instructions */}
+            <Block>
+              <FormInput
+                placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
+                value={fields.videoLink}
+                label="Add video instructions"
+                disabled={isUploadedFromPC}
+                onChange={onVideoLinkChange}
+                id="videoLink"
+                error={errors?.videoLink}
+              />
+              {!isUploadedFromPC ? (
+                <Buttons
+                  variant="link"
+                  size="small"
+                  onClick={() => setVideoUploadModal(true)}
+                  label={'Or upload from your pc'}
+                />
+              ) : (
+                <div>
+                  <Buttons
+                    variant="link"
+                    size="small"
+                    onClick={() => {
+                      const imageUrl = file
+                        ? getImageFromS3Static(UPLOAD_KEYS.ULB + file?.fileKey)
+                        : null;
+                      imageUrl && window.open(imageUrl, '_blank');
+                    }}
+                    label={'See video'}
+                  />
 
-            <div className="h-7 w-auto flex items-center">
-              <button
-                type="button"
-                className="w-auto bg-white dark:bg-gray-800 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                onClick={() => {
-                  onTopRightButtonClick();
-                }}>
-                <span className="sr-only">Close panel</span>
-                <XIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <Container>
-          {/* Activity name */}
-          <Block>
-            <FormInput
-              placeHolder="eg. What is Javascript?"
-              value={title}
-              label="Activity name"
-              isRequired
-              onChange={onFieldChange}
-              dark={shouldBeDark}
-              id="title"
-              error={errors?.title}
-            />
-          </Block>
-          {/* Activity label */}
-          <Block>
-            <FormInput
-              showCharacterUsage
-              label="Activity label"
-              maxLength={12}
-              dark={shouldBeDark}
-              isRequired
-              placeHolder="eg. Let's learn what is javascript"
-              value={label}
-              error={errors?.label}
-              onChange={onFieldChange}
-              id="label"
-            />
-          </Block>
-          {/* Video Instructions */}
-          <Block>
-            <FormInput
-              placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
-              value={fields.videoLink}
-              label="Add video instructions"
-              disabled={isUploadedFromPC}
-              onChange={onVideoLinkChange}
-              dark={shouldBeDark}
-              id="videoLink"
-              error={errors?.videoLink}
-            />
-            {!isUploadedFromPC ? (
-              <div
-                className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                onClick={() => setVideoUploadModal(true)}>
-                Or upload from your pc
-              </div>
-            ) : (
-              <div>
-                <div
-                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                  onClick={() => {
-                    const imageUrl = getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey);
-                    window.open(imageUrl, '_blank');
-                  }}>
-                  See video
+                  <Buttons
+                    variant="link"
+                    size="small"
+                    onClick={() => {
+                      setFile(null);
+                      file && file.fileKey && deleteImageFromS3(file?.fileKey);
+                    }}
+                    redBtn
+                    label={'Clear'}
+                  />
                 </div>
-                <div
-                  className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                  onClick={() => {
-                    setFile(null);
-                  }}>
-                  Clear
-                </div>
-              </div>
-            )}
-          </Block>
-          {/* Activity Instructions */}
-
-          <Block>
-            <Label className="mb-1" label={'Activity instructions'} />
-            <CustomRichTextEditor
-              withStyles
-              rounded
-              customStyle
-              features={features}
-              dark={shouldBeDark}
-              initialValue={instructions}
-              onChange={(htmlContent, plainText) =>
-                onEditorStateChange(
-                  htmlContent,
-                  plainText,
-                  'instructionsHtml',
-                  'instructions'
-                )
-              }
-            />
-          </Block>
-
-          {/* Interaction Type */}
-          <Block>
-            <Label className="mb-1" label={'Interaction type'} />
-
-            <div className="">
-              <Checkbox
-                title={'Group'}
-                checked={interactionType?.includes('group')}
-                onChange={handleInteractionType}
-                label={'Working as a class to complete activity'}
-                id={'group'}
-              />
-              <Checkbox
-                title={'Small Group'}
-                checked={interactionType?.includes('smallGroup')}
-                onChange={handleInteractionType}
-                label={'Working in small groups to complete activity'}
-                id={'smallGroup'}
-              />
-              <Checkbox
-                title={'Individual'}
-                checked={interactionType?.includes('individual')}
-                onChange={handleInteractionType}
-                label={'Working individually to complete activity'}
-                id={'individual'}
-              />
-
-              <hr className="border-gray-200 dark:border-gray-700" />
-            </div>
-          </Block>
-
-          {/* Estimated time */}
-
-          <Block>
-            <Label className="mb-1" isRequired label={'Estimated time'} />
-
-            <div className="">
-              <Selector
-                placeholder={'Select estimate time'}
-                list={estimatedTimeList}
-                selectedItem={estTime}
-                onChange={onSelectOption}
-              />
-            </div>
-          </Block>
-          {/* Tags */}
-
-          <Block>
-            <Label className="mb-1" label={'Tags'} />
-
-            <div className="sm:col-span-4">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}>
-                <InputTag tags={tags} setTags={handleAddTags} />
-              </form>
-            </div>
-          </Block>
-        </Container>
-
-        {/* <hr className="my-2 dark:text-gray-700 text-gray-500" /> */}
-
-        {/* Action buttons */}
-        {open && (
-          <div className="flex-shrink-0 px-4 border-t-0 dark:border-gray-700 border-gray-200 py-5 sm:px-6">
-            <div className="space-x-3 flex justify-end">
-              {!hideCloseButtons && (
-                <button
-                  type="button"
-                  className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => onTopRightButtonClick()}>
-                  Cancel
-                </button>
               )}
-              <button
-                disabled={loading}
-                onClick={(e) => onSaveClick(e)}
-                className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {loading
-                  ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
-                  : BUTTONS[userLanguage][editMode ? 'SAVE' : 'CREATE']}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+            </Block>
+            {/* Activity Instructions */}
+
+            <Block>
+              <Label className="mb-1" label={'Activity instructions'} />
+              <CustomRichTextEditor
+                withStyles
+                rounded
+                customStyle
+                features={features}
+                dark={shouldBeDark}
+                initialValue={instructions}
+                onChange={(htmlContent, plainText) =>
+                  onEditorStateChange(
+                    htmlContent,
+                    plainText,
+                    'instructionsHtml',
+                    'instructions'
+                  )
+                }
+              />
+            </Block>
+
+            {/* Interaction Type */}
+            <Block>
+              <Label className="mb-1" label={'Interaction type'} />
+
+              <div className="">
+                <Checkbox
+                  title={'Group'}
+                  checked={interactionType?.includes('group')}
+                  onChange={handleInteractionType}
+                  label={'Working as a class to complete activity'}
+                  id={'group'}
+                />
+                <Checkbox
+                  title={'Small Group'}
+                  checked={interactionType?.includes('smallGroup')}
+                  onChange={handleInteractionType}
+                  label={'Working in small groups to complete activity'}
+                  id={'smallGroup'}
+                />
+                <Checkbox
+                  title={'Individual'}
+                  checked={interactionType?.includes('individual')}
+                  onChange={handleInteractionType}
+                  label={'Working individually to complete activity'}
+                  id={'individual'}
+                />
+              </div>
+            </Block>
+
+            <Divider />
+
+            {/* Estimated time */}
+
+            <Block>
+              <Label className="mb-1" isRequired label={'Estimated time'} />
+
+              <div className="">
+                <Selector
+                  placeholder={'Select estimate time'}
+                  list={estimatedTimeList}
+                  selectedItem={estTime}
+                  onChange={onSelectOption}
+                />
+              </div>
+            </Block>
+          </Container>
+        </div>
+      </Drawer>
     </>
   );
 };

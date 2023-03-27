@@ -18,7 +18,7 @@ export interface IEventInput extends IAnnouncementInput {
 }
 export interface ICheckItOutInput extends IAnnouncementInput {}
 
-export interface IPerson {
+interface IPerson {
   image: string;
   firstName: string;
   lastName: string;

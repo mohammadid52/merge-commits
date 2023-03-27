@@ -1,20 +1,18 @@
 import React, {useState} from 'react';
-import {useParams} from 'react-router';
 import {HiPencil} from 'react-icons/hi';
-// import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useParams} from 'react-router';
+import {API, graphqlOperation} from 'aws-amplify';
 
 import * as mutation from 'graphql/mutations';
-import {useQuery} from 'customHooks/urlParam';
 
-import Modal from 'atoms/Modal';
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import AddButton from 'atoms/Buttons/AddButton';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
 
-import HolidayFormComponent from './HolidayFormComponent';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
+import HolidayFormComponent from './HolidayFormComponent';
 
 export interface IImpactLog {
   impactDate: Date;
@@ -38,7 +36,6 @@ const ClassRoomHolidays = ({
   setLogsChanged,
   sortLogsByDate
 }: IClassRoomHolidaysProps) => {
-  const params = useQuery(location.search);
   const {roomId}: any = useParams();
 
   const [dateOrder, setDateOrder] = useState('asc');
@@ -56,8 +53,6 @@ const ClassRoomHolidays = ({
     setFormOpen(true);
   };
 
-  const handleOnDragEnd = () => {};
-
   const postMutation = (data: any) => {
     setLessonImpactLogs(sortLogsByDate(data));
     setActiveIndex(null);
@@ -72,7 +67,8 @@ const ClassRoomHolidays = ({
   const onDelete = (index: number) => {
     const onDrop = async () => {
       setDeleting(true);
-      const dateToUpdate = lessonImpactLogs.filter((_: any, i: number) => index !== i);
+      // @ts-ignore
+      const dateToUpdate = lessonImpactLogs.filter((i: number) => index !== i);
       const result: any = await API.graphql(
         graphqlOperation(mutation.updateRoom, {
           input: {
@@ -161,7 +157,7 @@ const ClassRoomHolidays = ({
                     // <Draggable draggableId={`${idx}`} index={idx} key={`${idx}`}>
                     // {(provided) => (
                     <div
-                      key={`${idx}`}
+                      key={`${item.adjustment}`}
                       className={`flex justify-between bg-white w-full border-b-0 border-gray-200 ${
                         idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'
                       }`}
@@ -181,7 +177,7 @@ const ClassRoomHolidays = ({
                       <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                         {item.adjustment || '-'}
                       </div>
-                      <div className="w-2/10 flex px-4 py-3 flex justify-center">
+                      <div className="w-2/10  px-4 py-3 flex justify-center">
                         <span
                           className="w-auto cursor-pointer"
                           onClick={() => handleEdit(idx)}>
@@ -210,31 +206,31 @@ const ClassRoomHolidays = ({
           </div>
         )}
       </div>
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeDeleteModal}
-          saveAction={warnModal.action}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={deleting}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeDeleteModal}
+        saveAction={warnModal.action}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={deleting}
+      />
+
+      <Modal
+        open={formOpen}
+        showHeader={true}
+        title={'Add holiday'}
+        showHeaderBorder={true}
+        showFooter={false}
+        closeAction={handleCancel}>
+        <HolidayFormComponent
+          activeIndex={activeIndex || 0}
+          roomId={roomId}
+          lessonImpactLogs={lessonImpactLogs}
+          postMutation={postMutation}
+          handleCancel={handleCancel}
         />
-      )}
-      {formOpen && (
-        <Modal
-          showHeader={true}
-          title={'Add holiday'}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={handleCancel}>
-          <HolidayFormComponent
-            activeIndex={activeIndex}
-            roomId={roomId}
-            lessonImpactLogs={lessonImpactLogs}
-            postMutation={postMutation}
-            handleCancel={handleCancel}
-          />
-        </Modal>
-      )}
+      </Modal>
     </div>
   );
 };

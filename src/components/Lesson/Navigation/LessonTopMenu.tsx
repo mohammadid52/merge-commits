@@ -1,11 +1,27 @@
-import React, {ReactNode} from 'react';
+import {ReactNode} from 'react';
 import ProgressBar from './ProgressBar/ProgressBar';
 
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {IconContext} from 'react-icons';
-import {AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
+import useAuth from '@customHooks/useAuth';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
+import {AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
+import PageTimer from '../Components/PageTimer';
+
+const Button = ({
+  children,
+  onClick,
+  className
+}: {
+  className: string;
+  children: ReactNode;
+  onClick: () => void;
+}) => (
+  <button
+    className={`my-auto md:hidden ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30  ${className} `}
+    onClick={onClick}>
+    {children}
+  </button>
+);
 
 const LessonTopMenu = ({
   setOverlay,
@@ -22,60 +38,30 @@ const LessonTopMenu = ({
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
 
-  const theme = gContext.theme;
+  const {isTeacher} = useAuth();
 
-  // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
-  const {breakpoint} = useTailwindBreakpoint();
+  const estTime = Number(pages?.[lessonState.currentPage]?.estTime || 1); // unit of time here is minutes
+  const estTimeInSeconds = estTime * 60;
 
-  const Button = ({children, onClick}: {children: ReactNode; onClick: () => void}) =>
-    (breakpoint === 'xs' || breakpoint === 'sm') && (
-      <button
-        className={`my-auto ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-          canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
-        } `}
-        onClick={onClick}>
-        <IconContext.Provider
-          value={{
-            size: '1.5rem',
-            style: {width: '32px'},
-            className: `text-white`
-          }}>
-          {children}
-        </IconContext.Provider>
-      </button>
-    );
-
-  // ##################################################################### //
-  // ############################### OUTPUT ############################## //
-  // ##################################################################### //
   return (
     <>
       <div
-        className={`${theme.toolbar.bg}  shadow-1 w-full flex justify-center items-center content-center py-2 px-6`}>
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="flex flex-row justify-center">
+        className={`dark-blue  shadow-1 w-full flex  items-center justify-center py-4 px-6`}>
+        <div className="w-full flex flex-row items-center justify-center">
+          <div className="flex flex-row justify-center w-full items-center">
             {/* BACK BUTTON */}
 
-            {(breakpoint === 'xs' || breakpoint === 'sm') && (
-              <div
-                className={`my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer bg-darker-gray }`}
-                onClick={() => setOverlay('sidemenu')}>
-                <IconContext.Provider
-                  value={{
-                    size: '1.5rem',
-                    style: {width: '32px'},
-                    className: `text-white`
-                  }}>
-                  <AiOutlineMenu />
-                </IconContext.Provider>
-              </div>
-            )}
+            <div
+              className={`my-auto md:hidden mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer bg-darker-gray }`}
+              onClick={() => setOverlay?.('sidemenu')}>
+              <AiOutlineMenu size={'1.5rem'} className="text-white" />
+            </div>
 
             {/* PROGRESS BAR */}
 
             {pageStateUpdated && (
               <ProgressBar
-                handleHome={() => handlePopup(false)}
+                handleHome={() => handlePopup?.(false)}
                 handleRequiredNotification={handleRequiredNotification}
                 pages={pages}
                 canContinue={canContinue}
@@ -86,14 +72,26 @@ const LessonTopMenu = ({
                 requiredInputs={lessonState?.requiredInputs}
               />
             )}
-
+            {isTeacher && <PageTimer startTime={estTimeInSeconds} />}
             {/* FORWARD BUTTON */}
 
-            <Button onClick={() => handleForward(false)}>
-              <AiOutlineArrowLeft />
+            <Button
+              className={
+                canContinue
+                  ? 'bg-sea-green cursor-pointer'
+                  : 'bg-dark-gray cursor-default'
+              }
+              onClick={() => handleForward?.(false)}>
+              <AiOutlineArrowLeft size={'1.5rem'} className="text-white" />
             </Button>
-            <Button onClick={handleForward}>
-              <AiOutlineArrowRight />
+            <Button
+              className={
+                canContinue
+                  ? 'bg-sea-green cursor-pointer'
+                  : 'bg-dark-gray cursor-default'
+              }
+              onClick={() => handleForward?.()}>
+              <AiOutlineArrowRight size={'1.5rem'} className="text-white" />
             </Button>
           </div>
         </div>

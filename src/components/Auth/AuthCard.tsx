@@ -1,18 +1,18 @@
+import Buttons from '@components/Atoms/Buttons';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {getAsset} from 'assets';
 import BrowserAlert from 'components/General/BrowserAlert';
-import {MessageProps} from 'components/Message/Message';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
-import {getAsset} from 'assets';
-import React, {ReactNode, useEffect, useState} from 'react';
-import {NavLink} from 'react-router-dom';
 import gsap from 'gsap';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {ReactNode, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 
 interface AuthCardProps {
   children: ReactNode;
   subtitle?: string;
   title?: string;
-  message?: MessageProps;
+  message?: any;
   showFooter?: boolean;
   isSuccess?: boolean;
 }
@@ -49,12 +49,14 @@ const AuthCard = ({
     }
   }, [isSuccess]);
 
+  const history = useHistory();
+
   return (
     <div className="w-full  h-screen flex flex-row items-center justify-center text-sm md:bg-none sm:bg-cover sm:bg-center">
       <div className="w-full z-100 auth-card m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow rounded-xl overflow-hidden">
         {/* Left image starts here */}
         <div
-          className={` hidden  md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(
+          className={` hidden  w-full md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(
             clientKey,
             'authBackground'
           )} bg-cover bg-center`}></div>
@@ -77,11 +79,14 @@ const AuthCard = ({
               </h3>
             )}
             {subtitle && (
-              <h6 className="transition-all mb-4 text-sm text-center text-gray-500">
+              <h6
+                className={`px-2 transition-all mb-4 text-sm  ${
+                  subtitle.split(' ').length > 10 ? 'text-left' : 'text-center'
+                } text-gray-500`}>
                 {subtitle}
               </h6>
             )}
-            <div>{children}</div>
+            <div className="w-full">{children}</div>
             {message && (
               <p
                 className={`my-2 text-xs text-center ${
@@ -97,15 +102,14 @@ const AuthCard = ({
 
             <AnimatedContainer className="absolute bottom-0" show={showFooter}>
               {showFooter && (
-                <div className={` text-center mb-4 leading-5 text-xs text-gray-600`}>
+                <div className={`text-center mb-4 leading-5 text-xs text-gray-600`}>
                   <p>© Copyright {new Date().getFullYear()}</p>
-                  <p>
-                    <NavLink
-                      className="underline text-xs hover:text-blue-500"
-                      to="/privacy-policy">
-                      Privacy Policy
-                    </NavLink>
-                  </p>
+                  <Buttons
+                    label={'Privacy Policy'}
+                    variant="link"
+                    size="small"
+                    onClick={() => history.push('/privacy-policy')}
+                  />
                 </div>
               )}
             </AnimatedContainer>

@@ -1,20 +1,5 @@
 import {PagePart, UniversalLesson} from './UniversalLessonInterfaces';
 
-export interface ModalProps {
-  saveAction?: () => void;
-  closeAction?: () => void;
-  message?: string;
-  saveLabel?: string;
-  onlyInfo?: boolean;
-  deleteModal?: boolean;
-  deleteLabel?: string;
-  cancelLabel?: string;
-}
-
-export interface ULBDialogComponent {
-  inputJSX?: JSX.Element;
-}
-
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
@@ -23,26 +8,8 @@ export interface ULBSelectionProps {
     propertyToTarget: string,
     replacementValue?: string
   ) => void;
-  createNewBlockULBHandler?: (
-    targetID: string,
-    propertyToTarget: string,
-    contentType: string,
-    replacementValue?: any,
-    addBlockAtPosition?: number,
-    classString?: string,
-    customPageContentId?: string
-  ) => void;
-  updateBlockContentULBHandler?: (
-    targetID: string,
-    propertyToTarget: string,
-    contentType: string,
-    inputObj?: any,
-    addBlockAtPosition?: number,
-    classString?: string,
-    customPageContentId?: string,
-    pageContentIdx?: number,
-    partContentIdx?: number
-  ) => void;
+  createNewBlockULBHandler?: IContentTypeComponentProps['createNewBlockULBHandler'];
+  updateBlockContentULBHandler?: IContentTypeComponentProps['updateBlockContentULBHandler'];
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
   targetID?: string;
@@ -68,7 +35,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   ) => void;
   handleModalPopToggle?: (
     dialogToToggle: string,
-    position?: Number,
+    position?: number,
     section?: string,
     targetID?: string
   ) => void;
@@ -102,6 +69,8 @@ export interface IContentTypeComponentProps {
 
     customPageContentId?: string
   ) => any;
+  inputObj?: any;
+  selectedPageID?: string;
   updateBlockContentULBHandler: (
     targetID: string,
     propertyToTarget: string,
@@ -114,6 +83,7 @@ export interface IContentTypeComponentProps {
     partContentIdx?: number
   ) => any;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  setSavingStatus?: any;
 
   askBeforeClose: () => void;
 }

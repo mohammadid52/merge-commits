@@ -1,9 +1,10 @@
-import {getImageFromS3Static} from 'utilities/services';
-import React, {useCallback, useContext} from 'react';
+import useDictionary from '@customHooks/dictionary';
+import {useGlobalContext} from 'contexts/GlobalContext';
+
+import {useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {FaCloudUploadAlt} from 'react-icons/fa';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalBuilderDict} from 'dictionary/dictionary.iconoclast';
+import {getImageFromS3Static} from 'utilities/services';
 import {replaceAll} from 'utilities/strings';
 
 interface IULBFileUploader {
@@ -29,12 +30,14 @@ const ULBFileUploader = ({
   customVideo = false,
   isEditingMode = false
 }: IULBFileUploader) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
+
+  const {UniversalBuilderDict} = useDictionary();
   const otherProps: any = {};
   if (acceptedFilesFormat) {
     otherProps.accept = acceptedFilesFormat;
   }
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback((acceptedFiles: (File | null)[]) => {
     acceptedFiles.forEach((file: File | null) => {
       const reader = new FileReader();
       reader.onabort = () => console.log('file reading was aborted');
@@ -42,9 +45,9 @@ const ULBFileUploader = ({
       reader.onload = () => {
         // Do whatever you want with the file contents
         // const binaryStr = reader.result;
-        updateFileUrl(URL.createObjectURL(file), file);
+        file && updateFileUrl(URL.createObjectURL(file), file);
       };
-      reader.readAsArrayBuffer(file);
+      file && reader.readAsArrayBuffer(file);
     });
   }, []);
   const {getRootProps, getInputProps, fileRejections} = useDropzone({

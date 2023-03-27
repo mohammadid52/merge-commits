@@ -1,7 +1,6 @@
-import Label from './Label';
-import React, {forwardRef, MutableRefObject, useEffect} from 'react';
-import Buttons from '../Buttons';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import React, {forwardRef} from 'react';
+import Buttons from '../Buttons';
 
 interface IUploadButtonProps {
   label?: string;
@@ -28,12 +27,7 @@ const UploadButton = forwardRef<HTMLInputElement, IUploadButtonProps>(
     return (
       <>
         <div className="w-auto">
-          <Buttons
-            btnClass={disabled ? 'cursor-not-allowed' : ''}
-            disabled={disabled}
-            onClick={handleFile}
-            label={label}
-          />
+          <Buttons disabled={disabled} onClick={handleFile} label={label} />
 
           <input
             multiple={multiple}
@@ -47,9 +41,9 @@ const UploadButton = forwardRef<HTMLInputElement, IUploadButtonProps>(
           />
           {/* @ts-ignore */}
           <AnimatedContainer
-            show={message?.message?.length > 0}
+            show={Boolean(message?.message && message?.message?.length > 0)}
             animationType="translateY">
-            {message?.message?.length > 0 && (
+            {message?.message && message?.message?.length > 0 && (
               <p
                 className={`mt-1 text-${
                   message.type === 'default'

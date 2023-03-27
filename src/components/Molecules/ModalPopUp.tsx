@@ -23,6 +23,7 @@ interface ModalProps {
   className?: string;
   smallText?: string;
   dataCy?: string;
+  open: boolean;
 }
 
 const ModalPopUp = (props: ModalProps) => {
@@ -39,16 +40,18 @@ const ModalPopUp = (props: ModalProps) => {
     noButton,
     noButtonAction,
     loading,
-    cancelTooltip,
-    noTooltip,
-    saveTooltip,
+    cancelTooltip = '',
+    noTooltip = '',
+    saveTooltip = '',
     smallText,
     titleButton,
-    className = 'w-168',
-    dataCy
+
+    dataCy,
+    open
   } = props;
   return (
     <Modal
+      open={open}
       titleButton={titleButton}
       closeOnBackdrop
       title={'Warning'}
@@ -56,7 +59,7 @@ const ModalPopUp = (props: ModalProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className={`${className} text-center my-8`}>
+      <div className={` text-center my-8`}>
         <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
         {smallText && (
           <p className="my-4 px-6 text-gray-700 text-xs font-medium leading-8">
@@ -68,7 +71,8 @@ const ModalPopUp = (props: ModalProps) => {
             <Buttons
               dataCy={dataCy}
               label={deleteLabel ? deleteLabel : 'Delete'}
-              btnClass="px-10 py-3 ml-4 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500"
+              redBtn
+              className=" mr-4"
               onClick={saveAction}
               transparent
             />
@@ -90,7 +94,7 @@ const ModalPopUp = (props: ModalProps) => {
                       ? 'Saving'
                       : 'Save'
                   }
-                  btnClass="px-10 py-3 mr-4"
+                  className=" mr-4"
                   onClick={saveAction}
                 />
               </Tooltip>
@@ -101,7 +105,7 @@ const ModalPopUp = (props: ModalProps) => {
             <Tooltip show={noTooltip ? true : false} placement="bottom" text={noTooltip}>
               <Buttons
                 label={noButton}
-                btnClass="px-8 py-3 mr-4"
+                className=" mr-4"
                 onClick={noButtonAction}
                 transparent
               />
@@ -115,7 +119,7 @@ const ModalPopUp = (props: ModalProps) => {
               text={cancelTooltip}>
               <Buttons
                 label={cancelLabel ? cancelLabel : 'Cancel'}
-                btnClass="px-8 py-3 mr-4"
+                className=" mr-4"
                 onClick={cancelAction !== undefined ? cancelAction : closeAction}
                 transparent
               />

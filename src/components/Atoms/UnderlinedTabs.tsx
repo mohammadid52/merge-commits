@@ -1,9 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 import Tooltip from 'atoms/Tooltip';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React, {useEffect, useState} from 'react';
 
+export const renderButtonText = (tab: any) => {
+  return (
+    <div id={tab.id} className="flex items-center w-auto">
+      {tab.icon && (
+        <span className="w-8 h-8 theme-text flex items-center mr-4">{tab.icon}</span>
+      )}
+      <span>{tab.title}</span>
+    </div>
+  );
+};
 export interface ITabElementProps {
   id?: string;
   index: number;
@@ -22,42 +31,26 @@ interface TabsProps {
   hideTooltip?: boolean;
 }
 
-const UnderlinedTabs = (props: TabsProps) => {
-  const {tabs, activeTab, hideTooltip} = props;
-  const {theme, clientKey} = useContext(GlobalContext);
+const UnderlinedTabs = ({updateTab, tabs, activeTab = 0, hideTooltip}: TabsProps) => {
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [openTab, setOpenTab] = useState<number>(0);
 
   const changeActiveTab = (tab: number, e: React.MouseEvent<Element>) => {
     setOpenTab(tab);
-    if ('updateTab' in props) {
-      props.updateTab(tab, e);
-    }
+
+    updateTab?.(tab, e);
   };
 
   useEffect(() => {
     setOpenTab(activeTab);
   }, [activeTab]);
-  const renderButtonText = (tab: any) => {
-    return (
-      <div id={tab.id} className="flex items-center w-auto">
-        {tab.icon && (
-          <span className="w-8 h-8 flex items-center mr-4">
-            <IconContext.Provider
-              value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-              {tab.icon}
-            </IconContext.Provider>
-          </span>
-        )}
-        <span>{tab.title}</span>
-      </div>
-    );
-  };
+
   return (
     <div className="flex flex-wrap flex-col w-full ">
       <div className="flex flex-nowrap overflow-hidden sm:overflow-x-auto flex-row mr-2 bg-white">
-        {tabs.map((tab, key) => (
-          <div key={key} className="relative">
+        {tabs.map((tab) => (
+          <div key={tab.id} className="relative">
             <button
               onClick={(e) => {
                 changeActiveTab(tab.index, e);
@@ -89,11 +82,8 @@ const UnderlinedTabs = (props: TabsProps) => {
               ) : (
                 <>
                   {tab.icon && (
-                    <span className="w-8 h-8 flex items-center mr-4">
-                      <IconContext.Provider
-                        value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                        {tab.icon}
-                      </IconContext.Provider>
+                    <span className="w-8 h-8 flex items-center mr-4 theme-text">
+                      {tab.icon}
                     </span>
                   )}
                   {tab.title}
@@ -103,8 +93,10 @@ const UnderlinedTabs = (props: TabsProps) => {
           </div>
         ))}
       </div>
-      {tabs.map((tab, key) => (
-        <div key={key} className={`w-full ${openTab !== tab.index ? 'hidden' : 'block'}`}>
+      {tabs.map((tab) => (
+        <div
+          key={tab.title}
+          className={`w-full ${openTab !== tab.index ? 'hidden' : 'block'}`}>
           {openTab === tab.index ? <>{tab.content}</> : null}
         </div>
       ))}

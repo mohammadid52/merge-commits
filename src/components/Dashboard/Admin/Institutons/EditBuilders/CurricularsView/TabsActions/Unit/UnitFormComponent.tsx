@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import React, {useEffect, useState} from 'react';
 
 import Buttons from 'atoms/Buttons';
@@ -45,8 +45,7 @@ const UnitFormComponent = ({
   syllabusDetails,
   instId,
   setSyllabusDataParent,
-  curricular,
-  isInModal = false
+  curricular
 }: AddSyllabusProps) => {
   const initialData = {
     name: '',
@@ -106,18 +105,10 @@ const UnitFormComponent = ({
     }
   };
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = syllabusData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
+  const selectLanguage = (_: string[], option: any[]) => {
     setSyllabusData({
       ...syllabusData,
-      languages: updatedList
+      languages: option
     });
   };
 
@@ -283,10 +274,10 @@ const UnitFormComponent = ({
                 label={UserEditDict[userLanguage]['status']}
                 placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
-                onChange={(str: any, name: RoomStatus) => {
+                // @ts-ignore
+                onChange={(name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
-                dropdownWidth="w-56"
                 selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>
@@ -360,20 +351,14 @@ const UnitFormComponent = ({
         {messages.show ? (
           <div className="py-2 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
+              {messages.message ? messages.message : ''}
             </p>
           </div>
         ) : null}
 
-        <div className="flex my-8 justify-end">
+        <div className="flex gap-4 my-8 justify-end">
+          <Buttons label="Cancel" onClick={onCancel} transparent />
           <Buttons
-            btnClass="py-3 px-10 text-sm mr-4"
-            label="Cancel"
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            btnClass="py-3 px-10"
             label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
             onClick={saveSyllabusDetails}
             disabled={loading ? true : false}
@@ -381,14 +366,13 @@ const UnitFormComponent = ({
         </div>
       </div>
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
     </>
   );
 };

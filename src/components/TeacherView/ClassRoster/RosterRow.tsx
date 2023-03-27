@@ -1,17 +1,17 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import Tooltip from '@components/Atoms/Tooltip';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
+import {API, graphqlOperation} from 'aws-amplify';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 
-import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
 import {UserPageState} from 'API';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useEffect, useState} from 'react';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React, {useEffect, useState} from 'react';
 import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
 import {VscScreenFull} from 'react-icons/vsc';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
+import {formatPageName} from '@utilities/functions';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -25,7 +25,7 @@ interface RosterRowProps extends IRosterSectionProps {
   lessonProgress: string;
   hot?: boolean;
   onDemand?: boolean;
-  personEmail?: string;
+  personEmail: string;
 }
 
 const RosterRow: React.FC<RosterRowProps> = ({
@@ -52,7 +52,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   recordPrevPage
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
 
@@ -75,7 +75,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
       return false;
     }
   };
-  // const [successSound, terminateSound] = useSounds(['success', 'error']);
 
   const studentIsShared = () => {
     return sharedStudent === personAuthID;
@@ -87,15 +86,15 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
   const handleRowSelection = () => {
     if (studentIsShared()) {
-      handleShareStudentData(personAuthID, getPageID(currentLocation));
-      handleViewStudentData(personAuthID);
+      handleShareStudentData?.(personAuthID, getPageID(currentLocation));
+      handleViewStudentData?.(personAuthID);
       handlePageChange(parseInt(currentLocation));
     } else {
       if (lessonData?.type !== 'survey') {
-        handleViewStudentData(personAuthID);
+        handleViewStudentData?.(personAuthID);
       }
       if (!studentIsViewed()) {
-        setRecordPrevPage(currentPage);
+        setRecordPrevPage?.(currentPage);
         handlePageChange(parseInt(currentLocation));
       } else {
         handlePageChange(recordPrevPage);
@@ -117,15 +116,15 @@ const RosterRow: React.FC<RosterRowProps> = ({
   }, [currentLocation]);
 
   const unshareScreen = () => {
-    // handleViewStudentData(personAuthID);
+    // handleViewStudentData?.(personAuthID);
 
-    handleResetViewAndShare();
+    handleResetViewAndShare?.();
     handlePageChange(recordPrevPage);
   };
 
   const shareScreen = async () => {
-    handleViewStudentData(personAuthID);
-    handleShareStudentData(personAuthID, getPageID(currentLocation));
+    handleViewStudentData?.(personAuthID);
+    handleShareStudentData?.(personAuthID, getPageID(currentLocation));
   };
 
   // ##################################################################### //
@@ -160,14 +159,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   // ##################################################################### //
 
   const disabledShareButton = (
-    <Buttons
-      size="small"
-      btnClass="mx-2"
-      iconSize="w-4 h-6"
-      transparent
-      Icon={MdOutlineScreenShare}
-      disabled
-    />
+    <Buttons size="small" transparent Icon={MdOutlineScreenShare} disabled />
   );
 
   const active = false;
@@ -177,11 +169,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
       studentIsShared() ? (
         <Buttons
           size="small"
-          btnClass="text-white outline-none   mx-2"
           Icon={MdOutlineStopScreenShare}
           greenBtn
-          iconSize="w-4 h-6"
-          title="Unshare screen"
           onClick={() => {
             // terminateSound.play();
             unshareScreen();
@@ -196,9 +185,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
       <Buttons
         size="small"
-        btnClass="text-white outline-none  mx-2"
-        iconSize="w-4 h-6"
-        title="share screen"
         transparent={!studentIsViewed()}
         Icon={MdOutlineScreenShare}
         onClick={shareScreen}
@@ -249,7 +235,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   return (
     <>
       {/* <div className="" /> */}
-      <div className="roster-row">
+      <div className="roster-row w-full">
         <div
           draggable={false}
           className={`w-full px-4 flex py-2 transition-all duration-300 items-center ${
@@ -286,7 +272,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               <LocationBadge
                 style={onDemand ? {} : {fontSize: '.5rem'}}
                 customText={onDemand ? 'SP' : 'CLSRM'}
-                onDemand={onDemand}
+                onDemand={Boolean(onDemand)}
               />
             </div>
           </div>
@@ -307,21 +293,20 @@ const RosterRow: React.FC<RosterRowProps> = ({
             )}
           </div>
 
-          <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} flex items-center`}>
+          <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} gap-2 flex items-center`}>
             <Buttons
-              iconSize="w-4 h-6"
               disabled={!hot}
               variant={
                 studentIsShared()
                   ? 'primary'
                   : studentIsInLesson() && !studentIsViewed()
-                  ? 'secondary'
+                  ? 'dashed'
                   : 'primary'
               }
               transparent={!hot}
               greenBtn={studentIsViewed() && !studentIsShared()}
               onClick={handleRowSelection}
-              title={
+              tooltip={
                 studentIsViewed()
                   ? 'Cancel viewing student screen'
                   : 'View student screen'
@@ -346,7 +331,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               active && activeHoverClass
             }`}
             onClick={() =>
-              handleShareStudentData(personAuthID, getPageID(currentLocation))
+              handleShareStudentData?.(personAuthID, getPageID(currentLocation))
             }>
             <div className={`dot-menu transition duration-150`}>
               <DotMenu
@@ -357,24 +342,31 @@ const RosterRow: React.FC<RosterRowProps> = ({
                     </div>
                   )
                 }
+                // @ts-ignore
                 menuItems={[
                   {
                     label: 'Profile',
                     action: () =>
-                      handleToggleRightView({view: 'profile', option: personAuthID})
+                      handleToggleRightView?.({
+                        view: 'profile',
+                        option: personAuthID
+                      })
                   },
                   {
                     label: 'Attendance',
                     action: () =>
-                      handleToggleRightView({view: 'attendance', option: personAuthID})
+                      handleToggleRightView?.({
+                        view: 'attendance',
+                        option: personAuthID
+                      })
                   },
                   hot && {
                     label: 'Remove',
                     action: () => {
-                      kickoutStudent(personAuthID, personEmail);
+                      kickoutStudent?.(personAuthID, personEmail);
                     }
                   }
-                ]}
+                ].filter(Boolean)}
               />
             </div>
           </div>

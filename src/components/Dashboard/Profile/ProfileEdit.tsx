@@ -1,17 +1,19 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
+import React, {Fragment, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
-import {convertArrayIntoObj} from 'utilities/strings';
+import useAuth from '@customHooks/useAuth';
+import {Language} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {languageList} from 'utilities/staticData';
+import {convertArrayIntoObj} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import DropdownForm from './DropdownForm';
 import {UserInfo} from './Profile';
 
 interface UserInfoProps {
@@ -25,10 +27,10 @@ interface UserInfoProps {
 
 const ProfileEdit = (props: UserInfoProps) => {
   const history = useHistory();
-  const {state, userLanguage, clientKey, dispatch} = useContext(GlobalContext);
-  const {dashboardProfileDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {dashboardProfileDict} = useDictionary();
   const {user, getUser, status, setStatus, stdCheckpoints, questionData} = props;
-  let [imagePreviewURL, setImagePreviewURL] = useState(user.image);
+
   const [editUser, setEditUser] = useState(user);
   const [loading, setLoading] = useState(false);
   const [checkpointData, setCheckpointData] = useState<any>({});
@@ -54,9 +56,7 @@ const ProfileEdit = (props: UserInfoProps) => {
   };
 
   const onMultipleSelection = (
-    id: string,
-    name: string,
-    value: string,
+    option: any[],
     checkpointID: string,
     questionID: string
   ) => {
@@ -74,19 +74,12 @@ const ProfileEdit = (props: UserInfoProps) => {
           }
         });
       }
-      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
-      let updatedList;
-      if (selectedOption) {
-        const newList = selectedQuestion.filter((item: any) => item.id !== id);
-        updatedList = [...newList];
-      } else {
-        updatedList = [...selectedQuestion, {id, name, value}];
-      }
+
       setCheckpointData({
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList]
+          [questionID]: [...option]
         }
       });
     } else {
@@ -94,21 +87,14 @@ const ProfileEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [
-            {
-              id,
-              name,
-              value
-            }
-          ]
+          [questionID]: [...option]
         }
       });
     }
   };
   const onSingleSelect = (
-    value: string,
     name: string,
-    id: string,
+
     checkpointID: string,
     questionID: string
   ) => {
@@ -153,8 +139,10 @@ const ProfileEdit = (props: UserInfoProps) => {
     const modifiedResponseObj = {...responseObj, responseObject: val};
 
     try {
-      const questionData = await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {input: modifiedResponseObj})
+      await API.graphql(
+        graphqlOperation(customMutations.updateQuestionData, {
+          input: modifiedResponseObj
+        })
       );
     } catch (err) {
       console.error(err);
@@ -175,8 +163,10 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const createQuestionData = async (responseObj: any) => {
     try {
-      const questionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, {input: responseObj})
+      await API.graphql(
+        graphqlOperation(customMutations.createQuestionData, {
+          input: responseObj
+        })
       );
       console.log('Question data updated');
     } catch (err) {
@@ -203,13 +193,13 @@ const ProfileEdit = (props: UserInfoProps) => {
       questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }));
     if (questionData?.length === 0) {
-      let checkpoints = Promise.all(
+      Promise.all(
         allCheckpoints.map(async (item: any) => {
           return savePersonCheckpointData(item.checkpointId, item.questions);
         })
       );
     } else {
-      let checkpoints = Promise.all(
+      Promise.all(
         allCheckpoints.map(async (item: any) => {
           const currentItem: any = questionData?.find(
             (question: any) => question.checkpointID === item.checkpointId
@@ -228,20 +218,21 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   };
 
+  const {setUser} = useAuth();
+
   async function updatePerson() {
     const input = {
       id: editUser.id,
       authId: editUser.authId,
       firstName: editUser.firstName,
-      grade: editUser.grade,
+
       image: editUser.image,
-      language: editUser.language === 'English' ? 'EN' : 'ES',
+      language: editUser.language,
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
       role: editUser.role,
       status: editUser.status,
-      phone: editUser.phone,
-      birthdate: editUser.birthdate,
+
       email: editUser.email
     };
 
@@ -251,21 +242,9 @@ const ProfileEdit = (props: UserInfoProps) => {
       );
       setEditUser(update.data.updatePerson);
       setStatus('loading');
-      dispatch({
-        type: 'SET_USER',
-        payload: {
-          id: state.user.id,
 
-          firstName: editUser.firstName,
-          lastName: editUser.lastName,
-          language: editUser.language === 'English' ? 'EN' : 'ES',
-          onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
-          role: state.user.role,
-          image: state.user.image,
-          onDemand: state.user.onDemand,
-          lastEmotionSubmission: state.user?.lastEmotionSubmission
-        }
-      });
+      setUser({...editUser});
+
       gobackToPreviousStep();
     } catch (error) {
       console.error(error);
@@ -274,8 +253,8 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   async function saveProfileInformation() {
     saveAllCheckpointData();
-    const updateUser = await updatePerson();
-    const get = await getUser();
+    await updatePerson();
+    await getUser();
   }
 
   const onChange = (e: any) => {
@@ -286,17 +265,6 @@ const ProfileEdit = (props: UserInfoProps) => {
       [id]: value
     });
   };
-
-  const Language = [
-    {
-      id: 1,
-      name: 'English'
-    },
-    {
-      id: 2,
-      name: 'Spanish'
-    }
-  ];
 
   const convertToSelectorList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
@@ -335,19 +303,6 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   };
 
-  let imagePreview = null;
-  if (imagePreview) {
-    imagePreview = <img src={`"${imagePreviewURL}"`} />;
-  } else {
-    imagePreview = (
-      <svg
-        className="h-full w-full text-gray-300"
-        fill="currentColor"
-        viewBox="0 0 24 24">
-        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
-    );
-  }
   const extractItemFromArray = (responceArray: any[]) => {
     const answerArray: any = responceArray.map((item: any) => {
       return {
@@ -371,8 +326,6 @@ const ProfileEdit = (props: UserInfoProps) => {
       });
     }
   }, [questionData]);
-
-  const match = useRouteMatch();
 
   if (status !== 'done') {
     return <LessonLoading />;
@@ -416,18 +369,16 @@ const ProfileEdit = (props: UserInfoProps) => {
         <form>
           <div>
             <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
-              <div className="px-4 py-1 md:py-5 border-b-0 border-gray-200 sm:px-6">
+              <div className="px-4 py-1 md:py-5 flex items-center justify-between border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
-                  <NavLink
-                    data-cy="edit-password-link"
-                    className="text-gray-500 lowercase text-center mt-2 md:mt-0 md:text-right md:float-right w-auto"
-                    to={path}>
-                    <p className="font-medium text-sm md:text-base">
-                      Click here to edit password
-                    </p>
-                  </NavLink>
                 </h3>
+                <Buttons
+                  variant="dashed"
+                  size="small"
+                  label={'Click here to edit password'}
+                  onClick={() => history.push(path)}
+                />
               </div>
 
               <div className="h-full px-4 py-5 sm:px-6">
@@ -455,7 +406,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <FormInput
                         id="preferredName"
-                        value={editUser.preferredName}
+                        value={editUser?.preferredName || ''}
                         onChange={onChange}
                         label={dictionary['NICKNAME']}
                       />
@@ -464,17 +415,13 @@ const ProfileEdit = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <Selector
                         placeholder="Select Language"
-                        dropdownWidth="w-56"
-                        list={Language}
-                        onChange={(c: any, name: string) =>
-                          setEditUser({...editUser, language: name})
+                        list={languageList}
+                        width="100%"
+                        onChange={(value) =>
+                          setEditUser({...editUser, language: value as Language})
                         }
                         label={dictionary['LANGUAGE']}
-                        selectedItem={
-                          editUser.language === 'EN' || editUser.language === 'English'
-                            ? 'English'
-                            : 'Spanish'
-                        }
+                        selectedItem={editUser.language === 'EN' ? 'English' : 'Spanish'}
                       />
                     </div>
                   </>
@@ -605,11 +552,10 @@ const ProfileEdit = (props: UserInfoProps) => {
                                       list={convertToSelectorList(
                                         item?.question?.options
                                       )}
-                                      onChange={(value, name, id) =>
+                                      onChange={(value) =>
                                         onSingleSelect(
                                           value,
-                                          name,
-                                          id,
+
                                           checkpoint.id,
                                           item.question.id
                                         )
@@ -660,11 +606,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                                           : []
                                       }
                                       placeholder=""
-                                      onChange={(id, name, value) =>
+                                      onChange={(_, option) =>
                                         onMultipleSelection(
-                                          id,
-                                          name,
-                                          value,
+                                          option,
                                           checkpoint.id,
                                           item.question.id
                                         )
@@ -685,15 +629,13 @@ const ProfileEdit = (props: UserInfoProps) => {
           ) : null}
 
           <div className="px-4 pt-4 w-full flex justify-end">
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CANCEL']}
                 onClick={gobackToPreviousStep}
                 transparent
               />
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={
                   loading
                     ? 'Updating...'

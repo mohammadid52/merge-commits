@@ -2,7 +2,7 @@ import {PersonLessonsData} from 'API';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import React, {SetStateAction} from 'react';
 
-export interface LessonComponentsInterface {
+interface LessonComponentsInterface {
   isTeacher?: boolean;
   checkpointsItems?: any[];
   pageList?: any[];
@@ -34,23 +34,4 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   handleForward?: (back?: boolean) => void;
   getLessonCompletedValue?: () => any;
   createJournalData?: (onSuccess?: () => void) => any;
-}
-
-export interface ISideMenuProps {
-  isOpen: boolean;
-  overlay: string;
-  setOverlay: (overlay: string) => void;
-  handleHome?: () => void;
-  handleBack?: () => void;
-  handleVideoLink?: () => void;
-  videoLink?: string;
-  videoLinkModalVisible?: boolean;
-  handleVideoLinkPopup?: (url?: string) => void;
-  isAtEnd?: boolean;
-  setisAtEnd?: React.Dispatch<React.SetStateAction<boolean>>;
-  handleRequiredNotification?: () => void;
-  pages?: UniversalLessonPage[];
-  canContinue?: boolean;
-  handleForward?: () => void;
-  handlePopup?: (isLeavingAfterCompletion?: boolean) => void;
 }

@@ -1,17 +1,14 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {AiOutlineStop} from 'react-icons/ai';
-import {
-  createFilterToFetchSpecificItemsOnly,
-  keywordCapitilizer
-} from 'utilities/strings';
+import {keywordCapitilizer} from 'utilities/strings';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
@@ -33,7 +30,7 @@ const EMOJIS = getAsset('general', 'emoji');
 
 const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const roster = gContext.controlState.roster;
 
@@ -48,8 +45,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [sentimentStore, setSentimentStore] = useState<any>({});
-
-  const [notLoggedInCount, setNotLoggedInCount] = useState(0);
 
   const getOverallSentimentResult = async (dateString: string) => {
     let result: any[] = [];
@@ -174,13 +169,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   }, [visible]);
 
   // ##################################################################### //
-  // ######################### TOGGLE SENTIMENTS ######################### //
-  // ##################################################################### //
-  const handleSentimentToggle = () => {
-    setRightView({view: 'lesson', option: ''});
-  };
-
-  // ##################################################################### //
   // ############################## OTHER UI ############################# //
   // ##################################################################### //
   const customTitle = () => {
@@ -195,7 +183,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   // ############################# ANIMATION ############################# //
   // ##################################################################### //
-  const frameRef = useRef();
+  const frameRef = useRef<any>(null);
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
@@ -225,10 +213,11 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
           width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
         }}
         className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
-        {rightView.view === 'lessonInfo' && (
+        {rightView?.view === 'lessonInfo' && (
           <>
             <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
             <Modal
+              open={rightView?.view === 'lessonInfo'}
               customTitle={customTitle()}
               showHeader
               showHeaderBorder={false}

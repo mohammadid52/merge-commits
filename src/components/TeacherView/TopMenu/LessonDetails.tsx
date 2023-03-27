@@ -1,12 +1,11 @@
 import {Storage} from '@aws-amplify/storage';
 import Buttons from 'atoms/Buttons';
 import {downloadBlob} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Downloadables';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import React, {useContext, useState} from 'react';
+import {useState} from 'react';
 import {AiFillEye, AiOutlineLink} from 'react-icons/ai';
 import {BiCloudDownload} from 'react-icons/bi';
-import {useHistory} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
 interface ILessonDetailProps {
   hidden?: boolean;
@@ -25,15 +24,15 @@ const LessonDetails = ({
   handleToggleRightView,
   rightView
 }: ILessonDetailProps) => {
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
 
   const controlState = gContext.controlState;
-  const clientKey = gContext.clientKey;
-  const userLanguage = gContext.userLanguage;
-  const {classRoomDict} = useDictionary(clientKey);
 
-  const {lessonPlannerDict} = useDictionary(clientKey);
+  const userLanguage = gContext.userLanguage;
+  const {classRoomDict} = useDictionary();
+
+  const {lessonPlannerDict} = useDictionary();
 
   const getRoomData = getLocalStorageData('room_info');
 
@@ -118,7 +117,6 @@ const LessonDetails = ({
           size="small"
           Icon={AiFillEye}
           transparent={rightView?.view !== 'lessonInfo'}
-          title="see student sentiments"
           label="Sentiments"
           onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}
         />
@@ -126,7 +124,6 @@ const LessonDetails = ({
           size="small"
           Icon={BiCloudDownload}
           transparent
-          title="download lesson plan"
           label={isDownloading ? 'Downloading' : 'Lesson plan'}
           disabled={!lessonPlanAttachment || isDownloading}
           insideElement={

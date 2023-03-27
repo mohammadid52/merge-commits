@@ -1,28 +1,22 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useEffect, useState} from 'react';
-import {
-  AiOutlineArrowDown,
-  AiOutlineArrowUp,
-  AiOutlineUsergroupAdd
-} from 'react-icons/ai';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory} from 'react-router-dom';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
+import {AiOutlineUsergroupAdd} from 'react-icons/ai';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
-// import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import Filters from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import UserLookupAction from '@components/MicroComponents/UserLookupAction';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import UserLookupName from '@components/MicroComponents/UserLookupName';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useDictionary from '@customHooks/dictionary';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
+import {withZoiqFilter} from '@utilities/functions';
 import {PersonStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
@@ -34,7 +28,6 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
-import {withZoiqFilter} from '@utilities/functions';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -57,29 +50,22 @@ export const addName = (data: any[]) => {
 };
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
-  const {
-    state,
-    theme,
-    dispatch,
-    userLanguage,
-    zoiqFilter,
-    clientKey
-  } = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {state, userLanguage, zoiqFilter} = useGlobalContext();
+
   const history = useHistory();
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const {UserLookupDict, BreadcrumsTitles} = useDictionary();
 
-  const [sortingType, setSortingType] = useState({
+  const [sortingType] = useState({
     value: '',
     name: '',
     asc: true
   });
 
   // Below changes are for fetching entire list on client side.
-  const [totalUserList, setTotalUserList] = useState([]);
+  const [totalUserList, setTotalUserList] = useState<any[]>([]);
   const [totalUserNum, setTotalUserNum] = useState(0);
 
   const {
@@ -95,18 +81,16 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   // ...End.
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['PEOPLE'],
-      url: '/dashboard/manage-users',
+      href: '/dashboard/manage-users',
       last: true
     }
-  ];
-
-  const sortByList = [
-    {id: 1, name: 'Name', value: 'lastName'},
-    {id: 2, name: 'Role', value: 'role'},
-    {id: 4, name: 'Status', value: 'status'}
   ];
 
   const handleLink = () => {
@@ -135,21 +119,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     } else {
       _removeSearchAction();
     }
-  };
-
-  const setSortingValue = (str: string, name: string) => {
-    setSortingType({
-      ...sortingType,
-      value: str,
-      name: name
-    });
-  };
-
-  const toggleSortDimention = () => {
-    setSortingType({
-      ...sortingType,
-      asc: !sortingType.asc
-    });
   };
 
   const _removeSearchAction = () => {
@@ -234,7 +203,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const fetchAllPerson = async (filter?: any) => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
-        limit: 500,
+        limit: 1000,
 
         filter: withZoiqFilter(filter, zoiqFilter)
       })
@@ -262,7 +231,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
           const response = await dashboardDataFetch;
           let arrayOfResponseObjects = response?.data?.listRooms?.items;
-          arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
+          arrayOfResponseObjects = arrayOfResponseObjects.map(() => {
             return {class: {rooms: {items: arrayOfResponseObjects}}};
           });
 
@@ -276,6 +245,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         } catch (e) {
           console.error('getDashboardDataForTeachers -> ', e);
         } finally {
+          // do somthing s
         }
       }
       if (isTeacher || isBuilder || isAdmin) {
@@ -331,23 +301,24 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const [classList, setClassList] = useState([]);
+  const [classList, setClassList] = useState<any[]>([]);
 
   const fetchStudentList = async () => {
     setLoading(true);
 
     try {
-      const response: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
-        })
-      );
-      const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-          filter: {teacherAuthID: {eq: state.user.authId}}
-        })
-      );
-
+      const [response, assignedRoomsAsCoTeacher] = await Promise.all<any>([
+        API.graphql(
+          graphqlOperation(customQueries.getDashboardDataForTeachers, {
+            filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
+          })
+        ),
+        API.graphql(
+          graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+            filter: {teacherAuthID: {eq: state.user.authId}}
+          })
+        )
+      ]);
       let students1: any[] = [];
       let students2: any[] = [];
 
@@ -367,7 +338,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         classes.push(item.room.class);
         item?.room?.class?.students?.items.forEach((student: any) => {
           if (student?.student?.role === 'ST') {
-            students2.push({...student.student, classId: item.room.classID});
+            students2.push({
+              ...student.student,
+              classId: item.room.classID
+            });
           }
         });
       });
@@ -429,16 +403,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  // if (status !== 'done') {
-  // return <LessonLoading />;
-  // }
-
   const getClassListForSelector = () => {
     return classList.map((item: any, idx) => {
       return {
         id: idx,
         value: item.id,
-        name: item.name
+        label: item.name
       };
     });
   };
@@ -467,16 +437,16 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const setSelectedClassValue = (str: string, name: string) => {
-    if (selectedClass === null || selectedClass?.value !== str) {
+  const setSelectedClassValue = (name: string) => {
+    if (selectedClass === null || selectedClass?.value !== name) {
       setSelectedClass({
         ...selectedClass,
-        value: str,
+        value: name,
         name: name
       });
 
       removeSearchAction();
-      fetchClassStudents(str).then((resp: any) => {});
+      fetchClassStudents(name).then(() => {});
     }
   };
 
@@ -496,21 +466,31 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [filters, setFilters] = useState<any>();
 
-  const [filteredList, setFilteredList] = useState([]);
+  const [filteredList, setFilteredList] = useState<any[]>([]);
 
   const finalList = searchInput.isActive ? filteredList : currentList;
 
   const dict = UserLookupDict[userLanguage];
 
+  const match = useRouteMatch();
+
+  const handleUserLink = (id: string) => {
+    const {user} = state;
+
+    if (isStudentRoster) {
+      history.push(
+        `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${id}?from=dashboard`
+      );
+    } else {
+      const url = match.url.endsWith('/') ? match.url : match.url + '/';
+      history.push(`${url}${id}`);
+    }
+  };
+
   const dataList = map(finalList, (item, idx) => ({
     no: getIndex(idx),
-    name: (
-      <UserLookupName
-        searchTerm={searchInput.value}
-        isStudentRoster={isStudentRoster}
-        item={item}
-      />
-    ),
+    onClick: () => handleUserLink(item.id),
+    name: <UserLookupName searchTerm={searchInput.value} item={item} />,
     flow: <UserLocation role={item.role} onDemand={item?.onDemand} />,
     role: <UserRole role={item.role ? item.role : '--'} />,
     status: (
@@ -529,48 +509,27 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       'no',
       dict['name'],
       dict['flow'],
-
       dict['role'],
       dict['status'],
       dict['location'],
       state.user.role !== 'ST' && state.user.role !== 'BLD' && dict['action']
-    ],
+    ] as string[],
     dataList,
     config: {
-      dark: false,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading,
-        emptyText:
-          searchInput.isActive && !searchInput.typing
-            ? 'no data'
-            : searchInput.isActive && searchInput.typing
-            ? `Hit enter to search for ${searchInput.value}`
-            : UserLookupDict[userLanguage]['noresult'],
+
         pagination: {
           showPagination: !searchInput.isActive && selectedClass === null,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          no: 'w-12',
-          name: 'w-5/10 2xl:w-3/10 break-all',
-          status: 'w-36',
-          flow: 'w-48 2xl:w-36',
-          role: 'w-36',
-          location: 'w-72',
-          actions: 'w-aut'
-        },
-        maxHeight: 'max-h-none',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        }
       }
     }
   };
@@ -614,20 +573,17 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
             <div
               className={
                 isStudentRoster
-                  ? 'flex justify-end mb-4 items-center w-auto'
-                  : 'flex justify-end mb-4 w-auto'
+                  ? 'flex justify-end mb-4 gap-4 items-center w-auto'
+                  : 'flex justify-end mb-4 gap-4 w-auto'
               }>
               {isStudentRoster && (
                 <div className="w-auto relative flex mr-2 min-w-64">
                   <Selector
-                    isClearable
                     placeholder={'Select a class'}
                     list={getClassListForSelector()}
                     selectedItem={selectedClass?.name}
-                    setSelectedItem={setSelectedClass}
                     onChange={setSelectedClassValue}
                     disabled={loading}
-                    arrowHidden={true}
                   />
 
                   {selectedClass !== null && (
@@ -642,40 +598,17 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
               )}
 
               <SearchInput
-                dataCy="user-loookup-search"
                 value={searchInput.value}
                 onChange={setSearch}
                 disabled={loading}
                 onKeyDown={searchUserFromList}
                 closeAction={_removeSearchAction}
-                style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
               />
-              {!isInInstitute && (
-                <>
-                  <Selector
-                    placeholder={UserLookupDict[userLanguage]['sortby']}
-                    list={sortByList}
-                    selectedItem={sortingType.name}
-                    onChange={setSortingValue}
-                    disabled={loading}
-                    btnClass="rounded-r-none  border-r-none "
-                    arrowHidden={true}
-                  />
-                  <button
-                    className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-                    onClick={toggleSortDimention}>
-                    <IconContext.Provider
-                      value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                      {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-                    </IconContext.Provider>
-                  </button>
-                </>
-              )}
+
               {state.user.role !== 'SUP' && (
                 <Buttons
                   label={UserLookupDict[userLanguage]['button']['add']}
                   onClick={handleLink}
-                  btnClass={isInInstitute ? '' : 'mr-4 w-full'}
                   Icon={AiOutlineUsergroupAdd}
                 />
               )}

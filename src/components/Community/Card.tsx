@@ -23,6 +23,69 @@ import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
+import {Card as AntdCard} from 'antd';
+
+const EditChatModal = ({
+  chatConfig,
+  chatEditModal,
+  setChatEditModal,
+  chats,
+  setChats
+}: {
+  chatConfig: {
+    chatId: string;
+    chatValue: string;
+  };
+  chatEditModal: boolean;
+  setChatEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setChats: React.Dispatch<React.SetStateAction<IChat[]>>;
+  chats: IChat[];
+}) => {
+  const closeAction = () => {
+    setChatEditModal(false);
+    setValue('');
+  };
+  const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
+
+  const onEditedChatSave = () => {
+    mutate({
+      input: {id: chatConfig.chatId, msg: value, isEditedChat: true}
+    });
+  };
+
+  const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
+    onSuccess: () => {
+      const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
+      update(chats[idx], `msg`, () => value);
+      update(chats[idx], `isEditedChat`, () => true);
+      setChats([...chats]);
+      closeAction();
+    }
+  });
+
+  const disableSaveBtn =
+    chatConfig.chatValue === value || value.length === 0 || isLoading;
+
+  return (
+    <Modal
+      open={chatEditModal}
+      title="Edit Chat"
+      showHeader
+      showFooter={false}
+      closeAction={closeAction}>
+      <div className="min-w-132">
+        <FormInput
+          label="Comment"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </div>
+      <div className="flex mt-8 justify-end">
+        <Buttons disabled={disableSaveBtn} label={'Save'} onClick={onEditedChatSave} />
+      </div>
+    </Modal>
+  );
+};
 
 const BottomSection = ({
   setShowComments,
@@ -34,7 +97,7 @@ const BottomSection = ({
   cardDetails: ICommunityCard;
   showComments: boolean;
   chatCount: number;
-  authId?: string;
+  authId: string;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   let copyLikes = cardDetails.likes || [];
@@ -148,7 +211,8 @@ const PostComment = ({
     setShowComments(true);
 
     let payload = {...chatObject};
-    delete payload.person;
+    // @ts-ignore
+    delete payload?.person;
     mutate({
       input: {...payload}
     });
@@ -212,18 +276,18 @@ const PostComment = ({
 const Menu = ({
   showMenu,
   setShowMenu,
-  onDelete,
+  onDelete = () => {},
   cardId,
-  fileKey,
+  fileKey = '',
   onCardEdit,
   cardDetails
 }: {
   showMenu: boolean;
   cardId: string;
-  fileKey: string;
+  fileKey?: string;
   cardDetails: ICommunityCard;
   onCardEdit?: (cardDetails: ICommunityCard) => void;
-  onDelete?: (cardId: string, fileKey?: string) => void;
+  onDelete: (cardId: string, fileKey?: string) => void;
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
@@ -240,7 +304,7 @@ const Menu = ({
           <dl className="grid grid-cols-1 gap-y-3">
             <div className="col-span-1">
               <dt
-                onClick={() => onCardEdit(cardDetails)}
+                onClick={() => onCardEdit?.(cardDetails)}
                 className={`cursor-pointer text-gray-900  transition-all `}>
                 Edit
               </dt>
@@ -248,7 +312,7 @@ const Menu = ({
             <div className="col-span-1">
               <dt
                 data-cy="card-delete-button"
-                onClick={() => onDelete(cardId, fileKey)}
+                onClick={() => onDelete?.(cardId, fileKey)}
                 className={`cursor-pointer text-red-500 transition-all`}>
                 Delete
               </dt>
@@ -268,16 +332,16 @@ const Menu = ({
   );
 };
 
+const UploadDate = ({cardDate}: {cardDate?: string}) => {
+  return (
+    <span className="text-gray-600 font-thin w-auto text-xs ml-2">
+      • {moment(cardDate).fromNow()}
+    </span>
+  );
+};
+
 const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   const person = cardDetails?.person;
-
-  const UploadDate = () => {
-    return (
-      <span className="text-gray-600 font-thin w-auto text-xs ml-2">
-        • {moment(cardDetails.cardDate).fromNow()}
-      </span>
-    );
-  };
 
   const media = React.useMemo(
     () =>
@@ -291,12 +355,12 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
     return (
       <div className="relative">
         <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
-          Announcement <UploadDate />
+          Announcement <UploadDate cardDate={cardDetails.cardDate} />
         </div>
         <div className="flex max-w-xl  mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
-              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+              <div className="text-gray-400 community-media font-medium text-sm mb-7 mt-3 px-2">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
             </div>
@@ -315,7 +379,9 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
-    const [date, address] = cardDetails?.additionalInfo.split(' || ');
+    const info = cardDetails?.additionalInfo?.split(' || ');
+    const date = info && info[0] ? info[0] : new Date();
+    const address = info && info[1] ? info[1] : '';
 
     return (
       <div className="flex-col relative max-w-xl bg-gray-100 rounded-lg  mx-auto">
@@ -391,12 +457,12 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     <img
                       className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
                       alt="User avatar"
-                      src={getImageFromS3Static(person?.image)}
+                      src={person?.image ? getImageFromS3Static(person?.image) : ''}
                     />
                   </div>
                   <div className="flex flex-col mb-2 ml-4 mt-1">
                     <div className="text-gray-600 text-sm font-semibold">
-                      {person.firstName} {person.lastName}
+                      {person?.firstName} {person?.lastName}
                     </div>
                     <div className="flex  mt-1">
                       <div className="text-gray-500 font-thin w-auto text-xs">
@@ -407,7 +473,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 </div>
               )}
 
-              <div className="text-gray-400 font-medium text-sm mb-7 mt-3 px-2">
+              <div className="text-gray-400 font-medium community-media text-sm mb-7 mt-3 px-2">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
 
@@ -432,14 +498,14 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
 
 const Card = ({
   cardDetails,
-  onDelete,
+  onDelete = () => {},
   onCardEdit
 }: {
   cardDetails: ICommunityCard;
   onDelete: (cardId: string, fileKey: string) => void;
   onCardEdit?: (cardDetails: ICommunityCard) => void;
 }): JSX.Element => {
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<any[]>([]);
 
   const {mutate} = useGraphqlMutation('deleteCommunityChat');
   const community = useGraphqlMutation('updateCommunity');
@@ -448,7 +514,9 @@ const Card = ({
     remove(chats, ['id', chatId]);
     setChats([...chats]);
     mutate({input: {id: chatId}});
-    community.mutate({input: {id: cardDetails.id, chatCount: chatCount - 1}});
+    community.mutate({
+      input: {id: cardDetails.id, chatCount: chatCount - 1}
+    });
     setChatCount((prev) => prev - 1);
   };
 
@@ -456,7 +524,7 @@ const Card = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
-  const [error, setError] = useState('');
+  const [_, setError] = useState('');
 
   const fetchChats = async () => {
     try {
@@ -505,6 +573,7 @@ const Card = ({
     <Menu
       cardDetails={cardDetails}
       fileKey={cardDetails?.cardImageLink}
+      // @ts-ignore
       onDelete={onDelete}
       onCardEdit={onCardEdit}
       cardId={cardDetails.id}
@@ -512,60 +581,18 @@ const Card = ({
       setShowMenu={setShowMenu}
     />
   );
-
-  const EditChatModal = () => {
-    const closeAction = () => {
-      setChatEditModal(false);
-      setValue('');
-    };
-    const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
-
-    const onEditedChatSave = () => {
-      mutate({input: {id: chatConfig.chatId, msg: value, isEditedChat: true}});
-    };
-
-    const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
-      onSuccess: () => {
-        const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
-        update(chats[idx], `msg`, () => value);
-        update(chats[idx], `isEditedChat`, () => true);
-        setChats([...chats]);
-        closeAction();
-      }
-    });
-
-    const disableSaveBtn =
-      chatConfig.chatValue === value || value.length === 0 || isLoading;
-
-    return (
-      chatEditModal && (
-        <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
-          <div className="min-w-132">
-            <FormInput
-              label="Comment"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          </div>
-          <div className="flex mt-8 justify-end">
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              disabled={disableSaveBtn}
-              label={'Save'}
-              onClick={onEditedChatSave}
-            />
-          </div>
-        </Modal>
-      )
-    );
-  };
-
-  const [chatCount, setChatCount] = useState(cardDetails.chatCount);
+  const [chatCount, setChatCount] = useState<number>(cardDetails?.chatCount || 0);
 
   return (
-    <div className="relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
+    <AntdCard>
       {MenuOptions}
-      <EditChatModal />
+      <EditChatModal
+        chatConfig={chatConfig}
+        setChatEditModal={setChatEditModal}
+        chatEditModal={chatEditModal}
+        setChats={setChats}
+        chats={chats}
+      />
       <MainCard cardDetails={cardDetails} />
       <div className="w-auto">
         <BottomSection
@@ -594,7 +621,7 @@ const Card = ({
           />
         )}
       </div>
-    </div>
+    </AntdCard>
   );
 };
 

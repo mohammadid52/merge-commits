@@ -1,14 +1,15 @@
-import React, {Fragment, useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {RiLock2Fill} from 'react-icons/ri';
-import {NavLink, useRouteMatch} from 'react-router-dom';
+import {Fragment} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {LockOutlined} from '@ant-design/icons';
+import Buttons from '@components/Atoms/Buttons';
+import {Card, Descriptions} from 'antd';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {getUserRoleString} from 'utilities/strings';
-import Tooltip from 'atoms/Tooltip';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './Profile';
+import useAuth from '@customHooks/useAuth';
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -18,9 +19,10 @@ interface UserInfoProps {
 
 const ProfileInfo = (props: UserInfoProps) => {
   const {user, status, stdCheckpoints, questionData} = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {dashboardProfileDict} = useDictionary(clientKey);
-  const match = useRouteMatch();
+  const {userLanguage} = useGlobalContext();
+  const {dashboardProfileDict} = useDictionary();
+
+  const PersonalInfoDict = dashboardProfileDict[userLanguage]['PERSONAL_INFO'];
 
   const language = () => {
     if (user.language === 'EN') {
@@ -28,14 +30,9 @@ const ProfileInfo = (props: UserInfoProps) => {
     } else if (user.language === 'ES') {
       return 'Spanish';
     }
+    return 'English';
   };
 
-  // let changeToUsFormat = (actualDate: string) => {
-  //   let date = new Date(actualDate);
-  //   return (
-  //     (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
-  //   )
-  // }
   const getQuestionResponse = (checkpointID: string, questionID: string) => {
     const selectedCheckp: any = questionData.find(
       (item) => item.checkpointID === checkpointID
@@ -58,6 +55,11 @@ const ProfileInfo = (props: UserInfoProps) => {
     }
   };
 
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const {isStudent} = useAuth();
+
   if (status !== 'done') {
     return <LessonLoading />;
   }
@@ -65,125 +67,56 @@ const ProfileInfo = (props: UserInfoProps) => {
   {
     return (
       <div className="w-full md:px-4 pt-4">
-        <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-          <div className="border-b-0 border-gray-200 sm:px-6">
-            <h3 className="px-0 pr-0 pl-2 py-2 md:pl-0 md:py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
-              {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}{' '}
-            </h3>
-          </div>
-          <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-2 grid-rows-2 gap-x-1 sm:gap-x-2 gap-y-4 sm:grid-cols-3">
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['FIRST_NAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.firstName}`}</dd>
-              </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['LAST_NAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.lastName}`}</dd>
-              </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['NICKNAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.preferredName ? user.preferredName : '--'}`}
-                </dd>
-              </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['NICKNAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.preferredName ? user.preferredName : '--'}`}
-                </dd>
-              </div>
+        <Card>
+          <Descriptions
+            extra={
+              <div className="flex gap-4 items-center justify-center">
+                <Buttons
+                  tooltip="Change your password"
+                  Icon={LockOutlined}
+                  label={PersonalInfoDict['PASSWORD']}
+                  size="small"
+                  variant="dashed"
+                  onClick={() => {
+                    history.push(`${match.url}/password`);
+                  }}
+                />
 
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['LANGUAGE']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{language()}</dd>
+                {isStudent && (
+                  <Buttons
+                    tooltip="Change your journal passcode"
+                    onClick={() => {
+                      history.push(`${match.url}/passcode`);
+                    }}
+                    Icon={LockOutlined}
+                    label={PersonalInfoDict['PASSCODE']}
+                    size="small"
+                    variant="dashed"
+                  />
+                )}
               </div>
-              <div className="col-span-2 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['EMAIL']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.email}`}</dd>
-              </div>
-
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['ROLE']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.role ? getUserRoleString(user.role) : '--'}`}
-                </dd>
-              </div>
-              {/* PASSWORD */}
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
-                  <NavLink
-                    className="flex items-center justify-center w-auto"
-                    to={`${match.url}/password`}>
-                    <Tooltip text="edit password">
-                      <div className="flex items-center justify-center">
-                        <p className="w-auto mr-2">
-                          {
-                            dashboardProfileDict[userLanguage]['PERSONAL_INFO'][
-                              'PASSWORD'
-                            ]
-                          }
-                        </p>
-                        <IconContext.Provider
-                          value={{
-                            className: 'w-auto',
-                            size: '1rem',
-                            color: 'rgba(160, 174, 192, 1)'
-                          }}>
-                          <RiLock2Fill />
-                        </IconContext.Provider>
-                      </div>
-                    </Tooltip>
-                  </NavLink>
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
-              </div>
-              {/* PASSCODE */}
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
-                  <NavLink
-                    className="flex items-center justify-center w-auto"
-                    to={`${match.url}/passcode`}>
-                    <Tooltip text="edit password">
-                      <div className="flex items-center justify-center">
-                        <p className="w-auto mr-2">
-                          {
-                            dashboardProfileDict[userLanguage]['PERSONAL_INFO'][
-                              'PASSCODE'
-                            ]
-                          }
-                        </p>
-                        <IconContext.Provider
-                          value={{
-                            className: 'w-auto',
-                            size: '1rem',
-                            color: 'rgba(160, 174, 192, 1)'
-                          }}>
-                          <RiLock2Fill />
-                        </IconContext.Provider>
-                      </div>
-                    </Tooltip>
-                  </NavLink>
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
+            }
+            title={PersonalInfoDict['TITLE']}>
+            <Descriptions.Item label={PersonalInfoDict['FIRST_NAME']}>
+              {user.firstName}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['LAST_NAME']}>
+              {user.lastName}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['NICKNAME']}>
+              {user?.preferredName || ''}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['LANGUAGE']}>
+              {language()}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['ROLE']}>
+              {getUserRoleString(user.role)}
+            </Descriptions.Item>
+            <Descriptions.Item span={2} label={PersonalInfoDict['EMAIL']}>
+              {user.email}
+            </Descriptions.Item>
+          </Descriptions>
+        </Card>
 
         {stdCheckpoints?.length > 0 ? (
           <Fragment>
@@ -197,10 +130,9 @@ const ProfileInfo = (props: UserInfoProps) => {
                   </div>
                   <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                      {checkpoint.questions?.items.map((item: any, index: number) => (
-                        <div key={index} className="sm:col-span-1 p-2">
+                      {checkpoint.questions?.items.map((item: any) => (
+                        <div key={item.question.id} className="sm:col-span-1 p-2">
                           <dt className="text-sm leading-5 font-medium text-gray-500">
-                            {/* {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']} */}
                             {item.question.question}
                           </dt>
                           <dd className="mt-1 text-sm leading-5 text-gray-900">
@@ -216,7 +148,6 @@ const ProfileInfo = (props: UserInfoProps) => {
                                 {getQuestionResponse(checkpoint.id, item.question.id)}
                               </a>
                             )}
-                            {/* {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`} */}
                           </dd>
                         </div>
                       ))}

@@ -1,12 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 interface AddTopicProps {
   curricularId: string;
   onCancel?: () => void;
@@ -17,16 +16,16 @@ interface AddTopicProps {
 const AddTopic = (props: AddTopicProps) => {
   const {curricularId, onCancel, postMutation, topicData} = props;
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddTopicDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {AddTopicDict} = useDictionary();
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [learning, setLearning] = useState({id: '', name: '', value: ''});
+  const [learning] = useState({id: '', name: '', value: ''});
   const [validation, setValidation] = useState({name: '', learning: ''});
 
-  const [topicIds, setTopicIds] = useState([]);
+  const [_, setTopicIds] = useState<any[]>([]);
   const [evalution, setEvalution] = useState({
     distinguished: '',
     excelled: '',
@@ -210,13 +209,11 @@ const AddTopic = (props: AddTopicProps) => {
       </div>
       <div className="flex my-8 justify-center">
         <Buttons
-          btnClass="py-3 px-10 mr-4"
           label={AddTopicDict[userLanguage]['button']['cancel']}
           onClick={onCancel}
           transparent
         />
         <Buttons
-          btnClass="py-3 px-10 ml-4"
           label={AddTopicDict[userLanguage]['button']['save']}
           onClick={saveTopicDetails}
           disabled={loading}

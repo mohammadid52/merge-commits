@@ -1,8 +1,7 @@
-// import React from 'react';
 import {Dicitionary, PersonStatus, UserPageState} from 'API';
-import {globalStateType, globalState} from 'state/GlobalState';
+import {globalState} from 'state/GlobalState';
 
-type globalActions =
+export type GlobalActions =
   | {
       type: 'UPDATE_SIDEBAR';
       payload: {
@@ -42,6 +41,7 @@ type globalActions =
       payload: {
         roomID: string;
         syllabusID: string;
+        name: string;
       };
     }
   | {
@@ -58,11 +58,19 @@ type globalActions =
       };
     }
   | {
+      type: 'UPDATE_PAGE_STATE';
+      payload: {
+        pageState: UserPageState;
+        lastPageStateUpdate: string;
+      };
+    }
+  | {
       type: 'SET_USER';
       payload: {
         location: any[];
         removedFrom?: any[];
-
+        email: string;
+        authId: string;
         id: string;
         firstName: string;
         lastName: string;
@@ -105,6 +113,12 @@ type globalActions =
       };
     }
   | {
+      type: 'AUTHENTICATE';
+      payload: {
+        [key: string]: any;
+      };
+    }
+  | {
       type: 'CLEANUP';
     }
   | {
@@ -124,7 +138,7 @@ type globalActions =
       payload: Dicitionary[];
     };
 
-export const globalReducer = (state: globalStateType, action: globalActions) => {
+export const globalReducer = (state: any, action: GlobalActions) => {
   switch (action.type) {
     case 'UPDATE_SIDEBAR':
       return {
@@ -140,6 +154,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         dictionaries: action.payload
       };
     case 'UPDATE_ROOM':
+    case 'TOGGLE_LESSON':
       return {
         ...state,
         roomData: {
@@ -190,19 +205,13 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         ...state,
         activeRoom: action.payload.roomID,
         activeSyllabus: action.payload.syllabusID,
+        activeRoomName: action.payload.name,
         roomData: {
           ...state.roomData,
           syllabus: []
         }
       };
-    case 'TOGGLE_LESSON':
-      return {
-        ...state,
-        roomData: {
-          ...state.roomData,
-          [action.payload.property]: action.payload.data
-        }
-      };
+
     case 'UPDATE_TEMP':
       return {
         ...state,
@@ -234,6 +243,17 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
             action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700'
         }
       };
+
+    case 'UPDATE_PAGE_STATE':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          lastPageStateUpdate:
+            action?.payload?.lastPageStateUpdate || state.user.lastPageStateUpdate,
+          pageState: action?.payload?.pageState || state.user.pageState
+        }
+      };
     case 'SET_USER':
       return {
         ...state,
@@ -241,6 +261,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         user: {
           ...state.user,
           id: action.payload.id,
+          authId: action.payload.authId,
+          email: action.payload.email,
           firstName: action.payload.firstName,
           lastName: action.payload.lastName,
           language: action.payload.language,
@@ -260,11 +282,13 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           lessons: action.payload?.lessons,
           lastEmotionSubmission: action.payload?.lastEmotionSubmission,
           pageState: action.payload.pageState,
+
           status: action.payload?.status,
           removedFrom: action.payload?.removedFrom || []
         }
       };
     case 'LOG_IN':
+    case 'PREV_LOG_IN':
       return {
         ...state,
         status: 'logged-in',
@@ -283,16 +307,11 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         }
       };
 
-    case 'PREV_LOG_IN':
+    case 'AUTHENTICATE':
       return {
         ...state,
         status: 'logged-in',
-        isAuthenticated: true,
-        user: {
-          ...state.user,
-          email: action.payload.email,
-          authId: action.payload.authId
-        }
+        isAuthenticated: true
       };
     case 'CLEANUP':
       return globalState;

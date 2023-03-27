@@ -1,37 +1,42 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
-import {Route, Switch, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {withZoiqFilter} from '@utilities/functions';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
-import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
+import {useEffect, useState} from 'react';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
+
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonTabView from './StepActionComponent/LessonTabView';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {withZoiqFilter} from '@utilities/functions';
 
 interface ILessonBuilderHomeProps {
   instId?: string;
 }
 
-const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
-  const {dispatch} = useContext(GlobalContext);
+const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
+  const {dispatch} = useGlobalContext();
 
   const match = useRouteMatch();
 
-  const [designersList, setDesignersList] = useState([]);
-  const [institutionList, setInstitutionList] = useState([]);
+  const [designersList, setDesignersList] = useState<any[]>([]);
+  const [institutionList, setInstitutionList] = useState<any[]>([]);
 
   useEffect(() => {
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-builder'}});
+    dispatch({
+      type: 'UPDATE_CURRENTPAGE',
+      payload: {data: 'lesson-builder'}
+    });
   }, []);
 
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]}
+        filter: {
+          or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]
+        }
       })
     );
     const savedData = result.data.listPeople;
@@ -70,19 +75,6 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
    *  This was the most logical place to put it
    *  as it needs to overlay several of the components below
    */
-
-  // const NewLessonPlanModal = (_:any) =>
-  // <div className={`col-span-1`}>
-  //   <NewLessonPlanSO
-  //     editMode={editMode}
-  //     setEditMode={setEditMode}
-  //     pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing
-  //     open={newLessonPlanShow}
-  //     setOpen={setNewLessonPlanShow}
-  //     activePageData={activePageData}
-  //   />
-  // </div>
-  // }
 
   return (
     <>
@@ -134,7 +126,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
               </ErrorBoundary>
             )}
           />
-          <Route
+          {/* <Route
             exact
             path={`${match.url}/lesson/add/lesson-plan`}
             render={() => (
@@ -142,7 +134,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
                 <LessonPlan />
               </ErrorBoundary>
             )}
-          />
+          /> */}
           <Route
             path={`${match.url}/:lessonId/page-builder`}
             render={() => (

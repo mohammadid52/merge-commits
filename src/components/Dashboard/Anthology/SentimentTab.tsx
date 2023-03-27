@@ -1,18 +1,19 @@
-import {MenuIcon} from '@heroicons/react/outline';
+import {MenuOutlined} from '@ant-design/icons';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
+
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
-import FormInput from 'atoms/Form/FormInput';
-import React, {useContext, useEffect, useState} from 'react';
-import Buttons from 'atoms/Buttons';
-import useDictionary from 'customHooks/dictionary';
-import * as customQueries from 'customGraphql/customQueries';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import moment from 'moment';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
 import {findIndex, isEmpty, update} from 'lodash';
-import {getAsset} from 'assets';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
 
 interface ISentiment {
   personAuthID: string;
@@ -36,61 +37,67 @@ const EditBackstory = ({
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setStudentSentiments: React.Dispatch<React.SetStateAction<any[]>>;
   studentSentiments: any[];
-  data: ISentiment;
+  data: ISentiment | null;
   fromDashboard?: boolean;
   onSuccess?: () => void;
 }) => {
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const [backstory, setBackstory] = useState('');
 
   useEffect(() => {
-    setBackstory(data.backstory);
+    data && setBackstory(data.backstory);
   }, []);
 
   const [saving, setSaving] = useState(false);
 
-  const {EditQuestionModalDict, General} = useDictionary(clientKey);
+  const {EditQuestionModalDict, General} = useDictionary();
 
   const updateBackstory = async () => {
     setSaving(true);
     try {
-      const payload = {
-        personAuthID: data.personAuthID,
-        personEmail: data.personEmail,
-        date: data.date,
-        time: data.time,
-        backstory,
-        responseText: data.responseText
-      };
+      if (data) {
+        const payload = {
+          personAuthID: data.personAuthID,
+          personEmail: data.personEmail,
+          date: data.date,
+          time: data.time,
+          backstory,
+          responseText: data.responseText
+        };
 
-      if (fromDashboard) {
-        await API.graphql(
-          graphqlOperation(customMutations.createPersonSentiments, {input: payload})
-        );
-        await API.graphql(
-          graphqlOperation(customMutations.updateLastSubmissionDate, {
-            input: {
-              authId: data.personAuthID,
-              email: data.personEmail,
-              lastEmotionSubmission: data.date
-            }
-          })
-        );
-        onSuccess && onSuccess();
-      } else {
-        await API.graphql(
-          graphqlOperation(customMutations.updatePersonSentiments, {input: payload})
-        );
+        if (fromDashboard) {
+          await API.graphql(
+            graphqlOperation(customMutations.createPersonSentiments, {
+              input: payload
+            })
+          );
+          await API.graphql(
+            graphqlOperation(customMutations.updateLastSubmissionDate, {
+              input: {
+                authId: data.personAuthID,
+                email: data.personEmail,
+                lastEmotionSubmission: data.date
+              }
+            })
+          );
+          onSuccess && onSuccess();
+        } else {
+          await API.graphql(
+            graphqlOperation(customMutations.updatePersonSentiments, {
+              input: payload
+            })
+          );
+        }
+
+        const updateLocalState = () => {
+          const idx = data.idx || 0;
+          update(studentSentiments[idx], `backstory`, () => backstory);
+          setStudentSentiments([...studentSentiments]);
+        };
+
+        updateLocalState();
+        setShow(false);
       }
-
-      const updateLocalState = () => {
-        const idx = data.idx || 0;
-        update(studentSentiments[idx], `backstory`, () => backstory);
-        setStudentSentiments([...studentSentiments]);
-      };
-
-      updateLocalState();
-      setShow(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -99,42 +106,40 @@ const EditBackstory = ({
   };
 
   return (
-    show && (
-      <Modal
-        title={General[userLanguage]['SENTIMENT']['MODAL_TITLE']}
-        closeAction={() => setShow(false)}
-        showHeader={true}
-        showFooter={false}>
-        <div className="min-w-96 max-w-132 min-h-32">
-          <FormInput
-            dataCy="backstory-input"
-            rows={3}
-            showCharacterUsage
-            className={'mb-2'}
-            maxLength={144}
-            textarea
-            value={backstory}
-            onChange={(e: any) => setBackstory(e.target.value)}
-            placeHolder={`I'm feeling ${data.responseText} because...`}
+    <Modal
+      open={show}
+      title={General[userLanguage]['SENTIMENT']['MODAL_TITLE']}
+      closeAction={() => setShow(false)}
+      showHeader={true}
+      showFooter={false}>
+      <div className="min-w-96 max-w-132 min-h-32">
+        <FormInput
+          dataCy="backstory-input"
+          rows={3}
+          showCharacterUsage
+          className={'mb-2'}
+          maxLength={144}
+          textarea
+          value={backstory}
+          onChange={(e: any) => setBackstory(e.target.value)}
+          placeHolder={`I'm feeling ${data?.responseText || 'happy'} because...`}
+        />
+        <div className="flex items-center justify-end mt-4">
+          <Buttons
+            dataCy="backstory-button"
+            disabled={saving}
+            label={
+              !saving ? (
+                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
+              ) : (
+                <Loader className="text-white" />
+              )
+            }
+            onClick={updateBackstory}
           />
-          <div className="flex items-center justify-end mt-4">
-            <Buttons
-              dataCy="backstory-button"
-              disabled={saving}
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={
-                !saving ? (
-                  EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
-                ) : (
-                  <Loader className="text-white" />
-                )
-              }
-              onClick={updateBackstory}
-            />
-          </div>
         </div>
-      </Modal>
-    )
+      </div>
+    </Modal>
   );
 };
 
@@ -153,9 +158,9 @@ const SentimentTab = ({
   goBack?: () => void;
   onSuccess?: () => void;
 }) => {
-  const [studentSentiments, setStudentSentiments] = useState([]);
+  const [studentSentiments, setStudentSentiments] = useState<any[]>([]);
 
-  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const {state, userLanguage} = useGlobalContext();
   const {authId} = state.user;
 
   const [nextToken, setNextToken] = useState<string>('');
@@ -165,7 +170,7 @@ const SentimentTab = ({
   const [loadingSentiments, setLoadingSentiments] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const {General} = useDictionary(clientKey);
+  const {General} = useDictionary();
 
   const fetchSentiments = async (fetchNewRecords: boolean = false) => {
     try {
@@ -239,8 +244,10 @@ const SentimentTab = ({
   // Modal state for backstory edit
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const getEmojiName = (eName: string = 'OKAY') =>
-    General[userLanguage]['SENTIMENT']['EMOJIS'][eName?.toUpperCase()];
+  const getEmojiName = (eName: string = 'OKAY') => {
+    // @ts-ignore
+    return General[userLanguage]['SENTIMENT']['EMOJIS'][eName?.toUpperCase()];
+  };
 
   const openModalWithData = () => {
     setShowEditModal(true);
@@ -280,12 +287,9 @@ const SentimentTab = ({
           {!goBack ? (
             <span
               className={`w-auto ${goBack ? 'ml-8' : ''}`}
+              onClick={() => setView(view === 'table' ? 'emoji' : 'table')}
               title={`Show ${view === 'table' ? 'emoji' : 'table'} view`}>
-              <MenuIcon
-                onClick={() => setView(view === 'table' ? 'emoji' : 'table')}
-                className="block h-6 w-6 cursor-pointer"
-                aria-hidden="true"
-              />
+              <MenuOutlined />
             </span>
           ) : (
             <Buttons onClick={openModalWithData} label="Add backstory" />

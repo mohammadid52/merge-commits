@@ -1,64 +1,64 @@
-import Auth from '@aws-amplify/auth';
-import {getAsset} from 'assets';
+import {Auth} from 'aws-amplify';
+
+import Buttons from '@components/Atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useState} from 'react';
-import {NavLink} from 'react-router-dom';
+import {useFormik} from 'formik';
+import React, {useEffect, useState} from 'react';
+import {NavLink, useHistory} from 'react-router-dom';
+import {ForgotSchema} from 'Schema';
+import {useQuery} from '@customHooks/urlParam';
+
 const Forgot = () => {
-  const {clientKey} = useContext(GlobalContext);
-  let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
     message: ''
   });
-  const [input, setInput] = useState({
-    email: '',
-    password: ''
-  });
 
-  async function forgotPassword() {
-    let username = input.email;
+  const [isLoading, setIsLoading] = useState(false);
 
+  const history = useHistory();
+
+  async function forgotPassword(email: string) {
+    setIsLoading(true);
     try {
-      const user = await Auth.forgotPassword(username);
-      setMessage(() => {
-        return {
-          show: true,
-          type: 'success',
-          message: 'Please check your email for further instructions.'
-        };
-      });
+      const user = await Auth.signIn(email, 'xIconoclast.5x');
+      if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+        try {
+          const newPasswordUser = await Auth.completeNewPassword(user, values.password);
+          if (newPasswordUser) {
+            setMessage({
+              show: true,
+              type: 'success',
+              message: 'Your password was successfully updated.'
+            });
+            setTimeout(() => {
+              history.push('/login');
+            }, 3000);
+          }
+        } catch (error) {
+          console.error('error setting password', error);
+        }
+      }
     } catch (error) {
       console.error('error signing in', error);
       setMessage(() => {
-        if (!username) {
-          return {
-            show: true,
-            type: 'error',
-            message: 'Please enter your email'
-          };
-        }
-        if (!username.includes('@' && '.')) {
-          return {
-            show: true,
-            type: 'error',
-            message: 'Your email is not in the expected email address format'
-          };
-        }
         switch (error.code) {
+          case 'NotAuthorizedException':
+            return {
+              show: true,
+              type: 'error',
+              message:
+                'Your password was not updated.  Contact our team to reset your default settings before continuing.'
+            };
           case 'UserNotFoundException':
             return {
               show: true,
               type: 'error',
-              message: 'The email you entered was not found'
+              message: 'The email you entered was not found.'
             };
-          // case "UserNotFoundException":
-          //         return {
-          //                     show: true,
-          //                     type: 'error',
-          //                     message: 'Email was not found',
-          //                 }
+
           default:
             return {
               show: true,
@@ -67,69 +67,78 @@ const Forgot = () => {
             };
         }
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  const handleChange = (e: {target: {id: any; value: any}}) => {
-    const {id, value} = e.target;
-    setInput((input) => {
-      if (id === 'email') {
-        return {
-          ...input,
-          [id]: value.toLowerCase().trim()
-        };
-      } else {
-        return {
-          ...input,
-          [id]: value
-        };
-      }
-    });
+  useEffect(() => {
+    populateCodeAndEmail();
+  }, []);
+
+  const params = useQuery(location.search);
+
+  const populateCodeAndEmail = () => {
+    const emailId = params.get('email'); // Find an email from params.
+
+    setFieldValue('email', emailId);
   };
 
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
-      forgotPassword();
+  const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validationSchema: ForgotSchema,
+    onSubmit: async (values) => {
+      const {email} = values;
+      await forgotPassword(email);
     }
-  };
-
-  const handleSubmit = () => {
-    forgotPassword();
-  };
+  });
 
   return (
-    <AuthCard title="Forgot Password">
-      <div className="">
-        <FormInput
-          label="Email"
-          className="mb-4"
-          placeHolder="Enter your email"
-          type="email"
-          value={input.email}
-          id="email"
-          onChange={handleChange}
-        />
-        <div className="w-auto ml-2 leading-5 text-xs text-gray-600 text-center">
-          Enter your email to reset your password
+    <AuthCard
+      message={message}
+      subtitle="Only new users and users who have asked our team to reset their password can update their password without logging into the app. If you forgot your existing password, contact our team to reset your security settings so you can set a new password.">
+      <form onSubmit={handleSubmit}>
+        <div className="">
+          <FormInput
+            label="Email"
+            className="mb-4"
+            placeHolder="Enter your email"
+            type="email"
+            value={values.email}
+            id="email"
+            onChange={handleChange}
+          />
         </div>
-      </div>
+        <div className="">
+          <FormInput
+            label="Set Password"
+            className="mb-4"
+            placeHolder="Set your password"
+            type="password"
+            name="password"
+            value={values.password}
+            id="password"
+            onChange={handleChange}
+          />
+        </div>
 
-      <div className="">
-        <button
-          className={`p-3 my-4 ${getAsset(
-            clientKey,
-            'authButtonColor'
-          )} text-gray-200 rounded-xl font-semibold`}
-          onKeyPress={handleEnter}
-          onClick={handleSubmit}>
-          Submit
-        </button>
-        <NavLink to="/login">
-          <div className="text-center text-sm text-blueberry hover:text-blue-500">
-            Go back to login!
-          </div>
-        </NavLink>
-      </div>
+        <div className="">
+          <Buttons
+            disabled={isLoading}
+            type="submit"
+            loading={isLoading}
+            label={'Submit'}
+          />
+          <NavLink to="/login">
+            <p className="w-auto text-gray-600 hover:underline cursor-pointer text-right mt-2">
+              return to login
+            </p>
+          </NavLink>
+        </div>
+      </form>
     </AuthCard>
   );
 };

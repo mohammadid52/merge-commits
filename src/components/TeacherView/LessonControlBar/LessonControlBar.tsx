@@ -1,7 +1,8 @@
-import React, {useContext, useState} from 'react';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {useGlobalContext} from 'contexts/GlobalContext';
+
+import React, {useState} from 'react';
 import {BiBook} from 'react-icons/bi';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import StageButton from './StageButton';
 
 interface LessonControlBarProps {
@@ -13,7 +14,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
   handlePageChange
 }: LessonControlBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
   const PAGES = lessonState.lessonData.lessonPlan;
 
@@ -34,7 +35,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
   return (
     <div className="relative h-full w-full flex flex-col items-center z-100">
       <nav
-        className="relative bg-white rounded shadow-sm h-16 lg:h-12 flex"
+        className="relative bg-white w-full rounded shadow-sm h-16 lg:h-12 flex"
         aria-label="Breadcrumb">
         {anyoneIsShared && !isPresenting && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 disabled z-50">
@@ -44,7 +45,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
           </div>
         )}
         <ol
-          className={`max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto ${
+          className={`h-full max-w-screen-xl w-full mx-auto px-4 flex space-x-4 lg:space-x-0 items-center sm:px-6 lg:px-8 overflow-x-auto ${
             anyoneIsShared ? 'z-40' : ''
           }`}>
           <li className="flex w-auto">
@@ -59,12 +60,12 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
             PAGES.map((page: UniversalLessonPage, key: number) => (
               <StageButton
                 iconID={key}
-                key={key}
-                open={page.open}
+                key={page.id}
+                open={Boolean(page.open)}
                 disabled={!page.enabled}
-                active={page.active}
+                active={Boolean(page.active)}
                 label={page.label}
-                menuOpen={menuOpen === page.stage}
+                menuOpen={menuOpen === page?.stage}
                 handleOpenMenu={handleOpenMenu}
                 handlePageChange={handlePageChange}
                 id={page.id}

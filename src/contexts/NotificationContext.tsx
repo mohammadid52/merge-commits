@@ -1,6 +1,6 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
 
-const NotificationContext = createContext(null);
+const NotificationContext = createContext<any>(null);
 type INotification = {
   show: boolean;
   dark?: boolean;
@@ -35,16 +35,13 @@ const NotificationContextProvider = ({children}: {children: React.ReactNode}) =>
     }
   }, [notification.show]);
 
+  const value = useMemo(
+    () => ({notification, setNotification, clearNotification}),
+    [notification, setNotification, clearNotification]
+  );
+
   return (
-    <NotificationContext.Provider
-      // @ts-ignore
-      value={{
-        notification,
-        setNotification,
-        clearNotification
-      }}>
-      {children}
-    </NotificationContext.Provider>
+    <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>
   );
 };
 

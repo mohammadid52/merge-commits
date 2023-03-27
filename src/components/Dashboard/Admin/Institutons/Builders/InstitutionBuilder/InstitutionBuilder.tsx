@@ -1,21 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router';
 
-import PageWrapper from 'atoms/PageWrapper';
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import Loader from 'atoms/Loader';
-import {useQuery} from 'customHooks/urlParam';
-import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import InstitutionFormComponent from './InstitutionFormComponent';
-import ServiceVendors from './ServiceVendors';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import PageWrapper from 'atoms/PageWrapper';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import InstitutionFormComponent from './InstitutionFormComponent';
+import ServiceVendors from './ServiceVendors';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -47,7 +45,12 @@ export interface InstitutionInfo {
   classes?: {items: {name?: string; id: string}[]};
   curricula?: {items: {name?: string; id: string}[]};
   serviceProviders?: {
-    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+    items: {
+      id: string;
+      providerID: string;
+      status: string;
+      providerInstitution?: any;
+    }[];
   };
 }
 
@@ -66,14 +69,12 @@ const InstitutionBuilder = ({
   const {
     clientKey,
     state: {user},
-    theme,
+
     userLanguage
-  } = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  } = useGlobalContext();
+
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-  const {BreadcrumsTitles, CommonlyUsedDict, InstitutionBuilderDict} = useDictionary(
-    clientKey
-  );
+  const {BreadcrumsTitles, CommonlyUsedDict, InstitutionBuilderDict} = useDictionary();
   const [activeStep, setActiveStep] = useState('overview');
   const [institutionInfo, setInstitutionInfo] = useState({
     id: institutionId || '',
@@ -100,33 +101,33 @@ const InstitutionBuilder = ({
   });
 
   const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
+      href: '/dashboard/manage-institutions',
       last: false
     },
     {
       title: institutionInfo.name || BreadcrumsTitles[userLanguage]['ADD_INSTITUTION'],
-      url: `/dashboard/manage-institutions/add`,
+      href: `/dashboard/manage-institutions/add`,
       last: true
     }
   ];
   const steps: IStepElementInterface[] = [
     {
       title: 'General Information',
-      description: 'Capture core details of your institution',
-      stepValue: 'overview',
-      isComplete: true
+      subTitle: 'Capture core details of your institution',
+      stepValue: 'overview'
     },
     {
       title: 'Service Vendors (Optional)',
       description: '',
       stepValue: 'service_vendors',
-      disabled: !Boolean(institutionInfo.id),
-      isComplete: false,
-      tooltipText:
-        'You have to complete the first step before the second step is activated'
+      disabled: !Boolean(institutionInfo.id)
     }
   ];
 
@@ -134,17 +135,6 @@ const InstitutionBuilder = ({
     const redirectionUrl = `${match.url}?step=${step}&id=${institutionInfo.id}`;
     history.push(redirectionUrl);
   };
-
-  // useEffect(() => {
-  //   async function deleteInstitution() {
-  //     await API.graphql(
-  //       graphqlOperation(mutations.deleteInstitution, {
-  //         input: {id: 'd995bb46-46c1-4f13-b003-1d4e4aa8737a'},
-  //       })
-  //     );
-  //   }
-  //   deleteInstitution();
-  // });
 
   useEffect(() => {
     if (step) {
@@ -170,7 +160,7 @@ const InstitutionBuilder = ({
       ...prevData,
       ...data
     }));
-    postInfoUpdate(data);
+    postInfoUpdate?.(data);
   };
 
   const updateServiceProviders = (item: any) => {
@@ -201,6 +191,9 @@ const InstitutionBuilder = ({
             instName={'name'}
           />
         );
+
+      default:
+        return null;
     }
   };
 
@@ -241,12 +234,7 @@ const InstitutionBuilder = ({
       </div> */}
       {!isEditPage && (
         <div className="flex justify-end py-4 mb-4 w-full">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={() => null}
-            Icon={IoArrowUndoCircleOutline}
-          />
+          <Buttons label="Go back" onClick={() => null} Icon={IoArrowUndoCircleOutline} />
         </div>
       )}
       <div className="px-4">

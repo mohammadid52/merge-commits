@@ -22,10 +22,8 @@ const ThinkAboutItCard = () => {
             </label>
             <FormInput
               textarea={qa.textarea}
-              dark
               onChange={onAnsChange}
               id={qa.id}
-              resize={false}
               value={answers[qa.id]}
               rows={qa.textarea ? 5 : undefined}
               placeHolder={qa.placeholder}

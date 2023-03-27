@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineRead} from 'react-icons/ai';
 
 interface QuoteBlockProps {
@@ -12,7 +11,7 @@ interface QuoteBlockProps {
 }
 
 const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
-  const {title, subtitle, bgClass, textClass, description, styles} = props;
+  const {title, subtitle, bgClass, textClass, description} = props;
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
   const [showReadMe, setShowReadMe] = useState<boolean>(true);
@@ -57,16 +56,7 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
         <div
           id="read-icon"
           className="absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50">
-          <IconContext.Provider
-            value={{size: '2rem', style: {width: 'auto', cursor: 'pointer'}}}>
-            <AiOutlineRead
-              style={{
-                MozUserSelect: 'none',
-                WebkitUserSelect: 'none',
-                msUserSelect: 'none'
-              }}
-            />
-          </IconContext.Provider>
+          <AiOutlineRead className="w-auto cursor-pointer" size={'2rem'} />
         </div>
       ) : null}
 
@@ -84,7 +74,7 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
           {description ? (
             <div
               dangerouslySetInnerHTML={{__html: `"${description}"`}}
-              className="header-font font-light"></div>
+              className="header-font leading-5 font-light"></div>
           ) : null}
         </div>
 
@@ -94,14 +84,14 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
           className={`
           ${
             heroIsActive ? 'opacity-0' : `opacity-100`
-          } absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
+          } absolute bottom-0 opacity-100 h-full w-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
           <div
-            className={`${textClass} absolute bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
+            className={`${textClass} absolute w-full bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
             <div
-              dangerouslySetInnerHTML={{__html: title}}
+              dangerouslySetInnerHTML={{__html: title || ''}}
               className="text-4.5xl header-font font-light"></div>
             <div
-              dangerouslySetInnerHTML={{__html: subtitle}}
+              dangerouslySetInnerHTML={{__html: subtitle || ''}}
               className="w-full text-xl leading-none font-light"></div>
           </div>
         </div>

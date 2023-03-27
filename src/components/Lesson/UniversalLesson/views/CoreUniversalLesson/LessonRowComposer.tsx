@@ -1,6 +1,5 @@
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle} from 'API';
-import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
   PagePart,
@@ -39,12 +38,12 @@ const LessonRowComposer = () => {
   const getSeparateDataInPartContent = (id: string) => {
     let result: any[] = [];
     activePageData &&
-      activePageData.pageContent &&
-      activePageData.pageContent.length > 0 &&
-      activePageData.pageContent.forEach((f) => {
-        f.partContent.forEach((d) => {
-          if (d.type === id) {
-            let newPartContent = f.partContent.filter((_d) => _d.type === id);
+      activePageData?.pageContent &&
+      activePageData?.pageContent?.length > 0 &&
+      activePageData?.pageContent?.forEach((f) => {
+        f?.partContent?.forEach((d) => {
+          if (d?.type === id) {
+            let newPartContent = f?.partContent?.filter((_d) => _d.type === id);
             result.push({
               ...f,
               partContent: newPartContent
@@ -62,24 +61,26 @@ const LessonRowComposer = () => {
 
   const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
-    activePageData && activePageData?.pageContent && activePageData.pageContent.length > 0
-      ? activePageData?.pageContent?.forEach((a) => {
-          const objArray: any[] = [];
-          a.partContent.forEach((b) => {
-            if (!b.type.includes('Download')) {
-              objArray.push(b);
-            }
-          });
-          removeDownloadablesFromlist.push({...a, partContent: objArray});
-        })
-      : [];
+    activePageData &&
+      activePageData?.pageContent &&
+      activePageData.pageContent.length > 0 &&
+      activePageData?.pageContent?.forEach((a) => {
+        const objArray: any[] = [];
+        a.partContent.forEach((b) => {
+          if (!b?.type?.includes('Download')) {
+            objArray.push(b);
+          }
+        });
+        removeDownloadablesFromlist.push({...a, partContent: objArray});
+      });
 
     return removeDownloadablesFromlist;
   }, [activePageData]);
 
-  const removeDownloadablesFromlist = useMemo(() => getRemovedDownloadablesFromlist(), [
-    activePageData
-  ]);
+  const removeDownloadablesFromlist = useMemo(
+    () => getRemovedDownloadablesFromlist(),
+    [activePageData]
+  );
 
   useEffect(() => {
     const parentContainer = document.querySelector('html');
@@ -98,8 +99,6 @@ const LessonRowComposer = () => {
 
   const lessonState = gContext.lessonState;
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
-
-  const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
 
   useEffect(() => {
     if (PAGES) {
@@ -162,7 +161,7 @@ const LessonRowComposer = () => {
   }, []);
 
   return (
-    <div>
+    <div className="page-animate">
       {removeDownloadablesFromlist &&
         removeDownloadablesFromlist.map((pagePart: PagePart, idx: number): any => (
           <div key={`row_pagepart_${idx}`} className="relative">
@@ -185,9 +184,7 @@ const LessonRowComposer = () => {
                           key={`row_pagepart_${idx}_${idx2}`}
                           className={`${paddingForHeader(content.type)}`}>
                           <div
-                            className={`${
-                              content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
-                            } ${paddingForDarkBg(content.type)} `}
+                            className={` ${paddingForDarkBg(content.type)} `}
                             id={`${content.type === 'notes-form' ? '' : content.id}`}>
                             <SingleContentRow
                               content={content}
@@ -207,7 +204,6 @@ const LessonRowComposer = () => {
             </div>
           </div>
         ))}
-      {isLastPage && <AllEmotions />}
 
       {isStudent && (
         <>
@@ -223,13 +219,13 @@ const LessonRowComposer = () => {
             )}
           </div>
 
-          <TranslationModule />
-
           {shouldShowLessonModule && (
             <LessonModule currentLesson={lessonState?.lessonData} />
           )}
         </>
       )}
+
+      {user.role === 'ST' && <TranslationModule />}
     </div>
   );
 };

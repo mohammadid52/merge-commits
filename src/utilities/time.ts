@@ -1,36 +1,5 @@
 import moment from 'moment';
 
-interface PatternObject {
-  [key: string]: string;
-}
-
-/**
- * Quick function to flip around time/date formatting based on input & output pattern
- * Also works with other strings
- * @param pattern
- * @param separator
- * @param inputPattern
- * @param outputPattern
- */
-export const formatTime = (
-  pattern: string,
-  separator: string,
-  inputPattern: string,
-  outputPattern: string
-) => {
-  const patternStringObject = pattern.split(separator);
-  const originalTime = inputPattern
-    .split(separator)
-    .reduce((acc: PatternObject, val: string, i: number) => {
-      return {...acc, [`${val}`]: patternStringObject[i]};
-    }, {});
-  const outputTime = outputPattern
-    .split(separator)
-    .map((val: string, i: number) => originalTime[val]);
-
-  return outputTime.join(separator);
-};
-
 /**
  * Quick function to get date string in US format:
  * mm-dd-yyyy
@@ -58,12 +27,15 @@ export const dateString = (
   const monthNumber = d.getMonth();
   const year = d.getFullYear();
 
+  const world = `${dayNumber}${separator}${monthNumber + 1}${separator}${year}`;
+
   if (locale === 'US') {
     return `${monthNumber + 1}${separator}${dayNumber}${separator}${year}`;
   }
   if (locale === 'WORLD') {
-    return `${dayNumber}${separator}${monthNumber + 1}${separator}${year}`;
+    return world;
   }
+  return world;
 };
 
 export const dateFromServer = (date: string) => {
@@ -79,7 +51,9 @@ export const MinutesToHHMM = (minutes: number, separator?: string) => {
   let h = (minutes - m) / 60;
   return separator === ':'
     ? `${h.toString()}:${m < 10 ? '0' : ''} ${m.toString()}`
-    : `${h ? `${h.toString()} hrs` : ''} ${m.toString()} minutes`;
+    : m > 0
+    ? `${h ? `${h.toString()} ${h > 1 ? 'hrs' : 'hr'}` : ''} ${m.toString()} minutes`
+    : `${h.toString()} ${h > 1 ? 'hrs' : 'hr'}`;
 };
 
 /**
@@ -90,7 +64,7 @@ export const MinutesToHHMM = (minutes: number, separator?: string) => {
  */
 export function timeIntervals(): any[] {
   let items: any[] = [];
-  new Array(24).fill(undefined).forEach((acc: any, index: number) => {
+  new Array(24).fill(undefined).forEach((_, index: number) => {
     items = [
       ...items,
       {
@@ -109,3 +83,14 @@ export function timeIntervals(): any[] {
 
   return items;
 }
+
+export const getFormatedDate = (date: string) => {
+  if (date) {
+    if (date !== '-') {
+      return date.split(',')[0];
+    } else {
+      return '-';
+    }
+  }
+  return '-';
+};

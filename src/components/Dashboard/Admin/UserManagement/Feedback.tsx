@@ -4,29 +4,14 @@ import React from 'react';
 import {AiOutlineEdit} from 'react-icons/ai';
 import {BsFillTrashFill} from 'react-icons/bs';
 
+import Placeholder from '@components/Atoms/Placeholder';
+import {getUserRoleString} from '@utilities/strings';
 import moment from 'moment';
 import {getImageFromS3Static} from 'utilities/services';
-import {initials, stringToHslColor} from 'utilities/strings';
 import AudioMedia from './AudioMedia';
 import ImageMedia from './ImageMedia';
 import OtherMedia from './OtherMedia';
 import VideoMedia from './VideoMedia';
-const getRole = (role: string) => {
-  switch (role) {
-    case 'CRD':
-      return 'Coordinator';
-    case 'TR':
-      return 'Teacher';
-    case 'FLW':
-      return 'Fellow';
-    case 'BLD':
-      return 'Builder';
-    case 'ADM':
-      return 'Admin';
-    case 'ST':
-      return 'Student';
-  }
-};
 
 const getFormattedDate = (todayTime: any) => {
   const date = moment(todayTime).format('lll');
@@ -105,8 +90,8 @@ const Feedback = ({
   };
 
   const handleEdit = () => {
-    setEditCommentInput(feedback.text);
-    setEditModal((prevState: any) => ({
+    setEditCommentInput?.(feedback.text);
+    setEditModal?.((prevState: any) => ({
       show: !prevState.show,
       id: feedback.id,
       content: feedback.text
@@ -125,25 +110,11 @@ const Feedback = ({
             alt=""
           />
         ) : (
-          <div
-            className={`h-10 w-10 flex justify-center items-center rounded-md  bg-gray-400`}>
-            <div
-              className="h-full w-full flex justify-center items-center text-sm text-semibold text-white rounded-md"
-              style={{
-                /* stylelint-disable */
-                background: `${stringToHslColor(
-                  user.preferredName
-                    ? user.preferredName
-                    : user.firstName + ' ' + user.lastName
-                )}`,
-                textShadow: '0.2rem 0.2rem 3px #423939b3'
-              }}>
-              {initials(
-                user.preferredName ? user.preferredName : user.firstName,
-                user.lastName
-              )}
-            </div>
-          </div>
+          <Placeholder
+            firstName={user?.preferredName || user?.firstName || ''}
+            lastName={user?.lastName || ''}
+            size="h-10 w-10"
+          />
         )}
         <div className="ml-2 w-auto">
           <h5 className="font-semibold hover:text-underline">
@@ -160,7 +131,7 @@ const Feedback = ({
                   ? 'bg-green-100 text-green-800'
                   : 'bg-gray-100 text-gray-800'
               } ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium w-auto`}>
-              {getRole(user.role)}
+              {getUserRoleString(user.role)}
             </p>
             {feedback.edited && (
               <span className="text-gray-600 font-light text-xs ml-2">(edited)</span>

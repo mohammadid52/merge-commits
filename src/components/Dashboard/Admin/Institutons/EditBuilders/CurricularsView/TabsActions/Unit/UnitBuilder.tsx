@@ -1,21 +1,22 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useEffect, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as customQueries from 'customGraphql/customQueries';
 import {languageList} from 'utilities/staticData';
 
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import Loader from 'atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useAuth from '@customHooks/useAuth';
+import {RoomStatus} from 'API';
+import {BsArrowLeft} from 'react-icons/bs';
 import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
-import {BsArrowLeft} from 'react-icons/bs';
-import {RoomStatus} from 'API';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface IUnitData {
   id: string;
@@ -29,7 +30,7 @@ interface IUnitData {
   secondary: string;
   priorities: string;
   objectives: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {id?: string; label: string; value: string}[];
   lessonHistory: any;
 }
 
@@ -47,19 +48,13 @@ const UnitBuilder = ({instId, curricular}: any) => {
   const step = params.get('step');
   const {unitId}: any = useParams();
 
-  const {
-    clientKey,
-    state: {
-      user: {isSuperAdmin}
-    },
-    userLanguage
-  } = useContext(GlobalContext);
-  const {CommonlyUsedDict, SyllabusDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {CommonlyUsedDict, SyllabusDict} = useDictionary();
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
-  const [savedLessonsList, setSavedLessonsList] = useState([]);
-  const [lessonsIds, setLessonsIds] = useState([]);
-  const [messages, setMessages] = useState<IUIMessages>({
+  const [savedLessonsList, setSavedLessonsList] = useState<any[]>([]);
+  const [lessonsIds, setLessonsIds] = useState<any[]>([]);
+  const [_, setMessages] = useState<IUIMessages>({
     show: false,
     message: '',
     isError: false,
@@ -78,9 +73,12 @@ const UnitBuilder = ({instId, curricular}: any) => {
     purpose: '',
     status: RoomStatus.ACTIVE,
     objectives: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{id: '1', label: 'English', value: 'EN'}],
     lessonHistory: undefined
   };
+
+  const {isSuperAdmin} = useAuth();
+
   const [syllabusData, setSyllabusData] = useState<IUnitData>(initialData);
 
   useEffect(() => {
@@ -160,16 +158,13 @@ const UnitBuilder = ({instId, curricular}: any) => {
     {
       title: 'General Information',
       description: 'Capture core details of your Unit',
-      stepValue: 'overview',
-      isComplete: true
+      stepValue: 'overview'
     },
     {
       title: 'Lesson Plan manager',
       description: 'Assign lessons to Unit',
       stepValue: 'lessons',
-      disabled: !Boolean(unitId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(unitId)
     }
   ];
   const currentStepComp = (currentStep: string) => {
@@ -207,11 +202,13 @@ const UnitBuilder = ({instId, curricular}: any) => {
             setLessonsIds={setLessonsIds}
           />
         );
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="">
       {/* Section Header */}
 
       <div className="px-8 pb-4">
@@ -241,7 +238,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 mb-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 mb-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">

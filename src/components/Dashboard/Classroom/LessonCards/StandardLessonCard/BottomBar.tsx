@@ -1,7 +1,9 @@
-import React from 'react';
-import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import {MinutesToHHMM} from 'utilities/time';
-import {LessonCardProps} from '../../Classroom';
+import Placeholder from '@components/Atoms/Placeholder';
+import {LessonCardProps} from '@interfaces/ClassroomInterface';
+import {getImageFromS3Static} from '@utilities/services';
+import {MinutesToHHMM} from '@utilities/time';
+import {AiOutlineClockCircle} from 'react-icons/ai';
+
 import Start from '../../Start';
 
 const BottomBar = (props: LessonCardProps) => {
@@ -13,20 +15,20 @@ const BottomBar = (props: LessonCardProps) => {
     lessonProps,
     syllabusProps,
     accessible,
-    lessonType,
+
     lessonProgress = 0,
     isCompleted
   } = props;
 
   const startButtonProps = {
     preview: preview,
-    roomID: roomID,
-    isTeacher: isTeacher,
+    roomID: roomID || '',
+    isTeacher: Boolean(isTeacher),
     lessonKey: lessonProps ? lessonProps.lessonID : null,
     isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
     open: lessonProps && lessonProps?.status?.toLowerCase() === 'active' ? true : false,
-    isCompleted: isCompleted,
-    accessible: accessible,
+    isCompleted: Boolean(isCompleted),
+    accessible: Boolean(accessible),
     type: lessonProps.lesson.type,
     activeRoomInfo: activeRoomInfo,
     lessonProps: lessonProps?.lesson,
@@ -38,12 +40,11 @@ const BottomBar = (props: LessonCardProps) => {
   return (
     <div>
       <div
-        className={`bg-transparent relative border-t-0 border-gray-200 flex justify-between text-base p-2 px-3 ${
-          lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
-        }`}>
+        style={{borderTop: '1px solid rgba(237, 242, 247,1)'}}
+        className={`bg-transparent py-2 relative flex justify-around items-center px-4 `}>
         {/* TIME */}
         <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
-          <div className="w-auto text-gray-500">
+          <div className="flex items-center text-gray-500">
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div
@@ -55,19 +56,14 @@ const BottomBar = (props: LessonCardProps) => {
         {/* TEACHER */}
         <div className={`flex justify-center items-center md:w-5/10 w-auto md:mr-2`}>
           <div className="w-auto text-gray-500">
-            <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
+            <Placeholder
+              size="h-6 w-6 sm:h-8 sm:w-8"
+              firstName={activeRoomInfo?.teacher?.firstName}
+              lastName={activeRoomInfo?.teacher?.lastName}
+              image={getImageFromS3Static(activeRoomInfo?.teacher?.image)}
+            />
           </div>
 
-          {/* {isTeacher && (
-            <p className="overflow-ellipsis overflow-hidden text-base text-left">
-              Status:
-              {accessible ? (
-                <span className="ml-2 text-base font-semibold text-green-400">Open</span>
-              ) : (
-                <span className="ml-2 text-base font-semibold text-red-600">Closed</span>
-              )}
-            </p>
-          )} */}
           {/*
            * SHOW TEACHER NAME
            */}

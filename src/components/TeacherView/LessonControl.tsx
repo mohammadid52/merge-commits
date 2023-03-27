@@ -1,34 +1,30 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getDictionaries} from '@graphql/functions';
+import Buttons from '@components/Atoms/Buttons';
+import {Modal, Result} from 'antd';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useLessonControls from 'customHooks/lessonControls';
 import useAuth from 'customHooks/useAuth';
-import {
-  StudentPageInput,
-  UniversalLessonStudentData
-} from 'interfaces/UniversalLessonInterfaces';
-import React, {Suspense, useContext, useEffect, useState} from 'react';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
+import {Suspense, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import PositiveAlert from '../General/Popup';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
 import Frame from './Frame';
 import AttendanceFrame from './StudentWindow/AttendanceFrame';
-// import AttendanceFrame from './StudentWindow/AttendanceFrame';
 import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 import ProfileFrame from './StudentWindow/ProfileFrame';
 
-export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
+const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
   return (
     roomData?.completedLessons?.findIndex(
       (item: {lessonID?: string | null; time?: string | null}) =>
@@ -39,17 +35,14 @@ export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const {scanLessonAndFindComplicatedWord} = gContext;
-
-  const dispatch = gContext.dispatch;
 
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
   const roster = controlState.roster;
   const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -138,7 +131,7 @@ const LessonControl = () => {
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
     const idArr = studentDataArray
-      .reduce((acc: any[], dataObj: any, idx: number) => {
+      .reduce((acc: any[], dataObj: any) => {
         const idObj = {
           id: dataObj.id,
           pageIdx: PAGES.findIndex(
@@ -156,6 +149,7 @@ const LessonControl = () => {
         if (dataID1.pageIdx > dataID2.pageIdx) {
           return 1;
         }
+        return 1;
       });
     return idArr;
   };
@@ -164,7 +158,7 @@ const LessonControl = () => {
   const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
     return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
       const findPageData = studentDataArray.find(
-        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+        (dataObj: UniversalLessonStudentDataFromAPI) => dataObj.id === dataIdObj.id
       )?.pageData;
       if (Array.isArray(findPageData)) {
         return [...acc, findPageData];
@@ -214,12 +208,12 @@ const LessonControl = () => {
         console.error('loopFetchStudentData - ', e);
         return [];
       }
+      return [];
     } else {
       return [];
     }
   };
 
-  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   const PAGES = lessonState?.lessonData?.lessonPlan;
 
   const _loopFetchStudentData = async (): Promise<UniversalLessonStudentDataFromAPI[]> =>
@@ -227,13 +221,12 @@ const LessonControl = () => {
       try {
         const {lessonID} = urlParams;
 
-        setLessonDataLoaded(false);
         // fetch by pages
 
         let result: any = [];
 
         await Promise.all(
-          PAGES.map(async (page: any, idx: number) => {
+          PAGES.map(async (page: any) => {
             let studentData: any = await API.graphql(
               graphqlOperation(customQueries.getUniversalLessonStudentData, {
                 id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`
@@ -254,15 +247,16 @@ const LessonControl = () => {
         lessonDispatch({type: 'LESSON_LOADED', payload: true});
 
         // console.log('no more - ', combined);
-        setLessonDataLoaded(true);
+
         resolve(result);
       } catch (e) {
         console.error('loopFetchStudentData - ', e);
         return [];
       }
+      return [];
     });
 
-  const getStudentData = async (studentAuthId: string) => {
+  const getStudentData = async () => {
     try {
       // existing student rows
       const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
@@ -293,18 +287,18 @@ const LessonControl = () => {
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
 
   const clearStudentData = async () => {
-    lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+    lessonDispatch({type: 'UNLOAD_STUDENT_DATA', payload: {}});
   };
 
   useEffect(() => {
     if (lessonState.lessonData?.type !== 'survey') {
       if (lessonState.studentViewing === '') {
-        lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+        lessonDispatch({type: 'UNLOAD_STUDENT_DATA', payload: {}});
       }
 
       if (lessonState.studentViewing !== '') {
         clearStudentData().then((_: void) =>
-          getStudentData(lessonState.studentViewing).then((_: void) =>
+          getStudentData().then((_: void) =>
             console.log('getStudentData teacher - ', 'getted')
           )
         );
@@ -321,12 +315,10 @@ const LessonControl = () => {
   // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
   // ##################################################################### //
   const handleQuitShare = () => {
-    dispatch({type: 'QUIT_SHARE_MODE'});
     setIsSameStudentShared(false);
   };
 
   const handleQuitViewing = () => {
-    dispatch({type: 'QUIT_STUDENT_VIEWING'});
     setIsSameStudentShared(false);
   };
 
@@ -350,12 +342,7 @@ const LessonControl = () => {
         ];
       }, []);
 
-      const dictionaries = await getDictionaries();
-
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        response.lessonPlan,
-        dictionaries
-      );
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(response.lessonPlan);
 
       setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({
@@ -412,7 +399,10 @@ const LessonControl = () => {
         // history.push(`${match.url}/${0}`);
 
         const getRoomData = getLocalStorageData('room_info');
-        setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+        setLocalStorageData('room_info', {
+          ...getRoomData,
+          studentViewing: ''
+        });
 
         if (PAGES && PAGES.length > 0) {
           lessonDispatch({
@@ -545,55 +535,42 @@ const LessonControl = () => {
         )}
 
         {/* USER MANAGEMENT */}
-        <div
-          className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleLeavePopup}>
-          <PositiveAlert
-            identifier={''}
-            alert={leavePopup}
-            setAlert={setLeavePopup}
-            header="Are you sure you want to leave the Teacher View?"
-            button1="Go to student management"
-            button2="Cancel"
-            svg="question"
-            handleButton1={handleGoToUserManagement}
-            handleButton2={() => handleLeavePopup}
-            theme="light"
-            fill="screen"
+
+        <Modal open={leavePopup}>
+          <Result
+            status="warning"
+            title="Are you sure you want to leave the Teacher View?"
+            extra={[
+              <Buttons
+                onClick={handleGoToUserManagement}
+                label={'Go to student management'}
+              />,
+              <Buttons onClick={handleLeavePopup} label={'Cancel'} />
+            ]}
           />
-        </div>
+        </Modal>
+
         {/* HANDLE GO  HOME */}
-        <div
-          className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleHomePopup}>
-          <PositiveAlert
-            identifier={''}
-            alert={homePopup}
-            setAlert={setHomePopup}
-            header="Are you sure you want to leave the Teacher View?"
-            button1="Go to the dashboard"
-            button2="Cancel"
-            svg="question"
-            handleButton1={handleHome}
-            handleButton2={() => handleHomePopup}
-            theme="light"
-            fill="screen"
+        <Modal open={homePopup}>
+          <Result
+            status="warning"
+            title="Are you sure you want to leave the Teacher View?"
+            extra={[
+              <Buttons onClick={handleHome} label={'Go to the dashboard'} />,
+              <Buttons onClick={handleHomePopup} label={'Cancel'} />
+            ]}
           />
-        </div>
+        </Modal>
+
         {/* USER HAS LEFT NOTIFICATION */}
-        <div className={`${userHasLeftPopup ? 'absolute z-100 h-full' : 'hidden'}`}>
-          <PositiveAlert
-            identifier={''}
-            alert={userHasLeftPopup}
-            setAlert={setUserHasLeftPopup}
-            header="The student you were viewing has left the room."
-            button1="Close"
-            svg="question"
-            handleButton1={handleUserHasLeftPopup}
-            theme="light"
-            fill="screen"
+
+        <Modal open={userHasLeftPopup}>
+          <Result
+            status="info"
+            title="The student you were viewing has left the room."
+            extra={[<Buttons onClick={handleUserHasLeftPopup} label={'Close'} />]}
           />
-        </div>
+        </Modal>
 
         <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
@@ -601,7 +578,6 @@ const LessonControl = () => {
           <RosterFrame
             fullscreen={fullscreen}
             theme={theme}
-            clientKey={clientKey}
             rightView={rightView}
             setRightView={setRightView}>
             <ErrorBoundary

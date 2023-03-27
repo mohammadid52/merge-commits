@@ -1,8 +1,12 @@
+import {
+  EditQuestionModalDict,
+  UniversalBuilderDict
+} from '@dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
 import ULBFileUploader from 'atoms/Form/FileUploader';
 import FormInput from 'atoms/Form/FormInput';
-import {Storage} from '@aws-amplify/storage';
 import Label from 'atoms/Form/Label';
+import {Storage} from 'aws-amplify';
 import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import DummyContent from 'components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
 import PreviewLayout from 'components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';
@@ -11,15 +15,11 @@ import {
   Tabs3,
   useTabs
 } from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {
-  EditQuestionModalDict,
-  UniversalBuilderDict
-} from '@dictionary/dictionary.iconoclast';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {getImageFromS3Static} from 'utilities/services';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ProgressBar from '../ProgressBar';
 
 interface IImageInput {
@@ -51,7 +51,7 @@ const ImageFormComponent = ({
   const {
     userLanguage,
     state: {user}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
@@ -92,7 +92,11 @@ const ImageFormComponent = ({
   }, [selectedImageFromGallery]);
 
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
-    setImageInputs((prevValues) => ({...prevValues, value: previewUrl, imageData}));
+    setImageInputs((prevValues) => ({
+      ...prevValues,
+      value: previewUrl,
+      imageData
+    }));
     setErrors((prevValues) => ({...prevValues, value: ''}));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,8 +108,6 @@ const ImageFormComponent = ({
   };
 
   const addToDB = async (list: any) => {
-    // closeAction();
-
     const input = {
       id: list.id,
       lessonPlan: [...list.lessonPlan]
@@ -157,14 +159,12 @@ const ImageFormComponent = ({
     const styles = getStyles();
     let {imageData, ...payload} = imageInputs;
 
-    console.log('updatedInputs', updatedInputs);
-
     if (isValid) {
       setIsLoading(true);
 
       // logic for if new image is uploaded
-      if (imageWasUpdated) {
-        let temp = imageData.name.split('.');
+      if (imageWasUpdated && imageData?.name) {
+        let temp = imageData?.name?.split('.');
         const extension = temp.pop();
         const fileName = `${Date.now()}_${temp
           .join(' ')
@@ -247,7 +247,7 @@ const ImageFormComponent = ({
       Storage.put(`ULB/${user.id}/content_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        contentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
           setUploadProgress(progress.toFixed(0));
@@ -332,8 +332,8 @@ const ImageFormComponent = ({
                 <Label dark={false} label="Styles" />
                 <div className="mt-1 flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
                   <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
-                    Corners rounded
                     <ToggleForModal
+                      label="Corners rounded"
                       checked={selectedStyles.isRounded}
                       onClick={() => {
                         if (!value) {
@@ -376,22 +376,22 @@ const ImageFormComponent = ({
               />
             )}
 
-            <div className="flex mt-8 justify-center px-6 pb-4">
-              <div className="flex justify-end">
+            <div className="flex mt-8 justify-end px-6 pb-4">
+              <div className="flex justify-end gap-4">
                 <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
                   transparent
+                  size="middle"
                 />
                 <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2"
                   label={
                     loading
                       ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVING']
                       : EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
                   }
                   type="submit"
+                  size="middle"
                   onClick={onSave}
                   disabled={loading}
                 />

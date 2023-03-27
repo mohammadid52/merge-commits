@@ -1,13 +1,12 @@
-import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
-
-import {UserPageState, GetPersonLocationQueryVariables, PersonStatus} from 'API';
+import Loader from '@components/Atoms/Loader';
+import Popover from '@components/Atoms/Popover';
+import {formatPageName} from '@utilities/functions';
+import {GetPersonLocationQueryVariables, PersonStatus, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import moment from 'moment';
-import React, {useEffect, useState} from 'react';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import Popover from '@components/Atoms/Popover';
-import Loader from '@components/Atoms/Loader';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
 
 type LocationInfoType = {
   idx: number;
@@ -22,7 +21,7 @@ type LocationInfoType = {
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const LocationInfo = ({
+const LocationInfo = ({
   idx,
   authId,
   createdAt,
@@ -44,7 +43,7 @@ export const LocationInfo = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [isPersonLocationFetched, setIsPersonLocationFetched] = useState(false);
-  const [liveLessonData, setLiveLessonData] = useState(null);
+  const [liveLessonData, setLiveLessonData] = useState<null | any>(null);
 
   const fetchPersonLocation = async () => {
     try {

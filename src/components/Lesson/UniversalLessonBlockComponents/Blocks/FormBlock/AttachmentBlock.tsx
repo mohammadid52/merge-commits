@@ -1,18 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {Storage} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import * as mutations from 'graphql/mutations';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {BiImageAdd} from 'react-icons/bi';
@@ -31,9 +31,6 @@ interface IFile {
   fileKey?: string;
   fileName?: string;
 }
-
-const btnClass = (color: string) =>
-  `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
 
 interface IFileComponent extends IFile {
   deleteImage: (imgId: string) => void;
@@ -122,11 +119,11 @@ const File = ({
     </span>
   );
 
-  const [_fileName, setFileName] = useState(removeExtension(fileName) || '');
+  const [_fileName, setFileName] = useState(removeExtension(fileName || '') || '');
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
-    updateFilename(id, removeExtension(_fileName));
+    id && updateFilename(id, removeExtension(_fileName));
     setEditingFilename(false);
   };
 
@@ -167,7 +164,7 @@ const File = ({
                 <Btn
                   color="red"
                   onClick={() => {
-                    setFileName(fileName);
+                    fileName && setFileName(fileName);
                     setEditingFilename(false);
                   }}
                   label={'Cancel'}
@@ -185,7 +182,7 @@ const File = ({
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
             <div
-              onClick={() => deleteImage(fileKey)}
+              onClick={() => fileKey && deleteImage(fileKey)}
               className="w-auto cursor-pointer font-medium text-red-500 hover:text-red-800">
               Delete
             </div>
@@ -246,12 +243,12 @@ interface IAttachmentProps extends IFormBlockProps {
 }
 
 const AttachmentBlock = ({
-  inputID,
-  label,
+  inputID = '',
+  label = '',
   value,
-  numbered,
-  index,
-  required,
+  numbered = false,
+  index = '',
+  required = false,
   id,
   onSuccess,
   isStudent
@@ -260,7 +257,7 @@ const AttachmentBlock = ({
     lessonState,
     userLanguage,
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const lessonType = lessonState?.lessonData?.type;
 
@@ -269,9 +266,9 @@ const AttachmentBlock = ({
   // ##################################################################### //
 
   const isInLesson = useInLessonCheck();
-  const inputOther = useRef(null);
+  const inputOther = useRef<any>(null);
 
-  const openFilesExplorer = () => inputOther.current.click();
+  const openFilesExplorer = () => inputOther?.current?.click();
   // For Attachments - 31
 
   const fileIcon = getAsset('general', 'file');
@@ -323,7 +320,7 @@ const AttachmentBlock = ({
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        contentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
 
@@ -388,9 +385,7 @@ const AttachmentBlock = ({
         roomID: roomInfo?.id
       };
 
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.createPersonFiles, {input: payload})
-      );
+      await API.graphql(graphqlOperation(mutations.createPersonFiles, {input: payload}));
       onSuccess && onSuccess(filesUploading.map((file: any) => file.fileKey));
 
       resetAll();
@@ -449,7 +444,7 @@ const AttachmentBlock = ({
   };
 
   const uploadFile = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles: any) => {
       mapNewFiles(acceptedFiles);
       await uploadNewFiles();
     },
@@ -496,86 +491,84 @@ const AttachmentBlock = ({
 
   return (
     <>
-      {showModal && (
-        <Modal
-          title={label}
-          showHeader
-          showFooter={false}
-          closeAction={closeAction}
-          closeOnBackdrop={false}>
-          <div className="px-6 min-w-256 min-h-72">
-            <h4 className="text-lg text-gray-600 font-medium">{value}</h4>
-            <div
-              {...getRootProps()}
-              className={`border-${
-                isDragActive ? 'blue' : 'gray'
-              }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
-              <input
-                {...getInputProps()}
-                ref={inputOther}
-                onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
-                type="file"
-                className="hidden"
+      <Modal
+        open={showModal}
+        title={label}
+        showHeader
+        showFooter={false}
+        closeAction={closeAction}
+        closeOnBackdrop={false}>
+        <div className="px-6 min-w-256 min-h-72">
+          <h4 className="text-lg text-gray-600 font-medium">{value}</h4>
+          <div
+            {...getRootProps()}
+            className={`border-${
+              isDragActive ? 'blue' : 'gray'
+            }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
+            <input
+              {...getInputProps()}
+              ref={inputOther}
+              onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
+              type="file"
+              className="hidden"
+            />
+            <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
+            {isDragActive ? (
+              <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
+                Drop the files here
+              </p>
+            ) : (
+              <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
+                Drag 'n' drop your files here, or{' '}
+                <span
+                  onClick={isInLesson ? openFilesExplorer : noop}
+                  className="text-blue-500 cursor-pointer">
+                  browse
+                </span>
+              </p>
+            )}
+          </div>
+          <Transition
+            show={filesUploading.length > 0}
+            enter="transition-opacity duration-500"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-500"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            className="mt-4 flex flex-col  gap-y-6">
+            {map(filesUploading, (file: IFile) => (
+              <File
+                fileKey={file.fileKey}
+                updateFilename={updateFilename}
+                file={file.file}
+                id={file.id}
+                deleteImage={deleteImage}
+                _status={file._status}
+                progress={file.progress}
+                fileName={file.fileName}
               />
-              <img src={fileIcon} alt="file-icon" className="w-28 mb-2 h-auto" />
-              {isDragActive ? (
-                <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-                  Drop the files here
-                </p>
-              ) : (
-                <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-                  Drag 'n' drop your files here, or{' '}
-                  <span
-                    onClick={isInLesson ? openFilesExplorer : noop}
-                    className="text-blue-500 cursor-pointer">
-                    browse
-                  </span>
-                </p>
-              )}
-            </div>
-            <Transition
-              show={filesUploading.length > 0}
-              enter="transition-opacity duration-500"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity duration-500"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              className="mt-4 flex flex-col  gap-y-6">
-              {map(filesUploading, (file: IFile) => (
-                <File
-                  fileKey={file.fileKey}
-                  updateFilename={updateFilename}
-                  file={file.file}
-                  id={file.id}
-                  deleteImage={deleteImage}
-                  _status={file._status}
-                  progress={file.progress}
-                  fileName={file.fileName}
-                />
-              ))}
-            </Transition>
+            ))}
+          </Transition>
 
-            <div className="flex mt-8 justify-center px-6 pb-4">
-              <div className="flex justify-end">
-                <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                  onClick={resetAll}
-                  disabled={uploading}
-                  transparent
-                />
-                <Buttons
-                  disabled={uploading}
-                  btnClass="py-1 px-8 text-xs ml-2"
-                  label={uploading ? 'Uploading' : 'Upload'}
-                  onClick={onUploadAllFiles}
-                />
-              </div>
+          <div className="flex mt-8 justify-center px-6 pb-4">
+            <div className="flex justify-end">
+              <Buttons
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                onClick={resetAll}
+                disabled={uploading}
+                transparent
+              />
+              <Buttons
+                disabled={uploading}
+                label={uploading ? 'Uploading' : 'Upload'}
+                onClick={onUploadAllFiles}
+              />
             </div>
           </div>
-        </Modal>
-      )}
+        </div>
+      </Modal>
+
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <FormLabel label={label} required={required} numbered={numbered} index={index} />
 

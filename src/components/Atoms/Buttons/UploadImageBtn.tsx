@@ -31,15 +31,14 @@ const UploadImageBtn = ({
         setImage={setImage}
         toggleCropper={toggleCropper}>
         <Buttons
-          btnClass=" w-full"
+          className=" w-full"
           label={imageUrl ? 'Change image' : 'Upload image'}
           transparent
           onClick={handleImage}
           insideElement={
             imageUrl ? (
               <img
-                onClick={handleImage}
-                className={`profile  w-6 h-6 theme-border bg-gray-100  border-0 flex flex-shrink-0 rounded-xl theme-card-shadow`}
+                className={`profile  w-6 h-6 theme-border bg-gray-100  border-0 flex flex-shrink-0 rounded-xl `}
                 src={imageUrl}
                 onLoad={() => setImageLoading(false)}
               />

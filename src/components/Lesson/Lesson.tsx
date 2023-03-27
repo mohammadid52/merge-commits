@@ -1,10 +1,9 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
-import {getDictionaries, logError, updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from '@graphql/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
-import Noticebar from 'components/Noticebar/Noticebar';
+import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
@@ -69,12 +68,7 @@ const Lesson = () => {
           ];
         }, []);
 
-        const dictionaries = await getDictionaries();
-
-        const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-          response.lessonPlan,
-          dictionaries
-        );
+        const updatedLessonPlan = scanLessonAndFindComplicatedWord(response.lessonPlan);
 
         setLocalStorageData('lesson_plan', lessonPlan);
         lessonDispatch({
@@ -132,7 +126,7 @@ const Lesson = () => {
       }
     }
   }, [personLoading, personLessonData, PAGES]);
-  const [listPersonData, setListPersonData] = useState([]);
+  const [listPersonData, setListPersonData] = useState<any[]>([]);
 
   const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
 
@@ -144,7 +138,7 @@ const Lesson = () => {
           (d: PersonLessonsData) => d.lessonID === lessonID
         );
 
-        setPersonLessonData(_personLessonData);
+        _personLessonData && setPersonLessonData(_personLessonData);
       }
       setPersonLoading(false);
     }
@@ -170,6 +164,7 @@ const Lesson = () => {
       const thisPageRequired = lessonState?.requiredInputs[pageIdx] || [];
 
       if (thisPageData && thisPageData.length > 0) {
+        // @ts-ignore
         const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
           if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
             return input;
@@ -195,6 +190,7 @@ const Lesson = () => {
       const thisPageRequired = lessonState?.requiredInputs[lessonState.currentPage] || [];
 
       if (thisPageData && thisPageData.length > 0) {
+        // @ts-ignore
         const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
           if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
             return input;
@@ -202,18 +198,19 @@ const Lesson = () => {
         });
 
         if (areAnyEmpty.length > 0) {
-          lessonDispatch({type: 'SET_IS_VALID', payload: false});
+          lessonDispatch({type: 'SET_IS_VALID', payload: {isValid: false}});
+          // @ts-ignore
           return areAnyEmpty[0].domID;
         } else {
-          lessonDispatch({type: 'SET_IS_VALID', payload: true});
+          lessonDispatch({type: 'SET_IS_VALID', payload: {isValid: true}});
           return true;
         }
       } else {
-        lessonDispatch({type: 'SET_IS_VALID', payload: true});
+        lessonDispatch({type: 'SET_IS_VALID', payload: {isValid: true}});
         return true;
       }
     } else {
-      lessonDispatch({type: 'SET_IS_VALID', payload: false});
+      lessonDispatch({type: 'SET_IS_VALID', payload: {isValid: false}});
       return false;
     }
   };
@@ -259,10 +256,11 @@ const Lesson = () => {
         pages = personLessonData.pages;
       } else {
         if (personLessonData !== null && personLessonData !== undefined) {
-          if (personLessonData.id) {
+          if (personLessonData) {
             const getLessonRatingDetails: any = await API.graphql(
               graphqlOperation(customQueries.getPersonLessonsData, {
-                id: personLessonData.id
+                // @ts-ignore
+                id: personLessonData?.id || ''
               })
             );
             pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
@@ -279,7 +277,7 @@ const Lesson = () => {
   };
 
   const [getted, setGetted] = useState(false);
-  const [cleared, setCleared] = useState(false);
+  const [_, setCleared] = useState(false);
   const [created, setCreated] = useState(false);
 
   const getLocationData = getLocalStorageData('person_location');
@@ -393,7 +391,9 @@ const Lesson = () => {
     };
     try {
       const newUserLocation: any = await API.graphql(
-        graphqlOperation(customMutations.createPersonLocation, {input: newLocation})
+        graphqlOperation(customMutations.createPersonLocation, {
+          input: newLocation
+        })
       );
       const response = newUserLocation.data.createPersonLocation;
 
@@ -539,7 +539,7 @@ const Lesson = () => {
   };
   const updatePersonLessonPayload: UpdatePersonLessonsDataInput = {
     ...commonPersonLessonPayload,
-    id: personLessonData?.id
+    id: personLessonData?.id || ''
   };
 
   const createPersonLessonsData = async () => {
@@ -639,9 +639,11 @@ const Lesson = () => {
     handleMutationOnPageChange
   };
 
+  // const _inputNotifications = inputNotifications || [];
+  // const _notifications = notifications || [];
   return (
     <>
-      <Noticebar notifications={[...inputNotifications, ...notifications]} />
+      {/* <Noticebar notifications={[..._inputNotifications, ..._notifications]} /> */}
       {loaded ? isSurvey ? <SurveyApp {...props} /> : <LessonApp {...props} /> : null}
     </>
   );

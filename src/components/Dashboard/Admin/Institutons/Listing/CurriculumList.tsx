@@ -1,28 +1,32 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import Highlighted from '@components/Atoms/Highlighted';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CourseName from '@components/MicroComponents/CourseName';
-import CourseUnits from '@components/MicroComponents/CourseUnits';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import Table from '@components/Molecules/Table';
-import useAuth from '@customHooks/useAuth';
-import usePagination from '@customHooks/usePagination';
-import useSearch from '@customHooks/useSearch';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
-import {logError} from '@graphql/functions';
-import {withZoiqFilter} from '@utilities/functions';
+import Placeholder from '@components/Atoms/Placeholder';
+import {getImageFromS3} from '@utilities/services';
+import {Card, Descriptions} from 'antd';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import Filters, {SortType} from 'components/Atoms/Filters';
+import Highlighted from 'components/Atoms/Highlighted';
+import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
+
+import CourseUnits from 'components/MicroComponents/CourseUnits';
+import ModalPopUp from 'components/Molecules/ModalPopUp';
+import Table, {ITableProps} from 'components/Molecules/Table';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import useAuth from 'customHooks/useAuth';
+import usePagination from 'customHooks/usePagination';
+import useSearch from 'customHooks/useSearch';
+import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
+import {logError} from 'graphql/functions';
 import * as mutations from 'graphql/mutations';
 import {isEmpty, map, orderBy} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import moment from 'moment';
+import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
+import {withZoiqFilter} from 'utilities/functions';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface CurriculumListProps {
@@ -35,6 +39,8 @@ interface CurriculumListProps {
 interface ICurricular {
   name?: string;
   status?: string;
+  summary?: string;
+  description?: string;
   id: string;
   institutionID: string;
   institution?: {name?: string; id: string};
@@ -46,15 +52,15 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   const match = useRouteMatch();
   const history = useHistory();
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const userLanguage = gContext.userLanguage;
-  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary();
+  const {InstitueCurriculum} = useDictionary();
 
   const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
 
   const [institutionList, setInstitutionList] = useState<any>([]);
 
-  const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
+  const {isSuperAdmin} = useAuth();
 
   const [loading, setLoading] = useState(false);
 
@@ -83,9 +89,9 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   }, [isSuperAdmin]);
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
-    // onSearch(searchInput, value);
+  const instituteChange = (value: string) => {
+    setSelectedInstitution({name: value, id: value});
+
     updateRoomList(value);
   };
 
@@ -128,6 +134,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
               }
             };
           }
+          return {};
         })
         .filter(Boolean);
 
@@ -152,10 +159,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   };
 
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-  };
-
   const fetchInstitutions = async () => {
     try {
       setLoading(true);
@@ -173,18 +176,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       logError(error, {authId, email}, 'CurriculumList @fetchInstitutions');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const checkIfRemovable = (curriculumObj: any) => {
-    if (
-      curriculumObj.syllabi?.length > 0 ||
-      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0) ||
-      curriculumObj?.isUsed
-    ) {
-      return false;
-    } else {
-      return true;
     }
   };
 
@@ -241,12 +232,19 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     );
   };
 
-  const redirectToUnit = (institutionId: string, unitId: string) => {
+  const redirectToUnit = (
+    institutionId: string,
+    unitId: string,
+    courseId: string,
+    courseName: string
+  ) => {
     const baseUrl = '/dashboard/manage-institutions';
+    const suffix = `/units/${unitId}/edit?courseId=${courseId}&courseName=${courseName}`;
+
     history.push(
       isSuperAdmin
-        ? `${baseUrl}/units/${unitId}/edit`
-        : `${baseUrl}/institution/${institutionId}/units/${unitId}/edit`
+        ? `${baseUrl}${suffix}`
+        : `${baseUrl}/institution/${institutionId}${suffix}`
     );
   };
 
@@ -255,7 +253,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     setFirstPage,
     setLastPage,
     setTotalPages,
-
     currentList,
     allAsProps,
     setCurrentList
@@ -300,7 +297,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     ['asc']
   );
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -316,27 +313,45 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string; id?: string}>({});
+  const currentSelectedItem = (id: string) => courseList?.find((_c: any) => _c.id === id);
 
-  const currentSelectedItem =
-    hoveringItem &&
-    hoveringItem?.name &&
-    hoveringItem?.id &&
-    courseList?.find((_c: any) => _c.id === hoveringItem?.id);
+  const {Meta} = Card;
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: index + 1,
     onClick: () => editCurrentCurricular(item.id),
+
+    content: (
+      <Descriptions title="Course Details">
+        <Descriptions.Item label="Status">
+          <Status status={currentSelectedItem(item.id)?.status} useDefault />
+        </Descriptions.Item>
+        <Descriptions.Item label="Created date">
+          {moment(item.createdAt).format('ll')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Last update">
+          {moment(item.updatedAt).format('ll')}
+        </Descriptions.Item>
+        <Descriptions.Item span={2} label="Summary">
+          {currentSelectedItem(item.id)?.summary || 'n/a'}
+        </Descriptions.Item>
+        <Descriptions.Item span={2} label="Description">
+          {currentSelectedItem(item.id)?.description || 'n/a'}
+        </Descriptions.Item>
+      </Descriptions>
+    ),
     courseName: (
-      <CourseName
-        item={item}
-        setHoveringItem={setHoveringItem}
-        hoveringItem={hoveringItem}
-        isLast={finalList.length - 1 === index}
-        searchTerm={searchInput.value}
-        currentSelectedItem={currentSelectedItem}
-        isSuperAdmin={isSuperAdmin}
-        editCurrentCurricular={editCurrentCurricular}
+      <Meta
+        title={item.name}
+        className="flex items-center"
+        avatar={
+          <Placeholder
+            // @ts-ignore
+            image={getImageFromS3(item.image)}
+            size="h-6 w-6 mr-2"
+            name={item.name}
+          />
+        }
       />
     ),
     institutionName: isSuperAdmin && (
@@ -345,7 +360,14 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       </div>
     ),
     courseType: item.type || '-',
-    courseUnits: <CourseUnits item={item} redirectToUnit={redirectToUnit} />,
+    courseUnits: (
+      <CourseUnits
+        courseName={item.name}
+        courseId={item.id}
+        item={item}
+        redirectToUnit={redirectToUnit}
+      />
+    ),
     status: <Status useDefault status={item.status} />
     // actions: (
     //   <CommonActionsBtns
@@ -357,7 +379,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     // )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       InstitueCurriculum[userLanguage]['NO'],
       InstitueCurriculum[userLanguage]['NAME'],
@@ -369,32 +391,15 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     ],
     dataList,
     config: {
-      dark: false,
-      isLastAction: true,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading,
+        expandable: true,
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0 && isEmpty(filters),
           config: {
             allAsProps
           }
-        },
-        emptyText:
-          searchInput || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-            : InstitueCurriculum[userLanguage]['INFO'],
-        customWidth: {
-          no: 'w-12',
-          courseType: 'w-72',
-          courseName: 'w-72',
-          courseUnits: 'w-96',
-          actions: '-'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        }
       }
     }
   };
@@ -404,7 +409,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   // ##################################################################### //
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <SectionTitleV3
           title={InstitueCurriculum[userLanguage]['TITLE']}
           fontSize="xl"
@@ -420,17 +425,12 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
                 />
               )}
               <SearchInput
                 dataCy="curriculum-search-input"
                 value={searchInput.value}
                 onChange={setSearch}
-                isActive={searchInput.isActive}
                 disabled={loading}
                 onKeyDown={searchRoom}
                 closeAction={removeSearchAction}
@@ -461,15 +461,14 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
         <Table {...tableConfig} />
 
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            cancelLabel="CANCEL"
-            message={deleteModal.message}
-          />
-        )}
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          message={deleteModal.message}
+        />
       </div>
     </div>
   );
