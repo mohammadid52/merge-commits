@@ -366,25 +366,6 @@ const Csv = () => {
   const unitDropdownRef = useRef<any>(null);
   const surveyDropdownRef = useRef<any>(null);
 
-  const triggerDropdown = () => {
-    const currentStepRef = getCurrentStep().ref;
-    if (currentStepRef && currentStepRef?.current) {
-      currentStepRef?.current.focus();
-    }
-  };
-
-  const getCurrentStep = () => {
-    if (selectedInst && selectedClassRoom && selectedUnit) {
-      return {label: 'Select survey', ref: surveyDropdownRef};
-    } else if (selectedInst && selectedClassRoom) {
-      return {label: 'Select curriculum unit', ref: unitDropdownRef};
-    } else if (selectedInst) {
-      return {label: 'Select classroom', ref: classroomDropdownRef};
-    } else {
-      return {label: 'Select Institute', ref: instituteDropdownRef};
-    }
-  };
-
   return (
     <>
       <Modal
@@ -456,11 +437,6 @@ const Csv = () => {
           ) : (
             <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
               <p>Select filters options to populate data</p>
-              <Buttons
-                className="w-full"
-                onClick={triggerDropdown}
-                label={getCurrentStep().label}
-              />
             </Card>
           )}
         </div>

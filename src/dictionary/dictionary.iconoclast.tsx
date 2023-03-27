@@ -4322,7 +4322,7 @@ const UniversalBuilderDict: UniversalBuilderDictInterface = {
 const CsvDict: CsvDictInterface = {
   EN: {
     TITLE: 'Select Survey',
-    SELECT_INST: 'Select or search institute',
+    SELECT_INST: 'Select or Search Institute',
     SELECT_CLASSROOM: 'Select or search classroom',
     SELECT_FILTERS: 'Select Filters',
     SELECT_REASON: 'Select Reason',
