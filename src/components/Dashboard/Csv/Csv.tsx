@@ -1,5 +1,4 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
@@ -7,7 +6,7 @@ import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import {getFormatedDate} from '@utilities/time';
 import {Card, Col, Divider, Row, Statistic} from 'antd';
-import {PersonStatus, UniversalLessonPlan} from 'API';
+import {UniversalLessonPlan} from 'API';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
