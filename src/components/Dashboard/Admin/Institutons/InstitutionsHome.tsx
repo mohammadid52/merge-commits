@@ -1,38 +1,83 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
-import React, {useEffect, useState} from 'react';
+import React, {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
-import {DashboardProps} from '../../Dashboard';
-import NavBarRouter from '../NavBarRouter';
-import CurricularBuilder from './Builders/CurricularBuilder';
-import InstitutionBuilder from './Builders/InstitutionBuilder/InstitutionBuilder';
-import CurricularView from './EditBuilders/CurricularsView/CurricularView';
-import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
-import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
-import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
-import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
-import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
-import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
-import Institution from './Institution';
+import NavBarRouter from 'router/NavBarRouter';
+const CurricularBuilder = lazy(
+  () => import('dashboard/Admin/Institutons/Builders/CurricularBuilder')
+);
+const InstitutionBuilder = lazy(
+  () =>
+    import('dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder')
+);
+const CurricularView = lazy(
+  () => import('dashboard/Admin/Institutons/EditBuilders/CurricularsView/CurricularView')
+);
+const AddProfileCheckpoint = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint'
+    )
+);
+const EditLearningObjective = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditLearningObjective'
+    )
+);
+const EditMeasurement = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditMeasurement'
+    )
+);
+const EditProfileCheckpoint = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint'
+    )
+);
+const EditTopic = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditTopic'
+    )
+);
+const ProfileCheckpointlookup = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup'
+    )
+);
+const UnitBuilder = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder'
+    )
+);
+const Institution = lazy(() => import('dashboard/Admin/Institutons/Institution'));
 // Instituttion
-import InstitutionLookup from './InstitutionLookup';
-import InstitutionProfile from './InstitutionProfile';
+const InstitutionLookup = lazy(
+  () => import('dashboard/Admin/Institutons/InstitutionLookup')
+);
+const InstitutionProfile = lazy(
+  () => import('dashboard/Admin/Institutons/InstitutionProfile')
+);
 
-const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
+const InstitutionsHome: React.FC = () => {
   const {clientKey, state, dispatch} = useGlobalContext();
   const match = useRouteMatch();
   const {pathname} = useLocation();
 
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-  const [lessonData, setLessonData] = useState<{
+  const [_, setLessonData] = useState<{
     id?: string;
     title?: string;
   }>({});
@@ -45,7 +90,10 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}});
+    dispatch({
+      type: 'UPDATE_CURRENTPAGE',
+      payload: {data: 'manage-institutions'}
+    });
   }, [state.user.role]);
 
   const getLessonData = async () => {
@@ -56,7 +104,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         : '';
 
       const splitted = splitUrl.split('/');
-      if (splitUrl.indexOf('add') === -1 && splitted.length >= 0) {
+      if (splitUrl.indexOf('add') === -1 && splitted.length > 0) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
             id: splitted[0]
@@ -76,15 +124,16 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   };
 
+  const {user, isSuperAdmin} = useAuth();
+
   useEffect(() => {
-    if (state.user.isSuperAdmin) {
+    if (isSuperAdmin) {
       if (pathname.indexOf('lessons/') > -1) {
         getLessonData();
       }
     }
   }, [pathname]);
 
-  const {user} = useAuth();
   const institute =
     user && user.associateInstitute && user?.associateInstitute[0]?.institution;
 
@@ -192,7 +241,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           <ErrorBoundary componentName="InstitutionProfile">
             <div className="">
               <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
-              <div className="px-2 py-8 md:px-4 lg:p-8">
+              <div className="">
                 {/* <PageWrapper> */}
                 <PageWrapper>
                   <NavBarRouter institute={institute} />

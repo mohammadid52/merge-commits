@@ -2,10 +2,10 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import isEmpty from 'lodash/isEmpty';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
 import HeroBanner from '../../Header/HeroBanner';
@@ -20,7 +20,12 @@ export interface ModifiedListProps {
   name: any;
   teacherProfileImg: string;
   bannerImage: string;
-  teacher: {email: string; firstName: string; lastName: string; image: string};
+  teacher: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    image: string;
+  };
   curricula: {
     items: {
       curriculum: {
@@ -35,9 +40,15 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const {homeData, classList, handleRoomSelection, isTeacher, roomsLoading} = props;
+  const {
+    homeData,
+    classList,
+    handleRoomSelection = () => {},
+    isTeacher,
+    roomsLoading
+  } = props;
 
-  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
   const {DashboardDict} = useDictionary();
@@ -48,11 +59,11 @@ const Home = (props: ClassroomControlProps) => {
 
   useEffect(() => {
     if (state.user.role === 'ST') {
-      if (state.currentPage !== 'home') {
-        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-      }
       if (state.activeRoom && state.activeRoom.length > 0) {
-        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {roomID: '', syllabusID: ''}});
+        dispatch({
+          type: 'UPDATE_ACTIVEROOM',
+          payload: {name: '', roomID: '', syllabusID: ''}
+        });
       }
     }
   }, [state.user.role]);
@@ -75,7 +86,6 @@ const Home = (props: ClassroomControlProps) => {
       ? homeData.reduce((acc: any[], dataObj: any) => {
           if (dataObj?.class?.room) {
             const teacherObj = dataObj?.class?.room?.teacher;
-            // const allRooms = homeData[0]?.class?.rooms?.items;
 
             const teacherIsPresent = acc?.find(
               (teacher: any) =>
@@ -115,25 +125,28 @@ const Home = (props: ClassroomControlProps) => {
   };
 
   const teacherListWithImages =
-    getTeacherList.length > 0 &&
-    Promise.all(
-      getTeacherList.map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getTeacherList.length > 0
+      ? Promise.all(
+          getTeacherList.map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
+            };
+          })
+        )
+      : [];
+
   const coTeacherListWithImages =
-    getCoTeacherList().length > 0 &&
-    Promise.all(
-      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getCoTeacherList().length > 0
+      ? Promise.all(
+          getCoTeacherList().map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
+            };
+          })
+        )
+      : [];
 
   const getStudentsList =
     homeData && homeData.length > 0
@@ -156,7 +169,7 @@ const Home = (props: ClassroomControlProps) => {
       : [];
 
   const studentsListWithImages = Promise.all(
-    getStudentsList.map(async (studentObj: any, idx: number) => {
+    getStudentsList.map(async (studentObj: any) => {
       return {
         ...studentObj,
         student: {
@@ -226,6 +239,11 @@ const Home = (props: ClassroomControlProps) => {
     }
   }, [homeData]);
 
+  const refetchHomeData = () => {
+    const response = getClassList();
+    return response;
+  };
+
   return (
     <ErrorBoundary componentName="Home">
       {homeData ? (
@@ -253,6 +271,7 @@ const Home = (props: ClassroomControlProps) => {
           <div className="px-3">
             <ErrorBoundary componentName="RoomTiles">
               <RoomTiles
+                refetchHomeData={refetchHomeData}
                 roomsLoading={roomsLoading}
                 handleRoomSelection={handleRoomSelection}
                 classList={
@@ -274,7 +293,8 @@ const Home = (props: ClassroomControlProps) => {
                     borderBottom
                   />
                   <TeacherRows
-                    coTeachersList={coTeachersList}
+                    loading={Boolean(roomsLoading)}
+                    coTeachersList={coTeachersList || []}
                     teachersList={teacherList}
                   />
                 </div>
@@ -284,6 +304,7 @@ const Home = (props: ClassroomControlProps) => {
             <ErrorBoundary componentName="StudentTiles">
               <div className="my-6">
                 <StudentsTiles
+                  loading={roomsLoading}
                   title={
                     DashboardDict[userLanguage][
                       isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'

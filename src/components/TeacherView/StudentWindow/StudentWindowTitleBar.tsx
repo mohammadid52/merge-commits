@@ -1,28 +1,22 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaCompress, FaExpand} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import FullscreenToggle from './TitleBarSections/FullscreenToggle';
-import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';
-import PresentationModeToggle from './TitleBarSections/PresentationModeToggle';
+import { API, graphqlOperation } from "aws-amplify";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as mutations from "graphql/mutations";
+import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
+import React, { useEffect, useState } from "react";
+import {
+  getLocalStorageData,
+  setLocalStorageData,
+} from "utilities/localStorage";
+import OpenClosePagesToggle from "./TitleBarSections/OpenClosePagesToggle";
+import PresentationModeToggle from "./TitleBarSections/PresentationModeToggle";
 
 export interface StudentWindowTitleBarProps {
-  theme?: any;
-  themeColor?: string;
   handleFullscreen?: () => void;
   fullscreen?: boolean;
 }
 
-const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
-  props: StudentWindowTitleBarProps
-) => {
-  const {theme, themeColor, handleFullscreen, fullscreen} = props;
-  const gContext = useContext(GlobalContext);
+const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = () => {
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const displayData = lessonState?.displayData;
@@ -43,12 +37,16 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   // ##################################################################### //
 
   // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
-  const getRoomData = getLocalStorageData('room_info');
+  const getRoomData = getLocalStorageData("room_info");
 
   const handleOpenComponent = async (pageNr: number) => {
     // ~~~~~~~ GET CURRENT CLOSED PAGES ~~~~~~ //
     const getPagesBefore = lessonState.lessonData.lessonPlan.reduce(
-      (pagesBeforeAcc: string[], page: UniversalLessonPage, pageIdx: number) => {
+      (
+        pagesBeforeAcc: string[],
+        page: UniversalLessonPage,
+        pageIdx: number
+      ) => {
         if (pageIdx <= pageNr) {
           return [...pagesBeforeAcc, page.id];
         } else {
@@ -68,12 +66,15 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
 
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
-      type: 'TOGGLE_OPEN_PAGE',
-      payload: pageNr
+      type: "TOGGLE_OPEN_PAGE",
+      payload: pageNr,
     });
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
-    setLocalStorageData('room_info', {...getRoomData, ClosedPages: finalClosedPages});
+    setLocalStorageData("room_info", {
+      ...getRoomData,
+      ClosedPages: finalClosedPages,
+    });
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
     try {
@@ -87,12 +88,12 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
             teacherEmail: getRoomData.teacherEmail,
             name: getRoomData.name,
             maxPersons: getRoomData.maxPersons,
-            ClosedPages: finalClosedPages
-          }
+            ClosedPages: finalClosedPages,
+          },
         })
       );
     } catch (e) {
-      console.error('handleOpenClose - updateRoom mutation - ', e);
+      console.error("handleOpenClose - updateRoom mutation - ", e);
     }
   };
 
@@ -109,14 +110,14 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     );
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
-      type: 'TOGGLE_CLOSE_PAGE',
-      payload: pageNr
+      type: "TOGGLE_CLOSE_PAGE",
+      payload: pageNr,
     });
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
-    setLocalStorageData('room_info', {
+    setLocalStorageData("room_info", {
       ...getRoomData,
-      ClosedPages: getPagesAfter
+      ClosedPages: getPagesAfter,
     });
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
@@ -131,32 +132,21 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
             teacherEmail: getRoomData.teacherEmail,
             name: getRoomData.name,
             maxPersons: getRoomData.maxPersons,
-            ClosedPages: getPagesAfter
-          }
+            ClosedPages: getPagesAfter,
+          },
         })
       );
     } catch (e) {
-      console.error('handleClosePages - updateRoom mutation - ', e);
+      console.error("handleClosePages - updateRoom mutation - ", e);
     }
   };
 
-  // ##################################################################### //
-  // ############################# RESPONSIVE ############################ //
-  // ##################################################################### //
-
-  const {breakpoint} = useTailwindBreakpoint();
-
-  // ##################################################################### //
-  // ############################### OUTPUT ############################## //
-  // ##################################################################### //
-
   return (
     <div
-      className={`relative w-full py-2 my-auto flex flex-shrink-0 justify-between bg-transparent`}>
+      className={`relative w-full py-2 my-auto flex flex-shrink-0 justify-between bg-transparent`}
+    >
       {/* LEFT - TITLEBAR CONTROL */}
       <OpenClosePagesToggle
-        theme={theme}
-        themeColor={themeColor}
         currentPage={lessonState.currentPage}
         activePageData={activePageData}
         handleOpenComponent={handleOpenComponent}
@@ -165,8 +155,6 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
 
       {/* CENTER - PRESENTATION MODE */}
       <PresentationModeToggle
-        theme={theme}
-        themeColor={themeColor}
         displayData={displayData}
         lessonDispatch={lessonDispatch}
         lessonData={lessonState.lessonData}

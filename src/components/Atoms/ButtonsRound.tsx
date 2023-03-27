@@ -1,5 +1,4 @@
 import React from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IconType} from 'react-icons';
 
 interface ButtonRoundProps {
@@ -26,7 +25,7 @@ const ButtonsRound: React.FC<ButtonRoundProps> = (props: ButtonRoundProps) => {
     iconTxtColorClass,
     onClick,
     disabled,
-    pointerEvents,
+    pointerEvents
   } = props;
 
   return (
@@ -58,19 +57,17 @@ const ButtonsRound: React.FC<ButtonRoundProps> = (props: ButtonRoundProps) => {
           flex items-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400`}
           onClick={onClick}>
           {Icon ? (
-            <IconContext.Provider
-              value={{
-                className: `${
-                  iconTxtColorClass !== undefined ? iconTxtColorClass : 'text-indigo-600'
-                }
-                w-auto h-auto mx-auto my-auto ${
-                  pointerEvents !== undefined && pointerEvents === false
-                    ? 'pointer-events-none'
-                    : ''
-                }`,
-              }}>
-              <Icon size={iconSizePX ? iconSizePX : 32} />
-            </IconContext.Provider>
+            <Icon
+              className={`${
+                iconTxtColorClass !== undefined ? iconTxtColorClass : 'text-indigo-600'
+              }
+              w-auto h-auto mx-auto my-auto ${
+                pointerEvents !== undefined && pointerEvents === false
+                  ? 'pointer-events-none'
+                  : ''
+              }`}
+              size={iconSizePX ? iconSizePX : 32}
+            />
           ) : null}
         </div>
       </div>

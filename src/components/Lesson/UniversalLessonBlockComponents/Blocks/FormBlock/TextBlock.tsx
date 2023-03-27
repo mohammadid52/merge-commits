@@ -1,20 +1,30 @@
-import RequiredMark from 'atoms/RequiredMark';
-import {GlobalContext} from 'contexts/GlobalContext';
+import FormInput from '@components/Atoms/Form/FormInput';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
-import React, {useContext} from 'react';
+import React from 'react';
 import {FormLabel} from '../FormBlock';
 
-const TextBlock = (props: IFormBlockProps) => {
-  const {id, required, numbered, label, mode, isStudent, index, value, inputID} = props;
+interface TextBlockProps extends IFormBlockProps {
+  textarea?: boolean;
+}
 
+const TextBlock = (props: TextBlockProps) => {
   const {
-    state: {user, lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
-  const themePlaceholderColor =
-    lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+    id,
+    required = false,
+
+    label = '',
+    mode,
+    isStudent,
+    numbered,
+    index = '',
+
+    value = '',
+    inputID,
+    textarea
+  } = props;
 
   const isInLesson = useInLessonCheck();
 
@@ -30,27 +40,34 @@ const TextBlock = (props: IFormBlockProps) => {
     }
   };
 
-  const studentValue = getDataValue(inputID) || value;
+  const studentValue = getDataValue(inputID || '')[0] || value;
+  const placeHolder = value || 'Enter your answer here';
 
   return (
-    <div
-      id={`${inputID}_for_error`}
-      key={id}
-      className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
-      <FormLabel label={label} required={required} numbered={numbered} index={index} />
-      <input
+    <>
+      {label && (
+        <FormLabel
+          label={label}
+          required={required}
+          numbered={Boolean(numbered)}
+          index={index}
+        />
+      )}
+      <FormInput
+        key={id}
+        inputClassName="mt-2"
+        textarea={textarea}
+        tooltip={mode === 'building' ? 'Disabled in building mode' : undefined}
+        rows={textarea ? 4 : undefined}
         id={inputID}
-        data-cy={inputID}
-        disabled={mode === 'building'}
-        className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
-          lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-        } ${themePlaceholderColor} text-sm`}
-        name={'text'}
+        className="lesson-form-block "
         type={'text'}
+        isRequired={required}
+        placeHolder={placeHolder}
         onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
         value={isInLesson ? studentValue : value}
       />
-    </div>
+    </>
   );
 };
 

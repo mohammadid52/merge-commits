@@ -1,15 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useLocation} from 'react-router';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {
+  Tabs3,
+  useTabs
+} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import TabComponent from '../TabComponent';
+import {useEffect} from 'react';
+import {useLocation} from 'react-router';
 import CoursePartner from './CoursePartner';
 import SubjectProficiency from './SubjectProficiency';
 
 const CourseDynamics = ({roomData}: any) => {
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {RoomDetailsDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {RoomDetailsDict} = useDictionary();
   const location = useLocation();
   const params = useQuery(location.search);
   const subStep = params.get('sub-step');
@@ -17,40 +20,38 @@ const CourseDynamics = ({roomData}: any) => {
   const tabs = [
     {
       name: RoomDetailsDict[userLanguage].SUBJECT_PROFICIENCY,
-      section: 'subject-proficiency'
+      current: true
     },
     {
       name: RoomDetailsDict[userLanguage].COURSE_PARTNERS,
-      section: 'course-partners'
+      current: false
     }
   ];
 
-  const [activeTab, setActiveTab] = useState(tabs[0].section);
+  const {curTab, setCurTab} = useTabs(tabs);
 
   useEffect(() => {
     if (subStep) {
-      setActiveTab(subStep);
+      setCurTab(subStep);
     }
   }, [subStep]);
 
   const currentTabComp = (currentTab: string) => {
     switch (currentTab) {
-      case 'subject-proficiency':
+      case RoomDetailsDict[userLanguage].SUBJECT_PROFICIENCY:
         return <SubjectProficiency roomData={roomData} />;
-      case 'course-partners':
+      case RoomDetailsDict[userLanguage].COURSE_PARTNERS:
         return <CoursePartner roomData={roomData} />;
+      default:
+        return <SubjectProficiency roomData={roomData} />;
     }
   };
 
   return (
     <div className="bg-white shadow-5 overflow-hidden">
       <div className="p-4">
-        <TabComponent
-          tabs={tabs}
-          activeTab={activeTab}
-          handleTabSwitch={(tab: string) => setActiveTab(tab)}
-        />
-        {currentTabComp(activeTab)}
+        <Tabs3 tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
+        {currentTabComp(curTab)}
       </div>
     </div>
   );

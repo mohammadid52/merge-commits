@@ -24,12 +24,13 @@ import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidenc
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
-import ClassroomLoader from './ClassroomLoader';
+// import ClassroomLoader from "./ClassroomLoader";
 
 import FloatingAction from './FloatingActionForTeacherAndStudents';
 import FloatingActionTranslation from './FloatingActionTranslation';
 import SyllabusSwitch from './SyllabusSwitch';
-import Today from './TodayLesson';
+import ClassroomsList from './ClassroomsList';
+import {Skeleton} from 'antd';
 
 interface Artist {
   id: string;
@@ -138,7 +139,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     setClassroomCurriculum,
     classroomCurriculum,
     isTeacher,
-    isOnDemandStudent,
+    // isOnDemandStudent,
     currentPage,
     activeRoomInfo,
     setActiveRoomInfo,
@@ -152,13 +153,9 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   // ##################################################################### //
   // ############################ BASIC STATE ############################ //
   // ##################################################################### //
-  const gContext = useGlobalContext();
-  const state = gContext.state;
-  const dispatch = gContext.dispatch;
-  const stateUser = gContext.stateUser;
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
-  const userLanguage = gContext.userLanguage;
+  const {state, dispatch, theme, userLanguage, clientKey} = useGlobalContext();
+
+  const {role} = state.user;
 
   const roomData = getLocalStorageData('room_info');
   const teachingStyle = Boolean(roomData) ? roomData.teachingStyle : '--';
@@ -166,7 +163,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const {authId, email, pageState, isStudent, isFellow} = useAuth();
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
-  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {classRoomDict, BreadcrumsTitles} = useDictionary();
 
   // ##################################################################### //
   // ########################### ROOM SWITCHING ########################## //
@@ -176,9 +173,12 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
     }
     if (isTeacher || isFellow) {
-      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}});
+      dispatch({
+        type: 'UPDATE_CURRENTPAGE',
+        payload: {data: 'lesson-planner'}
+      });
     }
-  }, [stateUser?.role]);
+  }, [role]);
 
   const roomId = match?.params?.roomId;
 
@@ -187,7 +187,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       const roomIndex = state.roomData.rooms.findIndex((d: any) => d.id === roomId);
       const room = state.roomData.rooms[roomIndex];
       const name = room?.name;
-      handleRoomSelection(roomId, name, roomIndex);
+      handleRoomSelection?.(roomId, name, roomIndex);
 
       name && setPageTitle(name);
 
@@ -199,10 +199,15 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             email: email,
             pageState: pageState
           },
-          dispatch({
-            type: 'SET_USER',
-            payload: {...state.user, pageState: UserPageState.CLASS}
-          })
+          () => {
+            dispatch({
+              type: 'UPDATE_PAGE_STATE',
+              payload: {
+                pageState: UserPageState.CLASS,
+                lastPageStateUpdate: new Date().toISOString()
+              }
+            });
+          }
         );
       }
     }
@@ -353,20 +358,24 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       logError(e, {authId, email}, 'Classroom @handleSyllabusActivation');
     } finally {
       setSyllabusActivating(false);
-      setActiveRoomInfo({...activeRoomInfo, activeSyllabus: syllabusID});
+      setActiveRoomInfo?.({...activeRoomInfo, activeSyllabus: syllabusID});
     }
   };
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
-      url: `/dashboard/classroom/${roomId}`,
+      href: `/dashboard/classroom/${roomId}`,
       last: true
     }
   ];
 
-  const [listPersonData, setListPersonData] = useState([]);
+  const [listPersonData, setListPersonData] = useState<any[]>([]);
 
   const [fetchingPersonData, setFetchingPersonData] = useState(true);
 
@@ -395,11 +404,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     }
   };
 
-  const getLessonRating = async (
-    lessonId: string,
-    userEmail: string,
-    userAuthId: string
-  ) => {
+  const getLessonRating = async (lessonId: string, _: string, __: string) => {
     try {
       const data = listPersonData.find((pd) => pd.lessonID === lessonId);
       if (!isEmpty(data)) {
@@ -448,7 +453,10 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   }, []);
 
   const addTitle = (data: any[]) =>
-    data.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}));
+    data.map((item: any) => ({
+      ...item,
+      lessonTitle: item?.lesson?.title || ''
+    }));
 
   const withTitle = lessonData ? addTitle(lessonData) : [];
 
@@ -469,7 +477,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   return (
     <>
       <DashboardContainer
-        user={stateUser}
+        user={state.user}
         theme={theme}
         courseName={courseName}
         institutionId={activeRoomInfo?.institutionID}
@@ -495,12 +503,8 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
               <>
                 <SectionTitleV3
                   fontSize="2xl"
-                  fontStyle="bold"
-                  title={`${
-                    Boolean(state.roomData?.syllabus?.length)
-                      ? `${classRoomDict[userLanguage]['STEP']} 1:`
-                      : ''
-                  } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
+                  fontStyle="medium"
+                  title={` ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
                     !syllabusLoading
                       ? `for ${state.roomData?.curriculum?.name || ''}`
                       : ''
@@ -526,21 +530,6 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             )}
 
             <>
-              <SectionTitleV3
-                fontSize="2xl"
-                fontStyle="bold"
-                title={`${isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''} ${
-                  classRoomDict[userLanguage]['LESSON_TITLE']
-                } for ${state.roomData?.activeSyllabus?.name || 'loading'}`}
-                subtitle={
-                  isTeacher
-                    ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
-                    : isOnDemandStudent
-                    ? classRoomDict[userLanguage]['LESSON_SUB_TITLE_ASYNC']
-                    : 'To enter classroom, select open lesson for this week'
-                }
-              />
-
               <div className={`bg-opacity-10`}>
                 <div className={`pb-4 text-xl m-auto`}>
                   {!Boolean(activeRoomInfo) ? (
@@ -548,11 +537,11 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                       .fill(' ')
                       .map((_: any, index: number) => (
                         <Fragment key={index}>
-                          <ClassroomLoader />
+                          <Skeleton />
                         </Fragment>
                       ))
                   ) : Boolean(activeRoomInfo?.activeSyllabus) ? (
-                    <Today
+                    <ClassroomsList
                       activeRoom={state.activeRoom}
                       activeRoomInfo={activeRoomInfo}
                       isTeacher={isTeacher}
@@ -566,7 +555,9 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                       syllabus={syllabusData}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={
-                        listPersonData && listPersonData.length > 0 && getLessonRating
+                        listPersonData && listPersonData.length > 0
+                          ? getLessonRating
+                          : () => {}
                       }
                     />
                   ) : (

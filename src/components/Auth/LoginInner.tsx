@@ -5,11 +5,11 @@ import useAuth from '@customHooks/useAuth';
 import {getInstInfo, getPerson, signIn, updateLoginTime} from '@graphql/functions';
 import {getSignInError, getUserInfo, setCredCookies} from '@utilities/functions';
 import {createUserUrl} from '@utilities/urls';
+import {Checkbox} from 'antd';
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
-import RememberMe from 'components/Auth/RememberMe';
 import {useFormik} from 'formik';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
 import {useHistory} from 'react-router';
@@ -44,12 +44,11 @@ const LoginInner = ({
     values,
     errors,
     handleSubmit,
-    setFieldError,
+
     handleChange,
     setFieldValue,
     setValues,
-    getFieldMeta,
-    validateForm
+    setFieldError
   } = useFormik({
     initialValues: {
       email: '',
@@ -70,7 +69,7 @@ const LoginInner = ({
     const auth = cookies.cred;
 
     if (auth?.checked) {
-      setSubtitle(`Welcome back, ${auth?.name|| ''}!`);
+      setSubtitle(`Welcome back, ${auth?.name || ''}!`);
       setValues({
         email: auth.email,
         password: auth.password,
@@ -85,44 +84,6 @@ const LoginInner = ({
 
   const {setUser, authenticate} = useAuth();
 
-  const handleError = (error: any, onlyEmail?: boolean) => {
-    setMessage(() => {
-      switch (error.code) {
-        case 'UserNotFoundException':
-          setFieldError('email', 'The email you entered was not found');
-          return {
-            show: true,
-            type: 'error',
-            message: 'The email you entered was not found'
-          };
-        case 'NotAuthorizedException':
-          if (!onlyEmail) {
-            console.log('The email or password you entered was not correct');
-            return {
-              show: true,
-              type: 'error',
-              message: 'The email or password you entered was not correct'
-            };
-          }
-
-        case 'UserNotConfirmedException':
-          return {
-            show: true,
-            type: 'error',
-            message: 'You need to confirm registered email id, Please check your email.'
-          };
-        // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
-
-        default:
-          return {
-            show: true,
-            type: 'error',
-            message: error.message
-          };
-      }
-    });
-  };
-
   const getUser = async () => {
     const user = await Auth.signIn(values.email, 'xIconoclast.5x');
     return user;
@@ -132,50 +93,16 @@ const LoginInner = ({
 
   const onSetPassword = async () => {
     history.push(`/forgot-password?email=${values.email}`);
-    // validateForm(values);
-
-    // if (!getFieldMeta('email').error) {
-    //   try {
-    //     toggleLoading(true);
-    //     const user = await Auth.signIn(values.email, 'xIconoclast.5x');
-
-    //     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-    //       setNewUser(user);
-    //       setCreatePassword(true);
-    //       setEmail(values.email);
-    //       setMessage({
-    //         show: false,
-    //         type: '',
-    //         message: ''
-    //       });
-    //     } else {
-    //       setFieldError('password', 'You already have setup password');
-    //     }
-    //     toggleLoading(false);
-    //   } catch (error) {
-    //     if (error.code === 'NotAuthorizedException') {
-    //       toggleLoading(false);
-    //       setFieldError('password', 'You already have setup password');
-    //     } else {
-    //       handleError(error);
-    //     }
-    //     console.error(error);
-    //   }
-    // } else {
-    //   setFieldError('email', getFieldMeta('email').error);
-    // }
   };
 
   const onShowPassword = async (username: string, password: string, checked: boolean) => {
     try {
       toggleLoading(true);
 
-      const user: any = await signIn(
-        username,
-        password,
-        {setCookie, removeCookie},
-        checked
-      );
+      const user: any = await signIn(username, password, {
+        setCookie,
+        removeCookie
+      });
 
       if (user) {
         setIsLoginSuccess(true);
@@ -209,28 +136,29 @@ const LoginInner = ({
       }
     } catch (error) {
       console.error(error);
-
       if (error.code === 'NotAuthorizedException') {
-        if (error.message === 'Incorrect username or password.') {
-          const user = await getUser();
+        if (error.message?.toLowerCase().includes('incorrect username or password')) {
+          try {
+            const user = await getUser();
 
-          if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-            setNewUser(user);
-            setCreatePassword(true);
-            setEmail(values.email);
-          } else {
-            setMessage({
-              show: true,
-              type: 'error',
-              message: error.message
-            });
+            if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+              setNewUser(user);
+              setCreatePassword(true);
+              setEmail(values.email);
+            }
+          } catch (error) {
+            setFieldError('password', 'Incorrect username or password');
           }
         } else if (
           error.message ===
           'Temporary password has expired and must be reset by an administrator.'
         ) {
           try {
-            await axios.post(createUserUrl, {email: username, status: 'temporary'});
+            createUserUrl &&
+              (await axios.post(createUserUrl, {
+                email: username,
+                status: 'temporary'
+              }));
             setMessage({
               show: true,
               type: 'success',
@@ -238,12 +166,16 @@ const LoginInner = ({
                 'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
             });
           } catch (err) {
-            console.error('Error temporary password could not be reset');
+            console.error(err, 'Error temporary password could not be reset');
           }
         }
       } else if (error.code === 'UserNotConfirmedException') {
         try {
-          await axios.post(createUserUrl, {email: username, status: 'unconfirmed'});
+          createUserUrl &&
+            (await axios.post(createUserUrl, {
+              email: username,
+              status: 'unconfirmed'
+            }));
           setMessage({
             show: true,
             type: 'success',
@@ -252,10 +184,10 @@ const LoginInner = ({
           });
           // confirm user, set password, and sign in which should ask them to create a new password.
         } catch (err) {
-          console.error('Error in resetting unconfirmed user.');
+          console.error(err, 'Error in resetting unconfirmed user.');
         }
       } else {
-        getSignInError(error, true);
+        setMessage(getSignInError(error, true));
       }
     } finally {
       toggleLoading(false);
@@ -268,29 +200,24 @@ const LoginInner = ({
     <form
       onSubmit={handleSubmit}
       className="h-auto flex-grow flex flex-col justify-center">
-      <FormInput
-        dataCy="email"
-        Icon={AiOutlineUser}
-        label="Email"
-        onChange={(e) => {
-          setSubtitle(`Welcome Back!`);
-          handleChange(e);
-        }}
-        error={errors.email}
-        wrapperClass="mb-4"
-        placeHolder="Enter your email"
-        autocomplete="chrome-off"
-        type="email"
-        value={email}
-        id="email"
-        name="email"
-      />
-
-      <>
+      <div className="gap-2 flex flex-col">
         <FormInput
-          dataCy="password"
+          Icon={AiOutlineUser}
+          label="Email"
+          onChange={(e) => {
+            setSubtitle(`Welcome Back!`);
+            handleChange(e);
+          }}
+          error={errors.email}
+          placeHolder="Enter your email"
+          type="email"
+          value={email}
+          id="email"
+          name="email"
+        />
+
+        <FormInput
           error={errors.password}
-          autocomplete="chrome-off"
           label="Password"
           onChange={handleChange}
           Icon={AiOutlineLock}
@@ -300,31 +227,25 @@ const LoginInner = ({
           name="password"
           value={password}
         />
+      </div>
 
-        <div className="my-4">
-          <RememberMe
-            dataCy="remember"
-            isChecked={checked}
-            toggleCheckBox={() => setFieldValue('checked', !checked)}
-          />
-        </div>
-      </>
+      <div className="my-4">
+        <Checkbox checked={checked} onChange={() => setFieldValue('checked', !checked)}>
+          Remember me
+        </Checkbox>
+      </div>
 
       <div className="relative flex flex-col justify-center items-center">
+        <Buttons type="submit" loading={isToggled} label={'Login'} className="w-full" />
         <Buttons
           disabled={isToggled}
-          dataCy="login-button"
-          btnClass="w-full"
-          type="submit"
-          loading={isToggled}
-          label={'Login'}
+          size="small"
+          onClick={onSetPassword}
+          className="mt-2 self-end"
+          variant="dashed"
+          label={'set password'}
         />
       </div>
-      <p
-        onClick={onSetPassword}
-        className="w-auto text-gray-600 hover:underline cursor-pointer text-right mt-2">
-        set password
-      </p>
     </form>
   );
 };

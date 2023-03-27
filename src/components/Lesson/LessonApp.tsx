@@ -1,5 +1,9 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
+import {API, graphqlOperation} from 'aws-amplify';
+import {
+  CreateUniversalArchiveDataInput,
+  CreateUniversalLessonWritingExcercisesInput,
+  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI
+} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -23,14 +27,15 @@ import {ILessonSurveyApp} from './Lesson';
 import LessonSurveyAppWrapper from './LessonSurveyAppWrapper';
 
 // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
-export const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
+const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
   const goAhead = typeof studentDataRecords !== 'undefined';
   const extraPagesArray = lessonPlanPages.reduce(
     (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
       const findInStudentDataRecords = goAhead
         ? studentDataRecords.find(
-            //@ts-ignore
-            (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+            (data: UniversalLessonStudentData) =>
+              //@ts-ignore
+              data.lessonPageID === lessonPage.id
           )
         : undefined;
       if (typeof findInStudentDataRecords === 'undefined') {
@@ -66,10 +71,13 @@ export const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any
 
 // ~ FILTER/MERGE PAGEDATA & EXERCISEDATA  //
 // ------- FILTERING ------ //
-export const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
+const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
   return studentDataIdArray.reduce(
     (
-      acc: {pageData: StudentPageInput[]; exerciseData: StudentExerciseData[]},
+      acc: {
+        pageData: StudentPageInput[];
+        exerciseData: StudentExerciseData[];
+      },
       dataIdObj: any
     ) => {
       const findPageData = studentDataArray.find(
@@ -98,9 +106,9 @@ export const filterStudentData = (studentDataIdArray: any[], studentDataArray: a
 };
 
 // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
-export const studentDataIdArray = (studentDataArray: any[], lessonPlan: any[]) => {
+const studentDataIdArray = (studentDataArray: any[], lessonPlan: any[]) => {
   const idArr = studentDataArray
-    .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
+    .reduce((acc: any[], studentDataIdObj: any) => {
       const indexOfPage = lessonPlan?.findIndex(
         (lessonPlanPage: UniversalLessonPage) =>
           lessonPlanPage.id === studentDataIdObj.lessonPageID
@@ -120,15 +128,13 @@ export const studentDataIdArray = (studentDataArray: any[], lessonPlan: any[]) =
       if (dataID1.pageIdx > dataID2.pageIdx) {
         return 1;
       }
+      return -1;
     });
   return idArr;
 };
 
 // -------- MERGING ------- //
-export const mergedStudentData = (
-  studentDataArray: any[],
-  initStudentDataArray: any[]
-) => {
+const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
   const differenceData = studentDataArray?.reduce(
     //@ts-ignore
     (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
@@ -155,10 +161,7 @@ export const mergedStudentData = (
 };
 
 // ~~~ CHECK AD MERGE NEW EXERCISE DATA ~~ //
-export const mergedExerciseData = (
-  exerciseDataArray: any[],
-  initExerciseDataArray: any[]
-) => {
+const mergedExerciseData = (exerciseDataArray: any[], initExerciseDataArray: any[]) => {
   const differenceData = exerciseDataArray.reduce(
     //@ts-ignore
     (diffArray: any[], loadedInput: StudentExerciseData[] | [], pageIdx: number) => {
@@ -260,7 +263,10 @@ const LessonApp = (props: ILessonSurveyApp) => {
       ClosedPages: subscriptionData.ClosedPages
     });
 
-    lessonDispatch({type: 'SET_ROOM_SUBSCRIPTION_DATA', payload: subscriptionData});
+    lessonDispatch({
+      type: 'SET_ROOM_SUBSCRIPTION_DATA',
+      payload: subscriptionData
+    });
   };
 
   // ----------- 4 ---------- //
@@ -334,7 +340,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
           },
           page: UniversalLessonPage
         ) => {
-          const pageParts = page.pageContent;
+          const pageParts = page?.pageContent || [];
 
           const reducedPageInputs = pageParts.reduce(
             (
@@ -362,7 +368,8 @@ const LessonApp = (props: ILessonSurveyApp) => {
 
                     // -------- IF FORM ------- //
                     if (isForm) {
-                      const formSubInputs = partContent.value.reduce(
+                      const formSubInputs = partContent?.value?.reduce(
+                        // @ts-ignore
                         (
                           subPartAcc: {reqId: string[]; pgInput: any[]},
                           partContentSub: PartContentSub
@@ -386,16 +393,19 @@ const LessonApp = (props: ILessonSurveyApp) => {
 
                       const exerciseObj = {
                         id: partContent.id,
+                        // @ts-ignore
                         entryData: formSubInputs?.pgInput || []
                       };
 
                       return {
                         requiredIdAcc: [
                           ...partInputAcc.requiredIdAcc,
+                          // @ts-ignore
                           ...formSubInputs.reqId
                         ],
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
+                          // @ts-ignore
                           ...formSubInputs.pgInput
                         ],
                         pageExerciseAcc: isExercise
@@ -456,8 +466,6 @@ const LessonApp = (props: ILessonSurveyApp) => {
         {required: [], initialized: [], exercises: []}
       );
 
-      // console.log('mappedPages - ', mappedPages);
-
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
@@ -481,7 +489,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
     authId: string,
     email: string
   ) => {
-    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
+    const createdRecords = lessonPages.map(async (lessonPage: any) => {
       const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
         (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
@@ -528,7 +536,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
         let result: any = [];
 
         await Promise.all(
-          PAGES.map(async (page: any, idx: number) => {
+          PAGES.map(async (page: any) => {
             let studentData: any = await API.graphql(
               graphqlOperation(customQueries.getUniversalLessonStudentData, {
                 id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
@@ -550,6 +558,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
 
         setLessonDataLoaded(true);
         resolve(result);
+        return [];
       } catch (e) {
         console.error('loopFetchStudentData - ', e);
         return [];
@@ -559,7 +568,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
   const getOrCreateStudentData = async () => {
     try {
       // existing student rowss
-      const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
+      const studentDataRows: UniversalLessonStudentDataFromAPI[] = (
         await _loopFetchStudentData()
       ).filter(Boolean);
 
@@ -742,12 +751,13 @@ const LessonApp = (props: ILessonSurveyApp) => {
   // ######################### NAVIGATION CONTROL ######################## //
   // ##################################################################### //
 
-  const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
-    const studentDataRows: UniversalLessonStudentDataFromAPI[] = await _loopFetchStudentData();
+  const loopCreateStudentArchiveAndExcerciseData = async (_: string) => {
+    const studentDataRows: UniversalLessonStudentDataFromAPI[] =
+      await _loopFetchStudentData();
     const currentPageLocation = await getLessonCurrentPage();
 
     const result = studentDataRows.map(async (item: any) => {
-      const input = {
+      const input: CreateUniversalLessonWritingExcercisesInput = {
         id: uuidV4(),
         syllabusLessonID: item.syllabusLessonID,
         lessonID: item.lessonID,
@@ -760,25 +770,31 @@ const LessonApp = (props: ILessonSurveyApp) => {
         lessonProgress: item.lessonProgress,
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
-        exerciseData: item.exerciseData,
-        lessonName: lessonState?.lessonData?.title || '',
-        fromLesson: true
+        exerciseData: item.exerciseData
       };
       let newStudentData: any;
       let returnedData: any;
 
       if (item.hasExerciseData) {
+        // adding lesson name to writing exercise table
+        input.lessonName = lessonState?.lessonData?.title || '';
+
         console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
+
         newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
             input
           })
         );
       } else {
-        delete input.lessonName;
+        const inputForArchive: CreateUniversalArchiveDataInput = {
+          // Everything is the same
+          ...input
+        };
+
         newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalArchiveData, {
-            input
+            input: inputForArchive
           })
         );
         console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
@@ -803,6 +819,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
         'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
         e
       );
+      return null;
     }
   };
 
@@ -815,84 +832,6 @@ const LessonApp = (props: ILessonSurveyApp) => {
       createJournalData={createStudentArchiveData}
       {...props}
     />
-    // <ErrorBoundary componentName="LessonApp">
-    //   {/*
-    //   TODO: Add this again later
-    //   */}
-    //   {/* <FloatingSideMenu /> */}
-    //   <div
-    //     id="lesson-app-container"
-    //     className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
-    //     ref={topLessonRef}>
-    //     <div
-    //       className={`opacity-${
-    //         showRequiredNotification
-    //           ? '100 translate-x-0 transform z-100'
-    //           : '0 translate-x-10 transform'
-    //       } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
-    //       <p className="text-white font-medium tracking-wide">
-    //         <span className="text-red-500">*</span>Please fill all the required fields
-    //       </p>
-    //     </div>
-
-    //     <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-    //       <h6 className="text-xs text-shadow text-gray-500">{LESSON_NAME}</h6>
-    //     </div>
-
-    //     <div className="fixed " style={{zIndex: 5000}}>
-    //       <LessonHeaderBar
-    //         lessonDataLoaded={lessonDataLoaded}
-    //         overlay={overlay}
-    //         setOverlay={setOverlay}
-    //         pageStateUpdated={pageStateUpdated}
-    //         personLessonData={personLessonData}
-    //         updatePageInLocalStorage={updatePageInLocalStorage}
-    //         setPersonLessonData={setPersonLessonData}
-    //         createJournalData={createStudentArchiveData}
-    //         isAtEnd={isAtEnd}
-    //         canContinue={canContinue}
-    //         validateRequired={validateRequired}
-    //         setisAtEnd={setisAtEnd}
-    //         handleRequiredNotification={handleRequiredNotification}
-    //       />
-    //     </div>
-    //     <div
-    //       className={`${
-    //         breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
-    //       } relative lesson-body-container `}>
-    //       {!lessonDataLoaded ? (
-    //         <div className="mt-4 mb-8 lesson-page-container">
-    //           <LessonPageLoader />
-    //         </div>
-    //       ) : (
-    //         <ErrorBoundary
-    //           authId={user.authId}
-    //           email={user.email}
-    //           componentName="CoreUniversalLesson"
-    //           fallback={<h1>Error in the Lesson App</h1>}>
-    //           {/* ADD LESSONWRAPPER HERE */}
-    //           <div className="mt-4 mb-8 lesson-page-container">
-    //             <CoreUniversalLesson
-    //               invokeRequiredField={() => {
-    //                 invokeRequiredField();
-    //                 handleRequiredNotification();
-    //               }}
-    //               canContinue={canContinue}
-    //             />
-    //           </div>
-    //         </ErrorBoundary>
-    //       )}
-
-    //       {lessonDataLoaded && (
-    //         <Foot
-    //           isAtEnd={isAtEnd}
-    //           setisAtEnd={setisAtEnd}
-    //           handleRequiredNotification={handleRequiredNotification}
-    //         />
-    //       )}
-    //     </div>
-    //   </div>
-    // </ErrorBoundary>
   );
 };
 

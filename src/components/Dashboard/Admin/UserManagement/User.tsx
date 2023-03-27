@@ -4,7 +4,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {uploadImageToS3} from '@graphql/functions';
 import {PersonStatus, Role} from 'API';
 import Loader from 'atoms/Loader';
@@ -12,17 +12,18 @@ import Anthology from 'components/Dashboard/Anthology/Anthology';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
 import {map} from 'lodash';
 import sortBy from 'lodash/sortBy';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {
+  ITab,
+  useTabs
+} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Attendance from './Attendance';
 import SurveyList from './SurveyList';
@@ -32,15 +33,15 @@ import UserInformation from './UserInformation';
 
 export interface UserInfo {
   authId: string;
-  courses?: string;
+  courses?: string | null;
   createdAt: string;
   email: string;
-  externalId?: string;
+
   classes: any;
   firstName: string;
-  grade?: string;
+
   id: string;
-  image?: string;
+  image?: string | null;
   institution?: string;
   language: string;
   lastName: string;
@@ -49,9 +50,9 @@ export interface UserInfo {
   status: PersonStatus;
   inactiveStatusDate?: string;
   statusReason?: string;
-  phone: string;
+
   updatedAt: string;
-  birthdate?: string;
+
   isZoiq?: boolean;
   onDemand?: boolean;
   rooms: any[];
@@ -89,16 +90,13 @@ interface IUserProps {
 const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
   const dataList: any[] = map(list, (room, idx) => {
     const curriculum = room.curricula;
-    const teacher = room.teacher;
+    const teacher: any = room.teacher;
     return {
       no: idx + 1,
       institution: room?.class?.institution?.name,
+      onClick: () => handleClassRoomClick(room.id),
       classroom: (
-        <div
-          onClick={() => handleClassRoomClick(room.id)}
-          className="hover:underline cursor-pointer hover:theme-text">
-          {room.name}
-        </div>
+        <div className="hover:underline cursor-pointer hover:theme-text">{room.name}</div>
       ),
 
       teacher: teacher
@@ -111,23 +109,9 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
         : 'Not Available'
     };
   });
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Institution', 'Classroom', 'Teacher', 'Curriculum'],
-    dataList,
-    config: {
-      isLastAction: true,
-      isFirstIndex: true,
-
-      dataList: {
-        emptyText: 'No associated coursework and attendance',
-        customWidth: {
-          no: 'w-12',
-          classroom: 'w-72',
-          curriculum: 'w-72'
-        },
-        maxHeight: 'max-h-196'
-      }
-    }
+    dataList
   };
 
   return <Table {...tableConfig} />;
@@ -135,16 +119,13 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
 
 const User = (props: IUserProps) => {
   const {insideModalPopUp, onSuccessCallback, shouldNavigate} = props;
-  const history = useHistory();
-  const match = useRouteMatch();
-  const location = useLocation();
-  const params = useQuery(location.search);
+
   const urlParam: any = useParams();
 
-  const {theme, state, userLanguage, dispatch, clientKey} = useGlobalContext();
+  const {theme, state, dispatch} = useGlobalContext();
 
   const [status, setStatus] = useState('');
-  const [upImage, setUpImage] = useState(null);
+  const [upImage, setUpImage] = useState<any | null>(null);
   const [fileObj, setFileObj] = useState({});
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
@@ -177,14 +158,13 @@ const User = (props: IUserProps) => {
         payload: {roomData: arrayOfResponseObjects, authId}
       });
 
-      // mapData(arrayOfResponseObjects);
       return arrayOfResponseObjects;
     } catch (e) {
       console.error('getDashbaordData -> ', e);
     }
   };
 
-  const [questionData, setQuestionData] = useState([]);
+  const [questionData, setQuestionData] = useState<any[]>([]);
 
   const [urlState, setUrlState] = useUrlState(
     {id: '', t: 'p'},
@@ -192,7 +172,6 @@ const User = (props: IUserProps) => {
   );
 
   const userId = props.userId || urlParam?.userId;
-  console.log('🚀 ~ file: User.tsx:197 ~ User ~ userId', userId);
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -200,22 +179,22 @@ const User = (props: IUserProps) => {
     courses: null,
     createdAt: '',
     email: '',
-    externalId: null,
+
     firstName: '',
     inactiveStatusDate: '',
     statusReason: '',
-    grade: null,
+
     image: null,
-    institution: null,
+    institution: '',
     language: '',
     lastName: '',
-    preferredName: null,
+    preferredName: '',
     classes: null,
     role: '',
     status: PersonStatus.ACTIVE,
-    phone: '',
+
     updatedAt: '',
-    birthdate: null,
+
     onDemand: false,
     isZoiq: false,
     rooms: []
@@ -228,14 +207,10 @@ const User = (props: IUserProps) => {
   }, [user.authId, user.email]);
 
   const [imageUrl, setImageUrl] = useState('');
-  const pathName = location.pathname.replace(/\/$/, '');
-  const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
 
-  const {id, t: tab} = urlState;
+  const {t: tab} = urlState;
 
-  const {CommonlyUsedDict} = useDictionary(clientKey);
-
-  const mediaRef = React.useRef(null);
+  const mediaRef = React.useRef<any>(null);
   const handleImage = () => mediaRef?.current?.click();
 
   // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
@@ -271,8 +246,8 @@ const User = (props: IUserProps) => {
 
   // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
 
-  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
-  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState<any[]>([]);
+  const [privateCheckpoints, setPrivateCheckpoints] = useState<any[]>([]);
 
   async function getUserProfile(id: string) {
     try {
@@ -284,7 +259,10 @@ const User = (props: IUserProps) => {
       dispatch({
         type: 'UPDATE_TEMP_USER',
         payload: {
-          user: {id: userData.id, name: `${userData.firstName} ${userData.lastName}`}
+          user: {
+            id: userData.id,
+            name: `${userData.firstName} ${userData.lastName}`
+          }
         }
       });
 
@@ -306,8 +284,6 @@ const User = (props: IUserProps) => {
           ? studentRooms.map((item: any) => item?.curricula?.items).flat(1)
           : [];
 
-      // console.log('studentCurriculars', studentCurriculars);
-
       const uniqCurriculars: any =
         studentCurriculars.length > 0
           ? getUniqItems(
@@ -315,7 +291,6 @@ const User = (props: IUserProps) => {
               'curriculumID'
             )
           : [];
-      // console.log('uniqCurriculars', uniqCurriculars);
 
       const studCurriCheckp: any =
         uniqCurriculars.length > 0
@@ -324,14 +299,10 @@ const User = (props: IUserProps) => {
               .flat(1)
           : [];
 
-      // console.log('studCurriCheckp', studCurriCheckp);
-
       const studentCheckpoints: any =
         studCurriCheckp.length > 0
           ? studCurriCheckp.map((item: any) => item?.checkpoint)
           : [];
-
-      // console.log('studentCheckpoints', studentCheckpoints);
 
       let sCheckpoints: any[] = [];
 
@@ -429,7 +400,7 @@ const User = (props: IUserProps) => {
   ];
   tabs = tabs.filter(Boolean);
 
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
+  const {curTab, setCurTab, helpers} = useTabs(tabs as ITab[]);
 
   const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
 
@@ -441,8 +412,10 @@ const User = (props: IUserProps) => {
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(user.image);
-      setImageUrl(imageUrl);
+      if (user.image) {
+        const imageUrl: any = await getImageFromS3(user.image);
+        setImageUrl(imageUrl);
+      }
     }
     getUrl();
   }, [user.image]);
@@ -485,9 +458,7 @@ const User = (props: IUserProps) => {
     };
 
     try {
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
-      );
+      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
       setUser({
         ...user
       });
@@ -548,8 +519,7 @@ const User = (props: IUserProps) => {
                     disabled={isEditMode}
                     onClick={() => {
                       setIsEditMode(true);
-                      setCurTab(tabs[0].name);
-                      // history.push(`${match.url}/edit${location.search}`);
+                      tabs[0] && setCurTab(tabs[0]?.name);
                     }}
                   />
                 </div>
@@ -745,15 +715,15 @@ const User = (props: IUserProps) => {
             </div>
           </div>
         </>
-        {showCropper && (
-          <ProfileCropModal
-            upImg={upImage}
-            saveCroppedImage={(img: string) => {
-              saveCroppedImage(img);
-            }}
-            closeAction={toggleCropper}
-          />
-        )}
+
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          saveCroppedImage={(img: string) => {
+            saveCroppedImage(img);
+          }}
+          closeAction={toggleCropper}
+        />
       </>
     );
   }

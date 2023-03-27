@@ -1,75 +1,37 @@
-import React, {useState, Fragment, useEffect, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {API, graphqlOperation} from 'aws-amplify';
+import {Fragment, useEffect, useState} from 'react';
+import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
 import {useHistory, useParams} from 'react-router';
-import {
-  IoArrowUndoCircleOutline,
-  IoCaretDownCircleOutline,
-  IoCaretUpCircleOutline
-} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import SectionTitle from 'atoms/SectionTitle';
-import PageWrapper from 'atoms/PageWrapper';
-import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
-import SearchInput from 'atoms/Form/SearchInput';
 import CheckBox from 'atoms/Form/CheckBox';
+import SearchInput from 'atoms/Form/SearchInput';
 
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
-import {getLanguageString} from 'utilities/strings';
-import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import {goBackBreadCrumb} from 'utilities/functions';
 import {BsArrowLeft} from 'react-icons/bs';
+import {getLanguageString} from 'utilities/strings';
 import {v4 as uuidv4} from 'uuid';
+import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
 
-interface ProfileCheckpointlookupProps {
-  instId?: string;
-}
-
-const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
-  const {instId} = props;
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+const ProfileCheckpointlookup = () => {
+  const {theme, clientKey, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const urlParams: any = useParams();
   const {courseId} = urlParams;
-  const institutionId = urlParams.institutionId || instId;
-  const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
+
+  const [selectedCheckpointIds, setSelectedCheckpointIds] = useState<any[]>([]);
   const [expandId, setExpandedId] = useState('');
   const [searchInput, setSearchInput] = useState('');
-  const [filteredList, setFilteredList] = useState([]);
-  const [allCheckpointList, setAllCheckpointList] = useState([]);
+  const [filteredList, setFilteredList] = useState<any[]>([]);
+  const [allCheckpointList, setAllCheckpointList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const {ProfileCheckpointlookupDict, BreadcrumsTitles} = useDictionary(clientKey);
-
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['AddExistingCheckpoint'],
-      url: `/dashboard/curricular/${courseId}/checkpoint/addNew`,
-      last: true
-    }
-  ];
+  const {ProfileCheckpointlookupDict} = useDictionary();
 
   const selectItem = (checkpointId: string) => {
     const selectedItem = selectedCheckpointIds.find((id) => id === checkpointId);
@@ -120,7 +82,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
 
   const saveCurricularCheckpoints = async () => {
     setLoading(true);
-    let newCheckpoints: any = await Promise.all(
+    await Promise.all(
       selectedCheckpointIds.map(async (selectedId: string) =>
         saveCommonCurricular(selectedId)
       )
@@ -148,9 +110,10 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
         throw new Error('fail!');
       } else {
         const checkpointList = allCheckpointList.data?.listCheckpoints?.items;
-        const savedCheckpointId = curricularCheckp.data?.getCurriculum?.checkpoints?.items.map(
-          (item: {checkpointID: string}) => item.checkpointID
-        );
+        const savedCheckpointId =
+          curricularCheckp.data?.getCurriculum?.checkpoints?.items.map(
+            (item: {checkpointID: string}) => item.checkpointID
+          );
         const sortedList = checkpointList
           .filter((chechpoint: any) => !savedCheckpointId.includes(chechpoint.id))
           .sort((a: any, b: any) =>
@@ -182,7 +145,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
+            
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -227,7 +190,6 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
           onChange={(val: string) => setSearchInput(val)}
           onKeyDown={searchFromList}
           closeAction={removeSearchAction}
-          style="w-2/4"
         />
       </div>
       <div className="px-8">
@@ -288,17 +250,17 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                               <span
                                 className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
                                 onClick={() => viewCheckpoint(item.id)}>
-                                <IconContext.Provider
-                                  value={{
-                                    size: '1.5rem',
-                                    color: theme.iconColor[themeColor]
-                                  }}>
-                                  {expandId === item.id ? (
-                                    <IoCaretUpCircleOutline />
-                                  ) : (
-                                    <IoCaretDownCircleOutline />
-                                  )}
-                                </IconContext.Provider>
+                                {expandId === item.id ? (
+                                  <IoCaretUpCircleOutline
+                                    className="theme-text"
+                                    size="1.5rem"
+                                  />
+                                ) : (
+                                  <IoCaretDownCircleOutline
+                                    className="theme-text"
+                                    size="1.5rem"
+                                  />
+                                )}
                               </span>
                             </div>
                           </div>
@@ -339,14 +301,12 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
       <div className="flex mt-8 justify-center px-8 pb-4">
         <div className="flex justify-center my-6">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={ProfileCheckpointlookupDict[userLanguage]['button']['cancel']}
             onClick={history.goBack}
             transparent
           />
           {allCheckpointList.length > 0 && (
             <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
               label={
                 loading
                   ? ProfileCheckpointlookupDict[userLanguage]['button']['saving']

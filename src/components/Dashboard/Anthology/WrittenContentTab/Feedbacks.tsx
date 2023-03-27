@@ -1,22 +1,23 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {deleteImageFromS3, uploadImageToS3} from 'graphql/functions';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {doResize} from '@utilities/functions';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import {API, graphqlOperation} from 'aws-amplify';
+import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import EmojiPicker from 'emoji-picker-react';
+import {deleteImageFromS3, uploadImageToS3} from 'graphql/functions';
+import * as mutations from 'graphql/mutations';
 import {find, findIndex} from 'lodash';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {useEffect, useRef, useState} from 'react';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
 import {HiEmojiHappy} from 'react-icons/hi';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import * as mutations from 'graphql/mutations';
 import {getImageFromS3} from 'utilities/services';
-import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import Modal from 'atoms/Modal';
-import ModalPopUp from 'molecules/ModalPopUp';
 import Feedback from '../../Admin/UserManagement/Feedback';
 
 const Feedbacks = ({
@@ -35,7 +36,7 @@ const Feedbacks = ({
   setFileObject
 }: any) => {
   const entryID = item.id;
-  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage} = useGlobalContext();
 
   const [profileUrl, setProfileUrl] = useState('');
   useEffect(() => {
@@ -54,7 +55,11 @@ const Feedbacks = ({
 
   // ~~~~~~~~~~~~~~~~ MODALS ~~~~~~~~~~~~~~~ //
   const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
-  const [editModal, setEditModal] = useState({show: false, id: '', content: ''});
+  const [editModal, setEditModal] = useState({
+    show: false,
+    id: '',
+    content: ''
+  });
   const [deleteModal, setDeleteModal] = useState({show: false, id: ''});
 
   const closeEditModal = () => {
@@ -131,9 +136,15 @@ const Feedbacks = ({
     const commentObject: any = getCurrentComment(id);
 
     if (commentObject) {
-      updateCommentLocalState({comment: editCommentInput, id: commentObject.id});
+      updateCommentLocalState({
+        comment: editCommentInput,
+        id: commentObject.id
+      });
       closeEditModal();
-      await updateCommentFromDB({comment: editCommentInput, id: commentObject.id});
+      await updateCommentFromDB({
+        comment: editCommentInput,
+        id: commentObject.id
+      });
     }
   };
 
@@ -160,14 +171,17 @@ const Feedbacks = ({
 
     const mergedStudentData = allStudentData.map((dataRecord: any) => {
       if (dataRecord.id === selectStudentDataRecord.id) {
-        return {...dataRecord, exerciseData: newExerciseFeedback.exerciseData};
+        return {
+          ...dataRecord,
+          exerciseData: newExerciseFeedback.exerciseData
+        };
       } else {
         return dataRecord;
       }
     });
 
     try {
-      const updatedStudentData: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateUniversalLessonStudentData, {
           input: {
             id: selectStudentDataRecord.id,
@@ -195,7 +209,7 @@ const Feedbacks = ({
     });
 
     try {
-      const updateJournalData: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {
           input: {
             id: item.id,
@@ -215,7 +229,7 @@ const Feedbacks = ({
 
   const updateCommentFromDB = async (commentObj: any) => {
     try {
-      const commentUpdate: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateAnthologyComment, {
           input: {
             id: commentObj.id,
@@ -251,7 +265,9 @@ const Feedbacks = ({
             }
           : input;
       const results: any = await API.graphql(
-        graphqlOperation(mutations.createAnthologyComment, {input: finalInput})
+        graphqlOperation(mutations.createAnthologyComment, {
+          input: finalInput
+        })
       );
 
       const commentData: any = results.data.createAnthologyComment;
@@ -273,7 +289,7 @@ const Feedbacks = ({
 
   const deleteCommentFromDatabase = async (id: string, item: any) => {
     try {
-      const results: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
       );
 
@@ -359,22 +375,6 @@ const Feedbacks = ({
   // ######################### IMAGE MANIPULATION ######################## //
   // ##################################################################### //
 
-  const do_resize = (textbox: any) => {
-    var maxrows = 50;
-    var txt = textbox.value;
-    var cols = textbox.cols;
-
-    var arraytxt: any = txt.split('\n');
-    var rows = arraytxt.length;
-
-    for (let i = 0; i < arraytxt.length; i++)
-      // @ts-ignore
-      rows += parseInt(arraytxt[i].length / cols);
-
-    if (rows > maxrows) textbox.rows = maxrows;
-    else textbox.rows = rows;
-  };
-
   const preview_image = (file: any) => {
     var reader = new FileReader();
     reader.onload = function () {
@@ -401,9 +401,10 @@ const Feedbacks = ({
     obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
 
   const AttachmentsModalPopUp = (props: any) => {
-    const {children, closeAction} = props;
+    const {children, closeAction, open} = props;
     return (
       <Modal
+        open={open}
         closeOnBackdrop
         closeAction={closeAction}
         showHeader={false}
@@ -416,9 +417,9 @@ const Feedbacks = ({
 
   // ~~~~~~~ SPECIFIC CLICK HANDLING ~~~~~~~ //
 
-  const inputVideo = useRef(null);
-  const inputImage = useRef(null);
-  const inputOther = useRef(null);
+  const inputVideo = useRef<any>(null);
+  const inputImage = useRef<any>(null);
+  const inputOther = useRef<any>(null);
 
   const handleVideo = () => inputVideo.current.click();
   const handleImage = () => inputImage.current.click();
@@ -480,91 +481,88 @@ const Feedbacks = ({
     <div key={idx} className={`w-full pb-2 mb-2`}>
       {showComments && (
         <div className="comment-container">
-          {attModal.show && (
-            <AttachmentsModalPopUp
-              closeAction={() => setAttModal({show: false, url: '', type: ''})}>
-              {attModal.type.includes('image') && (
-                <img
-                  style={{objectFit: 'cover', maxHeight: '90vh', maxWidth: '90vw'}}
-                  className="h-auto w-auto rounded"
-                  src={attModal.url}
-                />
-              )}
-            </AttachmentsModalPopUp>
-          )}
-          {editModal.show && (
-            <Modal
-              showHeader={true}
-              title={`Edit`}
-              showHeaderBorder={true}
-              showFooter={false}
-              closeAction={closeEditModal}>
-              <div>
-                <textarea
-                  onKeyUp={(e) => do_resize(e.target)}
-                  style={{resize: 'none'}}
-                  cols={125}
-                  rows={1}
-                  placeholder="Edit Feedback"
-                  className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded-xl"
-                  value={editCommentInput}
-                  onChange={(e) => setEditCommentInput(e.target.value)}
-                />
-                <div className="mt-8 px-6 pb-4">
-                  <div className="flex justify-center items-center">
-                    <Buttons
-                      btnClass="py-1 px-4 text-xs mr-2"
-                      label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                      onClick={closeEditModal}
-                      transparent
-                    />
-                    <Buttons
-                      btnClass="py-1 px-8 text-xs ml-2"
-                      label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-                      onClick={() => editComment(editModal.id)}
-                    />
-                    {showEmojiForEdit && (
-                      <div
-                        onClick={(e: any) => {
-                          const {id} = e.target;
-                          if (id === 'picker-wrapper') {
-                            setShowEmojiForEdit(false);
-                          }
-                        }}
-                        id="picker-wrapper"
-                        className="picker-wrapper absolute bottom-1 left-5">
-                        <EmojiPicker
-                          groupVisibility={{
-                            recently_used: false
-                          }}
-                          onEmojiClick={(e: any, emoji: any) =>
-                            onEmojiSelect(emoji, true)
-                          }
-                        />
-                      </div>
-                    )}
-                    <button
-                      onClick={() => setShowEmojiForEdit(!showEmojiForEdit)}
-                      className={`${actionStyles}`}>
-                      <HiEmojiHappy className="" />
-                    </button>
-                  </div>
+          <AttachmentsModalPopUp
+            open={attModal.show}
+            closeAction={() => setAttModal({show: false, url: '', type: ''})}>
+            {attModal.type.includes('image') && (
+              <img
+                style={{
+                  objectFit: 'cover',
+                  maxHeight: '90vh',
+                  maxWidth: '90vw'
+                }}
+                className="h-auto w-auto rounded"
+                src={attModal.url}
+              />
+            )}
+          </AttachmentsModalPopUp>
+
+          <Modal
+            open={editModal.show}
+            showHeader={true}
+            title={`Edit`}
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={closeEditModal}>
+            <div>
+              <textarea
+                onKeyUp={(e) => doResize(e.target)}
+                style={{resize: 'none'}}
+                cols={125}
+                rows={1}
+                placeholder="Edit Feedback"
+                className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded-xl"
+                value={editCommentInput}
+                onChange={(e) => setEditCommentInput(e.target.value)}
+              />
+              <div className="mt-8 px-6 pb-4">
+                <div className="flex justify-center items-center">
+                  <Buttons
+                    label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                    onClick={closeEditModal}
+                    transparent
+                  />
+                  <Buttons
+                    label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                    onClick={() => editComment(editModal.id)}
+                  />
+                  {showEmojiForEdit && (
+                    <div
+                      onClick={(e: any) => {
+                        const {id} = e.target;
+                        if (id === 'picker-wrapper') {
+                          setShowEmojiForEdit(false);
+                        }
+                      }}
+                      id="picker-wrapper"
+                      className="picker-wrapper absolute bottom-1 left-5">
+                      <EmojiPicker
+                        onEmojiClick={(emoji: any) => onEmojiSelect(emoji, true)}
+                      />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setShowEmojiForEdit(!showEmojiForEdit)}
+                    className={`${actionStyles}`}>
+                    <HiEmojiHappy className="" />
+                  </button>
                 </div>
               </div>
-            </Modal>
-          )}
-          {deleteModal.show && (
-            <ModalPopUp
-              message="Are you sure you want to delete it?"
-              deleteLabel="delete"
-              deleteModal
-              saveAction={() => {
-                deleteComment(deleteModal.id);
-                setDeleteModal({show: false, id: ''});
-              }}
-              closeAction={() => setDeleteModal({show: false, id: ''})}
-            />
-          )}
+            </div>
+          </Modal>
+
+          <ModalPopUp
+            open={deleteModal.show}
+            message="Are you sure you want to delete it?"
+            deleteLabel="delete"
+            deleteModal
+            saveAction={() => {
+              deleteComment(deleteModal.id);
+              setDeleteModal({show: false, id: ''});
+            }}
+            closeAction={() => setDeleteModal({show: false, id: ''})}
+          />
+
           {loadingComments ? (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
@@ -594,6 +592,7 @@ const Feedbacks = ({
                   />
                 );
               }
+              return <div className="hidden w-auto" />;
             })
           ) : (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
@@ -610,7 +609,7 @@ const Feedbacks = ({
               style={{minHeight: '2.5rem'}}
               className="flex comment-box__inner flex-col border-b-0 border-gray-200">
               <textarea
-                onKeyUp={(e) => do_resize(e.target)}
+                onKeyUp={(e) => doResize(e.target)}
                 style={{resize: 'none'}}
                 placeholder="Add Feedback"
                 className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 rounded-full text-gray-700"
@@ -723,10 +722,7 @@ const Feedbacks = ({
                       id="picker-wrapper"
                       className="picker-wrapper absolute bottom-5 left-5">
                       <EmojiPicker
-                        groupVisibility={{
-                          recently_used: false
-                        }}
-                        onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji, false)}
+                        onEmojiClick={(emoji: any) => onEmojiSelect(emoji, false)}
                       />
                     </div>
                   )}

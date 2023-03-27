@@ -11,41 +11,6 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 
-// const ColorPicker = (props: {
-//   currentState?: any;
-//   expanded?: any;
-//   onExpandEvent?: any;
-//   onChange: any;
-// }) => {
-//   const stopPropagation = (event: {stopPropagation: () => void}) => {
-//     event.stopPropagation();
-//   };
-
-//   const _onChange = (color: {hex: any}) => {
-//     const {onChange} = props;
-//     onChange('color', color.hex);
-//   };
-
-//   const renderModal = () => {
-//     const {color} = props.currentState;
-//     return (
-//       <div onClick={stopPropagation}>
-//         <BlockPicker color={color} onChangeComplete={_onChange} />
-//       </div>
-//     );
-//   };
-
-//   const {expanded, onExpandEvent} = props;
-//   return (
-//     <div aria-haspopup="true" aria-expanded={expanded} aria-label="rdw-color-picker">
-//       <div onClick={onExpandEvent}>
-//         <img src={'https://image.flaticon.com/icons/png/512/1250/1250615.png'} alt="" />
-//       </div>
-//       {expanded ? renderModal() : undefined}
-//     </div>
-//   );
-// };
-
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
   initialValue: string;
@@ -65,7 +30,7 @@ interface RichTextEditorProps {
    * Don't use this if the content is serious
    */
   withStyles?: boolean;
-  fetchTeacherValue?: () => string;
+  fetchTeacherValue?: () => string | undefined | null;
 }
 
 const DEFAULT_INLINE_OPTIONS = ['bold', 'italic', 'underline'];
@@ -91,7 +56,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
 
-  const [changesArr, setChangesArr] = useState([]);
+  const [changesArr, setChangesArr] = useState<any[]>([]);
 
   /**
    * Please don't do this:
@@ -171,7 +136,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     }
   }, deps);
 
-  const editorRef = React.useRef();
+  const editorRef = React.useRef<any>(null);
 
   useEffect(() => {
     if (editorRef && editorRef?.current && withStyles) {
@@ -333,10 +298,22 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
             icon: textEdit.remove,
             className: 'toolbarCustomIcon'
           },
-          list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-          textAlign: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-          link: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-          history: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+          list: {
+            inDropdown: true,
+            className: 'dropdownClassName toolbarCustomIcon'
+          },
+          textAlign: {
+            inDropdown: true,
+            className: 'dropdownClassName toolbarCustomIcon'
+          },
+          link: {
+            inDropdown: true,
+            className: 'dropdownClassName toolbarCustomIcon'
+          },
+          history: {
+            inDropdown: true,
+            className: 'dropdownClassName toolbarCustomIcon'
+          },
           fontFamily: {
             options: [
               'Arial',

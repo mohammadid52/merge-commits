@@ -1,33 +1,38 @@
 import {
   StudentExerciseData,
-  StudentPageInput
-} from 'interfaces/UniversalLessonInterfaces';
+  StudentPageInput,
+} from "interfaces/UniversalLessonInterfaces";
 
-export interface lessonStateType {
-  loaded?: boolean;
-  universalLessonID?: string;
-  universalLessonPageID?: string;
-  universalStudentDataID?: any[];
-  studentAuthID?: string;
-  studentUsername?: string;
-  lessonData?: any;
-  currentPage?: number;
-  lessonProgress?: number;
-  canContinue?: string;
-  updated?: boolean;
-  requiredInputs?: [string[]];
-  studentData?: [StudentPageInput[]];
-  exerciseData?: [StudentExerciseData[]];
-  viewing?: boolean;
-  displayData?: {studentAuthID?: string; lessonPageID?: string}[];
-  sharedData?: any[];
-  saveCount?: number;
-  firstSave?: boolean;
+export interface LessonStateType {
+  pageTimers?: any[];
+  loaded: boolean;
+  universalLessonID: string;
+  universalLessonPageID: string;
+  universalStudentDataID: any[];
+  studentAuthID: string;
+  studentUsername: string;
+  lessonData: any;
+  currentPage: number;
+  lessonProgress: number;
+  canContinue: string;
+  updated: boolean;
+  requiredInputs: [string[]];
+  studentData: [StudentPageInput[]];
+  exerciseData: [StudentExerciseData[]];
+  viewing: boolean;
+  displayData: {
+    studentAuthID: string;
+    lessonPageID: string;
+    isTeacher: boolean;
+  }[];
+  sharedData: any[];
+  saveCount: number;
+  firstSave: boolean;
   subscription?: any;
   subscribeFunc?: any;
-  studentViewing?: string;
-  isLastPage?: boolean;
-  isValid?: boolean;
+  studentViewing: string;
+  isLastPage: boolean;
+  isValid: boolean;
   misc?: {
     leaveModalVisible?: boolean;
     personLessonData?: {
@@ -37,17 +42,18 @@ export interface lessonStateType {
   };
 }
 
-export const lessonState: lessonStateType = {
+export const lessonState: LessonStateType = {
   loaded: false,
-  universalLessonID: '',
-  universalLessonPageID: '',
+  universalLessonID: "",
+  universalLessonPageID: "",
+  pageTimers: [],
   universalStudentDataID: [],
-  studentAuthID: '',
-  studentUsername: '',
+  studentAuthID: "",
+  studentUsername: "",
   lessonData: {},
   currentPage: 0,
   lessonProgress: 0,
-  canContinue: '',
+  canContinue: "",
   isValid: true,
   updated: false,
   isLastPage: false,
@@ -55,18 +61,18 @@ export const lessonState: lessonStateType = {
   studentData: [[]],
   exerciseData: [[]],
   viewing: false,
-  displayData: [{studentAuthID: '', lessonPageID: ''}],
+  displayData: [{ studentAuthID: "", lessonPageID: "", isTeacher: false }],
   sharedData: [],
   saveCount: 0,
   firstSave: true,
   subscription: {},
   subscribeFunc: () => {},
-  studentViewing: '',
+  studentViewing: "",
   misc: {
     leaveModalVisible: false,
     personLessonData: {
-      lessonID: '',
-      data: []
-    }
-  }
+      lessonID: "",
+      data: [],
+    },
+  },
 };

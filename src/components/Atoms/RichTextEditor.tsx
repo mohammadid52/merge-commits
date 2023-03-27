@@ -1,6 +1,5 @@
 import {ContentState, convertToRaw, EditorState, convertFromHTML} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-// import htmlToDraft from 'html-to-draftjs';
 import React, {useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -37,7 +36,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     dark = false,
     mediumDark = false,
     customStyle = false,
-    rounded = false,
+
     features = [],
     theme,
     withStyles = false,
@@ -149,7 +148,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       : 'editorClassName '
   }  ${maxHeight ? maxHeight : ''}`;
 
-  const editorRef = React.useRef();
+  const editorRef = React.useRef<any>(null);
 
   return (
     <Editor

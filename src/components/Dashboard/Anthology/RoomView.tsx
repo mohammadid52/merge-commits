@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import Loader from '@components/Atoms/Loader';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
@@ -73,8 +73,6 @@ const RoomView = ({
     });
     Promise.all(curriculumMap)
       .then((responseArray: any[]) => {
-        // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-        // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
         setFilteredRooms(responseArray);
       })
       .finally(() => {
@@ -116,9 +114,6 @@ const RoomView = ({
 
   // if nothing works call this
   const checkFromState = () => {
-    // if (studentAuthId && studentEmail) {
-    //   getDashboardData(studentAuthId, studentEmail);
-    // }
     if (state?.temp?.roomData) {
       mapData(state?.temp?.roomData);
     } else {
@@ -161,7 +156,7 @@ const RoomView = ({
   const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
   const mapNotebookRoomCards = (onSuccess?: (output?: any[]) => void) => {
-    const mapped = filteredRooms.map(async (item, idx: number) => {
+    const mapped = filteredRooms.map(async (item) => {
       const {curricula} = item;
 
       const bannerImage = await (curricula?.items[0]?.image
@@ -181,7 +176,7 @@ const RoomView = ({
       );
 
       setMappedNotebookRoomCards(filtered);
-      onSuccess(filtered);
+      onSuccess?.(filtered);
     });
   };
 
@@ -191,11 +186,13 @@ const RoomView = ({
 
   useEffect(() => {
     if (loaded && filteredRooms.length > 0) {
+      // @ts-ignore
       mapNotebookRoomCards((output: any[]) => {
         if (roomId && loaded && output.length > 0) {
           const roomObj = output.find((room: any) => room.id === roomId);
 
-          roomObj && handleSectionSelect('Class Notebook', roomObj.id, roomObj.name);
+          roomObj &&
+            handleSectionSelect?.('Class Notebook', roomObj.id, roomObj.curriculumName);
         }
       });
     }
@@ -228,7 +225,7 @@ const RoomView = ({
               transition: 'width 2s',
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
-            className="mt-0 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
+            className="mt-2 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             <RoomViewCard
               roomID={'private'}
               mainSection={mainSection}

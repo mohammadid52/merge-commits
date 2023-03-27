@@ -1,6 +1,4 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
-import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import {getLocalStorageData} from '@utilities/localStorage';
@@ -11,27 +9,27 @@ import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks
 import StarRatingBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';
 import WritingExerciseBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock';
 import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {map, noop} from 'lodash';
-import React, {useContext} from 'react';
+import React from 'react';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 
 export const FormLabel = ({
-  numbered,
-  index,
-  label,
-  required
+  numbered = false,
+  index = '0',
+  label = '',
+  required = false
 }: {
   index: string;
   numbered: boolean;
   label: string;
   required: boolean;
 }) => {
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const gState = gContext.state;
   const {lessonPage: {theme: themeTextColor = ''} = {}} = gState;
 
@@ -58,7 +56,7 @@ export interface FormControlProps {
   id?: string;
   inputID: string;
   type?: string;
-  label?: string;
+  label: string;
   classString?: string;
   value?: any;
   options?: any;
@@ -131,7 +129,12 @@ export const FormBlock = ({
   }: FormControlProps) => {
     return (
       <div id={`${inputID}_for_error`} key={id} className={`mb-4 p-4`}>
-        <FormLabel label={label} required={required} numbered={numbered} index={index} />
+        <FormLabel
+          label={label}
+          required={Boolean(required)}
+          numbered={Boolean(numbered)}
+          index={index?.toString() || ''}
+        />
         <input
           id={inputID}
           disabled={mode === 'building'}
@@ -155,11 +158,11 @@ export const FormBlock = ({
   const composeInput = (
     inputID: string,
     type?: string,
-    label?: string,
+    label = '',
     value?: any,
     options?: any,
     isInLesson?: boolean,
-    handleUpdateStudentData?: any,
+    _?: any,
     getValue?: (domID: string) => any,
     numbered?: boolean,
     index?: string,
@@ -170,6 +173,7 @@ export const FormBlock = ({
       id,
       numbered,
       mode,
+      key: id,
       type,
       index,
       label,
@@ -182,10 +186,9 @@ export const FormBlock = ({
     switch (type) {
       case FORM_TYPES.TEXT:
         return <TextBlock {...formBlockProps} />;
-      case FORM_TYPES.DATE_PICKER:
-        return <DatePicker {...formBlockProps} />;
+
       case FORM_TYPES.TEXTAREA:
-        return <TextAreaBlock {...formBlockProps} />;
+        return <TextBlock textarea {...formBlockProps} />;
       case FORM_TYPES.RADIO:
       case FORM_TYPES.MULTIPLE:
         return <OptionBlock options={options} {...formBlockProps} />;
@@ -198,6 +201,7 @@ export const FormBlock = ({
             id={id}
             inputID={inputID}
             label={label}
+            key={id}
             required={required}
             numbered={numbered}
             index={index}
@@ -210,6 +214,7 @@ export const FormBlock = ({
         return (
           <LinkInput
             numbered={numbered}
+            key={id}
             index={index}
             id={id}
             required={required}
@@ -230,13 +235,14 @@ export const FormBlock = ({
       case FORM_TYPES.REVIEW_SLIDER:
         return (
           <ReviewSliderBlock
+            key={id}
             inputID={inputID}
             id={id}
             disabled={mode === 'building'}
             classString={classString}
             label={label}
             onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-            value={isInLesson ? getValue(inputID) : value}
+            value={isInLesson ? getValue?.(inputID || '') : value}
           />
         );
 
@@ -244,14 +250,15 @@ export const FormBlock = ({
       case `${FORM_TYPES.WRITING_EXERCISE}-content`:
         return (
           <div
+            key={id}
             className={`border-0 border-gray-700 ${
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
                 : 'border-t-none rounded-t-none'
-            } p-4 rounded-2xl bg-component-dark`}>
+            } ${Boolean(label) ? 'p-4' : ''} rounded-2xl dark-blue`}>
             <WritingExerciseBlock
               title={type === FORM_TYPES.WRITING_EXERCISE}
-              value={isInLesson ? getValue(inputID) : value}
+              value={isInLesson ? getValue?.(inputID || '') : value}
               onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
               id={id}
               type={type}
@@ -267,10 +274,10 @@ export const FormBlock = ({
       case FORM_TYPES.POEM:
       case `${FORM_TYPES.POEM}-content`:
         return (
-          <div className={`mt-4  rounded-2xl`}>
+          <div key={id} className={`mt-4  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
-              value={isInLesson ? getValue(inputID) : value}
+              value={isInLesson ? getValue?.(inputID || '') : value}
               onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
               id={id}
               type={type}
@@ -297,7 +304,7 @@ export const FormBlock = ({
       value: v.value
     }));
 
-    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+    return <NotesBlock key={id} grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   }
 
   return (
@@ -306,7 +313,7 @@ export const FormBlock = ({
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
-            <ErrorBoundary componentName="FormBlock-composeInput">
+            <ErrorBoundary key={v.id} componentName="FormBlock-composeInput">
               <React.Fragment key={`formBlock_${i}`}>
                 {composeInput(
                   v.id,

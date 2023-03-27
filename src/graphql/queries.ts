@@ -14,16 +14,9 @@ export const getPerson = /* GraphQL */ `
       firstName
       preferredName
       lastName
-      externalId
-      grade
-      onBoardSurvey
-      offBoardSurvey
-      phone
-      birthdate
       inactiveStatusDate
       image
       language
-      filters
       lastLoggedIn
       lastLoggedOut
       onDemand
@@ -100,16 +93,9 @@ export const listPeople = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -292,16 +278,9 @@ export const getPersonLessonsData = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -678,16 +657,9 @@ export const getStaff = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -778,16 +750,9 @@ export const listStaff = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -916,16 +881,9 @@ export const getRoom = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -1132,16 +1090,9 @@ export const listRooms = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -1316,16 +1267,9 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -1362,16 +1306,9 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -1439,16 +1376,9 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -1533,16 +1463,9 @@ export const getClassroomGroups = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -1619,16 +1542,9 @@ export const getClassroomGroups = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -1730,16 +1646,9 @@ export const listClassroomGroups = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -1829,16 +1738,9 @@ export const getRoomCoTeachers = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -1911,16 +1813,9 @@ export const getRoomCoTeachers = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -2019,16 +1914,9 @@ export const listRoomCoTeachers = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -2157,16 +2045,9 @@ export const getClass = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -2413,16 +2294,9 @@ export const getClassStudent = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -2485,16 +2359,9 @@ export const listClassStudents = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -2595,11 +2462,6 @@ export const getCurriculum = /* GraphQL */ `
       syllabiHistory
       signedOff
       status
-      signedOffSteps {
-        authID
-        date
-        step
-      }
       createdAt
       updatedAt
     }
@@ -2661,11 +2523,6 @@ export const listCurricula = /* GraphQL */ `
         syllabiHistory
         signedOff
         status
-        signedOffSteps {
-          authID
-          date
-          step
-        }
         createdAt
         updatedAt
       }
@@ -2720,11 +2577,6 @@ export const getTopic = /* GraphQL */ `
         syllabiHistory
         signedOff
         status
-        signedOffSteps {
-          authID
-          date
-          step
-        }
         createdAt
         updatedAt
       }
@@ -3019,11 +2871,6 @@ export const getRoomCurriculum = /* GraphQL */ `
         syllabiHistory
         signedOff
         status
-        signedOffSteps {
-          authID
-          date
-          step
-        }
         createdAt
         updatedAt
       }
@@ -3242,296 +3089,6 @@ export const listQuestionTypes = /* GraphQL */ `
     }
   }
 `;
-export const getRoomMsgs = /* GraphQL */ `
-  query GetRoomMsgs($id: ID!) {
-    getRoomMsgs(id: $id) {
-      id
-      roomID
-      senderAuthID
-      senderEmail
-      body
-      createdAt
-      sender {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        inactiveStatusDate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        lessons {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        statusReason
-        addedby
-        lastEmotionSubmission
-        pageState
-        lastPageStateUpdate
-        statusChangedBy
-        isZoiq
-        createdAt
-        updatedAt
-      }
-      updatedAt
-    }
-  }
-`;
-export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs(
-    $filter: ModelRoomMsgsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        roomID
-        senderAuthID
-        senderEmail
-        body
-        createdAt
-        sender {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getStudentData = /* GraphQL */ `
-  query GetStudentData($syllabusLessonID: ID!, $studentID: String!) {
-    getStudentData(syllabusLessonID: $syllabusLessonID, studentID: $studentID) {
-      id
-      lessonProgress
-      currentLocation
-      status
-      saveType
-      syllabusLessonID
-      studentID
-      studentAuthID
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        inactiveStatusDate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        lessons {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        statusReason
-        addedby
-        lastEmotionSubmission
-        pageState
-        lastPageStateUpdate
-        statusChangedBy
-        isZoiq
-        createdAt
-        updatedAt
-      }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      anthologyContent {
-        type
-        subType
-        title
-        subTitle
-        description
-        content
-        classID
-        feedbacks
-        edited
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listStudentData = /* GraphQL */ `
-  query ListStudentData(
-    $syllabusLessonID: ID
-    $studentID: ModelStringKeyConditionInput
-    $filter: ModelStudentDataFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listStudentData(
-      syllabusLessonID: $syllabusLessonID
-      studentID: $studentID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        lessonProgress
-        currentLocation
-        status
-        saveType
-        syllabusLessonID
-        studentID
-        studentAuthID
-        student {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        doFirstData {
-          nextToken
-        }
-        checkpointData {
-          nextToken
-        }
-        anthologyContent {
-          type
-          subType
-          title
-          subTitle
-          description
-          content
-          classID
-          feedbacks
-          edited
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getAnthologyComment = /* GraphQL */ `
   query GetAnthologyComment($id: ID!) {
     getAnthologyComment(id: $id) {
@@ -3549,16 +3106,9 @@ export const getAnthologyComment = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -3621,16 +3171,9 @@ export const listAnthologyComments = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -3681,16 +3224,9 @@ export const getQuestionData = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -3751,16 +3287,9 @@ export const listQuestionData = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -3815,16 +3344,9 @@ export const getPersonLocation = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -3901,16 +3423,9 @@ export const getPersonLocation = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -4104,16 +3619,9 @@ export const listPersonLocations = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -4262,11 +3770,6 @@ export const getAttendance = /* GraphQL */ `
         syllabiHistory
         signedOff
         status
-        signedOffSteps {
-          authID
-          date
-          step
-        }
         createdAt
         updatedAt
       }
@@ -4457,16 +3960,9 @@ export const getAttendance = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -5601,16 +5097,9 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -5776,16 +5265,9 @@ export const getUploadLogs = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -5952,16 +5434,9 @@ export const getUploadLogs = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -6134,16 +5609,9 @@ export const listUploadLogs = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -6797,15 +6265,6 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-      }
       lessonPlan {
         id
         disabled
@@ -6817,17 +6276,6 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
-      feedback {
-        items {
-          id
-          syllabusLessonID
-          liked
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -6890,9 +6338,6 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        displayData {
-          breakdownComponent
-        }
         lessonPlan {
           id
           disabled
@@ -6904,324 +6349,6 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
         }
         startDate
         endDate
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getUniversalLessonFeedback = /* GraphQL */ `
-  query GetUniversalLessonFeedback($id: ID!) {
-    getUniversalLessonFeedback(id: $id) {
-      id
-      syllabusLessonID
-      liked
-      comment
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        complete
-        roster
-        viewing
-        lesson {
-          id
-          type
-          label
-          title
-          institutionID
-          language
-          designers
-          objectives
-          lessonPlanAttachment
-          purpose
-          introduction
-          introductionTitle
-          status
-          instructions
-          instructionsTitle
-          summary
-          summaryTitle
-          duration
-          resources
-          notes
-          cardImage
-          cardCaption
-          darkMode
-          rubrics
-          smallGroup
-          groupSize
-          groupType
-          smallGroupSize
-          smallGroupOption
-          studentMaterials
-          targetAudience
-          isUsed
-          createdAt
-          updatedAt
-        }
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listUniversalLessonFeedbacks = /* GraphQL */ `
-  query ListUniversalLessonFeedbacks(
-    $filter: ModelUniversalLessonFeedbackFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listUniversalLessonFeedbacks(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        syllabusLessonID
-        liked
-        comment
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getStudentConnections = /* GraphQL */ `
-  query GetStudentConnections($id: ID!) {
-    getStudentConnections(id: $id) {
-      fromEmail
-      fromAuthID
-      toEmail
-      toAuthID
-      remarks
-      fromStudent {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        inactiveStatusDate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        lessons {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        statusReason
-        addedby
-        lastEmotionSubmission
-        pageState
-        lastPageStateUpdate
-        statusChangedBy
-        isZoiq
-        createdAt
-        updatedAt
-      }
-      toStudent {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        inactiveStatusDate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        lessons {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        statusReason
-        addedby
-        lastEmotionSubmission
-        pageState
-        lastPageStateUpdate
-        statusChangedBy
-        isZoiq
-        createdAt
-        updatedAt
-      }
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listStudentConnections = /* GraphQL */ `
-  query ListStudentConnections(
-    $filter: ModelStudentConnectionsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listStudentConnections(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        fromEmail
-        fromAuthID
-        toEmail
-        toAuthID
-        remarks
-        fromStudent {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        toStudent {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        id
         createdAt
         updatedAt
       }
@@ -7244,16 +6371,9 @@ export const getPersonSentiments = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -7316,16 +6436,9 @@ export const listPersonSentiments = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -7383,699 +6496,6 @@ export const listSentiments = /* GraphQL */ `
     }
   }
 `;
-export const getSentimentTracker = /* GraphQL */ `
-  query GetSentimentTracker($personAuthID: String!, $date: AWSDate!) {
-    getSentimentTracker(personAuthID: $personAuthID, date: $date) {
-      personAuthID
-      personEmail
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        inactiveStatusDate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        lessons {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        statusReason
-        addedby
-        lastEmotionSubmission
-        pageState
-        lastPageStateUpdate
-        statusChangedBy
-        isZoiq
-        createdAt
-        updatedAt
-      }
-      sentimentId
-      sentiment {
-        id
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
-      }
-      classRoomID
-      classRoom {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        status
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          isZoiq
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          roomId
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData {
-          isTeacher
-          studentAuthID
-          lessonPageID
-        }
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
-        classroomGroups {
-          nextToken
-        }
-        weekDay
-        conferenceCallLink
-        lessonImpactLog {
-          impactDate
-          reasonComment
-          lessonImpact
-          adjustment
-        }
-        classSentiment
-        type
-        isZoiq
-        teachingStyle
-        createdAt
-        updatedAt
-      }
-      syllabusLessonID
-      syllabusLesson {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        complete
-        roster
-        viewing
-        lesson {
-          id
-          type
-          label
-          title
-          institutionID
-          language
-          designers
-          objectives
-          lessonPlanAttachment
-          purpose
-          introduction
-          introductionTitle
-          status
-          instructions
-          instructionsTitle
-          summary
-          summaryTitle
-          duration
-          resources
-          notes
-          cardImage
-          cardCaption
-          darkMode
-          rubrics
-          smallGroup
-          groupSize
-          groupType
-          smallGroupSize
-          smallGroupOption
-          studentMaterials
-          targetAudience
-          isUsed
-          createdAt
-          updatedAt
-        }
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      date
-      time
-      sentimentName
-      sentimentType
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listSentimentTrackers = /* GraphQL */ `
-  query ListSentimentTrackers(
-    $personAuthID: String
-    $date: ModelStringKeyConditionInput
-    $filter: ModelSentimentTrackerFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listSentimentTrackers(
-      personAuthID: $personAuthID
-      date: $date
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        personAuthID
-        personEmail
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        sentimentId
-        sentiment {
-          id
-          sentimentName
-          sentimentType
-          createdAt
-          updatedAt
-        }
-        classRoomID
-        classRoom {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          status
-          filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          currentPage
-          activeLessons
-          weekDay
-          conferenceCallLink
-          classSentiment
-          type
-          isZoiq
-          teachingStyle
-          createdAt
-          updatedAt
-        }
-        syllabusLessonID
-        syllabusLesson {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        date
-        time
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getFeelingTracker = /* GraphQL */ `
-  query GetFeelingTracker($personAuthID: String!, $date: AWSDate!) {
-    getFeelingTracker(personAuthID: $personAuthID, date: $date) {
-      id
-      personAuthID
-      personEmail
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        inactiveStatusDate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        onDemand
-        sentiments
-        passcode
-        classes {
-          nextToken
-        }
-        lessons {
-          nextToken
-        }
-        spotlightUser
-        spotlightDate
-        statusReason
-        addedby
-        lastEmotionSubmission
-        pageState
-        lastPageStateUpdate
-        statusChangedBy
-        isZoiq
-        createdAt
-        updatedAt
-      }
-      sentimentId
-      sentiment {
-        id
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
-      }
-      classRoomID
-      classRoom {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        status
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          isZoiq
-          filters
-          setupComplete
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          roomId
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData {
-          isTeacher
-          studentAuthID
-          lessonPageID
-        }
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
-        classroomGroups {
-          nextToken
-        }
-        weekDay
-        conferenceCallLink
-        lessonImpactLog {
-          impactDate
-          reasonComment
-          lessonImpact
-          adjustment
-        }
-        classSentiment
-        type
-        isZoiq
-        teachingStyle
-        createdAt
-        updatedAt
-      }
-      lessonID
-      date
-      time
-      sentimentName
-      sentimentType
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listFeelingTrackers = /* GraphQL */ `
-  query ListFeelingTrackers(
-    $personAuthID: String
-    $date: ModelStringKeyConditionInput
-    $filter: ModelFeelingTrackerFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listFeelingTrackers(
-      personAuthID: $personAuthID
-      date: $date
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        personAuthID
-        personEmail
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        sentimentId
-        sentiment {
-          id
-          sentimentName
-          sentimentType
-          createdAt
-          updatedAt
-        }
-        classRoomID
-        classRoom {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          status
-          filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          currentPage
-          activeLessons
-          weekDay
-          conferenceCallLink
-          classSentiment
-          type
-          isZoiq
-          teachingStyle
-          createdAt
-          updatedAt
-        }
-        lessonID
-        date
-        time
-        sentimentName
-        sentimentType
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getFeelingsArchive = /* GraphQL */ `
   query GetFeelingsArchive($id: ID!) {
     getFeelingsArchive(id: $id) {
@@ -8092,16 +6512,9 @@ export const getFeelingsArchive = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -8190,16 +6603,9 @@ export const getFeelingsArchive = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -8391,16 +6797,9 @@ export const listFeelingsArchives = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -8636,16 +7035,9 @@ export const getCommunity = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -8752,16 +7144,9 @@ export const listCommunities = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -8865,16 +7250,9 @@ export const getGameChangerLog = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -8946,16 +7324,9 @@ export const listGameChangerLogs = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -9002,16 +7373,9 @@ export const getCommunityChat = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -9064,16 +7428,9 @@ export const listCommunityChats = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -9091,55 +7448,6 @@ export const listCommunityChats = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getCypressTesting = /* GraphQL */ `
-  query GetCypressTesting($id: ID!) {
-    getCypressTesting(id: $id) {
-      id
-      testID
-      testName
-      testType
-      testSteps
-      testData
-      testExpResults
-      edgeCases
-      lastUpdate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCypressTestings = /* GraphQL */ `
-  query ListCypressTestings(
-    $id: ID
-    $filter: ModelCypressTestingFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listCypressTestings(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        testID
-        testName
-        testType
-        testSteps
-        testData
-        testExpResults
-        edgeCases
-        lastUpdate
-        createdAt
         updatedAt
       }
       nextToken
@@ -9167,16 +7475,9 @@ export const getErrorLog = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -9240,16 +7541,9 @@ export const listErrorLogs = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -9291,16 +7585,9 @@ export const getDicitionary = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -9367,16 +7654,9 @@ export const listDicitionaries = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand
@@ -9435,16 +7715,9 @@ export const userById = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -9497,16 +7770,9 @@ export const usersByRole = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -9637,73 +7903,6 @@ export const lessonsByType2 = /* GraphQL */ `
     }
   }
 `;
-export const messagesByRoomID = /* GraphQL */ `
-  query MessagesByRoomID(
-    $roomID: ID!
-    $createdAt: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelRoomMsgsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    messagesByRoomID(
-      roomID: $roomID
-      createdAt: $createdAt
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        roomID
-        senderAuthID
-        senderEmail
-        body
-        createdAt
-        sender {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          inactiveStatusDate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          sentiments
-          passcode
-          spotlightUser
-          spotlightDate
-          statusReason
-          addedby
-          lastEmotionSubmission
-          pageState
-          lastPageStateUpdate
-          statusChangedBy
-          isZoiq
-          createdAt
-          updatedAt
-        }
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const personLocationBySyllabusLesson = /* GraphQL */ `
   query PersonLocationBySyllabusLesson(
     $syllabusLessonID: ID!
@@ -9738,16 +7937,9 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           inactiveStatusDate
           image
           language
-          filters
           lastLoggedIn
           lastLoggedOut
           onDemand

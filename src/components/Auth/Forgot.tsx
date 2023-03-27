@@ -49,7 +49,8 @@ const Forgot = () => {
             return {
               show: true,
               type: 'error',
-              message: 'Your password was not updated.  Contact our team to reset your default settings before continuing.'
+              message:
+                'Your password was not updated.  Contact our team to reset your default settings before continuing.'
             };
           case 'UserNotFoundException':
             return {
@@ -75,9 +76,9 @@ const Forgot = () => {
     populateCodeAndEmail();
   }, []);
 
-  const populateCodeAndEmail = () => {
-    const params = useQuery(location.search);
+  const params = useQuery(location.search);
 
+  const populateCodeAndEmail = () => {
     const emailId = params.get('email'); // Find an email from params.
 
     setFieldValue('email', emailId);
@@ -127,8 +128,6 @@ const Forgot = () => {
         <div className="">
           <Buttons
             disabled={isLoading}
-            dataCy="forgot-button"
-            btnClass="w-full"
             type="submit"
             loading={isLoading}
             label={'Submit'}

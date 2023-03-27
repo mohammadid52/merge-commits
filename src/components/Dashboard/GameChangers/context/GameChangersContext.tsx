@@ -1,9 +1,9 @@
-import React, {createContext, useContext, useRef, useState} from 'react';
-const GameChangerContext = createContext(null);
+import React, { createContext, useContext, useRef, useState } from "react";
+const GameChangerContext = createContext<any>(null);
 
 // TYPES
 
-export type SelectedEmotion = {primary: string; secondary: string};
+export type SelectedEmotion = { primary: string; secondary: string };
 
 export const GameChangerProvider = ({
   children,
@@ -26,10 +26,10 @@ export const GameChangerProvider = ({
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
   // emotion component context
-  const [selectedEmotions, setSelectedEmotions] = useState([]);
-  const [primaryEmotion, setPrimaryEmotion] = useState('');
-  const [secondaryEmotion, setSecondaryEmotion] = useState('');
-  const [replaceIdx, setReplaceIdx] = useState(null);
+  const [selectedEmotions, setSelectedEmotions] = useState<any[]>([]);
+  const [primaryEmotion, setPrimaryEmotion] = useState("");
+  const [secondaryEmotion, setSecondaryEmotion] = useState("");
+  const [replaceIdx, setReplaceIdx] = useState<any | null>(null);
   const [showFinalStep, setShowFinalStep] = useState(false);
   return (
     <GameChangerContext.Provider
@@ -63,13 +63,14 @@ export const GameChangerProvider = ({
         setPrimaryEmotion,
         replaceIdx,
         setReplaceIdx,
-      }}>
+      }}
+    >
       {children}
     </GameChangerContext.Provider>
   );
 };
 export const useGameChangers = (): {
-  selectedCard: number | null;
+  selectedCard: number;
   showHowTo: boolean;
   showInfo: boolean;
   isCompleted: boolean;
@@ -79,7 +80,7 @@ export const useGameChangers = (): {
   initialIndex: number;
   replaceIdx: number | null;
   counter: number;
-  countSelected: number | null;
+  countSelected: number;
   goBackCallback?: any;
   primaryEmotion: string;
   setPrimaryEmotion: React.Dispatch<React.SetStateAction<string>>;

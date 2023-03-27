@@ -11,24 +11,24 @@ interface HeaderBlockProps extends RowWrapperProps {
 }
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
-  const {id, value, type, classString, pagePartId} = props;
+  const {id, value, type, classString, pagePartId = ''} = props;
 
-  const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
+  const composeHeader = (inputID: string, inputValue: any) => {
     return (
-      <div
+      <h1
         id={inputID}
         dangerouslySetInnerHTML={{
           __html: inputValue.value
         }}
-        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center  mt-4 mb-2"`}></div>
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center  mt-4 mb-2"`}></h1>
     );
   };
 
   return (
     <div className="w-auto">
-      {value && value.length > 0 && (
+      {value && value.length > 0 && id && (
         <>
-          <div key={id}>{composeHeader(id, value[0], type)}</div>
+          <div key={id}>{composeHeader(id, value[0])}</div>
 
           {value[1] !== '' && (
             <ParagraphBlock

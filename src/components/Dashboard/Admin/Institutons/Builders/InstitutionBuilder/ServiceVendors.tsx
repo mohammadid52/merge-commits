@@ -1,43 +1,45 @@
-import React, {useEffect, useState, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useEffect, useState} from 'react';
 
+import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import Tooltip from 'atoms/Tooltip';
-import AddButton from 'atoms/Buttons/AddButton';
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 
-import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
-import {statusList} from 'utilities/staticData';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
+import {statusList} from 'utilities/staticData';
+import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
 
 interface ServiceVendorsProps {
   instId: string;
   serviceProviders: {
-    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+    items: {
+      id: string;
+      providerID: string;
+      status: string;
+      providerInstitution?: any;
+    }[];
   };
   updateServiceProviders: Function;
   instName: string;
 }
 
 const ServiceVendors = (props: ServiceVendorsProps) => {
-  const {userLanguage, clientKey, zoiqFilter, theme} = useContext(GlobalContext);
+  const {userLanguage, clientKey, zoiqFilter, theme} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {spBuilderDict, BUTTONS} = useDictionary(clientKey);
+  const {spBuilderDict, BUTTONS} = useDictionary();
   const dictionary = spBuilderDict[userLanguage];
 
-  const {instId, serviceProviders, instName} = props;
+  const {instId, serviceProviders} = props;
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
   const [partners, setPartners] = useState<any>([]);
-  const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
-    show: false,
-    item: {}
-  });
-  const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
+
+  const [newServPro, setNewServPro] = useState({id: '', label: '', value: ''});
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
 
@@ -53,10 +55,10 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
     }
   }, [serviceProviders]);
 
-  const onServProChange = (val: string, name: string, id: string) => {
+  const onServProChange = (val: string, option: any) => {
     setNewServPro({
-      id: id,
-      name: name,
+      id: option.id,
+      label: option.label,
       value: val
     });
   };
@@ -81,7 +83,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       const listItems = list.data.listInstitutions?.items || [];
       // create
       const servProList = listItems
-        .map((item: any, i: any) => ({
+        .map((item: any) => ({
           id: item.id,
           name: item.name || '',
           value: item.name || ''
@@ -117,13 +119,17 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         props.updateServiceProviders(item);
         const updatedPartners = [
           ...partners,
-          {id: item.id, status: 'Active', partner: {...item.providerInstitution}}
+          {
+            id: item.id,
+            status: 'Active',
+            partner: {...item.providerInstitution}
+          }
         ];
 
         const updatedAvailableServiceProviders = availableServiceProviders.filter(
           (item: any) => item.id !== newServPro.id
         );
-        setNewServPro({id: '', name: '', value: ''});
+        setNewServPro({id: '', label: '', value: ''});
         setPartners(updatedPartners);
         setAvailableServiceProviders(updatedAvailableServiceProviders);
       } else {
@@ -209,7 +215,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
               <div className="w-full m-auto max-h-88 overflow-y-auto">
                 {partners.map((item: any, index: number) => (
                   <div
-                    key={index}
+                    key={item.id}
                     className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {index + 1}.
@@ -224,7 +230,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
                           selectedItem={item.status}
                           placeholder="Select Status"
                           list={statusList}
-                          onChange={(val, name, id) =>
+                          onChange={(val) =>
                             onPartnerStatusChange(val, item.id, item.status)
                           }
                         />

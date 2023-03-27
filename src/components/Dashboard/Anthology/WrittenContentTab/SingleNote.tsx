@@ -1,13 +1,12 @@
 import Loader from '@components/Atoms/Loader';
-import {ListAnthologyCommentsQuery, ListAnthologyCommentsQueryVariables} from 'API';
-import {getAsset} from 'assets';
+import {AnthologyComment, ListAnthologyCommentsQueryVariables} from 'API';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {anthologyDict} from 'dictionary/dictionary.iconoclast';
 import {sortBy} from 'lodash';
-import React, {Suspense, useEffect, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import Toggle from './../AnthologyContentNote/Toggle';
 import Feedbacks from './Feedbacks';
 
@@ -29,14 +28,13 @@ const SingleNote = (props: any) => {
     setAllUniversalJournalData
   } = props;
 
-  const {theme, clientKey, userLanguage} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {userLanguage} = useGlobalContext();
 
   // ##################################################################### //
   // ########################### FEEDBACK-LOGIC ########################## //
   // ##################################################################### //
   const [showComments, setShowComments] = useState(false);
-  const [feedbackData, setFeedbackData] = useState([]);
+  const [feedbackData, setFeedbackData] = useState<any[]>([]);
 
   const [fileObject, setFileObject] = useState({});
 
@@ -58,10 +56,12 @@ const SingleNote = (props: any) => {
           entryID: {eq: contentObj.id}
         };
 
-  const {data: listCommentData, refetch, isLoading, isFetched} = useGraphqlQuery<
-    ListAnthologyCommentsQueryVariables,
-    ListAnthologyCommentsQuery['listAnthologyComments']['items']
-  >(
+  const {
+    data: listCommentData,
+    refetch,
+    isLoading,
+    isFetched
+  } = useGraphqlQuery<ListAnthologyCommentsQueryVariables, AnthologyComment[]>(
     'listAnthologyComments',
     {
       filter: filter
@@ -143,7 +143,7 @@ const SingleNote = (props: any) => {
            */}
           <div className={`flex pt-2 flex-col  mt-2`}>
             {viewEditMode.mode === 'edit' && viewEditMode.dataID === contentObj.id ? (
-              <div className="flex items-center">
+              <div className="flex items-center gap-4">
                 <Buttons
                   onClick={() => {
                     handleEditToggle('', '', 0, '');
@@ -151,10 +151,11 @@ const SingleNote = (props: any) => {
                   }}
                   label={anthologyDict[userLanguage].ACTIONS.CANCEL}
                   transparent
-                  btnClass="mr-2"
+                  size="middle"
                 />
 
                 <Buttons
+                  size="middle"
                   onClick={() =>
                     handleEditToggle('save', contentObj.id, 0, contentObj?.recordID)
                   }
@@ -164,13 +165,13 @@ const SingleNote = (props: any) => {
             ) : (
               <div className="flex items-center justify-between">
                 <div className="w-auto flex gap-2 items-center justify-start">
-                  <div
-                    className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                  <Buttons
+                    size="middle"
                     onClick={() =>
                       handleEditToggle('edit', contentObj.id, 0, contentObj?.recordID)
-                    }>
-                    {anthologyDict[userLanguage].ACTIONS.EDIT}
-                  </div>
+                    }
+                    label={anthologyDict[userLanguage].ACTIONS.EDIT}
+                  />
 
                   {/* CONDITIONAL SHOW OF DELETE AND DELETE CONFIRM BTNS */}
                   {subSection !== 'Work' && subSection !== 'Notes' ? (
@@ -178,23 +179,25 @@ const SingleNote = (props: any) => {
                     viewEditMode.option === 0 &&
                     viewEditMode.dataID === contentObj.id ? (
                       <>
-                        <div
-                          className={`${theme.btn.confirm}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                          onClick={() => handleEditToggle('delete', contentObj.id, 1)}>
-                          {anthologyDict[userLanguage].ACTIONS.CONFIRM}
-                        </div>
-                        <div
-                          className={`${theme.btn.cancel}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
-                          onClick={() => handleEditToggle('', '', 0, '')}>
-                          {anthologyDict[userLanguage].ACTIONS.CANCEL}
-                        </div>
+                        <Buttons
+                          size="middle"
+                          onClick={() => handleEditToggle('delete', contentObj.id, 1)}
+                          label={anthologyDict[userLanguage].ACTIONS.CONFIRM}
+                        />
+                        <Buttons
+                          size="middle"
+                          variant="default"
+                          onClick={() => handleEditToggle('', '', 0, '')}
+                          label={anthologyDict[userLanguage].ACTIONS.CANCEL}
+                        />
                       </>
                     ) : (
-                      <div
-                        className={`${theme.btn.delete}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
-                        onClick={() => handleEditToggle('delete', contentObj.id, 0)}>
-                        {anthologyDict[userLanguage].ACTIONS.DELETE}
-                      </div>
+                      <Buttons
+                        size="middle"
+                        redBtn
+                        onClick={() => handleEditToggle('delete', contentObj.id, 0)}
+                        label={anthologyDict[userLanguage].ACTIONS.DELETE}
+                      />
                     )
                   ) : null}
                   {/* SHOW SHARE TOGGLE ONLY IN JOURNAL */}
@@ -213,25 +216,19 @@ const SingleNote = (props: any) => {
                  *  section:  FEEDBACK
                  */}
                 {subSection === 'Work' || contentObj?.shared ? (
-                  <div
+                  <Buttons
                     onClick={() => {
                       !showComments && refetch();
                       setShowComments(!showComments);
                     }}
-                    className={`iconoclast:bg-main curate:bg-main ${
-                      isLoading ? 'flex items-center justify-between' : ''
-                    }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                    <p>
-                      {isLoading
+                    size="middle"
+                    disabled={isLoading}
+                    label={
+                      isLoading
                         ? 'Loading Comments . . .'
-                        : `${showComments ? 'Hide' : 'Show'} Feedback`}
-                    </p>
-                    {/* {!loadingComments && (
-                    <span className="w-auto ml-4 w-auto">
-                      <Loader color="#fff" />
-                    </span>
-                  )} */}
-                  </div>
+                        : `${showComments ? 'Hide' : 'Show'} Feedback`
+                    }
+                  />
                 ) : null}
               </div>
             )}

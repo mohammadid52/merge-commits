@@ -1,9 +1,9 @@
-import React, {Fragment, useContext} from 'react';
+import {Fragment} from 'react';
 import {useHistory} from 'react-router';
 
 import {getAsset} from 'assets';
 import AddButton from 'atoms/Buttons/AddButton';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 interface ClassListProps {
@@ -13,10 +13,10 @@ interface ClassListProps {
 }
 
 const ClassList = (props: ClassListProps) => {
-  const {classes, instId, instName} = props;
+  const {classes, instId} = props;
 
   const history = useHistory();
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, theme, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_class} = useDictionary();
 
@@ -60,7 +60,7 @@ const ClassList = (props: ClassListProps) => {
             <div className="w-full m-auto max-h-88 overflow-y-auto">
               {classes.items.map((item, index) => (
                 <div
-                  key={index}
+                  key={item.id}
                   className={`flex justify-between w-full px-8 py-2 whitespace-nowrap border-b-0 border-gray-200 ${
                     index % 2 !== 0 ? 'bg-gray-50' : ''
                   }`}>

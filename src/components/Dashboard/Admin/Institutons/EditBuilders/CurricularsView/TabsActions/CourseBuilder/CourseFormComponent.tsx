@@ -2,38 +2,39 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
 import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
-import useAuth from '@customHooks/useAuth';
-import {logError, uploadImageToS3} from '@graphql/functions';
+import {checkUniqCurricularName, uploadImageToS3} from '@graphql/functions';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutation from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
-import {languageList} from 'utilities/staticData';
+import {languageList, typeList} from 'utilities/staticData';
 
 export const RoomStatusList = [
   {
-    name: RoomStatus.ACTIVE,
-    id: 1
+    label: RoomStatus.ACTIVE,
+    id: 1,
+    value: RoomStatus.ACTIVE
   },
 
   {
-    name: RoomStatus.INACTIVE,
-    id: 3
+    label: RoomStatus.INACTIVE,
+    id: 3,
+    value: RoomStatus.INACTIVE
   },
   {
-    name: RoomStatus.TRAINING,
-    id: 4
+    label: RoomStatus.TRAINING,
+    id: 4,
+    value: RoomStatus.TRAINING
   }
 ];
 interface CourseBuilderProps {
@@ -48,7 +49,7 @@ interface ICourseForm {
   summary: string;
   objectives: string;
   type?: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {id?: string; label: string; value: string}[];
   institute: {
     id: string;
   };
@@ -66,7 +67,7 @@ const CourseFormComponent = ({
     status: RoomStatus.ACTIVE,
     summary: '',
     type: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{id: '1', label: 'English', value: 'EN'}],
     institute: {
       id: ''
     }
@@ -75,23 +76,20 @@ const CourseFormComponent = ({
 
   const match = useRouteMatch();
 
-  const [designersList, setDesignersList] = useState([]);
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [designersList, setDesignersList] = useState<any[]>([]);
+  const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
   const [curricularData, setCurricularData] = useState<ICourseForm>(initialData);
   const [fileObj, setFileObj] = useState({});
 
   const [showCropper, setShowCropper] = useState(false);
-  const [upImage, setUpImage] = useState(null);
+  const [upImage, setUpImage] = useState<any | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
-  const [s3Image, setS3Image] = useState(null);
-  const [error, setError] = useState({
-    show: true,
-    errorMsg: ''
-  });
+  const [s3Image, setS3Image] = useState<any | null>(null);
+
   const [loading, setIsLoading] = useState(false);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {CurricularBuilderdict, UserEditDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {CurricularBuilderdict, UserEditDict} = useDictionary();
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -113,39 +111,17 @@ const CourseFormComponent = ({
   };
 
   // Temporary List
-  //*******//
-  const typeList = [
-    {id: 0, name: 'In-School Programming'},
-    {id: 1, name: 'After-School Programming'},
-    {id: 2, name: 'Summer Intensives (2 week programming)'},
-    {id: 3, name: "Writer's Retreat"}
-  ];
+
   //*****//
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = curricularData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
+  const selectLanguage = (_: string[], option: any[]) => {
     setCurricularData({
       ...curricularData,
-      languages: updatedList
+      languages: option
     });
   };
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigners(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigners(option);
   };
 
   const saveCourse = async () => {
@@ -248,26 +224,6 @@ const CourseFormComponent = ({
     }
   };
 
-  const checkUniqCurricularName = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
-          filter: {
-            institutionID: {eq: curricularData.institute.id},
-            name: {eq: curricularData.name}
-          }
-        })
-      );
-      return list.data.listCurricula.items.length === 0 ? true : false;
-    } catch {
-      setMessages({
-        show: true,
-        message: CurricularBuilderdict[userLanguage]['messages']['error']['process'],
-        isError: true
-      });
-    }
-  };
-
   const validateForm = async () => {
     if (curricularData.name.trim() === '') {
       setMessages({
@@ -288,7 +244,10 @@ const CourseFormComponent = ({
       curricularData.name.trim() !== '' &&
       courseData.name !== curricularData.name
     ) {
-      const isUniq = await checkUniqCurricularName();
+      const isUniq = await checkUniqCurricularName(
+        curricularData.institute.id,
+        curricularData.name
+      );
       if (!isUniq) {
         setMessages({
           show: true,
@@ -325,21 +284,24 @@ const CourseFormComponent = ({
 
   useEffect(() => {
     if (
-      courseData.designers !== null &&
+      courseData?.designers !== null &&
       designersList?.length &&
-      courseData.designers?.length
+      courseData?.designers?.length
     ) {
-      const designers = [...courseData.designers].map((desID: string) => {
-        const personData = designersList.find((per) => per.id === desID);
-        if (personData) {
-          const personObj = {
-            id: personData?.id,
-            name: personData?.name,
-            value: personData?.name
-          };
-          return personObj;
-        }
-      });
+      const designers = [...courseData.designers]
+        .map((desID: string) => {
+          const personData = designersList.find((per) => per.id === desID);
+          if (personData) {
+            const personObj = {
+              id: personData?.id,
+              name: personData?.name,
+              value: personData?.name
+            };
+            return personObj;
+          }
+          return null;
+        })
+        .filter(Boolean);
 
       setSelectedDesigners(designers.filter(Boolean));
     } else {
@@ -380,7 +342,7 @@ const CourseFormComponent = ({
     setFormData();
   }, [courseData]);
 
-  const mediaRef = React.useRef(null);
+  const mediaRef = React.useRef<any>(null);
   const handleImage = () => mediaRef?.current?.click();
 
   const [warnModal, setWarnModal] = useState({
@@ -413,59 +375,18 @@ const CourseFormComponent = ({
     }
   };
 
-  const checkIfRemovable = () => {
-    return false;
-  };
-
-  const [deleteModal, setDeleteModal] = useState<any>({
-    show: false,
-    message: '',
-    action: () => {}
-  });
-
-  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
-    if (!deleteModal.show) {
-      setDeleteModal({
-        show: true,
-        message: `Are you sure you want to delete the course "${targetString}"?`,
-        action: () => handleDelete(itemObj)
-      });
-    } else {
-      setDeleteModal({show: false, message: '', action: () => {}});
-    }
-  };
-
-  const [deleting, setDeleting] = useState<boolean>(false);
-  const {authId, email} = useAuth();
-
-  const handleDelete = async (item: any) => {
-    setDeleting(true);
-    try {
-      await API.graphql(
-        graphqlOperation(mutation.deleteCurriculum, {
-          input: {id: item.id}
-        })
-      );
-    } catch (e) {
-      logError(e, {authId, email}, 'CurriculumList @handleDelete');
-    } finally {
-      setDeleting(false);
-      setDeleteModal({show: false, message: '', action: () => {}});
-    }
-  };
-
   const {
     name,
     description,
     objectives,
     languages,
     type,
-    institute,
+
     status = RoomStatus.ACTIVE,
     summary
   } = curricularData;
 
-  const [uploadProgress, setUploadProgress] = useState<string | number>(0);
+  const [uploadProgress] = useState<string | number>(0);
 
   return (
     <div className="">
@@ -522,10 +443,10 @@ const CourseFormComponent = ({
                 label={UserEditDict[userLanguage]['status']}
                 placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
-                onChange={(str: any, name: RoomStatus) => {
+                // @ts-ignore
+                onChange={(name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
-                dropdownWidth="w-56"
                 selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>
@@ -534,7 +455,7 @@ const CourseFormComponent = ({
                 label={CurricularBuilderdict[userLanguage]['TYPE']}
                 placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
                 list={typeList}
-                onChange={(str: any, name: string) => {
+                onChange={(name: string) => {
                   setCurricularData({...curricularData, type: name});
                 }}
                 selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
@@ -587,19 +508,18 @@ const CourseFormComponent = ({
       {messages.show ? (
         <div className="py-2 m-auto text-center">
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-            {messages.message && messages.message}
+            {messages.message ? messages.message : ''}
           </p>
         </div>
       ) : null}
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
 
       <div className="flex my-8 gap-5 justify-center">
         <Buttons
@@ -619,15 +539,16 @@ const CourseFormComponent = ({
         </button> */}
       </div>
       {/* Image cropper */}
-      {showCropper && (
-        <ProfileCropModal
-          upImg={upImage}
-          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-          locked
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
+
+      <ProfileCropModal
+        open={showCropper}
+        upImg={upImage || ''}
+        customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+        locked
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
+
       {/* </PageWrapper> */}
     </div>
   );

@@ -1,21 +1,26 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {useHistory} from 'react-router';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 
-import {getAsset} from 'assets';
-import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import HeroBanner from 'components/Header/HeroBanner';
-import useDictionary from 'customHooks/dictionary';
-import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
+import {Breadcrumb} from 'antd';
+import HeroBanner from 'components/Header/HeroBanner';
+import useDictionary from 'customHooks/dictionary';
+import {AiOutlineHome} from 'react-icons/ai';
+import {breadcrumbsRoutes} from 'utilities/breadcrumb';
+
+export type BreadCrumb = {
+  title: string;
+  href: string;
+  last: boolean;
+  goBack?: boolean;
+};
 
 interface BreadCrumbProps {
-  items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
+  items?: BreadCrumb[];
   unsavedChanges?: boolean;
   separateGoBackButton?: string;
   toggleModal?: any;
@@ -31,43 +36,18 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     forInstitution = false,
     institutionId,
     institutionData,
-    items,
-    separateGoBackButton = '',
-    unsavedChanges = false,
-    toggleModal,
+    items = [],
+
     bannerImage,
     title
   } = props;
-  const {state, theme, userLanguage, dispatch, clientKey} = useGlobalContext();
+  const {state, userLanguage} = useGlobalContext();
 
   const user = state.temp.user;
 
-  const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
+  const {BreadcrumsTitles, Institute_info} = useDictionary();
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const history = useHistory();
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-
-  const goToUrl = (url: string) => {
-    if (unsavedChanges) {
-      toggleModal(url);
-    } else {
-      setLessonData({});
-      setRoomData({});
-      setCourseData({});
-      setUnitData({});
-
-      dispatch({
-        type: 'UPDATE_TEMP_USER',
-        payload: {
-          user: null
-        }
-      });
-
-      history.push(url);
-    }
-  };
 
   const [lessonData, setLessonData] = useState<{
     id?: string;
@@ -163,7 +143,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     try {
       // To extract unit id from path name
       const unitId = pathname.split('/units/')?.length
-        ? pathname.split('/units/')[1]
+        ? pathname.split('/units/')[1].replace('/edit', '')
         : '';
 
       if (unitId) {
@@ -199,6 +179,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
   const baseUrl = isSuperAdmin
     ? `/dashboard/manage-institutions`
     : `/dashboard/manage-institutions/institution/${institutionId}`;
+
   const {heroSectionTitle, breadcrumbPathForSection} = breadcrumbsRoutes({
     breadcrumbsTitles: BreadcrumsTitles[userLanguage],
     instituteTabTitles: Institute_info[userLanguage],
@@ -213,35 +194,35 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     }
   });
 
-  const breadCrumbsList: {
-    title: string;
-    url?: string;
-    last: boolean;
-    goBack?: boolean;
-  }[] = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    // {
-    //   title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-    //   url: '/dashboard/manage-institutions',
-    //   last: false,
-    // },
+  const breadCrumbsList: BreadCrumb[] = [
+    {
+      title: <AiOutlineHome />,
+      href: '/dashboard',
+      last: false
+    },
+
     institutionId && {
       title: institutionData?.name,
-      url:
+      href:
         currentPath === 'edit'
           ? `${location.pathname}${location.search}`
           : `/dashboard/manage-institutions/institution/${institutionId}/edit`,
       last: false
     },
     ...(breadcrumbPathForSection || [])
-  ].filter(Boolean);
+  ].filter(Boolean) as BreadCrumb[];
+
+  const finalList = forInstitution ? breadCrumbsList : items;
 
   return (
     <>
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
-        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
-          <div
+        {/* <div className={`absolute theme-bg w-full bottom-0 z-20`}> */}
+        <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
+          <Breadcrumb items={finalList} />
+        </div>
+        {/* <div
             className={`${
               separateGoBackButton ? 'justify-between' : ''
             } flex flex-row my-0 py-2`}>
@@ -251,49 +232,49 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
               } pl-4 ${theme.verticalBorder[themeColor]}`}>
               <nav className="w-full flex">
                 <ol className="list-none flex items-center justify-start">
-                  {(forInstitution ? breadCrumbsList : items).map((item, i) => (
-                    <li
-                      className="flex items-center w-auto mr-1 md:mr-2"
-                      style={{minWidth: 'fit-content'}}
-                      key={i}>
-                      {!item.goBack ? (
-                        <div
-                          onClick={() =>
-                            item?.goBack === false ? () => {} : goToUrl(item.url)
-                          }>
+                  {finalList &&
+                    finalList?.length > 0 &&
+                    finalList?.map((item) => (
+                      <li
+                        className="flex items-center w-auto mr-1 md:mr-2"
+                        style={{minWidth: 'fit-content'}}
+                        key={item.title}>
+                        {!item.goBack ? (
+                          <div
+                            onClick={() =>
+                              item?.goBack === false ? () => {} : goToUrl(item?.url)
+                            }>
+                            <span
+                              className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
+                              {item.title}
+                            </span>
+                          </div>
+                        ) : (
                           <span
-                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
+                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base text-white hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2`}
+                            onClick={() =>
+                              unsavedChanges ? toggleModal() : history.goBack()
+                            }>
                             {item.title}
-                            {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                           </span>
-                        </div>
-                      ) : (
-                        <span
-                          className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base text-white hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2`}
-                          onClick={() =>
-                            unsavedChanges ? toggleModal() : history.goBack()
-                          }>
-                          {item.title}
-                          {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
-                        </span>
-                      )}
-                      {!item.last && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className={`${'text-white'} stroke-current inline-block h-4 w-4`}>
-                          <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                      )}
-                    </li>
-                  ))}
+                        )}
+                        {!item.last && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={`${'text-white'} stroke-current inline-block h-4 w-4`}>
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
+                        )}
+                      </li>
+                    ))}
                 </ol>
               </nav>
             </div>
@@ -304,13 +285,13 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                 <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
               </span>
             </div>
-          </div>
-        </div>
+          </div> */}
       </div>
-      <InformationalWalkThrough
+      {/* </div> */}
+      {/* <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}
-      />
+      /> */}
     </>
   );
 };

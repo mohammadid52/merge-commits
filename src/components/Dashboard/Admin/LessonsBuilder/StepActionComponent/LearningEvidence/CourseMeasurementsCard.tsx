@@ -1,9 +1,9 @@
-import CheckBox from 'atoms/Form/CheckBox';
-import Tooltip from 'atoms/Tooltip';
-import React from 'react';
-import {FaGraduationCap} from 'react-icons/fa';
-import {HiOutlineArrowRight} from 'react-icons/hi';
-import {getImageFromS3Static} from 'utilities/services';
+import CheckBox from "atoms/Form/CheckBox";
+import Tooltip from "atoms/Tooltip";
+import React from "react";
+import { FaGraduationCap } from "react-icons/fa";
+import { HiOutlineArrowRight } from "react-icons/hi";
+import { getImageFromS3Static } from "utilities/services";
 
 interface ICourseMeasurementsProps {
   curriculum: any;
@@ -26,11 +26,12 @@ interface ICourseMeasurementsProps {
   curIdx?: number;
 }
 
-export const Empty = ({text}: {text: string}) => (
+export const Empty = ({ text }: { text: string }) => (
   <h5
     className={
-      'text-sm text-gray-500 text-center mt-2 border-0 border-gray-400 rounded-lg p-2 border-dashed'
-    }>
+      "text-sm text-gray-500 text-center mt-2 border-0 border-gray-400 rounded-lg p-2 border-dashed"
+    }
+  >
     {text}
   </h5>
 );
@@ -43,12 +44,13 @@ const CourseMeasurementsCard = ({
   selectedMeasurements = [],
   editCurrentMeasurement,
   editCurrentTopic,
-  curIdx
+  curIdx,
 }: ICourseMeasurementsProps) => {
   return (
     <div
       className="flex flex-col rounded-xl theme-card-shadow overflow-hidden"
-      key={curriculum.id}>
+      key={curriculum.id}
+    >
       <div className="flex-shrink-0">
         <div className="">
           <div className="flex p-4 text-white items-center theme-bg">
@@ -75,78 +77,95 @@ const CourseMeasurementsCard = ({
                   <div key={objective.id} className="pr-1 mb-2">
                     <div
                       onClick={() => editLearningObj(objective)}
-                      className="flex cursor-pointer justify-between group items-center">
+                      className="flex cursor-pointer justify-between group items-center"
+                    >
                       <Tooltip text="Edit details">
                         <span
-                          className={`text-lg group-hover:underline hover:underline font-bold pr-2`}>
+                          className={`text-lg group-hover:underline hover:underline font-bold pr-2`}
+                        >
                           {objectiveIndex + 1}. {objective.name}
                         </span>
                       </Tooltip>
                     </div>
                     {objective.associatedTopics?.length ? (
-                      objective.associatedTopics.map((topic: any, topicIndex: number) => {
-                        return (
-                          <div className="ml-2" key={topic.id}>
-                            <div className="text-lg font-medium mb-1">
-                              <div
-                                onClick={() =>
-                                  editCurrentTopic(
-                                    topic,
-                                    curIdx,
-                                    objectiveIndex,
-                                    topicIndex
-                                  )
-                                }
-                                className="w-auto cursor-pointer hover:underline  mt-1 mr-2 flex items-center text-gray-700 justify-start">
-                                <HiOutlineArrowRight
-                                  className={`arrow-icon mr-2 w-auto `}
-                                />
-                                {topic.name}
-                              </div>
-                            </div>
-                            <ul className="pl-4">
-                              {topic.associatedRubrics?.length ? (
-                                <>
-                                  {topic.associatedRubrics.map(
-                                    (rubric: any, rubricIndex: number) => (
-                                      <li
-                                        className="flex group hover:border-gray-300 border-0 border-transparent transition-all   justify-between cursor-pointer rounded-md  px-2 items-center truncate"
-                                        key={rubric.id}>
-                                        <span
-                                          onClick={() =>
-                                            editCurrentMeasurement(rubric, objective.id)
-                                          }
-                                          className="pr-2 text-lg truncate flex items-center">
-                                          <div
-                                            className={`w-2 mt-1 h-2 mr-2 rounded-full bg-black`}></div>{' '}
-                                          {rubric.name}
-                                        </span>
-                                        <span className="w-auto mr-4">
-                                          <CheckBox
-                                            className="group:hover:bg-gray-500"
-                                            value={Boolean(
-                                              (selectedMeasurements || []).find(
-                                                (measurement: any) =>
-                                                  measurement.rubricID === rubric.id
-                                              )?.checked
-                                            )}
-                                            onChange={(e) =>
-                                              handleCheckboxChange(e, rubric.id)
-                                            }
-                                            name="rubricId"
-                                          />
-                                        </span>
-                                      </li>
+                      objective.associatedTopics.map(
+                        (topic: any, topicIndex: number) => {
+                          return (
+                            <div className="ml-2" key={topic.id}>
+                              <div className="text-lg font-medium mb-1">
+                                <div
+                                  onClick={() =>
+                                    editCurrentTopic(
+                                      topic,
+                                      curIdx || 0,
+                                      objectiveIndex,
+                                      topicIndex
                                     )
-                                  )}
-                                </>
-                              ) : (
-                                <Empty text="No measurement added" />
-                              )}
-                            </ul>
-                          </div>
-                        );
-                      })
+                                  }
+                                  className="w-auto cursor-pointer hover:underline  mt-1 mr-2 flex items-center text-gray-700 justify-start"
+                                >
+                                  <HiOutlineArrowRight
+                                    className={`arrow-icon mr-2 w-auto `}
+                                  />
+                                  {topic.name}
+                                </div>
+                              </div>
+                              <ul className="pl-4">
+                                {topic.associatedRubrics?.length ? (
+                                  <>
+                                    {topic.associatedRubrics.map(
+                                      (rubric: any, _: number) => (
+                                        <li
+                                          className="flex group hover:border-gray-300 border-0 border-transparent transition-all   justify-between cursor-pointer rounded-md  px-2 items-center truncate"
+                                          key={rubric.id}
+                                        >
+                                          <span
+                                            onClick={() =>
+                                              editCurrentMeasurement(
+                                                rubric,
+                                                objective.id
+                                              )
+                                            }
+                                            className="pr-2 text-lg truncate flex items-center"
+                                          >
+                                            <div
+                                              className={`w-2 mt-1 h-2 mr-2 rounded-full bg-black`}
+                                            ></div>{" "}
+                                            {rubric.name}
+                                          </span>
+                                          <span className="w-auto mr-4">
+                                            <CheckBox
+                                              className="group:hover:bg-gray-500"
+                                              value={Boolean(
+                                                (
+                                                  selectedMeasurements || []
+                                                ).find(
+                                                  (measurement: any) =>
+                                                    measurement.rubricID ===
+                                                    rubric.id
+                                                )?.checked
+                                              )}
+                                              onChange={(e) =>
+                                                handleCheckboxChange(
+                                                  e,
+                                                  rubric.id
+                                                )
+                                              }
+                                              name="rubricId"
+                                            />
+                                          </span>
+                                        </li>
+                                      )
+                                    )}
+                                  </>
+                                ) : (
+                                  <Empty text="No measurement added" />
+                                )}
+                              </ul>
+                            </div>
+                          );
+                        }
+                      )
                     ) : (
                       <Empty text="No Topic added" />
                     )}

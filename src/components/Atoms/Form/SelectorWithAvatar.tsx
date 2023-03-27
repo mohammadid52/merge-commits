@@ -1,14 +1,13 @@
-import React, {useState, useRef, useContext} from 'react';
-import {IconContext} from 'react-icons';
-import {FaSpinner} from 'react-icons/fa';
+import React, {useRef, useState} from 'react';
 
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
-import {initials, getInitialsFromString, stringToHslColor} from 'utilities/strings';
+import Placeholder from '../Placeholder';
+import Spinner from '../Spinner';
 import Label from './Label';
 
-interface selectorProps {
+interface SelectorProps {
   list?: {id: number; name: string; avatar?: string}[];
   selectedItem?: {value?: string; id?: string};
   btnClass?: string;
@@ -23,7 +22,7 @@ interface selectorProps {
   label?: string;
 }
 
-const SelectorWithAvatar = (props: selectorProps) => {
+const SelectorWithAvatar = (props: SelectorProps) => {
   const {
     list,
     selectedItem,
@@ -40,10 +39,10 @@ const SelectorWithAvatar = (props: selectorProps) => {
   } = props;
 
   const [showList, setShowList] = useState(false);
-  const currentRef: any = useRef(null);
-  const [teacherList, setTeacherList] = useState([]);
+  const currentRef: any = useRef<any>(null);
+  const [teacherList, setTeacherList] = useState<any[]>([]);
 
-  const {theme, clientKey} = useContext(GlobalContext);
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const updateSelectedItem = (str: string, name: string, id: string, avatar: string) => {
@@ -137,16 +136,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
               </svg>
             </span>
           )}
-          {loading && (
-            <IconContext.Provider
-              value={{
-                size: '1.2rem',
-                style: {},
-                className: `relative w-auto mr-4 animate-spin ${theme.textColor[themeColor]}`
-              }}>
-              <FaSpinner />
-            </IconContext.Provider>
-          )}
+          {loading && <Spinner />}
         </button>
       </span>
       {showList && !loading && (
@@ -159,14 +149,24 @@ const SelectorWithAvatar = (props: selectorProps) => {
             {teacherList.length > 0 ? (
               teacherList.map(
                 (
-                  item: {name: string; id: any; value: string; avatar?: string},
+                  item: {
+                    name: string;
+                    id: any;
+                    value: string;
+                    avatar?: string;
+                  },
                   key: number
                 ) => (
                   <li
                     data-cy={`selector-item-${dataCy}-${key}`}
-                    key={key}
+                    key={item.id}
                     onClick={() =>
-                      updateSelectedItem(item.value, item.name, item.id, item.avatar)
+                      updateSelectedItem(
+                        item.value,
+                        item.name,
+                        item.id,
+                        item?.avatar || ''
+                      )
                     }
                     id={item.id}
                     role="option"
@@ -178,23 +178,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
                         className="flex-shrink-0 h-6 w-6 rounded-full"
                       />
                     ) : (
-                      <div
-                        className="h-6 w-6 rounded-full flex flex-shrink-0 justify-center items-center text-white text-xs p-2 text-bold"
-                        style={{
-                          background: `${stringToHslColor(
-                            getInitialsFromString(item.name)[0] +
-                              ' ' +
-                              getInitialsFromString(item.name)[1]
-                          )}`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3'
-                        }}>
-                        {item.name
-                          ? initials(
-                              getInitialsFromString(item.name)[0],
-                              getInitialsFromString(item.name)[1]
-                            )
-                          : initials('N', 'A')}
-                      </div>
+                      <Placeholder size="h-6 w-6" name={item.name} />
                     )}
                     <span
                       className={`${
@@ -203,7 +187,9 @@ const SelectorWithAvatar = (props: selectorProps) => {
                       {item.name}
                     </span>
                     <span
-                      className={`${selectedItem.id === item.id ? 'display' : 'hidden'} ${
+                      className={`${
+                        selectedItem?.id === item.id ? 'display' : 'hidden'
+                      } ${
                         theme.textColor[themeColor]
                       } relative w-auto flex items-center`}>
                       <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

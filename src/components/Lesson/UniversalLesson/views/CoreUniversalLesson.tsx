@@ -10,7 +10,7 @@ import {getLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../../../Error/ErrorBoundary';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
-
+import {scrollUp} from '@utilities/functions';
 const CoreUniversalLesson = ({
   invokeRequiredField,
   canContinue,
@@ -46,7 +46,10 @@ const CoreUniversalLesson = ({
   const history = useHistory();
   const match = useRouteMatch();
 
+  const lessonType = lessonState.lessonData?.lessonType;
+
   const goNext = () => {
+    scrollUp(lessonType);
     history.push(`${match.url}/${currentPage + 1}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
@@ -74,11 +77,13 @@ const CoreUniversalLesson = ({
         }
       }
     } else {
-      goNext();
+      if (!forward) goBack();
+      else goNext();
     }
   };
 
   const goBack = () => {
+    scrollUp(lessonType);
     history.push(`${match.url}/${currentPage - 1}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
@@ -90,7 +95,7 @@ const CoreUniversalLesson = ({
     <div
       className={`${
         !isInLesson ? 'h-full overflow-hidden overflow-y-scroll' : ''
-      } bg-dark-gray relative sm:max-w-132 max-w-80 xs:max-w-96  md:max-w-200 2xl:max-w-256 mx-auto`}>
+      } px-4 pb-4 relative mx-auto max-w-100 sm:max-w-[35rem] lg:max-w-[55rem] 2xl:max-w-[60rem] `}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <ErrorBoundary
@@ -101,21 +106,20 @@ const CoreUniversalLesson = ({
             <div
               className={`${
                 userAtFirst() ? 'justify-end' : 'justify-between'
-              } flex items-center  gap-x-4`}>
+              } flex items-center mt-4  gap-x-4`}>
               {!userAtFirst() && (
                 <>
                   <Buttons
                     label="Go Back"
-                    title={getPageName('prev')}
+                    tooltip={getPageName('prev')}
+                    size="middle"
                     Icon={AiOutlineArrowLeft}
-                    iconBeforeLabel
                     onClick={() => handleForward(false)}
-                    transparent
                   />
                   {userAtEnd() && isStudent ? (
                     <SaveQuit
                       invokeRequiredField={invokeRequiredField}
-                      canContinue={canContinue}
+                      canContinue={Boolean(canContinue)}
                       roomID={getRoomData?.id}
                     />
                   ) : null}
@@ -124,10 +128,10 @@ const CoreUniversalLesson = ({
               {!userAtEnd() && (
                 <Buttons
                   label="Next page"
-                  title={getPageName('next')}
+                  size="middle"
+                  tooltip={getPageName('next')}
                   onClick={handleForward}
                   Icon={AiOutlineArrowRight}
-                  transparent
                 />
               )}
             </div>

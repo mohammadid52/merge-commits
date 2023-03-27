@@ -9,25 +9,32 @@ import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from 'utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
-import DatePicker from 'react-datepicker';
+import {DatePicker} from 'antd';
+
+import type {DatePickerProps, RangePickerProps} from 'antd/es/date-picker';
+
+const {RangePicker} = DatePicker;
 
 const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
-  const [file, setFile] = useState<IFile>();
+  const [file, setFile] = useState<IFile | any>();
   const [overlayText, setOverlayText] = useState('');
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [_, setUnsavedChanges] = useState(false);
 
   const [details, setDetails] = useState({
-    startTime: null,
-    endTime: null,
-    date: null,
+    startTime: new Date().toISOString(),
+    endTime: new Date().toISOString(),
+    date: new Date().toISOString(),
     address: ''
   });
 
   const [error, setError] = useState('');
 
-  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
+  const [fields, setFields] = useState<{
+    summary: string;
+    summaryHtml: string;
+  }>({
     summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || '' : ''
   });
 
   const onEditorStateChange = (
@@ -41,7 +48,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
     setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
-  const [tempData, setTempData] = useState(null);
+  const [tempData, setTempData] = useState<any>(null);
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
@@ -49,15 +56,17 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         image: cardDetails.cardImageLink
       });
 
-      setOverlayText(cardDetails?.cardName);
+      cardDetails?.cardName && setOverlayText(cardDetails?.cardName);
 
-      const [date, address] = cardDetails?.additionalInfo.split(' || ');
+      const info = cardDetails?.additionalInfo?.split(' || ');
+      const date = info?.[0] || new Date().toISOString();
+      const address = info?.[1] || '';
 
       setDetails({
         ...details,
-        startTime: new Date(cardDetails?.startTime),
-        endTime: new Date(cardDetails?.endTime),
-        date: new Date(date),
+        startTime: new Date(cardDetails?.startTime).toISOString(),
+        endTime: new Date(cardDetails?.endTime).toISOString(),
+        date: new Date(date).toISOString(),
         address: address
       });
     }
@@ -78,8 +87,8 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         summaryHtml: fields.summaryHtml,
         summary: fields.summary,
         cardName: overlayText,
-        startTime: details.startTime,
-        endTime: details.endTime,
+        startTime: details?.startTime || new Date().toISOString(),
+        endTime: details.endTime || new Date().toISOString(),
         additionalInfo: `${details.date} || ${details.address}`,
         id: cardDetails?.id,
         isEditedCard: editMode
@@ -88,20 +97,6 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         delete eventDetails.id;
       }
       onSubmit(eventDetails, () => setIsLoading(false));
-    }
-  };
-
-  const handleDateChange = (data: any, type: string) => {
-    setError('');
-
-    if (type === 'startTime') {
-      setDetails({...details, startTime: data});
-    } else if (type === 'endTime') {
-      setDetails({...details, endTime: data});
-    } else if (type === 'date') {
-      setDetails({...details, date: data});
-    } else {
-      setDetails({...details, address: data});
     }
   };
 
@@ -118,9 +113,24 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       isValid = false;
     } else {
       setError('');
-      isValid = true;
     }
     return isValid;
+  };
+
+  const onChange = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
+    // @ts-ignore
+    const startTime = value?.[0]?.$d as Date;
+    // @ts-ignore
+    const endTime = value?.[1]?.$d as Date;
+    setDetails({
+      ...details,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString()
+    });
+  };
+
+  const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
+    console.log('onOk: ', value);
   };
 
   return (
@@ -144,7 +154,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
           initialImage={
             !isEmpty(file) && file?._status === 'success'
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
-              : null
+              : ''
           }
           setError={setError}
           setFile={setFile}
@@ -189,65 +199,24 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       <div className="px-3 py-4">
         <Label label="Step 4: Provide details about the event" />
 
-        <div className="grid grid-cols-2 mt-4 gap-6">
-          <div className="relative event-details-datepicker">
-            <Label label="Start Time" />
-            <DatePicker
-              selected={details.startTime}
-              onChange={(date) => handleDateChange(date, 'startTime')}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption="Time"
-              placeholderText={'Start Time'}
-              isClearable={true}
-              dateFormat="h:mm aa"
-            />
-          </div>
-          <div className="relative event-details-datepicker">
-            <Label label="Date" />
-
-            <DatePicker
-              dateFormat={'dd/MM/yyyy'}
-              selected={details.date}
-              placeholderText={'Date'}
-              onChange={(date: any) => handleDateChange(date, 'date')}
-              isClearable={true}
-            />
-          </div>
-          <div className="relative event-details-datepicker">
-            <Label label="End Time" />
-
-            <DatePicker
-              selected={details.endTime}
-              onChange={(date) => handleDateChange(date, 'endTime')}
-              showTimeSelect
-              showTimeSelectOnly
-              placeholderText={'End Time'}
-              timeIntervals={15}
-              timeCaption="Time"
-              isClearable={true}
-              dateFormat="h:mm aa"
-            />
-          </div>
-        </div>
+        <RangePicker
+          className="w-full"
+          showTime={{format: 'HH:mm'}}
+          format="YYYY-MM-DD HH:mm"
+          onChange={onChange}
+          onOk={onOk}
+        />
       </div>
 
       <AnimatedContainer show={Boolean(error)}>
         {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
-            onClick={onCancel}
-            transparent
-          />
+        <div className="flex justify-end gap-4">
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
           <Buttons
             dataCy="save-event-button"
             loading={isLoading}
-            btnClass="py-1 px-8 text-xs ml-2"
             disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
             label={'Save'}
             onClick={_onSubmit}

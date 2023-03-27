@@ -1,18 +1,18 @@
 import {Storage} from '@aws-amplify/storage';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 import {Transition} from '@headlessui/react';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {findIndex, map, reject, remove, update} from 'lodash';
+import {nanoid} from 'nanoid';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import {useDropzone} from 'react-dropzone';
 import {removeExtension} from 'utilities/functions';
 import {getImageFromS3Static} from 'utilities/services';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {getAsset} from 'assets';
-import {findIndex, map, reject, remove, update} from 'lodash';
-import {nanoid} from 'nanoid';
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
-import {useDropzone} from 'react-dropzone';
-import Buttons from 'atoms/Buttons';
 import {UPLOAD_KEYS} from '../../../constants';
 import {FORM_TYPES} from '../common/constants';
 
@@ -24,14 +24,11 @@ interface IDownloadDialogProps extends IContentTypeComponentProps {
 interface IFile {
   _status: 'progress' | 'failed' | 'success' | 'other';
   progress: number | string | null;
-  file: File;
+  file: File | null;
   id?: string;
   fileKey?: string;
   fileName?: string;
 }
-
-const btnClass = (color: string) =>
-  `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
 
 interface IFileComponent extends IFile {
   deleteImage: (imgId: string) => void;
@@ -65,7 +62,7 @@ const File = ({
   fileKey,
   file,
   updateFilename,
-  id
+  id = ''
 }: IFileComponent) => {
   const genStatus = () => {
     switch (_status) {
@@ -93,7 +90,6 @@ const File = ({
     }
   };
 
-  // const getFile = async () => await getImageFromS3(imgId);
   const imageUrl = file
     ? URL.createObjectURL(file)
     : getImageFromS3Static(`${UPLOAD_KEY}${fileKey}`);
@@ -138,8 +134,10 @@ const File = ({
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
-    updateFilename(id, removeExtension(_fileName));
-    setEditingFilename(false);
+    if (id) {
+      updateFilename(id, removeExtension(_fileName));
+      setEditingFilename(false);
+    }
   };
 
   return (
@@ -151,7 +149,7 @@ const File = ({
             <p className="w-auto">
               {_status === 'success' || _status === 'other'
                 ? !fileName
-                  ? file.name
+                  ? file?.name
                   : fileName
                 : genStatus()}
             </p>{' '}
@@ -179,7 +177,7 @@ const File = ({
                 <Btn
                   color="red"
                   onClick={() => {
-                    setFileName(fileName);
+                    setFileName(fileName || '');
                     setEditingFilename(false);
                   }}
                   label={'Cancel'}
@@ -197,7 +195,7 @@ const File = ({
         {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
             <div
-              onClick={() => deleteImage(fileKey)}
+              onClick={() => fileKey && deleteImage(fileKey)}
               className="w-auto cursor-pointer font-medium text-red-500 hover:text-red-800">
               Delete
             </div>
@@ -274,7 +272,6 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     if (inputObj && inputObj.length > 0) {
       setIsEditingMode(true);
       const f: IFile[] = map(inputObj, (d) => {
-        console.log('<<---', d);
         return {
           id: d.id,
           fileKey: d.value,
@@ -314,19 +311,21 @@ const DownloadModal = (props: IDownloadDialogProps) => {
       );
 
       for (const file of notUploadedFiles) {
-        let temp = file.file.name.split('.');
-        const extension = temp.pop();
-        const fileName = `${Date.now()}_${temp
-          .join(' ')
-          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-        updateImgId(file, fileName);
-        await uploadImageToS3(file.file, fileName, file.file.type, file);
+        if (file.file) {
+          let temp = file.file.name.split('.');
+          const extension = temp.pop();
+          const fileName = `${Date.now()}_${temp
+            .join(' ')
+            .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+          updateImgId(file, fileName);
+          await uploadImageToS3(file.file, fileName, file.file.type, file);
+        }
       }
     }
   };
 
   const uploadFile = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles: any) => {
       setUnsavedChanges(true);
 
       mapNewFiles(acceptedFiles);
@@ -339,7 +338,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     onDrop: uploadFile
   });
 
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
   const updateProgress = (file: IFile, progress: IFile['progress']) => {
     const idx = getId(file);
@@ -370,7 +369,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        contentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
 
@@ -417,13 +416,13 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     }
   };
 
-  const inputOther = useRef(null);
+  const inputOther = useRef<any>(null);
 
   const fileIcon = getAsset('general', 'file');
 
-  const openFilesExplorer = () => inputOther.current.click();
+  const openFilesExplorer = () => inputOther?.current?.click?.();
 
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {EditQuestionModalDict} = useDictionary();
 
   const addToDB = async (list: any) => {
     closeAction();
@@ -438,12 +437,15 @@ const DownloadModal = (props: IDownloadDialogProps) => {
 
   const onDownloadCreate = async () => {
     const _files = map(filesUploading, (f) => {
-      return {
-        id: f.id,
-        label: removeExtension(f.fileName) || removeExtension(f.file.name),
-        value: f.fileKey
-      };
-    });
+      if (f) {
+        return {
+          id: f.id,
+          label: removeExtension(f.fileName || f?.file?.name || '') || '',
+          value: f.fileKey
+        };
+      }
+      return null;
+    }).filter(Boolean);
 
     const parentKey = 'downloadable-files';
     if (isEditingMode) {
@@ -526,18 +528,18 @@ const DownloadModal = (props: IDownloadDialogProps) => {
           );
         })}
       </Transition>
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-8 justify-end px-6 pb-4">
+        <div className="flex justify-end gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onDownloadCreate}
+            size="middle"
           />
         </div>
       </div>

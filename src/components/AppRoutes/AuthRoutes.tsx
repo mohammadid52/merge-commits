@@ -1,19 +1,20 @@
 import LogoutAfterInactivity from '@components/Auth/LogoutAfterInactivity';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import useAuth from '@customHooks/useAuth';
 import PrivateRoute from 'components/Auth/PrivateRoute';
-import React, {lazy} from 'react';
+import React, {lazy, Suspense} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 
 const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
 const Lesson = lazy(() => import('components/Lesson/Lesson'));
 const TeacherView = lazy(() => import('components/TeacherView/TeacherView'));
-const Chat = lazy(() => import('components/RoomChat/Chat'));
 const Csv = lazy(() => import('components/Dashboard/Csv/Csv'));
 const AuthRoutes = () => {
   const {signOut} = useAuth();
+
   return (
-    <>
+    <Suspense fallback={<ComponentLoading />}>
       <LogoutAfterInactivity
         logout={() => {
           signOut();
@@ -41,9 +42,7 @@ const AuthRoutes = () => {
             />
           )}
         />
-        <PrivateRoute path="/chat">
-          <Chat />
-        </PrivateRoute>
+
         <PrivateRoute path="/csv">
           <ErrorBoundary componentName="Csv">
             <Csv />
@@ -51,7 +50,7 @@ const AuthRoutes = () => {
         </PrivateRoute>
         <Route render={() => <Redirect to="/" />} />
       </Switch>
-    </>
+    </Suspense>
   );
 };
 

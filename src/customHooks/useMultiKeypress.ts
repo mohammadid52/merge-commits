@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from "react";
 
 const useMultiKeypress = (keyName: string) => {
   let keys = {
@@ -9,7 +9,7 @@ const useMultiKeypress = (keyName: string) => {
   const [keyPressed, setKeyPressed] = useState(false);
 
   const onKeyDown = (event: any) => {
-    if ('Meta' === event.key || 'Ctrl' === event.key) {
+    if ("Meta" === event.key || "Ctrl" === event.key) {
       keys.a = true;
     }
 
@@ -22,19 +22,19 @@ const useMultiKeypress = (keyName: string) => {
     }
   };
 
-  const onKeyUp = (event: KeyboardEvent) => {
+  const onKeyUp = () => {
     setKeyPressed(false);
     keys.a = false;
     keys.b = false;
   };
 
   useEffect(() => {
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
 
     return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
     };
   }, []);
 

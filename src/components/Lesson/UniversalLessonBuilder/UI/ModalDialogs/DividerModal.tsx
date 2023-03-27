@@ -1,12 +1,12 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import React, {useEffect, useState} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import {DIVIDER} from '../common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
 
 interface Divider extends IContentTypeComponentProps {
   inputObj?: any;
@@ -22,13 +22,13 @@ const DividerModal = (props: Divider) => {
     askBeforeClose,
     setUnsavedChanges
   } = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditQuestionModalDict} = useDictionary();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: React.FormEvent) => {
     setUnsavedChanges(true);
-    const {value, name} = e.target as HTMLFormElement;
+    const {value} = e.target as HTMLFormElement;
     setDividerText(value);
   };
 
@@ -105,18 +105,18 @@ const DividerModal = (props: Divider) => {
         </div>
       </div>
       <div className="flex mt-4 justify-end px-6 pl-0 pb-4">
-        <div className="flex items-center w-auto">
+        <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onDividerCreate}
+            size="middle"
           />
         </div>
       </div>

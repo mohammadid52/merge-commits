@@ -1,16 +1,21 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import {logError, uploadImageToS3} from '@graphql/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
+import {API, graphqlOperation} from 'aws-amplify';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
-import {Transition} from '@headlessui/react';
-import {focusOn, getExtension, withZoiqFilter} from '@utilities/functions';
+import {
+  focusOn,
+  getExtension,
+  insertExtraDataForClassroom,
+  removeDuplicates,
+  withZoiqFilter
+} from '@utilities/functions';
 import {getImageFromS3} from '@utilities/services';
 import {
   ClassroomType,
@@ -28,28 +33,12 @@ import * as queries from 'graphql/queries';
 import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useEffect, useRef, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
-import {insertExtraDataForClassroom, removeDuplicates} from './Csv';
+
 interface ICsvProps {
   institutionId?: string;
 }
-
-const DataValue = ({
-  title,
-  content
-}: {
-  title: string;
-  content: string | React.ReactNode;
-}) => {
-  return (
-    <div className="w-auto flex mb-2 flex-col items-start justify-start">
-      <p className="text-sm text-gray-500">{title}</p>
-      <div className="text-dark-gray font-medium text-left w-auto text-sm">{content}</div>
-    </div>
-  );
-};
 
 type IModal = {
   show: boolean;
@@ -92,24 +81,24 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
   const [demographicsData, setDemographicsData] = useState<any[]>([]);
   const [newDemographicsData, setNewDemographicsData] = useState<string[]>([]);
-  const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [selectedSurvey, setSelectedSurvey] = useState<any | null>(null);
   const [classRoomLoading, setClassRoomLoading] = useState(false);
   const [unitsLoading, setUnitsLoading] = useState(false);
-  const [instClassRooms, setInstClassRooms] = useState([]);
-  const [classRoomsList, setClassRoomsList] = useState([]);
-  const [units, setUnits] = useState([]);
+  const [instClassRooms, setInstClassRooms] = useState<any[]>([]);
+  const [classRoomsList, setClassRoomsList] = useState<any[]>([]);
+  const [units, setUnits] = useState<any[]>([]);
   const [isMapping, setIsMapping] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(INITIAL_MODAL_STATE);
 
-  const [selectedClassRoom, setSelectedClassRoom] = useState(null);
-  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
+  const [selectedClassRoom, setSelectedClassRoom] = useState<any | null>(null);
+  const [selectedCurriculum, setSelectedCurriculum] = useState<any | null>(null);
 
-  const [selectedUnit, setSelectedUnit] = useState(null);
-  const [activeUnits, setActiveUnits] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState<any | null>(null);
+  const [__, setActiveUnits] = useState<any[]>([]);
   const [uploadingCSV, setUploadingCSV] = useState(false);
 
-  const [surveys, setSurveys] = useState([]);
+  const [surveys, setSurveys] = useState<any[]>([]);
   const [surveysLoading, setSurveysLoading] = useState(false);
 
   const [checkingCsvFile, setCheckingCsvFile] = useState(false);
@@ -119,18 +108,18 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const {authId, isTeacher, isFellow, email, firstName, lastName} = useAuth();
 
   const fileReader = new FileReader();
-  const fileInputRef = useRef<HTMLInputElement>();
-  const csvInputRef = useRef<HTMLInputElement>();
+
+  const csvInputRef = useRef<HTMLInputElement | null>(null);
 
   const reasonDropdown = [
     {
       id: 1,
-      name: 'Paper Survey',
+      label: 'Paper Survey',
       value: 'paper-survey'
     },
     {
       id: 2,
-      name: 'User Update Survey',
+      label: 'User Update Survey',
       value: 'user-update'
     }
   ];
@@ -292,6 +281,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           } else {
             return false;
           }
+
+          return null;
         });
       });
 
@@ -304,7 +295,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     surveyQuestionOptions: any,
     parsed: any,
     index: number,
-    keyName: string
+    _: string
   ) => {
     const getUniversalSurveyStudent: any = await API.graphql(
       graphqlOperation(queries.getUniversalSurveyStudentData, {
@@ -343,6 +334,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               return (item.input = [value]);
             }
           }
+          return null;
         });
 
         input = {
@@ -364,7 +356,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     surveyQuestionOptions: any,
     parsed: any,
     index: number,
-    keyName: string
+    _: string
   ) => {
     let input: any = {
       lessonID: '',
@@ -405,7 +397,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     });
   };
 
-  const ddIDAndDemographicData = async (value: string, parsed: any, index2: number) => {
+  const ddIDAndDemographicData = async (value: string, parsed: any, _: number) => {
     const getDemographicsData: any = await API.graphql(
       graphqlOperation(queries.getQuestionData, {
         id: value
@@ -430,6 +422,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               item.response = [value];
               return true;
             }
+            return false;
           }
         );
 
@@ -449,7 +442,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     value: string,
     parsed: any,
     index: number,
-    index2: number
+    _: number
   ) => {
     let input: any = {
       authId: '',
@@ -541,7 +534,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 </div>
               ),
 
-              saveAction: null,
+              saveAction: () => {},
               saveLabel: '',
               closeLabel: ''
             });
@@ -572,7 +565,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 </div>
               ),
 
-              saveAction: null,
+              saveAction: () => {},
               saveLabel: '',
               closeLabel: ''
             });
@@ -952,9 +945,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
         return fileUrl as string;
       }
+      return null;
     } catch (error) {
       console.error(error);
       logError(error, {authId, email}, 'UploadCSV @uploadCsvToS3');
+      return null;
     }
   };
 
@@ -1014,31 +1009,35 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       const csvUrl = await uploadCsvToS3();
 
       // step 2 - create upload log record and use csv url there
-      await createUploadLog(csvUrl);
+      if (csvUrl) {
+        await createUploadLog(csvUrl);
 
-      // step 3 - delete previous temporary records for both tables
-      await deletePrevTempDataUploadSurveyData();
-      await deletePrevTempDataDempographics();
+        // step 3 - delete previous temporary records for both tables
+        await deletePrevTempDataUploadSurveyData();
+        await deletePrevTempDataDempographics();
 
-      // step 4 - upload everything to table
-      await handleSurveyExistingUpload();
-      await handleNewSurveyUniversalUpload();
-      await handleDemographicsExistingUpload();
-      await handleDemographicsNewUpload();
+        // step 4 - upload everything to table
+        await handleSurveyExistingUpload();
+        await handleNewSurveyUniversalUpload();
+        await handleDemographicsExistingUpload();
+        await handleDemographicsNewUpload();
 
-      setSelectedReason({
-        id: 0,
-        name: '',
-        value: ''
-      });
+        setSelectedReason({
+          id: 0,
+          name: '',
+          value: ''
+        });
 
-      csvInputRef.current.value = '';
-      setFile(null);
+        if (csvInputRef.current && csvInputRef?.current?.value !== null) {
+          csvInputRef.current.value = '';
+        }
+        setFile(null);
 
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 4500);
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 4500);
+      }
     } catch (error) {
       logError(error, {authId, email}, 'UploadCSV @handleSubmit');
       console.error('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
@@ -1072,8 +1071,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         .map((syl: any) => {
           let unitData = syl.unit;
           if (Boolean(unitData)) {
-            return {id: unitData.id, name: unitData.name, value: unitData.name};
+            return {
+              id: unitData.id,
+              name: unitData.name,
+              value: unitData.name
+            };
           }
+          return null;
         })
         .filter(Boolean);
       // console.log('units', units)
@@ -1093,7 +1097,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       ?.filter((_c: {activeSyllabus: any}) => Boolean(_c?.activeSyllabus))
       .map((_c: {activeSyllabus: string | null}) => {
         if (_c?.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
-      });
+        return null;
+      })
+      .filter(Boolean);
 
     try {
       let curriculumUnits: any = await API.graphql(
@@ -1109,6 +1115,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             let unitData = syl.unit;
             return {id: unitData.id, name: unitData.name};
           }
+          return null;
         })
         .filter(Boolean);
 
@@ -1133,7 +1140,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         classrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomsDashboard, {
             filter: withZoiqFilter(
-              {teacherAuthID: {eq: authId}, type: {eq: ClassroomType.TRADITIONAL}},
+              {
+                teacherAuthID: {eq: authId},
+                type: {eq: ClassroomType.TRADITIONAL}
+              },
               zoiqFilter
             )
           })
@@ -1191,15 +1201,18 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             return {
               id: cr.id,
 
-              name: cr.name,
+              label: cr.name,
               value: cr.name,
               class: {...cr.class},
               curriculum,
               ...insertExtraDataForClassroom(cr)
             };
           }
+          return null;
         })
         .filter(Boolean);
+
+      console.log(instCRs);
 
       setClassRoomsList(classrooms);
       setInstClassRooms(removeDuplicates(instCRs));
@@ -1256,10 +1269,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const onClassRoomSelect = async (id: string, name: string, value: string) => {
+  const onClassRoomSelect = async (id: string, label: string, value: string) => {
     try {
       let sCR = selectedClassRoom;
-      let cr = {id, name, value};
+      let cr = {id, label, value};
       resetFile();
       setSelectedClassRoom(cr);
       setUnits([]);
@@ -1292,16 +1305,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     setSelectedSurvey(null);
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
-
-  const currentSelectedClassroomData =
-    hoveringItem &&
-    hoveringItem?.name &&
-    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
-
-  const currentActiveUnit =
-    currentSelectedClassroomData &&
-    activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
+  const [_, setHoveringItem] = useState<{name?: string}>({});
 
   const getMappedValues = (input: any) => {
     if (input) {
@@ -1337,6 +1341,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const dataList = getMappedValues(parsedObj).map((listItem, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     id: listItem['AuthId'],
     name: `${listItem['First Name']} ${listItem['Last Name']}`,
 
@@ -1344,46 +1349,36 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     takenSurvey: listItem['UniversalSurveyStudentID'] === 'Not-taken-yet' ? 'No' : 'Yes'
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Id', 'Name', 'Email', 'Taken Survey'],
     dataList,
     config: {
-      isFirstIndex: true,
       dataList: {
-        loading: isEmpty(parsedObj),
-
-        emptyText: 'no data found',
-        customWidth: {
-          id: 'w-72',
-          takenSurvey: 'w-48',
-
-          email: 'w-72 break-all'
-        },
-        maxHeight: 'max-h-196'
+        loading: isEmpty(parsedObj)
       }
     }
   };
 
   return (
     <>
-      {showModal.show && (
-        <Modal
-          showHeader
-          title={showModal.title}
-          closeAction={clearModal}
-          saveAction={showModal.saveAction}
-          closeOnBackdrop
-          saveElement={showModal?.saveElement}
-          closeLabel={showModal.closeLabel}
-          saveLabel={showModal?.saveLabel}
-          showFooter={Boolean(showModal.closeLabel)}>
-          {showModal.element}
-        </Modal>
-      )}
+      <Modal
+        open={showModal.show}
+        showHeader
+        title={showModal.title}
+        closeAction={clearModal}
+        saveAction={showModal.saveAction}
+        closeOnBackdrop
+        saveElement={showModal?.saveElement}
+        closeLabel={showModal.closeLabel}
+        saveLabel={showModal?.saveLabel}
+        showFooter={Boolean(showModal.closeLabel)}>
+        {showModal.element}
+      </Modal>
+
       <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 justify-start">
-            <div className="">
+            <div className="w-full">
               <SectionTitleV3
                 textWidth="lg:w-1/3 2xl:w-1/4"
                 withButton={
@@ -1392,105 +1387,41 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       <Selector
                         dataCy="upload-analytics-classroom"
                         loading={classRoomLoading}
-                        selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-                        placeholder="select classroom"
-                        width="xl:w-64"
-                        setHoveringItem={setHoveringItem}
+                        selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
+                        placeholder="Select Classroom"
+                        width={250}
                         list={instClassRooms}
-                        onChange={(value, name, id) => {
+                        onChange={(value, option: any) => {
                           setHoveringItem({});
-                          onClassRoomSelect(id, name, value);
+                          onClassRoomSelect(option.id, value, value);
                           focusOn('upload-analytics-unit');
                         }}
                       />
-                      {currentSelectedClassroomData && (
-                        <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-                          <Transition
-                            style={{
-                              top: '0rem',
-                              bottom: '1.5rem',
-                              right: '-110%',
-                              zIndex: 999999
-                            }}
-                            className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                            show={Boolean(hoveringItem && hoveringItem.name)}>
-                            <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                              <DataValue
-                                title={'Institution Name'}
-                                content={currentSelectedClassroomData?.institutionName}
-                              />
-                              <DataValue
-                                title={'Clasroom Name'}
-                                content={currentSelectedClassroomData?.name}
-                              />
-                              <DataValue
-                                title={'Status'}
-                                content={
-                                  <p
-                                    className={`${
-                                      currentSelectedClassroomData.status === 'ACTIVE'
-                                        ? 'text-green-500'
-                                        : 'text-yellow-500'
-                                    } lowercase`}>
-                                    {currentSelectedClassroomData.status}
-                                  </p>
-                                }
-                              />
-                              <DataValue
-                                title={'Teacher'}
-                                content={
-                                  <div className="flex items-center justify-center w-auto">
-                                    <span className="w-auto">
-                                      <img
-                                        src={currentSelectedClassroomData.teacher.image}
-                                        className="h-6 w-6 rounded-full"
-                                      />
-                                    </span>
-                                    <p className="w-auto ml-2">
-                                      {currentSelectedClassroomData.teacher.name}
-                                    </p>
-                                  </div>
-                                }
-                              />
-                              <DataValue
-                                title={'Course Name'}
-                                content={currentSelectedClassroomData?.courseName || '--'}
-                              />
-                              <DataValue
-                                title={'Active Unit'}
-                                content={currentActiveUnit?.name || '--'}
-                              />
-                            </div>
-                          </Transition>
-                        </ClickAwayListener>
-                      )}
                     </div>
                     <Selector
                       dataCy="upload-analytics-unit"
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
-                      placeholder="select unit"
-                      btnId="upload-analytics-unit"
+                      placeholder="Select Unit"
                       list={units}
-                      width="xl:w-64"
+                      width={250}
                       disabled={!selectedCurriculum}
-                      onChange={(value, name, id) => {
-                        onUnitSelect(id, name, value);
+                      onChange={(value, option: any) => {
+                        onUnitSelect(option.id, value, value);
                         focusOn('analytics-survey');
                       }}
                     />
 
                     <Selector
                       dataCy="analytics-survey"
-                      btnId="analytics-survey"
                       loading={surveysLoading}
-                      width="xl:w-64"
-                      direction="left"
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-                      placeholder="select survey"
+                      placeholder="Select Survey"
                       list={surveys}
-                      onChange={(value, name, id) => onChangeSurvey(id, name, value)}
+                      onChange={(value, option: any) =>
+                        onChangeSurvey(option.id, value, value)
+                      }
                     />
                   </div>
                 }
@@ -1500,7 +1431,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-start  gap-x-4 border-t-0 border-gray-400 border-dashed py-4 mb-4">
+        <div className="flex items-center justify-start  gap-x-4  py-4 mb-4">
           <UploadButton
             disabled={isMapping || !Boolean(selectedSurvey)}
             label={file ? 'Change file' : 'Choose file'}
@@ -1511,15 +1442,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           />
 
           <Selector
-            additionalClass="w-auto"
-            btnClass={!file && 'cursor-not-allowed'}
             disabled={!file}
-            dropdownWidth="w-96"
-            btnId="reason-button"
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
-            onChange={(value, name, id) => onReasonSelected(id, name, value)}
+            width={250}
+            onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
           />
         </div>
         <AnimatedContainer show={checkingCsvFile} animationType="translateY">

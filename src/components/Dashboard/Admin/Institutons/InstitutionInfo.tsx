@@ -1,35 +1,7 @@
-import {Storage} from '@aws-amplify/storage';
-import React, {useEffect, useState} from 'react';
-import NavBarRouter from '../NavBarRouter';
+import {InstitutionInfoProps} from '@interfaces/InstitutionInterface';
+import {useEffect, useState} from 'react';
+import NavBarRouter from '../../../../router/NavBarRouter';
 import InstitutionProfile from './InstitutionProfile';
-
-interface InstitutionInfoProps {
-  institute?: InstInfo;
-  loading: boolean;
-  updateServiceProviders: Function;
-  tabProps?: any;
-  toggleUpdateState?: () => void;
-  postInfoUpdate?: (data: any) => void;
-}
-interface InstInfo {
-  id: string;
-  name: string;
-  type: string;
-  website: string;
-  address: string;
-  addressLine2: string;
-  city: string;
-  state: string;
-  zip: string;
-  image: string;
-  phone: string;
-  classes: {items: {name?: string; id: string}[]};
-  curricula: {items: {name?: string; id: string}[]};
-  isServiceProvider: boolean;
-  serviceProviders?: {
-    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
-  };
-}
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {institute} = instProps;
@@ -61,32 +33,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {/* Profile section */}
         <div className="flex-col flex justify-center lg:justify-start w-full">
           <div className="flex flex-1 overflow-x-hidden mb-8">
-            <div className="">
-              <div className="">
-                {/* {renderElementBySelectedMenu()} */}
-                <NavBarRouter
-                  {...instProps}
-                  updateCurricularList={updateCurricularList}
-                  curricular={curricular}
-                />
-              </div>
+            <div className="w-full">
+              <NavBarRouter
+                {...instProps}
+                updateCurricularList={updateCurricularList}
+                curricular={curricular}
+              />
             </div>
           </div>
 
           <InstitutionProfile institute={institute} />
         </div>
-
-        {/* {instProps?.institute?.id && (
-          <div className="overflow-hidden sm:rounded-lg">
-            <div className="">
-              <UnderlinedTabs
-                tabs={tabs}
-                activeTab={tabProps.tabsData.inst}
-                updateTab={updateTab}
-              />
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );

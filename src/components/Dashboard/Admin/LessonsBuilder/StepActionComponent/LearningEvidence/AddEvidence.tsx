@@ -1,15 +1,13 @@
-import React, {useContext} from 'react';
-
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
 
+import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
-import Buttons from 'atoms/Buttons';
 
 const AddEvidence = () => {
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {LessonBuilderDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {LessonBuilderDict} = useDictionary();
 
   const AddEvidenceDict =
     LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['ADD_EVIDENCE'];
@@ -53,12 +51,7 @@ const AddEvidence = () => {
           />
         </div>
         <div className="ml-4 w-auto">
-          <Buttons
-            btnClass="ml-4 py-1"
-            label="Add"
-            onClick={() => console.log('add')}
-            disabled={true}
-          />
+          <Buttons label="Add" onClick={() => console.log('add')} disabled={true} />
         </div>
       </div>
     </div>

@@ -1,12 +1,13 @@
+import Loader from '@components/Atoms/Loader';
+import Placeholder from '@components/Atoms/Placeholder';
 import useAuth from '@customHooks/useAuth';
+import {Empty} from 'antd';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
-import ImageAlternate from 'atoms/ImageAlternative';
 import {filter, map, orderBy} from 'lodash';
-import React from 'react';
 import {useHistory} from 'react-router';
 
-interface Teacher {
+export interface Teacher {
   firstName: string;
   lastName: string;
   phone: string;
@@ -17,8 +18,12 @@ interface Teacher {
   image: string | null;
 }
 
-const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
-  const {coTeachersList = [], teachersList = []} = props;
+const TeacherRows = (props: {
+  loading: boolean;
+  coTeachersList: Teacher[];
+  teachersList: Teacher[];
+}) => {
+  const {coTeachersList = [], loading, teachersList = []} = props;
 
   const allTeachers = [...teachersList, ...coTeachersList];
 
@@ -97,7 +102,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
             {attachedClasses.map((teacher, idx: number) => {
               return (
                 <li
-                  key={`home__teacher-${idx}`}
+                  key={teacher?.firstName + teacher?.lastName}
                   style={
                     teacher.status === PersonStatus.INACTIVE
                       ? {borderLeftWidth: '2px', borderLeftColor: 'red'}
@@ -112,31 +117,25 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                         ? '#'
                         : `/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`
                     }
-                    className={`block hover:bg-gray-200 ${
+                    className={`block no-underline hover:bg-gray-200 ${
                       isStudent ? 'pointer-events-none' : ''
                     }`}
                     style={{borderRadius: 'inherit'}}>
                     <div className="flex items-center px-4 py-4 sm:px-6">
                       <div className="min-w-0 flex-1 flex items-center">
-                        {teacher.image ? (
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src={teacher?.image}
-                            alt=""
-                          />
-                        ) : (
-                          <ImageAlternate
-                            user={teacher}
-                            styleClass="h-12 w-12 rounded-full"
-                          />
-                        )}
+                        <Placeholder
+                          size=" h-8 w-8 lg:h-12 lg:w-12"
+                          firstName={teacher?.firstName}
+                          lastName={teacher?.lastName}
+                          image={teacher?.image}
+                        />
 
                         <div className="min-w-0 flex-1 px-4">
                           <div>
-                            <p className="text-sm font-medium text-indigo-600 truncate">
+                            <h4 className="text-sm mb-0 font-medium text-indigo-600 truncate">
                               {teacher.firstName + ' ' + teacher.lastName}
-                            </p>
-                            <p className="mt-2 flex items-center text-sm text-gray-500">
+                            </h4>
+                            <p className="mt-2 flex mb-0 items-center text-sm text-gray-500">
                               <svg
                                 className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +145,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                               </svg>
-                              <span className="truncate">{teacher.email}</span>
+                              <span className=" truncate">{teacher.email}</span>
                             </p>
                           </div>
                         </div>
@@ -160,19 +159,17 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                               teacher?.classes?.length > 1 ? 'list-disc' : ''
                             }`}>
                             {teacher?.classes?.map((d: any) => (
-                              <>
-                                <li
-                                  key={d.name}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    history.push(
-                                      `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
-                                    );
-                                  }}
-                                  className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
-                                  {d.name}
-                                </li>
-                              </>
+                              <li
+                                key={d.name}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  history.push(
+                                    `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
+                                  );
+                                }}
+                                className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                                {d.name}
+                              </li>
                             ))}
                           </ul>
                         </div>
@@ -183,8 +180,12 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
               );
             })}
           </ul>
+        ) : loading ? (
+          <div className="min-h-56 flex items-center justify-center ">
+            <Loader className="w-auto text-gray-400" withText="Loading teachers..." />
+          </div>
         ) : (
-          <div className="flex justify-center items-center p-12">No teachers found</div>
+          <Empty description={'No teachers found'} />
         )}
       </div>
     </ContentCard>

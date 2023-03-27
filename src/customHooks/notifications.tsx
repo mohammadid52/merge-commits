@@ -1,17 +1,22 @@
-import {useContext, useEffect, useState} from 'react';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from 'graphql/mutations';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData} from 'utilities/localStorage';
 import {
   getSessionStorageData,
   removeSessionStorageData,
   setSessionStorageData
 } from 'utilities/sessionStorage';
 import useLessonControls from './lessonControls';
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+
+const getPageLabel = (pageID: string) => {
+  const localLessonPlan = getLocalStorageData('lesson_plan', '[]') || [];
+  const findPage = localLessonPlan && localLessonPlan?.length > 0;
+  localLessonPlan?.find((pageObj: any) => pageObj && pageObj?.id === pageID);
+  if (findPage && pageID) {
+    return findPage.label;
+  }
+};
 
 // ##################################################################### //
 // ######################## GLOBAL NOTIFICATIONS ####################### //
@@ -19,7 +24,7 @@ import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 
 const useGlobalNotifications = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
   const dispatch = gContext.dispatch;
   const history = useHistory();
@@ -65,7 +70,7 @@ const useGlobalNotifications = () => {
 
 const useLessonControlNotifications = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
 
   // ~~~~~~~~~~~ FUNCTIONS - LIVE ~~~~~~~~~~ //
@@ -73,15 +78,6 @@ const useLessonControlNotifications = () => {
   const {resetViewAndShare} = useLessonControls();
 
   // ~~~~~~~ FUNCTIONS - LABELS ETC. ~~~~~~~ //
-  const getPageLabel = (pageID: string) => {
-    const localLessonPlan = getLocalStorageData('lesson_plan');
-    const findPage =
-      localLessonPlan &&
-      localLessonPlan.find((pageObj: any) => pageObj && pageObj?.id === pageID);
-    if (findPage && pageID) {
-      return findPage.label;
-    }
-  };
 
   const getSharedStudenName = (authID: string) => {
     const studentList = getLocalStorageData('student_list');
@@ -97,18 +93,17 @@ const useLessonControlNotifications = () => {
     if (findStudent && authID) {
       return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
+    return '';
   };
 
+  const displayData = lessonState?.displayData?.[0];
+
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //
-  const isPresenting = lessonState.displayData[0].isTeacher === true;
+  const isPresenting = displayData?.isTeacher === true;
   const studentIsViewed = lessonState.studentViewing !== '';
-  const isClosed = lessonState.displayData[0].studentAuthID === 'closed';
-  const studentIsShared =
-    lessonState.displayData &&
-    lessonState.displayData[0].studentAuthID !== '' &&
-    !isClosed &&
-    !isPresenting;
-  const isLessonClosed = lessonState.displayData && isClosed && isPresenting;
+  const isClosed = displayData?.studentAuthID === 'closed';
+  const studentIsShared = displayData?.studentAuthID !== '' && !isClosed && !isPresenting;
+  const isLessonClosed = lessonState?.displayData && isClosed && isPresenting;
 
   const history = useHistory();
 
@@ -117,7 +112,7 @@ const useLessonControlNotifications = () => {
   };
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
-  const watchList = [
+  const watchList: NotificationListItem[] = [
     {
       check: studentIsViewed,
       notification: {
@@ -152,9 +147,9 @@ const useLessonControlNotifications = () => {
       check: studentIsShared,
       notification: {
         label: 'Sharing student data',
-        message: `"${getPageLabel(
-          lessonState.displayData[0].lessonPageID
-        )}" by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
+        message: `"${getPageLabel(displayData?.lessonPageID)}" by "${getSharedStudenName(
+          displayData?.studentAuthID
+        )}"`,
         type: 'alert',
         cta: 'Quit Sharing'
       },
@@ -203,7 +198,7 @@ const useLessonControlNotifications = () => {
 
 const useLessonNotifications = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const lessonPlan = lessonState.lessonData.lessonPlan;
@@ -248,18 +243,9 @@ const useLessonNotifications = () => {
     }
   };
 
-  const getPageLabel = (pageID: string) => {
-    const localLessonPlan = getLocalStorageData('lesson_plan');
-    const findPage =
-      localLessonPlan &&
-      localLessonPlan.find((pageObj: any) => pageObj && pageObj?.id === pageID);
-    if (findPage && pageID) {
-      return findPage.label;
-    }
-  };
-
   const getSharedStudenName = (authID: string) => {
     const studentList = getLocalStorageData('student_list');
+
     const findStudent =
       studentList &&
       studentList.reduce((acc: any, studentObj: any) => {
@@ -269,9 +255,11 @@ const useLessonNotifications = () => {
           return acc;
         }
       }, {});
+
     if (findStudent && authID) {
       return findStudent?.firstName + ' ' + findStudent?.lastName;
     }
+    return '';
   };
 
   // ~~~~~~~~~~~~~ LOGIC CHECKS ~~~~~~~~~~~~ //a
@@ -295,8 +283,10 @@ const useLessonNotifications = () => {
     history.push('/dashboard');
   };
 
+  const studentAuthID = lessonState.displayData[0].studentAuthID;
+
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
-  const watchList = [
+  const watchList: NotificationListItem[] = [
     {
       check: iAmViewed && !iAmShared,
       notification: {
@@ -332,7 +322,9 @@ const useLessonNotifications = () => {
       check: anyPageIsShared && !iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing a page',
-        message: ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
+        message: studentAuthID
+          ? ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`
+          : '',
         type: 'alert',
         cta: 'Go There Now'
       },
@@ -344,7 +336,9 @@ const useLessonNotifications = () => {
       check: iAmShared && !thisPageIsShared,
       notification: {
         label: 'Teacher is sharing your page',
-        message: `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`,
+        message: studentAuthID
+          ? `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`
+          : '',
         type: 'alert',
         cta: 'Go There Now'
       },
@@ -389,7 +383,9 @@ const useLessonNotifications = () => {
       check: thisPageIsShared && !iAmShared && !teacherIsPresenting,
       notification: {
         label: 'You are viewing this page',
-        message: `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
+        message: studentAuthID
+          ? `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`
+          : '',
         type: 'info',
         cta: ''
       },
@@ -435,7 +431,7 @@ const useLessonNotifications = () => {
 };
 const useInputNotifications = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
 
   const lessonState = gContext.lessonState;
 

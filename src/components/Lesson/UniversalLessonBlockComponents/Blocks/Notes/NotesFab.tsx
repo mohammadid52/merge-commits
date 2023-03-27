@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Auth} from '@aws-amplify/auth';
+import {Auth} from 'aws-amplify';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import Loader from 'atoms/Loader';
@@ -67,7 +67,6 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
   const gContext = useGlobalContext();
 
   const lessonState = gContext.lessonState;
-  const saveJournalData = gContext.saveJournalData;
 
   const allNotes = mapNotesTogether(notes);
 
@@ -135,7 +134,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
   // ~~~~~~~~~~ UPDATE DB RECORDS ~~~~~~~~~~ //
   const updateStudentData = async (newNote: any) => {
     return lessonState.universalStudentDataID.reduce(
-      async (p: any, currentIdObj: any, idx: number) => {
+      async (currentIdObj: any, idx: number) => {
         if (currentIdObj.update) {
           let list = lessonState.studentData[currentIdObj.pageIdx];
           list.push(newNote);
@@ -148,8 +147,10 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
           };
 
           try {
-            let updatedStudentData: any = await API.graphql(
-              graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
+            await API.graphql(
+              graphqlOperation(mutations.updateUniversalLessonStudentData, {
+                input: data
+              })
             );
           } catch (e) {
             logError(e, {authId, email}, 'NotesFab @updateStudentData', e.toString());
@@ -487,10 +488,10 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
     }
   };
 
-  const getUniq2 = (entryData: any[]) => {
+  const getUniq2 = (entryData: any[] | undefined) => {
     const domIds: string[] = [];
 
-    return entryData.filter((d) => {
+    return entryData?.filter((d) => {
       if (!domIds.includes(d.domID)) {
         domIds.push(d.domID);
         return true;
@@ -521,7 +522,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       ed?.type?.includes('content-custom')
     );
 
-    const mapFixedData = fixedFilteredData.map((m) => {
+    const mapFixedData = fixedFilteredData?.map((m) => {
       // @ts-ignore
       const note = find(allNotes, ['id', m.domID]);
       if (!isEmpty(note) && m) {
@@ -538,9 +539,10 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
           custom: false
         };
       }
+      return null;
     });
 
-    const mapCustomData = fixedCustomData.map((m) => {
+    const mapCustomData = fixedCustomData?.map((m) => {
       let className = m.type.split(' || ')[1];
       const note = find(allNotes, ['id', m.domID]);
       if (!isEmpty(note) && m) {
@@ -553,9 +555,15 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
           partContentId: note?.partContentId
         };
       }
+      return null;
     });
 
-    const collectedNotes = [...mapFixedData, ...mapCustomData].filter(Boolean);
+    let _mapFixedData =
+      Array.isArray(mapFixedData) && mapFixedData?.length > 0 ? mapFixedData : [];
+    let _mapCustomData =
+      Array.isArray(mapCustomData) && mapCustomData?.length > 0 ? mapCustomData : [];
+
+    const collectedNotes = [..._mapFixedData, ..._mapCustomData].filter(Boolean);
 
     return (
       <>

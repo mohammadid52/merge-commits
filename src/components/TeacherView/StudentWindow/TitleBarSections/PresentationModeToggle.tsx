@@ -1,4 +1,3 @@
-import useSounds from '@customHooks/useSounds';
 import Buttons from 'atoms/Buttons';
 import useLessonControls from 'customHooks/lessonControls';
 import React, {useEffect} from 'react';
@@ -10,12 +9,10 @@ interface IFullscreenToggleProps extends StudentWindowTitleBarProps {
   displayData: any;
   lessonDispatch: any;
   lessonData: any;
-  currentPage: string;
+  currentPage: number;
 }
 
 const PresentationModeToggle = ({
-  theme,
-  themeColor,
   displayData,
   lessonDispatch,
   lessonData,
@@ -29,8 +26,11 @@ const PresentationModeToggle = ({
   const getRoomData = getLocalStorageData('room_info');
 
   //TODO: to refactor this to lessonControls hook
-  const getPageID = (locationIndex: string) => {
+  const getPageID = (locationIndex: number | string) => {
     if (lessonData && lessonData?.lessonPlan) {
+      if (typeof locationIndex === 'number') {
+        return lessonData.lessonPlan[locationIndex]?.id;
+      }
       return lessonData.lessonPlan[parseInt(locationIndex)]?.id;
     }
   };
@@ -52,8 +52,6 @@ const PresentationModeToggle = ({
       displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
     });
   };
-
-  // const [onSound, offSound] = useSounds(['success', 'error']);
 
   const handlePresentationToggle = async (
     presenting: boolean,
@@ -77,15 +75,13 @@ const PresentationModeToggle = ({
   }, [isPresenting, currentPage]);
 
   return (
-    <div className="w-1/3 flex justify-end h-8 align-middle leading-8 ">
-      <Buttons
-        Icon={CgScreen}
-        iconSize="h-3.5 w-3.5"
-        transparent={isPresenting}
-        label={isPresenting ? 'Stop Presenting' : 'Start Presenting'}
-        onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
-      />
-    </div>
+    <Buttons
+      Icon={CgScreen}
+      size="middle"
+      transparent={isPresenting}
+      label={isPresenting ? 'Stop Presenting' : 'Start Presenting'}
+      onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
+    />
   );
 };
 

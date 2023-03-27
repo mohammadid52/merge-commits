@@ -1,21 +1,20 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Fragment, useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
-// import { reorder } from 'utilities/strings';
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
-import PageWrapper from 'atoms/PageWrapper';
-import DragableAccordion from 'atoms/DragableAccordion';
-import Buttons from 'atoms/Buttons';
-import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 import Loader from '@components/Atoms/Loader';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {RoomStatus} from 'API';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {RoomStatus} from 'API';
+import Buttons from 'atoms/Buttons';
+import DragableAccordion from 'atoms/DragableAccordion';
+import PageWrapper from 'atoms/PageWrapper';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
 
 interface CheckpointListProps {
   curricularId: string;
@@ -27,10 +26,10 @@ const CheckpointList = (props: CheckpointListProps) => {
   const {curricularId, institutionId, status} = props;
   const history = useHistory();
 
-  const [checkPoints, setCheckPoints] = useState([]);
+  const [checkPoints, setCheckPoints] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const {CHECKPOINTSDICT, BreadcrumsTitles} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {CHECKPOINTSDICT} = useDictionary();
 
   const createNewCheckpoint = () => {
     history.push(
@@ -47,13 +46,15 @@ const CheckpointList = (props: CheckpointListProps) => {
       `/dashboard/manage-institutions/institution/${institutionId}/course-builder/${curricularId}/checkpoint/edit/${id}`
     );
   };
-  const changeStep = () => {};
+  const changeStep = () => {
+    // do something
+  };
   const DeleteCheckpoint = async (checkpointId: string, checkpointList: any) => {
     const commonCheckpointId: string = [...checkpointList].find(
       (item: any) => item.id === checkpointId
     )?.commonCheckpointId;
     if (commonCheckpointId) {
-      const result: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(customMutations.deleteCommonCheckpoint, {
           input: {
             id: commonCheckpointId
@@ -70,7 +71,9 @@ const CheckpointList = (props: CheckpointListProps) => {
   const fetchCurricularCheckpoint = async () => {
     setLoading(true);
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.getCurriculumCheckpoints, {id: curricularId})
+      graphqlOperation(customQueries.getCurriculumCheckpoints, {
+        id: curricularId
+      })
     );
     const curricularCheckp: any = result.data?.getCurriculum?.checkpoints?.items;
     if (curricularCheckp.length > 0) {
@@ -131,12 +134,10 @@ const CheckpointList = (props: CheckpointListProps) => {
                 </div>
                 <div className="flex justify-center w-9/10 m-auto">
                   <Buttons
-                    btnClass="mr-3"
                     label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']}
                     onClick={addExistingCheckpoint}
                   />
                   <Buttons
-                    btnClass="ml-3"
                     label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']}
                     onClick={createNewCheckpoint}
                   />

@@ -1,3 +1,4 @@
+import {Divider} from 'antd';
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import ActivityBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
@@ -5,13 +6,11 @@ import DocsBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/D
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import map from 'lodash/map';
-import React from 'react';
 import {
   DIVIDER,
   FORM_TYPES,
   GAME_CHANGERS,
-  SPACER,
-  TABLE
+  SPACER
 } from '../UniversalLessonBuilder/UI/common/constants';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
@@ -24,12 +23,16 @@ import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import LinksBlock from './Blocks/LinksBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
-import {StringifyBlock} from './Blocks/StringifyBlock';
-import TableBlock from './Blocks/TableBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
 
 const Spacer = (props: any) => {
-  return <div style={{margin: `${props.value[0].value || 32}px 0px`}} />;
+  return (
+    <Divider
+      style={{margin: `${props.value[0].value || 32}px 0px`}}
+      className="bg-gray-600"
+      dashed
+    />
+  );
 };
 
 const composePartContent = (
@@ -45,12 +48,14 @@ const composePartContent = (
   notesData?: any,
   isStudent: boolean = true
 ): JSX.Element => {
+  const _mode = mode || 'lesson';
+
   const commonBlockProps = {
     classString,
     id,
     type,
     value,
-    mode
+    mode: _mode
   };
 
   if (type.includes('jumbotron')) {
@@ -62,7 +67,7 @@ const composePartContent = (
   } else if (type.includes('keyword')) {
     return (
       <ErrorBoundary componentName="KeywordBlock">
-        <KeywordBlock id={id} type={type} value={value} mode={mode} />
+        <KeywordBlock id={id} type={type} value={value} mode={_mode} />
       </ErrorBoundary>
     );
   } else if (type.includes(SPACER)) {
@@ -142,13 +147,15 @@ const composePartContent = (
         <DividerBlock value={value[0]?.value} />
       </ErrorBoundary>
     );
-  } else if (type === TABLE) {
-    return (
-      <ErrorBoundary componentName="TableBlock">
-        <TableBlock classString={classString} value={value} />
-      </ErrorBoundary>
-    );
-  } else if (type === FORM_TYPES.DOWNLOAD) {
+  }
+  //  else if (type === TABLE) {
+  //   return (
+  //     <ErrorBoundary componentName="TableBlock">
+  //       <TableBlock classString={classString} value={value} />
+  //     </ErrorBoundary>
+  //   );
+  // }
+  else if (type === FORM_TYPES.DOWNLOAD) {
     return (
       <ErrorBoundary componentName="DownloadBlock">
         <DownloadBlock value={value} />
@@ -194,8 +201,7 @@ const composePartContent = (
       </GameChangerProvider>
     );
   } else {
-    console.log('Unidentified component type: => ', type);
-    return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
+    return <div className="hidden"></div>;
   }
 };
 

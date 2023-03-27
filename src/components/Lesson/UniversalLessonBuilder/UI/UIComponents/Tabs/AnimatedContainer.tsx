@@ -7,10 +7,10 @@ const AnimatedContainer = ({
   animationType = 'scale',
   duration = '300',
   className,
-  customAnimation,
+  customAnimation = {show: '', hide: ''},
   fixWidth = false,
   delay = '0s',
-  zIndex,
+
   style = {}
 }: {
   show: boolean;
@@ -33,15 +33,14 @@ const AnimatedContainer = ({
 
       case 'opacity':
         return show ? 'opacity-100' : 'opacity-0';
-      case 'scale':
-        return show ? 'scale-100 opacity-100' : 'scale-95 opacity-0';
+
       case 'translateY':
         return show ? 'translate-y-0 opacity-100' : '-translate-y-3 opacity-0';
       case 'custom':
         return show ? customAnimation.show : customAnimation.hide;
-
+      // Default scale
       default:
-        return show ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full';
+        return show ? 'scale-100 opacity-100' : 'scale-95 opacity-0';
     }
   };
   return (

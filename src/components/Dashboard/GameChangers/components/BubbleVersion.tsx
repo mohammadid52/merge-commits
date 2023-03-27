@@ -4,19 +4,15 @@ import useInGC from 'customHooks/checkIfGameChanges';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import gsap from 'gsap';
 import {isEmpty} from 'lodash';
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 // local context
 import {useGameChangers} from '../context/GameChangersContext';
 
 const BubbleVersion = () => {
   const {setSecondaryEmotion, primaryEmotion, setPrimaryEmotion} = useGameChangers();
 
-  const {
-    selectedEmotions,
-    setSelectedEmotions,
-    replaceIdx,
-    setReplaceIdx
-  } = useGameChangers();
+  const {selectedEmotions, setSelectedEmotions, replaceIdx, setReplaceIdx} =
+    useGameChangers();
 
   const {setNotification, clearNotification} = useNotifications();
 
@@ -35,14 +31,18 @@ const BubbleVersion = () => {
     });
   }, [primaryEmotion]);
 
-  const onPrimaryEmotion = (e: any, emotionName: string) => {
+  const onPrimaryEmotion = (emotionName: string) => {
     setPrimaryEmotion(emotionName);
   };
 
   const exists = (emName: string) =>
     selectedEmotions.findIndex((em) => em.secondary === emName) !== -1;
 
-  const config = {duration: 0.5, transformOrigin: 'center', ease: 'easeInOut'};
+  const config = {
+    duration: 0.5,
+    transformOrigin: 'center',
+    ease: 'easeInOut'
+  };
   const circleWithPath = (e: any) => {
     return [e.target, e.target.nextSibling];
   };
@@ -111,7 +111,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="524"
                 cy="319"
-                onClick={(e) => onPrimaryEmotion(e, 'sad')}
+                onClick={() => onPrimaryEmotion('sad')}
                 r="70"
                 fill="url(#paint0_linear_9_249)"
               />
@@ -124,7 +124,7 @@ const BubbleVersion = () => {
                 id="emotion-btn"
                 cx="280"
                 cy="355"
-                onClick={(e) => onPrimaryEmotion(e, 'happy')}
+                onClick={() => onPrimaryEmotion('happy')}
                 r="115"
                 fill="url(#paint1_linear_9_249)"
               />
@@ -136,7 +136,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="407"
-                onClick={(e) => onPrimaryEmotion(e, 'angry')}
+                onClick={() => onPrimaryEmotion('angry')}
                 cy="520"
                 r="70"
                 fill="url(#paint2_linear_9_249)"
@@ -148,7 +148,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onPrimaryEmotion(e, 'bad')}
+                onClick={() => onPrimaryEmotion('bad')}
                 cx="60"
                 cy="334"
                 r="55"
@@ -162,7 +162,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="115"
-                onClick={(e) => onPrimaryEmotion(e, 'surprised')}
+                onClick={() => onPrimaryEmotion('surprised')}
                 cy="115"
                 r="115"
                 fill="url(#paint4_linear_9_249)"
@@ -174,7 +174,7 @@ const BubbleVersion = () => {
               />
               <circle
                 id="emotion-btn"
-                onClick={(e) => onPrimaryEmotion(e, 'disgusted')}
+                onClick={() => onPrimaryEmotion('disgusted')}
                 cx="382"
                 cy="135"
                 r="95"
@@ -188,7 +188,7 @@ const BubbleVersion = () => {
               <circle
                 id="emotion-btn"
                 cx="174"
-                onClick={(e) => onPrimaryEmotion(e, 'fearful')}
+                onClick={() => onPrimaryEmotion('fearful')}
                 cy="551"
                 r="75"
                 fill="url(#paint6_linear_9_249)"

@@ -1,17 +1,20 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getDate} from '@components/General/EmojiFeedback';
-import {useNotifications} from '@contexts/NotificationContext';
-import {PersonStatus, UserPageState} from 'API';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import useLessonControls from 'customHooks/lessonControls';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import * as subscriptions from 'graphql/subscriptions';
-import React, {useContext, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import RosterSection from './ClassRoster/RosterSection';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import { getDate } from "@components/General/EmojiFeedback";
+import { useNotifications } from "@contexts/NotificationContext";
+import { PersonStatus, UserPageState } from "API";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import useLessonControls from "customHooks/lessonControls";
+import * as mutations from "graphql/mutations";
+import * as queries from "graphql/queries";
+import * as subscriptions from "graphql/subscriptions";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  getLocalStorageData,
+  setLocalStorageData,
+} from "utilities/localStorage";
+import RosterSection from "./ClassRoster/RosterSection";
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -19,7 +22,7 @@ interface IClassRosterProps {
   isSameStudentShared: boolean;
   handlePageChange?: any;
   handleRoomUpdate?: (payload: any) => void;
-  rightView?: {view: string; option?: string};
+  rightView?: { view: string; option?: string };
   setRightView?: any;
 }
 
@@ -27,21 +30,21 @@ const ClassRoster = ({
   handlePageChange,
   handleRoomUpdate,
   rightView,
-  setRightView
+  setRightView,
 }: IClassRosterProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
   const roster = controlState.roster;
   const controlDispatch = gContext.controlDispatch;
-  const clientKey = gContext.clientKey;
+
   const userLanguage = gContext.userLanguage;
 
-  const {lessonPlannerDict} = useDictionary(clientKey);
+  const { lessonPlannerDict } = useDictionary();
   const urlParams: any = useParams();
-  const getRoomData = getLocalStorageData('room_info');
+  const getRoomData = getLocalStorageData("room_info");
 
   // ##################################################################### //
   // ########################### LOADING STATE ########################### //
@@ -53,7 +56,9 @@ const ClassRoster = ({
   // ############################ ALL STUDENTS ########################### //
   // ##################################################################### //
 
-  const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
+  const [personLocationStudents, setPersonLocationStudents] = useState<any[]>(
+    []
+  );
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
   const [deletedStudent, setDeletedStudent] = useState<any>({});
 
@@ -63,7 +68,10 @@ const ClassRoster = ({
   // ~~~~~~~~~~~~~~ INITIALIZE ~~~~~~~~~~~~~ //
 
   useEffect(() => {
-    if (Object.keys(getRoomData).length > 0 && getRoomData.hasOwnProperty('classID')) {
+    if (
+      Object.keys(getRoomData).length > 0 &&
+      getRoomData.hasOwnProperty("classID")
+    ) {
       getClassStudents(getRoomData?.classID);
     }
     return () => {
@@ -74,15 +82,17 @@ const ClassRoster = ({
         deleteSubscription.unsubscribe();
       }
 
-      console.log('unsubscribe from student updates -- ClassRoster');
+      console.log("unsubscribe from student updates -- ClassRoster");
       lessonDispatch({
-        type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, studentViewing: ''}
+        type: "SET_ROOM_SUBSCRIPTION_DATA",
+        payload: { id: getRoomData.id, studentViewing: "" },
       });
-      setLocalStorageData('room_info', {
+      setLocalStorageData("room_info", {
         ...getRoomData,
-        studentViewing: '',
-        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+        studentViewing: "",
+        displayData: [
+          { isTeacher: false, studentAuthID: "", lessonPageID: "" },
+        ],
       });
     };
   }, []);
@@ -99,14 +109,15 @@ const ClassRoster = ({
       graphqlOperation(subscriptions.onCreateUpdatePersonLocationItem, {
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
-        roomID: getRoomData.id
+        roomID: getRoomData.id,
       })
       //@ts-ignore
     ).subscribe({
       next: (locationData: any) => {
-        const updatedStudent = locationData.value.data.onCreateUpdatePersonLocationItem;
+        const updatedStudent =
+          locationData.value.data.onCreateUpdatePersonLocationItem;
         setUpdatedStudent(updatedStudent);
-      }
+      },
     });
     return personLocationSub;
   };
@@ -119,16 +130,17 @@ const ClassRoster = ({
       graphqlOperation(subscriptions.onDeletePersonLocationItem, {
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
-        roomID: getRoomData.id
+        roomID: getRoomData.id,
       })
       //@ts-ignore
     ).subscribe({
       next: (locationData: any) => {
-        const deletedStudent = locationData.value.data.onDeletePersonLocationItem;
+        const deletedStudent =
+          locationData.value.data.onDeletePersonLocationItem;
 
-        console.log('deleted location: ', deletedStudent);
+        console.log("deleted location: ", deletedStudent);
         setDeletedStudent(deletedStudent);
-      }
+      },
     });
     return personLocationDeleteSub;
   };
@@ -153,7 +165,7 @@ const ClassRoster = ({
         graphqlOperation(queries.listClassStudents, {
           nextToken: nextToken,
           limit: 500,
-          filter: {classID: {eq: sessionClassID}}
+          filter: { classID: { eq: sessionClassID } },
         })
       );
       const classStudentList = outArray
@@ -164,35 +176,38 @@ const ClassRoster = ({
         .filter(filterRemovedStudents)
         .map((student: any) => {
           return {
-            id: '',
+            id: "",
             personAuthID: student.studentAuthID,
             personEmail: student.studentEmail,
-            syllabusLessonID: '',
-            roomID: '',
-            currentLocation: '',
-            lessonProgress: '',
+            syllabusLessonID: "",
+            roomID: "",
+            currentLocation: "",
+            lessonProgress: "",
             person: student.student,
             syllabusLesson: {},
-            room: '',
+            room: "",
             createdAt: student.createdAt,
             updatedAt: student.updatedAt,
-            saveType: ''
+            saveType: "",
           };
         });
       controlDispatch({
-        type: 'UPDATE_STUDENT_ROSTER',
-        payload: {students: initClassStudentList}
+        type: "UPDATE_STUDENT_ROSTER",
+        payload: { students: initClassStudentList },
       });
     } catch (e) {
-      console.error('getClassStudents - ', e);
+      console.error("getClassStudents - ", e);
     }
   };
 
   // ~~~ GET ACTIVE ST // PERSONLOCATION ~~~ //
 
-  const {lessonID} = urlParams;
+  const { lessonID } = urlParams;
 
-  const getActiveClassStudents = async (nextToken?: string, outArray?: any[]) => {
+  const getActiveClassStudents = async (
+    nextToken?: string,
+    outArray?: any[]
+  ) => {
     if (!loading) {
       setLoading(true);
     }
@@ -201,33 +216,42 @@ const ClassRoster = ({
         graphqlOperation(queries.listPersonLocations, {
           nextToken: nextToken,
           filter: {
-            syllabusLessonID: {eq: getRoomData.activeSyllabus},
-            lessonID: {eq: lessonID},
-            roomID: {eq: getRoomData.id}
-          }
+            syllabusLessonID: { eq: getRoomData.activeSyllabus },
+            lessonID: { eq: lessonID },
+            roomID: { eq: getRoomData.id },
+          },
         })
       );
       const syllabusLessonStudentList = outArray
-        ? [...syllabusLessonStudents.data.listPersonLocations.items, ...outArray]
+        ? [
+            ...syllabusLessonStudents.data.listPersonLocations.items,
+            ...outArray,
+          ]
         : syllabusLessonStudents.data.listPersonLocations.items;
-      const theNextToken = syllabusLessonStudents.data.listPersonLocations?.nextToken;
+      const theNextToken =
+        syllabusLessonStudents.data.listPersonLocations?.nextToken;
 
       if (theNextToken) {
         getActiveClassStudents(theNextToken, syllabusLessonStudentList);
       } else {
-        const studentsFromThisClass = syllabusLessonStudentList.filter((student: any) => {
-          const findStudentInClasslist = roster.find(
-            (student2: any) => student2.personEmail === student.personEmail
-          );
-          if (findStudentInClasslist) {
-            return findStudentInClasslist;
+        const studentsFromThisClass = syllabusLessonStudentList.filter(
+          (student: any) => {
+            const findStudentInClasslist = roster.find(
+              (student2: any) => student2.personEmail === student.personEmail
+            );
+            if (findStudentInClasslist) {
+              return findStudentInClasslist;
+            }
+            return null;
           }
-        });
+        );
 
         setPersonLocationStudents(studentsFromThisClass || []);
         controlDispatch({
-          type: 'UPDATE_ACTIVE_ROSTER',
-          payload: {students: studentsFromThisClass.filter(filterRemovedStudents)}
+          type: "UPDATE_ACTIVE_ROSTER",
+          payload: {
+            students: studentsFromThisClass.filter(filterRemovedStudents),
+          },
         });
         subscription = subscribeToPersonLocations();
         deleteSubscription = subscribeToDeletePersonLocations();
@@ -235,7 +259,7 @@ const ClassRoster = ({
       }
     } catch (e) {
       setLoading(false);
-      console.error('getActiveClassStudents - ', e);
+      console.error("getActiveClassStudents - ", e);
     }
   };
 
@@ -248,7 +272,8 @@ const ClassRoster = ({
   const notInClassStudents = () => {
     let notInClass = roster.filter((student: any) => {
       const isInStateRoster = controlState.rosterActive.find(
-        (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
+        (studentTarget: any) =>
+          studentTarget.personAuthID === student.personAuthID
       );
 
       return isInStateRoster === undefined;
@@ -257,15 +282,15 @@ const ClassRoster = ({
     notInClass = notInClass.map((item: any) => {
       return {
         ...item,
-        _sortName: item?.person?.firstName.toLowerCase()
+        _sortName: item?.person?.firstName.toLowerCase(),
       };
     });
 
-    return notInClass.sort(function (a: {_sortName: number}, b: {_sortName: number}) {
-      if (a._sortName < b._sortName) {
+    return notInClass.sort((a: any, b: any) => {
+      if (a?._sortName < b?._sortName) {
         return -1;
       }
-      if (a._sortName > b._sortName) {
+      if (a?._sortName > b?._sortName) {
         return 1;
       }
       return 0;
@@ -287,23 +312,23 @@ const ClassRoster = ({
     if (studentExists) {
       const existRoster = personLocationStudents.map((student: any) => {
         if (student.personAuthID === newStudent.personAuthID) {
-          return {...student, currentLocation: newStudent.currentLocation};
+          return { ...student, currentLocation: newStudent.currentLocation };
         } else {
           return student;
         }
       });
       setPersonLocationStudents(existRoster);
       controlDispatch({
-        type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: existRoster.filter(filterRemovedStudents)}
+        type: "UPDATE_ACTIVE_ROSTER",
+        payload: { students: existRoster.filter(filterRemovedStudents) },
       });
       setUpdatedStudent({});
     } else {
       const newRoster = [...personLocationStudents, newStudent];
       setPersonLocationStudents(newRoster);
       controlDispatch({
-        type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: newRoster.filter(filterRemovedStudents)}
+        type: "UPDATE_ACTIVE_ROSTER",
+        payload: { students: newRoster.filter(filterRemovedStudents) },
       });
       setUpdatedStudent({});
     }
@@ -336,8 +361,8 @@ const ClassRoster = ({
       );
       setPersonLocationStudents(deleteRoster);
       controlDispatch({
-        type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: deleteRoster.filter(filterRemovedStudents)}
+        type: "UPDATE_ACTIVE_ROSTER",
+        payload: { students: deleteRoster.filter(filterRemovedStudents) },
       });
       setDeletedStudent({});
     } else {
@@ -358,11 +383,11 @@ const ClassRoster = ({
   const viewedStudent = lessonState?.studentViewing;
   const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
-  const {resetViewAndShare, resetShare, resetView} = useLessonControls();
+  const { resetViewAndShare, resetShare } = useLessonControls();
 
   // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
 
-  const {setNotification, clearNotification} = useNotifications();
+  const { setNotification, clearNotification } = useNotifications();
 
   const handleViewStudentData = async (idStr: string) => {
     if (viewedStudent === idStr) {
@@ -370,28 +395,35 @@ const ClassRoster = ({
       setNotification({
         show: true,
         timeout: 2000,
-        title: 'Student screen sharing and viewing cancelled'
+        title: "Student screen sharing and viewing cancelled",
       });
       await resetViewAndShare();
     } else {
       lessonDispatch({
-        type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, studentViewing: idStr}
+        type: "SET_ROOM_SUBSCRIPTION_DATA",
+        payload: { id: getRoomData.id, studentViewing: idStr },
       });
 
-      setLocalStorageData('room_info', {...getRoomData, studentViewing: idStr});
+      setLocalStorageData("room_info", {
+        ...getRoomData,
+        studentViewing: idStr,
+      });
       clearNotification();
-      setNotification({show: true, timeout: 2000, title: 'Viewing student screen'});
-      await handleRoomUpdate({id: getRoomData.id, studentViewing: idStr});
+      setNotification({
+        show: true,
+        timeout: 2000,
+        title: "Viewing student screen",
+      });
+      await handleRoomUpdate?.({ id: getRoomData.id, studentViewing: idStr });
     }
   };
 
-  const [removing, setRemoving] = useState(null);
+  const [removing, setRemoving] = useState<string | null>(null);
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
       setRemoving(inputAuthId);
 
-      let updateStudentStatus = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updatePerson, {
           input: {
             email: inputEmail,
@@ -399,17 +431,17 @@ const ClassRoster = ({
             status: PersonStatus.INACTIVE,
             pageState: UserPageState.LESSON,
             lastPageStateUpdate: new Date().toISOString(),
-            inactiveStatusDate: getDate()
-          }
+            inactiveStatusDate: getDate(),
+          },
         })
       );
 
-      let deleteLocation = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.deletePersonLocation, {
           input: {
             personEmail: inputEmail,
-            personAuthID: inputAuthId
-          }
+            personAuthID: inputAuthId,
+          },
         })
       );
 
@@ -420,11 +452,13 @@ const ClassRoster = ({
       setPersonLocationStudents(personLocationStudentsDeleted);
       setRemoving(null);
       controlDispatch({
-        type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: personLocationStudentsDeleted.filter(filterRemovedStudents)}
+        type: "UPDATE_ACTIVE_ROSTER",
+        payload: {
+          students: personLocationStudentsDeleted.filter(filterRemovedStudents),
+        },
       });
     } catch (e) {
-      console.error('error deleting location record - ', e);
+      console.error("error deleting location record - ", e);
     }
   };
 
@@ -434,7 +468,7 @@ const ClassRoster = ({
       setNotification({
         show: true,
         timeout: 2000,
-        title: 'Student screen sharing and viewing cancelled'
+        title: "Student screen sharing and viewing cancelled",
       });
       resetViewAndShare();
     }
@@ -445,42 +479,54 @@ const ClassRoster = ({
   // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
 
   const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
-    if (lessonState?.lessonData?.type !== 'survey') {
+    if (lessonState?.lessonData?.type !== "survey") {
       if (sharedStudent === idStr) {
         clearNotification();
         setNotification({
           show: true,
           timeout: 2000,
-          title: 'Student screen sharing cancelled'
+          title: "Student screen sharing cancelled",
         });
         await resetShare();
       } else {
         lessonDispatch({
-          type: 'SET_ROOM_SUBSCRIPTION_DATA',
+          type: "SET_ROOM_SUBSCRIPTION_DATA",
           payload: {
             id: getRoomData.id,
             displayData: [
-              {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}
-            ]
-          }
+              {
+                isTeacher: false,
+                studentAuthID: idStr,
+                lessonPageID: pageIdStr,
+              },
+            ],
+          },
         });
-        setLocalStorageData('room_info', {
+        setLocalStorageData("room_info", {
           ...getRoomData,
-          displayData: [{isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}]
+          displayData: [
+            { isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr },
+          ],
         });
 
         clearNotification();
-        setNotification({show: true, timeout: 2000, title: 'Sharing student screen'});
+        setNotification({
+          show: true,
+          timeout: 2000,
+          title: "Sharing student screen",
+        });
 
-        await handleRoomUpdate({
+        await handleRoomUpdate?.({
           id: getRoomData.id,
-          displayData: [{isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}]
+          displayData: [
+            { isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr },
+          ],
         });
       }
     } else {
       console.log(
-        'handleShareStudentData - ',
-        'Not sharing because lesson type is survey'
+        "handleShareStudentData - ",
+        "Not sharing because lesson type is survey"
       );
     }
   };
@@ -497,11 +543,14 @@ const ClassRoster = ({
   // ############################### OTHER ############################### //
   // ##################################################################### //
 
-  const handleToggleRightView = (rightViewObj: {view: string; option: string}) => {
+  const handleToggleRightView = (rightViewObj: {
+    view: string;
+    option: string;
+  }) => {
     let toggleValue =
-      rightView.view === rightViewObj.view
-        ? {...rightViewObj, view: 'lesson'}
-        : {...rightViewObj, view: rightViewObj.view};
+      rightView?.view === rightViewObj.view
+        ? { ...rightViewObj, view: "lesson" }
+        : { ...rightViewObj, view: rightViewObj.view };
     setRightView(toggleValue);
   };
 
@@ -513,7 +562,9 @@ const ClassRoster = ({
 
   return (
     <>
-      <div className={`w-full h-full   overflow-y-auto overflow-x-hidden pb-48`}>
+      <div
+        className={`w-full h-full   overflow-y-auto overflow-x-hidden pb-48`}
+      >
         {/* */}
         <div className="px-4">
           <div className="text-sm w-full pt-2 font-semibold text-gray-600 border-b-0 border-gray-600 pb-1">
@@ -542,9 +593,11 @@ const ClassRoster = ({
           sharedStudent={sharedStudent}
           handlePageChange={handlePageChange}
           sectionTitle={
-            lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']
+            lessonPlannerDict[userLanguage]["OTHER_LABELS"]["STUDENT_SECTION"][
+              "IN_CLASS"
+            ]
           }
-          emptyMessage={'No students are in class'}
+          emptyMessage={"No students are in class"}
         />
         {/* STUDENTS - NOT IN CLASS */}
         <RosterSection
@@ -561,11 +614,11 @@ const ClassRoster = ({
           sharedStudent={sharedStudent}
           handlePageChange={handlePageChange}
           sectionTitle={
-            lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
-              'NOT_IN_CLASS'
+            lessonPlannerDict[userLanguage]["OTHER_LABELS"]["STUDENT_SECTION"][
+              "NOT_IN_CLASS"
             ]
           }
-          emptyMessage={'...'}
+          emptyMessage={"..."}
         />
 
         {/* STUDENTS - ON DEMAND*/}

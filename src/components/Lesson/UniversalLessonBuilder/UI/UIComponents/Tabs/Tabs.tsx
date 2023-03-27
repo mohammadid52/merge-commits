@@ -5,9 +5,10 @@ const _tabs = [
   {name: 'Component Details', current: true},
   {name: 'Preview', current: false}
 ];
-interface ITab {
+export interface ITab {
   name: string;
   current: boolean;
+  disabled?: boolean;
 }
 
 export const useTabs = (tabs: ITab[] = _tabs) => {
@@ -41,14 +42,14 @@ export const Tabs2 = ({
           id="tabs"
           name="tabs"
           className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:iconoclast:border-500 focus:curate:border-500 sm:text-sm rounded-md"
-          defaultValue={tabs.find((tab) => tab.current).name}>
+          defaultValue={tabs.find((tab) => tab.current)?.name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}
         </select>
       </div>
       <div className="hidden sm:block">
-        <div className="border-b-0 border-gray-200">
+        <div className="border-b-2 border-gray-200">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
               <button
@@ -60,9 +61,9 @@ export const Tabs2 = ({
                   tabs.length >= 4 ? 'text-xs' : 'text-sm',
 
                   tab.name === curTab
-                    ? 'iconoclast:border-600 curate:border-600'
+                    ? 'theme-border:600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                  'whitespace-nowrap py-4 px-1 w-auto border-b-2 font-medium'
+                  'whitespace-nowrap cursor-pointer py-4 px-1 w-auto border-b-2 font-medium'
                 )}
                 aria-current={tab.current ? 'page' : undefined}>
                 {tab.name}
@@ -100,7 +101,7 @@ const Tabs = ({
           id="tabs"
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-          defaultValue={tabs.find((tab) => tab.current).name}>
+          defaultValue={tabs.find((tab) => tab?.current)?.name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}
@@ -164,7 +165,7 @@ export const Tabs3 = ({
           id="tabs"
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-0 border-gray-300 rounded-md"
-          defaultValue={tabs.find((tab) => tab.current).name}>
+          defaultValue={tabs?.find((tab) => tab?.current)?.name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}

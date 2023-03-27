@@ -1,7 +1,7 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
 import Buttons from 'atoms/Buttons';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import RichTextEditor from 'atoms/RichTextEditor';
+import {API, graphqlOperation} from 'aws-amplify';
 import Media from 'components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
@@ -10,10 +10,10 @@ import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import * as queries from 'graphql/queries';
 import {ICommunityCardProps, ISpotlightInput} from 'interfaces/Community.interfaces';
+import isEmpty from 'lodash/isEmpty';
+import {useEffect, useState} from 'react';
 import {getImageFromS3Static} from 'utilities/services';
 import {getFilterORArray} from 'utilities/strings';
-import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
 
 const Spotlight = ({
   instId,
@@ -22,13 +22,13 @@ const Spotlight = ({
   editMode,
   cardDetails
 }: ICommunityCardProps) => {
-  const [teachersList, setTeachersList] = useState([]);
+  const [teachersList, setTeachersList] = useState<any[]>([]);
   const [loadingTeachers, setLoadingTeachers] = useState(false);
   const [file, setFile] = useState<IFile>();
-  const [studentsList, setStudentsList] = useState([]);
+  const [studentsList, setStudentsList] = useState<any[]>([]);
   const [loadingStudents, setLoadingStudents] = useState(false);
 
-  const [tempData, setTempData] = useState(null);
+  const [tempData, setTempData] = useState<any>(null);
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
@@ -46,7 +46,7 @@ const Spotlight = ({
         setSelectedPerson(teacher);
       }
 
-      if (cardDetails?.additionalLinks?.length > 1) {
+      if (cardDetails?.additionalLinks && cardDetails?.additionalLinks?.length > 1) {
         setYoutubeVideoLink(cardDetails.additionalLinks[1]);
       }
 
@@ -56,8 +56,9 @@ const Spotlight = ({
 
       if (
         !cardDetails.cardImageLink &&
+        additionalLinks &&
         additionalLinks?.length > 0 &&
-        additionalLinks[0]
+        additionalLinks?.[0]
       ) {
         setYoutubeVideoLink(additionalLinks[0]);
       }
@@ -74,10 +75,13 @@ const Spotlight = ({
     }
   }, [editMode, cardDetails, teachersList]);
 
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
+  const [_, setUnsavedChanges] = useState(false);
+  const [fields, setFields] = useState<{
+    summary: string;
+    summaryHtml: string;
+  }>({
     summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || '' : ''
   });
 
   const onEditorStateChange = (
@@ -100,7 +104,11 @@ const Spotlight = ({
   };
   const [roomData, setRoomData] = useState(initialData);
 
-  const [selectedPerson, setSelectedPerson] = useState({id: '', name: '', value: ''});
+  const [selectedPerson, setSelectedPerson] = useState({
+    id: '',
+    name: '',
+    value: ''
+  });
 
   const selectPerson = (val: string, name: string, id: string) => {
     setSelectedPerson({id: id, name: name, value: val});
@@ -177,10 +185,12 @@ const Spotlight = ({
   };
 
   const fetchOtherList = async () => {
-    const items: any = await getInstituteInfo(instId);
-    const serviceProviders = items.map((item: any) => item.providerID);
-    const allInstiId = [...serviceProviders, instId];
-    getTeachersList(allInstiId);
+    if (instId) {
+      const items: any = await getInstituteInfo(instId);
+      const serviceProviders = items.map((item: any) => item.providerID);
+      const allInstiId = [...serviceProviders, instId];
+      getTeachersList(allInstiId);
+    }
   };
 
   useEffect(() => {
@@ -198,8 +208,7 @@ const Spotlight = ({
       );
       const listStaffs = list.data.listStaff.items;
 
-      if (listStaffs?.length === 0) {
-      } else {
+      if (listStaffs?.length > 0) {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() >
           b.staffMember?.firstName?.toLowerCase()
@@ -267,7 +276,6 @@ const Spotlight = ({
       isValid = false;
     } else {
       setError('');
-      isValid = true;
     }
     return isValid;
   };
@@ -295,7 +303,7 @@ const Spotlight = ({
       if (youtubeVideoLink) {
         spotlightDetails = {
           ...spotlightDetails,
-          cardImageLink: null,
+          cardImageLink: '',
           additionalLinks: [youtubeVideoLink, selectedPerson.id]
         };
       }
@@ -333,6 +341,7 @@ const Spotlight = ({
       </div>
       {tempData && tempData?.image ? (
         <div>
+          {/* @ts-ignore */}
           <Media
             initialImage={getImageFromS3Static(
               COMMUNITY_UPLOAD_KEY +
@@ -344,11 +353,12 @@ const Spotlight = ({
           />
         </div>
       ) : (
+        // @ts-ignore
         <Media
           initialImage={
             !isEmpty(file) && file?._status === 'success'
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
-              : null
+              : 'null'
           }
           {...mediaProps}
         />
@@ -378,15 +388,9 @@ const Spotlight = ({
       </AnimatedContainer>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             dataCy="save-spotlight-button"
             label={'Save'}
             loading={isLoading}

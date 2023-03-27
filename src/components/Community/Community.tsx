@@ -1,9 +1,6 @@
 import BreadCrums from 'atoms/BreadCrums';
-import ContentCard from 'atoms/ContentCard';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import Card from 'components/Community/Card';
 import CardsModal from 'components/Community/CardsModal';
 import {
   CardType,
@@ -12,7 +9,6 @@ import {
 } from 'components/Community/constants.community';
 import DashboardContainer from 'components/Dashboard/DashboardContainer';
 import HeroBanner from 'components/Header/HeroBanner';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
@@ -34,18 +30,49 @@ import {
   IEventInput,
   ISpotlightInput
 } from 'interfaces/Community.interfaces';
-import {findIndex, isEmpty} from 'lodash';
+import {findIndex} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
-import React, {useEffect, useState} from 'react';
-import {BsCardHeading} from 'react-icons/bs';
+import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
+import CommonList from 'components/Community/CommanList';
+import PageWrapper from '@components/Atoms/PageWrapper';
 
-const Community = ({}: {role: string}) => {
+const TitleBar = ({
+  selectedFilterType,
+  filterList,
+  changeFilter
+}: {
+  selectedFilterType: any;
+  filterList: any;
+  changeFilter: any;
+}) => (
+  <SectionTitleV3
+    title={'Community'}
+    fontSize="xl"
+    fontStyle="semibold"
+    extraClass="leading-6 text-gray-900"
+    borderBottom
+    shadowOff
+    withButton={
+      <div className="w-auto">
+        <Selector
+          width={250}
+          selectedItem={selectedFilterType.name}
+          list={filterList}
+          placeholder={'All '}
+          onChange={changeFilter}
+        />
+      </div>
+    }
+  />
+);
+
+const Community = () => {
   const {clientKey, userLanguage} = useGlobalContext();
 
   const {
@@ -78,13 +105,17 @@ const Community = ({}: {role: string}) => {
   const history = useHistory();
 
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
-  const {CommunityDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {CommunityDict, BreadcrumsTitles} = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['COMMUNTIY'],
-      url: `/dashboard/`,
+      href: `/dashboard/`,
       last: true
     }
   ];
@@ -103,7 +134,7 @@ const Community = ({}: {role: string}) => {
     {
       onSuccess: (data, cb) => {
         const orderedList = orderBy(data, ['createdAt'], 'desc');
-        cb(orderedList);
+        cb?.(orderedList);
       }
     }
   );
@@ -119,7 +150,7 @@ const Community = ({}: {role: string}) => {
   }, [isStudent]);
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
-  const [filteredList, setFilteredList] = useState([]);
+  const [filteredList, setFilteredList] = useState<any[]>([]);
 
   const onCancel = (): void => {
     setShowCardsModal(false);
@@ -128,7 +159,7 @@ const Community = ({}: {role: string}) => {
 
   const [isCardEditMode, setIsCardEditMode] = useState(false);
 
-  const [cardForEdit, setCardForEdit] = useState(null);
+  const [cardForEdit, setCardForEdit] = useState<any>(null);
 
   const onCardEdit = (cardDetails: ICommunityCard) => {
     // @ts-ignore
@@ -162,7 +193,7 @@ const Community = ({}: {role: string}) => {
       if (data) {
         // @ts-ignore
         list.unshift({...data});
-        setList([...list]);
+        setList?.([...list]);
       }
     }
   });
@@ -173,7 +204,7 @@ const Community = ({}: {role: string}) => {
       const cardIdx = findIndex(list, (item: ICommunityCard) => item.id === data.id);
 
       listCopy[cardIdx] = data;
-      setList(listCopy);
+      setList?.(listCopy);
     }
   });
 
@@ -297,17 +328,6 @@ const Community = ({}: {role: string}) => {
     }
   };
 
-  const FAB = () => {
-    return (
-      <div
-        data-cy="open-builder-button"
-        onClick={() => setShowCardsModal(true)}
-        className="fixed z-100 bottom-8 md:bottom-5 cursor-pointer flex items-center justify-center right-2 md:right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
-        <BsCardHeading className="text-white text-lg" />
-      </div>
-    );
-  };
-
   const deleteImage = async (fileKey: string) => {
     deleteImageFromS3(`${COMMUNITY_UPLOAD_KEY}${fileKey}`);
   };
@@ -315,73 +335,17 @@ const Community = ({}: {role: string}) => {
   const onDelete = async (cardId: string, fileKey?: string) => {
     try {
       remove(list, ['id', cardId]);
-      setList([...list]);
+      setList?.([...list]);
       if (fileKey) {
         await deleteImage(fileKey);
       }
-      const res: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
       );
     } catch (error) {
       logError(error, {authId: personAuthID, email: personEmail}, 'Community @onDelete');
       console.error(error);
-    } finally {
     }
-  };
-
-  const CommonList = () => {
-    let data =
-      isEmpty(selectedFilterType) || selectedFilterType.value === 'all'
-        ? list
-        : filteredList;
-    return (
-      <ErrorBoundary componentName="CommonList">
-        <ContentCard hasBackground={false} additionalClass=" space-y-12 p-6">
-          <div> {<FAB />}</div>
-
-          {/* Error--1213 */}
-          <AnimatedContainer show={Boolean(error)}>
-            {error && (
-              <div className="flex items-center justify-center">
-                <p className="text-red-500 text-xs">{error}</p>
-              </div>
-            )}
-          </AnimatedContainer>
-
-          {/* Other Cards here */}
-
-          {!Boolean(error) && isLoading && !isFetched && (
-            <div className="flex items-center justify-center">
-              <Loader animation withText="Loading cards..." className="w-auto" />
-            </div>
-          )}
-
-          {!Boolean(error) &&
-            !isLoading &&
-            isFetched &&
-            data &&
-            data.length > 0 &&
-            data.map((card: ICommunityCard, idx: number) => (
-              <Card
-                onCardEdit={onCardEdit}
-                onDelete={onDelete}
-                key={idx}
-                cardDetails={card}
-              />
-            ))}
-
-          <AnimatedContainer show={data.length === 0 && isFetched}>
-            {data.length === 0 && isFetched && (
-              <div className="flex items-center justify-center">
-                <p className="text-gray-500 text-sm">
-                  No community posts... Be the first to start the conversation
-                </p>
-              </div>
-            )}
-          </AnimatedContainer>
-        </ContentCard>
-      </ErrorBoundary>
-    );
   };
 
   const changeFilter = (val: string, name: string, id: string) => {
@@ -398,46 +362,27 @@ const Community = ({}: {role: string}) => {
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
 
   const filterList = [
-    {id: 1434, name: 'All', value: 'all'},
-    {id: 1, name: 'Spotlight', value: 'spotlight'},
-    {id: 2, name: 'Announcement', value: 'announcement'},
-    {id: 3, name: 'Event', value: 'event'},
-    {id: 4, name: 'Check It Out', value: 'check_it_out'}
+    {id: 1434, label: 'All', value: 'all'},
+    {id: 1, label: 'Spotlight', value: 'spotlight'},
+    {id: 2, label: 'Announcement', value: 'announcement'},
+    {id: 3, label: 'Event', value: 'event'},
+    {id: 4, label: 'Check It Out', value: 'check_it_out'}
   ];
-
-  const TitleBar = () => (
-    <SectionTitleV3
-      extraContainerClass="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
-      title={'Community'}
-      fontSize="xl"
-      fontStyle="semibold"
-      extraClass="leading-6 text-gray-900"
-      borderBottom
-      shadowOff
-      withButton={
-        <div className="w-auto">
-          <Selector
-            selectedItem={selectedFilterType.name}
-            list={filterList}
-            additionalClass="md:w-56"
-            placeholder={'All '}
-            onChange={changeFilter}
-          />
-        </div>
-      }
-    />
-  );
 
   if (isStudent) {
     return (
-      <div>
-        <div>
+      <div className="w-full">
+        <div className="w-full">
           <HeroBanner imgUrl={bannerImg} title={'Community'} />
         </div>
 
         <HeaderTextBar>Here is what is happening today</HeaderTextBar>
         <div className="px-10">
-          <TitleBar />
+          <TitleBar
+            selectedFilterType={selectedFilterType}
+            filterList={filterList}
+            changeFilter={changeFilter}
+          />
           <CardsModal
             navState={navState}
             editMode={isCardEditMode}
@@ -450,7 +395,17 @@ const Community = ({}: {role: string}) => {
             setShowCardsModal={setShowCardsModal}
           />
 
-          <CommonList />
+          <CommonList
+            selectedFilterType={selectedFilterType}
+            filteredList={filteredList}
+            list={list}
+            onDelete={onDelete}
+            onCardEdit={onCardEdit}
+            error={error}
+            isFetched={isFetched}
+            isLoading={isLoading}
+            setShowCardsModal={setShowCardsModal}
+          />
         </div>
       </div>
     );
@@ -479,17 +434,32 @@ const Community = ({}: {role: string}) => {
           setShowCardsModal={setShowCardsModal}
         />
         {/* ~~~~~~~~~~~~~CARDS MODAL ENDS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
-          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <BreadCrums items={breadCrumsList} />
+        <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
+          <BreadCrums items={breadCrumsList} />
+        </div>
+        <PageWrapper>
+          <div className={`p-4 pt-0`}>
+            <TitleBar
+              selectedFilterType={selectedFilterType}
+              filterList={filterList}
+              changeFilter={changeFilter}
+            />
+
+            <div className="">
+              <CommonList
+                selectedFilterType={selectedFilterType}
+                filteredList={filteredList}
+                list={list}
+                onDelete={onDelete}
+                onCardEdit={onCardEdit}
+                error={error}
+                isFetched={isFetched}
+                isLoading={isLoading}
+                setShowCardsModal={setShowCardsModal}
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="px-10">
-          <TitleBar />
-
-          <CommonList />
-        </div>
+        </PageWrapper>
       </DashboardContainer>
     </ErrorBoundary>
   );

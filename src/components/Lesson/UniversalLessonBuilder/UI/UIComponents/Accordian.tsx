@@ -1,6 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
-import Buttons from 'atoms/Buttons';
-import Tooltip from 'atoms/Tooltip';
+import Buttons from "atoms/Buttons";
+import React, { useEffect, useRef, useState } from "react";
 
 interface AccordionProps {
   title: React.ReactNode;
@@ -15,19 +14,19 @@ interface AccordionProps {
 
 export const Accordion: React.FC<AccordionProps> = ({
   title,
-  onResponseSelect,
+  onResponseSelect = () => {},
   content,
-  overrideBool
+  overrideBool,
 }) => {
   const [active, setActive] = useState(false);
-  const [height, setHeight] = useState('0px');
+  const [height, setHeight] = useState("0px");
 
-  const contentSpace = useRef(null);
+  const contentSpace = useRef<any>(null);
 
   function toggleAccordion() {
     setActive(active === false ? true : false);
 
-    setHeight(active ? '0px' : `${contentSpace.current.scrollHeight}px`);
+    setHeight(active ? "0px" : `${contentSpace?.current?.scrollHeight || 0}px`);
   }
   useEffect(() => {
     if (overrideBool) {
@@ -37,7 +36,9 @@ export const Accordion: React.FC<AccordionProps> = ({
       // collapse false
       setActive(true);
     }
-    setHeight(overrideBool ? '0px' : `${contentSpace.current.scrollHeight}px`);
+    setHeight(
+      overrideBool ? "0px" : `${contentSpace?.current?.scrollHeight || 0}px`
+    );
   }, [overrideBool]);
 
   return (
@@ -45,15 +46,17 @@ export const Accordion: React.FC<AccordionProps> = ({
       {/* <Tooltip text={`Click me to see options`} placement={'bottom'}> */}
       <div
         className="py-6 box-border px-4 appearance-none hover:bg-gray-200 cursor-pointer focus:outline-none flex items-center justify-between"
-        onClick={toggleAccordion}>
+        onClick={toggleAccordion}
+      >
         <p className="inline-block text-lg w-auto font-medium ">{title}</p>
-        <Buttons label="Add this" onClick={() => onResponseSelect(content)} />
+        <Buttons label="Add this" onClick={() => onResponseSelect?.(content)} />
       </div>
       {/* </Tooltip> */}
       <div
         ref={contentSpace}
-        style={{maxHeight: `${height}`}}
-        className="overflow-auto transition-all duration-300 ease-in-out mt-4">
+        style={{ maxHeight: `${height}` }}
+        className="overflow-auto transition-all duration-300 ease-in-out mt-4"
+      >
         <ul className="pb-5 list-disc px-8">
           {content.map((item) => (
             <li className="" key={item.id}>

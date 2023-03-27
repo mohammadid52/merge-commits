@@ -1,10 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {BiNotepad} from 'react-icons/bi';
 import {FiUserCheck} from 'react-icons/fi';
 import {HiPencil} from 'react-icons/hi';
 import {MdSpeakerNotes} from 'react-icons/md';
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router';
+import {useHistory, useLocation, useParams} from 'react-router';
 
 import * as customQueries from 'customGraphql/customQueries';
 
@@ -20,7 +20,7 @@ import UnderlinedTabs from 'atoms/UnderlinedTabs';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {RoomStatus} from 'API';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import EditCurricular from '../EditCurricular';
 import CheckpointList from './TabsListing/CheckpointList';
@@ -37,7 +37,7 @@ interface InitialData {
   status: RoomStatus;
   summary: string;
   objectives: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {label: string; value: string}[];
   institute: {
     id: string;
     name: string;
@@ -53,18 +53,15 @@ interface InitialData {
 const CurricularView = (props: CurricularViewProps) => {
   const {tabProps} = props;
 
-  const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
-  const pathName = location.pathname.replace(/\/$/, '');
-  const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
 
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
   const urlParams: any = useParams();
-  const currID = params.get('id');
+  const currID = params.get('id') || '';
   const institutionId = urlParams.institutionId;
   const initialData = {
     id: '',
@@ -80,7 +77,7 @@ const CurricularView = (props: CurricularViewProps) => {
     syllabusSequence: [] as any,
     description: '',
     summary: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{label: 'English', value: 'EN'}],
     objectives: '',
     type: '',
     designers: [] as any
@@ -88,35 +85,37 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const [curricularModal, setCurricularModal] = useState(false);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
-  const [designersId, setDesignersID] = useState([]);
-  const [personsDataList, setPersonsDataList] = useState([]);
+  const [designersId, setDesignersID] = useState<any[]>([]);
+  const [personsDataList, setPersonsDataList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+  const {clientKey, userLanguage, theme} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {curricularviewdict, BreadcrumsTitles, EditCurriculardict} = useDictionary(
-    clientKey
-  );
+  const {curricularviewdict, BreadcrumsTitles, EditCurriculardict} = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
+      href: '/dashboard/manage-institutions',
       last: false
     },
     {
       title: curricularData.institute?.name,
-      url: `/dashboard/manage-institutions/institution/${institutionId}`,
+      href: `/dashboard/manage-institutions/institution/${institutionId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUM'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}/course`,
+      href: `/dashboard/manage-institutions/institution/${institutionId}/course`,
       last: false
     },
     {
       title: curricularData?.name,
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
         'id'
       )}`,
       last: true
@@ -279,28 +278,6 @@ const CurricularView = (props: CurricularViewProps) => {
           title={curricularviewdict[userLanguage]['TITLE']}
           subtitle={curricularviewdict[userLanguage]['SUBTITLE']}
         />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go Back"
-            btnClass="mr-4"
-            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
-            Icon={IoArrowUndoCircleOutline}
-          />
-          {currentPath !== 'edit' ? (
-            <Buttons
-              btnClass="mr-4 px-6"
-              label="Edit"
-              onClick={() =>
-                history.push(
-                  `/dashboard/manage-institutions/${institutionId}/curricular/edit?id=${params.get(
-                    'id'
-                  )}`
-                )
-              }
-              Icon={FaEdit}
-            />
-          ) : null}
-        </div> */}
       </div>
 
       {/* Body section */}
@@ -321,20 +298,6 @@ const CurricularView = (props: CurricularViewProps) => {
                     </span>
                   </Tooltip>
                 </h3>
-                {/* {currentPath !== 'edit' ? (
-                  <Buttons
-                    btnClass="px-6 py-1"
-                    label="Edit"
-                    onClick={() =>
-                      history.push(
-                        `/dashboard/manage-institutions/${institutionId}/curricular/edit?id=${params.get(
-                          'id'
-                        )}`
-                      )
-                    }
-                    Icon={FaEdit}
-                  />
-                ) : null} */}
               </div>
 
               <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
@@ -380,7 +343,7 @@ const CurricularView = (props: CurricularViewProps) => {
                       {languages && languages.length > 0
                         ? languages.map(
                             (item, index) =>
-                              item.name +
+                              item.label +
                               `${languages.length - 1 === index ? '.' : ',' + ' '}`
                           )
                         : '--'}
@@ -409,20 +372,20 @@ const CurricularView = (props: CurricularViewProps) => {
           </div>
         </div>
       </PageWrapper>
-      {curricularModal && (
-        <Modal
-          showHeader={true}
-          title={EditCurriculardict[userLanguage]['TITLE']}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={closeCurricularModal}>
-          <EditCurricular
-            curricularDetails={curricularData}
-            postUpdateDetails={postUpdateDetails}
-            closeAction={closeCurricularModal}
-          />
-        </Modal>
-      )}
+
+      <Modal
+        open={curricularModal}
+        showHeader={true}
+        title={EditCurriculardict[userLanguage]['TITLE']}
+        showHeaderBorder={true}
+        showFooter={false}
+        closeAction={closeCurricularModal}>
+        <EditCurricular
+          curricularDetails={curricularData}
+          postUpdateDetails={postUpdateDetails}
+          closeAction={closeCurricularModal}
+        />
+      </Modal>
     </div>
   );
 };

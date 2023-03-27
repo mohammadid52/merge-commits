@@ -1,6 +1,6 @@
-import React, {useContext, useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 
@@ -12,10 +12,10 @@ interface KeywordBlockProps extends RowWrapperProps {
 
 const KeywordBlock = (props: KeywordBlockProps) => {
   const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+    state: {lessonPage: {themeTextColor = ''} = {}}
+  } = useGlobalContext();
   const {id, value} = props;
-  const keywords: any = [];
+
   const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
 
   useEffect(() => {
@@ -41,28 +41,31 @@ const KeywordBlock = (props: KeywordBlockProps) => {
 
   return (
     <div id={id} className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}>
-      <div className={`flex flex-row p-2 pt-4`}>
+      <div className={`flex flex-row gap-4 pt-4`}>
         {mappedKeywords.length > 0 &&
           mappedKeywords.map((row: any[], i0: number) => (
-            <div key={`cardKWP_${i0}`} className={`flex flex-col mx-2`}>
+            <div key={`cardKWP_${i0}`} className={`flex flex-col`}>
               {row.length > 0 &&
                 row.map(
                   (
-                    word: {id: string; type: string; label: string; value: string},
+                    word: {
+                      id: string;
+                      type: string;
+                      label: string;
+                      value: string;
+                    },
                     idx: number
                   ) => (
                     <div
                       key={`cardKW_${idx}`}
-                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg ${
-                        lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
-                      } border-light-gray`}>
+                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden rounded-lg bg-darker-blue`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
-                        <p
+                        <h5
                           dangerouslySetInnerHTML={{__html: word.label}}
-                          className={`text-lg font-semibold ${themeTextColor}`}></p>
+                          className={`text-lg font-medium ${themeTextColor}`}></h5>
                         <p
                           dangerouslySetInnerHTML={{__html: word.value}}
-                          className={`text-sm ${themeTextColor}`}></p>
+                          className={`text-sm leading-5 text-gray-100`}></p>
                       </div>
                     </div>
                   )

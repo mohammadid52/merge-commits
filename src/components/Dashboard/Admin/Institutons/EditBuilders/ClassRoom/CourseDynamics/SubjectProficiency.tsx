@@ -1,17 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
 import AddButton from 'atoms/Buttons/AddButton';
 import Loader from 'atoms/Loader';
 
+import {useGlobalContext} from 'contexts/GlobalContext';
+import ModalPopUp from 'molecules/ModalPopUp';
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
-import ModalPopUp from 'molecules/ModalPopUp';
-import {GlobalContext} from 'contexts/GlobalContext';
 
 interface ISubjectProficiencyProps {
   roomData: any;
@@ -22,7 +22,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
 
   const {
     state: {user}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const isSuperAdmin = user.role === 'SUP';
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -180,15 +180,15 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
         postMutation={postMutation}
         roomData={roomData}
       />
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeDeleteModal}
-          saveAction={warnModal.action}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={deleting}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeDeleteModal}
+        saveAction={warnModal.action}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={deleting}
+      />
     </div>
   );
 };

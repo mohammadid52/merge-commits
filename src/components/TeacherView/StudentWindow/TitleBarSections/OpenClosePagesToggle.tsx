@@ -1,12 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaCompress, FaExpand} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
+import { StudentWindowTitleBarProps } from "../StudentWindowTitleBar";
 
 interface IOpenClosePagesToggle extends StudentWindowTitleBarProps {
   currentPage?: number;
@@ -16,12 +8,10 @@ interface IOpenClosePagesToggle extends StudentWindowTitleBarProps {
 }
 
 const OpenClosePagesToggle = ({
-  theme,
-  themeColor,
-  currentPage,
+  currentPage = 0,
   activePageData,
   handleOpenComponent,
-  handleCloseComponent
+  handleCloseComponent,
 }: IOpenClosePagesToggle) => {
   return (
     <div className="w-1/3 flex justify-start h-8 align-middle leading-8 ">
@@ -34,15 +24,18 @@ const OpenClosePagesToggle = ({
        * and when you're NOT currently viewing a studento
        *
        */}
-      {currentPage !== 0 && activePageData && activePageData.disabled !== true ? (
+      {currentPage !== 0 &&
+      activePageData &&
+      activePageData?.disabled !== true ? (
         <span
-          className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
+          className={`mr-2 theme-text w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
           onClick={() =>
-            activePageData.open
-              ? handleCloseComponent(currentPage)
-              : handleOpenComponent(currentPage)
-          }>
-          {activePageData.open ? 'Close' : 'Open'} Component
+            activePageData?.open
+              ? handleCloseComponent?.(currentPage)
+              : handleOpenComponent?.(currentPage)
+          }
+        >
+          {activePageData?.open ? "Close" : "Open"} Component
         </span>
       ) : null}
     </div>

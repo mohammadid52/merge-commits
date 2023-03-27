@@ -13,10 +13,7 @@ export const VideoBlock = (props: VideoBlockProps) => {
   const {value: url, height = '560', width = '315'} = props.value[0];
 
   return (
-    <div
-      id={id}
-      data-id={dataIdAttribute}
-      className={`bg-component-dark border-0 border-gray-700 px-4 py-5 rounded-2xl flex justify-center`}>
+    <div id={id} data-id={dataIdAttribute} className={``}>
       {url && <ReactPlayer url={url} width={`${width}px`} height={`${height}px`} />}
     </div>
   );

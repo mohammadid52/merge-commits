@@ -1,5 +1,5 @@
-import React, {useContext, useState} from 'react';
-import {useEffect} from 'react';
+import Spinner from '@components/Atoms/Spinner';
+import React, {useEffect, useState} from 'react';
 
 interface IEmptyViewWrapper {
   children?: React.ReactNode;
@@ -11,10 +11,10 @@ interface IEmptyViewWrapper {
 
 const EmptyViewWrapper = ({
   children,
-  fallbackContents,
+  fallbackContents = <Spinner />,
   revealContents,
   timedRevealInt,
-  wrapperClass,
+  wrapperClass
 }: IEmptyViewWrapper) => {
   const [timeToReveal, setTimeToReveal] = useState<boolean>(false);
 

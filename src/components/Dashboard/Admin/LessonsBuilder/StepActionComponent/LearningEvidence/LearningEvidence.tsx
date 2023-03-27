@@ -46,16 +46,11 @@ const LearningEvidence = ({
   updateMeasurementList
 }: ILearningEvidence) => {
   const {userLanguage} = useGlobalContext();
-  const {
-    AddNewLessonFormDict,
-    LearningEvidenceDict,
-    AddMeasurementDict,
-    AddTopicDict
-  } = useDictionary();
+  const {AddNewLessonFormDict, LearningEvidenceDict, AddMeasurementDict, AddTopicDict} =
+    useDictionary();
   const [addModalShow, setAddModalShow] = useState(false);
-  const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
+  const [selectedCurriculumList, setSelectedCurriculumList] = useState<any[]>([]);
 
-  // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -74,9 +69,6 @@ const LearningEvidence = ({
       topicId: rubricData.topicID,
       objectiveId
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
-    // );
   };
 
   const createLearningObjective = () => {
@@ -99,13 +91,6 @@ const LearningEvidence = ({
   const editLearningObj = (learningData: any) => {
     setIsFormOpen(true);
     setSelectedObjectiveData(learningData);
-  };
-
-  const createNewTopic = (learningObjectiveID: string) => {
-    setTopicModal(true);
-    setSelectedTopicData({
-      learningObjectiveID
-    });
   };
 
   const editCurrentTopic = (
@@ -133,17 +118,9 @@ const LearningEvidence = ({
     fetchLessonRubrics();
   }, []);
 
-  // useEffect(() => {
-  //   // setSelectedMeasurements(rubrics);
-  // }, [rubrics]);
-
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
-    // const activeIndex = selectedCurriculumList.findIndex(
-    //   (item) => item.id === curricularId
-    // );
-    // const temp = [...selectedCurriculumList];
-    // if (!temp[activeIndex].learningEvidenceList) {
+
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
       graphqlOperation(customQueries.listRubrics, {
@@ -154,7 +131,7 @@ const LearningEvidence = ({
     );
     rubricList = rubricList.data.listRubrics?.items || [];
 
-    const [results, learningObjectiveSeqResult, topics]: any = await Promise.all([
+    const [results, _, topics]: any = await Promise.all([
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
           filter: {
@@ -178,8 +155,6 @@ const LearningEvidence = ({
 
     const learningObjectives = results.data?.listLearningObjectives?.items;
 
-    const learningObjectiveSeq =
-      learningObjectiveSeqResult?.data?.getCSequences?.sequence || [];
     setLearnings(learningObjectives);
     const learningObjectiveData = learningObjectives?.map((objective: any) => {
       const associatedTopics = topicsList
@@ -203,11 +178,12 @@ const LearningEvidence = ({
       return objective;
     });
     setEvidenceListLoading(false);
+    const sortInner = (a: any, b: any) =>
+      a.measurementName.toLowerCase() > b.measurementName.toLowerCase() ? 1 : -1;
+    const sorted = learningEvidenceList.sort(sortInner);
     return {
       learningObjectiveData,
-      learningEvidenceList: learningEvidenceList.sort((a: any, b: any) =>
-        a.measurementName.toLowerCase() > b.measurementName.toLowerCase() ? 1 : -1
-      )
+      learningEvidenceList: sorted
     };
   };
 
@@ -269,10 +245,6 @@ const LearningEvidence = ({
     updateMeasurementList(rubrics);
   };
 
-  // const onSubmit = () => {
-  //   updateMeasurementList(selectedMeasurements);
-  // };
-
   const postLearningObjectiveChange = (data: any) => {
     setSelectedCurriculumList((prevList) =>
       prevList.map((item) =>
@@ -311,7 +283,7 @@ const LearningEvidence = ({
     uniqueId: curriculum.id
   }));
 
-  const [learnings, setLearnings] = useState([]);
+  const [learnings, setLearnings] = useState<any[]>([]);
 
   const postMeasurementChange = (data: any) => {
     const {objectiveId, topicId} = selectedRubricData;
@@ -375,12 +347,7 @@ const LearningEvidence = ({
   };
 
   const postTopicChange = (data: any) => {
-    const {
-      learningObjectiveID,
-      curIdx = -1,
-      objectiveIdx = -1,
-      topicIdx = -1
-    } = selectedTopicData;
+    const {curIdx = -1, objectiveIdx = -1, topicIdx = -1} = selectedTopicData;
     let temp: any[] = [...selectedCurriculumList];
 
     if (curIdx === -1) return;
@@ -421,11 +388,8 @@ const LearningEvidence = ({
               Boolean(learnings?.length) && (
                 <Buttons
                   disabled={loading}
-                  btnClass=""
                   label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
-                  labelClass={'leading-6'}
                   Icon={IoIosAdd}
-                  iconBeforeLabel
                   onClick={createLearningObjective}
                 />
               )
@@ -477,69 +441,68 @@ const LearningEvidence = ({
             </div>
           )}
         </PageWrapper>
-        {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Evidence'}
-            closeOnBackdrop
-            closeAction={() => setAddModalShow(false)}>
-            <div className="min-w-256">
-              <AddEvidence />
-            </div>
-          </Modal>
-        )}
-        {isFormOpen && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Learning Objective'}
-            closeOnBackdrop
-            closeAction={handleCancel}>
-            <div className="min-w-120">
-              <AddLearningObjective
-                curricularId={selectedObjectiveData.curricularId}
-                handleCancel={handleCancel}
-                learningObjectiveData={selectedObjectiveData}
-                postMutation={postLearningObjectiveChange}
-              />
-            </div>
-          </Modal>
-        )}
-        {openMeasurementModal && (
-          <Modal
-            showHeader={true}
-            title={AddMeasurementDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onMeasurementClose}>
-            <AddMeasurement
-              curricularId={selectedRubricData.curriculumID}
-              onCancel={onMeasurementClose}
-              postMutation={postMeasurementChange}
-              rubricData={selectedRubricData}
-              topicId={selectedRubricData.topicId}
-            />
-          </Modal>
-        )}
 
-        {openTopicModal && (
-          <Modal
-            showHeader={true}
-            title={AddTopicDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onTopicModalClose}>
-            <AddTopic
-              curricularId={selectedTopicData.curriculumID}
-              onCancel={onTopicModalClose}
-              postMutation={postTopicChange}
-              topicData={selectedTopicData}
+        <Modal
+          open={addModalShow}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Add Evidence'}
+          closeOnBackdrop
+          closeAction={() => setAddModalShow(false)}>
+          <div className="min-w-256">
+            <AddEvidence />
+          </div>
+        </Modal>
+
+        <Modal
+          open={isFormOpen}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Learning Objective'}
+          closeOnBackdrop
+          closeAction={handleCancel}>
+          <div className="min-w-120">
+            <AddLearningObjective
+              curricularId={selectedObjectiveData.curricularId}
+              handleCancel={handleCancel}
+              learningObjectiveData={selectedObjectiveData}
+              postMutation={postLearningObjectiveChange}
             />
-          </Modal>
-        )}
+          </div>
+        </Modal>
+
+        <Modal
+          open={openMeasurementModal}
+          showHeader={true}
+          title={AddMeasurementDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onMeasurementClose}>
+          <AddMeasurement
+            curricularId={selectedRubricData.curriculumID}
+            onCancel={onMeasurementClose}
+            postMutation={postMeasurementChange}
+            rubricData={selectedRubricData}
+            topicId={selectedRubricData.topicId}
+          />
+        </Modal>
+
+        <Modal
+          open={openTopicModal}
+          showHeader={true}
+          title={AddTopicDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onTopicModalClose}>
+          <AddTopic
+            curricularId={selectedTopicData.curriculumID}
+            onCancel={onTopicModalClose}
+            postMutation={postTopicChange}
+            topicData={selectedTopicData}
+          />
+        </Modal>
       </div>
     </div>
   );

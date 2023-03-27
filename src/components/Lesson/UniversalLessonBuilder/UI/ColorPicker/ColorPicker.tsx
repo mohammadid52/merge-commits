@@ -21,10 +21,32 @@ interface ColorObject {
   label: string | number;
 }
 
+const availableColors: ColorObject[] = [
+  {value: 'gray', label: 'Gray'},
+  {value: 'red', label: 'Red'},
+  {value: 'yellow', label: 'Yellow'},
+  {value: 'green', label: 'Green'},
+  {value: 'blue', label: 'Blue'},
+  {value: 'indigo', label: 'Indigo'},
+  {value: 'purple', label: 'Purple'},
+  {value: 'pink', label: 'Pink'}
+];
+const colorCodes: ColorObject[] = [
+  {value: 100, label: 100},
+  {value: 200, label: 200},
+  {value: 300, label: 300},
+  {value: 400, label: 400},
+  {value: 500, label: 500},
+  {value: 600, label: 600},
+  {value: 700, label: 700},
+  {value: 800, label: 800},
+  {value: 900, label: 900}
+];
+
 const ColorPicker = (props: ColorPickerProps) => {
   const {
     callbackColor,
-    classString,
+    classString = '',
     noneLabel,
     onNoneClick,
     isMainPage,
@@ -32,28 +54,6 @@ const ColorPicker = (props: ColorPickerProps) => {
     styleString,
     customColors = null
   } = props;
-
-  const availableColors: ColorObject[] = [
-    {value: 'gray', label: 'Gray'},
-    {value: 'red', label: 'Red'},
-    {value: 'yellow', label: 'Yellow'},
-    {value: 'green', label: 'Green'},
-    {value: 'blue', label: 'Blue'},
-    {value: 'indigo', label: 'Indigo'},
-    {value: 'purple', label: 'Purple'},
-    {value: 'pink', label: 'Pink'}
-  ];
-  const colorCodes: ColorObject[] = [
-    {value: 100, label: 100},
-    {value: 200, label: 200},
-    {value: 300, label: 300},
-    {value: 400, label: 400},
-    {value: 500, label: 500},
-    {value: 600, label: 600},
-    {value: 700, label: 700},
-    {value: 800, label: 800},
-    {value: 900, label: 900}
-  ];
 
   const dynamicColors = customColors ? customColors.colors : availableColors;
   const dynamicValues = customColors ? customColors.values : colorCodes;
@@ -114,14 +114,7 @@ const ColorPicker = (props: ColorPickerProps) => {
       <div className={`bg-white shadow-lg  my-3 rounded-lg p-6`}>
         <div className="flex items-center mb-2 justify-between">
           <p className={`text-gray-900 w-auto font-medium text-2xl`}>Select a color</p>
-          {noneLabel && (
-            <Buttons
-              onClick={onNoneClick}
-              btnClass="py-1 px-4 text-xs "
-              label={noneLabel}>
-              {noneLabel}
-            </Buttons>
-          )}
+          {noneLabel && <Buttons onClick={onNoneClick} label={noneLabel} />}
         </div>
         <div className={`my-4 ${customColors ? 'flex items-center' : ''}`}>
           {dynamicColors.length > 0 && dynamicValues.length > 0 ? colorGrid() : null}

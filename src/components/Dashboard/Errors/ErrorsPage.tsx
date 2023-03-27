@@ -1,12 +1,12 @@
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
-import Loader from '@components/Atoms/Loader';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {logError} from '@graphql/functions';
+import {Card, Divider, Popconfirm, Radio, Tooltip} from 'antd';
 import {
   ErrorLog,
   ErrorStatus,
@@ -14,26 +14,41 @@ import {
   UpdateErrorLogInput
 } from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as queries from 'graphql/queries';
-import * as mutations from 'graphql/mutations';
 import * as customMutations from 'customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {orderBy, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
-import {Redirect} from 'react-router';
+import {Redirect, useHistory} from 'react-router';
 
 const ErrorItem = ({
   error,
   updateStatus,
-  idx,
+
   setShowModal,
+
   setMultipleItemsToClose
 }: {
   setShowModal: React.Dispatch<
-    React.SetStateAction<{show: boolean; additional?: string; message: string}>
+    React.SetStateAction<{
+      show: boolean;
+      additional: string;
+      message: string;
+    }>
   >;
-  setMultipleItemsToClose: (id: string, callback: () => void) => void;
+  // multipleCloseModal: {
+  //   show: boolean;
+  //   message: string;
+  //   onClose: () => void;
+  //   onSave: () => void;
+  //   cancelAction: () => void;
+  // };
+  setMultipleItemsToClose: (
+    id: string,
+    callback: () => void,
+    callback2: (data: any[]) => void
+  ) => void;
   updateStatus: (id: string, status: ErrorStatus) => void;
   error: ErrorLog;
   idx: number;
@@ -57,7 +72,11 @@ const ErrorItem = ({
   const stackItem = {
     label: 'see stack details',
     action: () => {
-      setShowModal({show: true, message: outputError, additional: error.errorType});
+      setShowModal({
+        show: true,
+        message: outputError,
+        additional: error.errorType
+      });
     }
   };
 
@@ -66,7 +85,29 @@ const ErrorItem = ({
   const closedItem = {
     label: 'set to closed',
     action: () => {
-      setMultipleItemsToClose(error.id, () => updateStatus(error.id, ErrorStatus.CLOSED));
+      setMultipleItemsToClose(
+        error.id,
+        () => updateStatus(error.id, ErrorStatus.CLOSED),
+        (similarErrorItems) => {
+          setMultipleCloseModal({
+            show: true,
+            message: `Are you sure you want to close all items related to ${
+              (error && error.componentName) || ''
+            }`,
+            onClose: onMultipleCloseModal,
+            onSave: () => {
+              similarErrorItems.forEach((d) => {
+                updateStatus(d.id, ErrorStatus.CLOSED);
+              });
+              onMultipleCloseModal();
+            },
+            cancelAction: () => {
+              error?.id && updateStatus(error?.id, ErrorStatus.CLOSED);
+              onMultipleCloseModal();
+            }
+          });
+        }
+      );
     }
   };
 
@@ -77,53 +118,73 @@ const ErrorItem = ({
       ? [pendingItem, closedItem]
       : [pendingItem, reviewItem];
 
-  const statusBorder = () => {
-    switch (errorStatus) {
-      case ErrorStatus.PENDING:
-        return 'border-indigo-500';
-      case ErrorStatus.REVIEW:
-        return 'border-blue-500';
-      case ErrorStatus.CLOSED:
-        return 'border-green-500';
+  const history = useHistory();
 
-      default:
-        return 'border-indigo-500';
-    }
+  const INITIAL_MULTIPLE_CLOSE_MODAL = {
+    show: false,
+    message: '',
+    onClose: () => {},
+    onSave: () => {},
+    cancelAction: () => {}
+  };
+  const [multipleCloseModal, setMultipleCloseModal] = useState(
+    INITIAL_MULTIPLE_CLOSE_MODAL
+  );
+
+  const onMultipleCloseModal = () => {
+    setMultipleCloseModal(INITIAL_MULTIPLE_CLOSE_MODAL);
   };
 
   return (
-    <div className={`white_back p-4 pb-8 relative border-l-6 ${statusBorder()}`}>
+    <Card
+      title={
+        <div className="pt-2">
+          <Tooltip placement="topLeft" title={error.componentName}>
+            <h4 className="mb-0">{error.componentName}</h4>
+          </Tooltip>
+          <p className=" text-sm text-gray-500">{error.email}</p>
+        </div>
+      }>
       <div className="absolute top-0 w-auto p-4 right-0">
         <DotMenu menuItems={[...menuItems]} />
       </div>
-      <h2 className=" text-sm font-medium text-gray-900">{error.email}</h2>
-      <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
+
+      <h4 className="mb-8 text-sm text-red-600 font-light h-24 overflow-auto py-2">
         {outputError}
       </h4>
 
-      <h6 className="text-sm text-gray-900 font-light overflow-auto py-2 mb-4">
-        {error.componentName}
-      </h6>
-
-      <div className="absolute left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
-        <div
-          title={error.pageUrl}
-          className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light ">
-          <a href={error.pageUrl}>visit url</a>
-        </div>
+      <Divider />
+      <div className="absolute w-full left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
+        <Buttons
+          onClick={() => error?.pageUrl && history.push(error?.pageUrl)}
+          variant="link"
+          size="small"
+          label={'Visit url'}
+        />
         {errorStatus === ErrorStatus.PENDING && (
-          <Buttons
-            onClick={() => closedItem.action()}
-            size="small"
-            transparent
-            Icon={AiOutlineCloseCircle}
-          />
+          <Popconfirm
+            title={'Warning'}
+            description={multipleCloseModal.message}
+            placement="bottom"
+            okText="Yes"
+            onConfirm={multipleCloseModal.onSave}
+            onCancel={multipleCloseModal.onClose}
+            cancelText="No"
+            open={multipleCloseModal.show}>
+            <Buttons
+              onClick={() => closedItem.action()}
+              size="small"
+              transparent
+              variant="dashed"
+              label={'Close'}
+            />
+          </Popconfirm>
         )}
-        <p className="text-xs text-gray-500 font-light italic w-auto">
+        <p className="mb-0 text-gray-500 font-light w-auto">
           {moment(error.errorTime).format('lll')}
         </p>
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -190,7 +251,11 @@ const ErrorsPage = () => {
     }
   );
 
-  const [showModal, setShowModal] = useState({show: false, message: '', additional: ''});
+  const [showModal, setShowModal] = useState({
+    show: false,
+    message: '',
+    additional: ''
+  });
 
   const [filteredList, setFilteredList] = useState([...data]);
 
@@ -214,77 +279,55 @@ const ErrorsPage = () => {
         id,
         status
       };
-      const res = await API.graphql(
-        graphqlOperation(customMutations.updateErrorLog, {input})
-      );
+      await API.graphql(graphqlOperation(customMutations.updateErrorLog, {input}));
     } catch (error) {
       logError(error, {email, authId}, '@updateStatus');
     }
   };
 
-  const INITIAL_MULTIPLE_CLOSE_MODAL = {
-    show: false,
-    message: '',
-    onClose: () => {},
-    onSave: () => {},
-    cancelAction: () => {}
-  };
-  const [multipleCloseModal, setMultipleCloseModal] = useState(
-    INITIAL_MULTIPLE_CLOSE_MODAL
-  );
-
-  const onMultipleCloseModal = () => {
-    setMultipleCloseModal(INITIAL_MULTIPLE_CLOSE_MODAL);
-  };
-
-  const setMultipleItemsToClose = (currentId: string, callback: () => void) => {
+  const setMultipleItemsToClose = (
+    currentId: string,
+    callback: () => void,
+    callback2: (data: any[]) => void
+  ) => {
     const currentItem = data && data.find((d: ErrorLog) => d.id === currentId);
 
     const similarErrorItems =
       data && currentItem
         ? data.filter(
             (d: ErrorLog) =>
-              d.componentName === currentItem.componentName &&
-              d.error === currentItem.error
+              d.componentName === currentItem?.componentName &&
+              d.error === currentItem?.error
           )
         : [];
 
     if (similarErrorItems && similarErrorItems.length > 0) {
-      setMultipleCloseModal({
-        show: true,
-        message: `Are you sure you want to close all items related to ${currentItem.componentName}`,
-        onClose: onMultipleCloseModal,
-        onSave: () => {
-          similarErrorItems.forEach((d) => {
-            updateStatus(d.id, ErrorStatus.CLOSED);
-          });
-          onMultipleCloseModal();
-        },
-        cancelAction: () => {
-          updateStatus(currentItem.id, ErrorStatus.CLOSED);
-          onMultipleCloseModal();
-        }
-      });
+      callback2?.(similarErrorItems);
     } else {
-      callback();
+      callback?.();
     }
   };
 
-  const [filters, setFilters] = useState<ErrorStatus>();
+  const [filters, setFilters] = useState<ErrorStatus | null>(null);
 
-  const updateFilter = (filterName: ErrorStatus) => {
+  const updateFilter = (filterName: ErrorStatus, mode: string) => {
     if (filterName === filters) {
       setFilters(null);
       setFilteredList([...data]);
+      setMode('');
     } else {
+      setMode(mode);
       const filtered = data.filter((_d: any) => filterName === _d.status);
       setFilteredList(filtered);
       setFilters(filterName);
     }
   };
 
-  const pendingLength = data.filter((_d: ErrorLog) => _d.status === ErrorStatus.PENDING)
-    .length;
+  const pendingLength = data.filter(
+    (_d: ErrorLog) => _d.status === ErrorStatus.PENDING
+  ).length;
+
+  const [mode, setMode] = useState('');
 
   return (
     <>
@@ -293,38 +336,39 @@ const ErrorsPage = () => {
           <div className="py-2 my-8 inline-block min-w-full sm:px-6 lg:px-8">
             <div>
               <Label label="Filters" />
-              <div className="flex gap-x-4 mb-4 mt-2 items-center">
-                <Buttons
-                  onClick={() => updateFilter(ErrorStatus.PENDING)}
-                  transparent={filters !== ErrorStatus.PENDING}
-                  label={'Pending'}
-                />
-                <Buttons
-                  onClick={() => updateFilter(ErrorStatus.CLOSED)}
-                  transparent={filters !== ErrorStatus.CLOSED}
-                  label={'Closed'}
-                />
-                <Buttons
-                  onClick={() => updateFilter(ErrorStatus.REVIEW)}
-                  transparent={filters !== ErrorStatus.REVIEW}
-                  label={'Review'}
-                />
-              </div>
+
+              <Radio.Group value={mode} style={{marginBottom: 12}}>
+                <Radio.Button
+                  onClick={() => updateFilter(ErrorStatus.PENDING, 'Pending')}
+                  value={'Pending'}>
+                  Pending
+                </Radio.Button>
+                <Radio.Button
+                  onClick={() => updateFilter(ErrorStatus.REVIEW, 'Review')}
+                  value={'Review'}>
+                  Review
+                </Radio.Button>
+                <Radio.Button
+                  onClick={() => updateFilter(ErrorStatus.CLOSED, 'Closed')}
+                  value={'Closed'}>
+                  Closed
+                </Radio.Button>
+              </Radio.Group>
             </div>
 
             <div className="overflow-hidden">
               {isLoading ? null : (
-                <h5 className="text-base mb-4 text-gray-800">
+                <h6 className="text-base mb-4 text-gray-800">
                   {pendingLength} pending errors - total {data.length} errors
-                </h5>
+                </h6>
               )}
 
-              {isLoading ? (
-                <Loader withText="loading error logs" animation />
-              ) : filteredList.length > 0 ? (
-                <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
-                  {filteredList.map((error, idx) => (
+              <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+                {isLoading && Array.from({length: 4}).map(() => <Card loading />)}
+                {filteredList.length > 0 ? (
+                  filteredList.map((error, idx) => (
                     <ErrorItem
+                      // multipleCloseModal={multipleCloseModal}
                       setMultipleItemsToClose={setMultipleItemsToClose}
                       idx={idx}
                       setShowModal={setShowModal}
@@ -332,15 +376,16 @@ const ErrorsPage = () => {
                       error={error}
                       key={idx}
                     />
-                  ))}
-                </div>
-              ) : (
-                <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
-                  {filters !== undefined
-                    ? `No errors found for status - ${filters}`
-                    : 'Woahhh.. no errors.'}
-                </p>
-              )}
+                  ))
+                ) : isLoading ? null : (
+                  <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                    {filters !== undefined
+                      ? `No errors found for status - ${filters}`
+                      : 'Woahhh.. no errors.'}
+                  </p>
+                )}
+              </div>
+
               {/* </tbody> */}
               {/* </table> */}
             </div>
@@ -348,24 +393,13 @@ const ErrorsPage = () => {
         </div>
       </div>
 
-      {showModal.show && (
-        <ModalPopUp
-          closeAction={() => {
-            setShowModal({show: false, message: '', additional: ''});
-          }}
-          message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
-        />
-      )}
-      {multipleCloseModal.show && (
-        <ModalPopUp
-          closeAction={multipleCloseModal.onClose}
-          saveAction={multipleCloseModal.onSave}
-          message={multipleCloseModal.message}
-          saveLabel="Close all"
-          cancelLabel="close this one"
-          cancelAction={multipleCloseModal.cancelAction}
-        />
-      )}
+      <ModalPopUp
+        open={showModal.show}
+        closeAction={() => {
+          setShowModal({show: false, message: '', additional: ''});
+        }}
+        message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
+      />
     </>
   );
 };
