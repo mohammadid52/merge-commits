@@ -95,7 +95,6 @@ else
 
     
 
-
     
 
     echo ${GREEN}"<---Successfully pulled... now copying content from api.schema.graphql to schema.graphql--->"${NONE}

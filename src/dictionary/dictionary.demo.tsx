@@ -786,7 +786,7 @@ const classRoomDict: ClassroomDictInterface = {
     ASSESSMENT_TITLE: 'Surveys & Assessments',
     STEP: 'Step',
     UNIT_TITLE: 'Select Unit',
-    UNIT_SUB_TITLE: 'Select unit for list of corresponding lessons',
+    UNIT_SUB_TITLE: 'This will display the lessons your students see on the app',
     LESSON_TITLE: 'Select Lesson',
     LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     LESSON_SUB_TITLE_ASYNC:
@@ -828,7 +828,8 @@ const classRoomDict: ClassroomDictInterface = {
     ASSESSMENT_TITLE: 'Encuestas y Evaluaciones',
     STEP: 'Paso',
     UNIT_TITLE: 'Seleccionar Unidad',
-    UNIT_SUB_TITLE: 'Seleccionar unidad para ver lista de lecciones correspondientes',
+    UNIT_SUB_TITLE:
+      'Esto mostrará las lecciones que tus estudiantes ven en la aplicación',
     LESSON_TITLE: 'Seleccionar Lección',
     LESSON_SUB_TITLE: 'Haz clic en la lección que deseas enseñar',
     LESSON_SUB_TITLE_ASYNC:
@@ -3086,7 +3087,7 @@ const UserInformationDict: UserInformationDictInterface = {
     role: 'Role',
     status: 'Status',
     email: 'Email Address',
-    account: 'Account Created',
+    account: 'Member Since',
     ondemand: 'Self-Paced',
     CLASSROOM_LOCATION: 'Classroom Location',
     LOCATION: 'Location',
@@ -4321,8 +4322,8 @@ const UniversalBuilderDict: UniversalBuilderDictInterface = {
 const CsvDict: CsvDictInterface = {
   EN: {
     TITLE: 'Select Survey',
-    SELECT_INST: 'Select institute',
-    SELECT_CLASSROOM: 'Select classroom',
+    SELECT_INST: 'Select or Search Institute',
+    SELECT_CLASSROOM: 'Select or search classroom',
     SELECT_FILTERS: 'Select Filters',
     SELECT_REASON: 'Select Reason',
     REASON: 'Reason....',

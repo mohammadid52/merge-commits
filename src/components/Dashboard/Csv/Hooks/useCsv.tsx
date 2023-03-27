@@ -19,7 +19,9 @@ const useCsv = ({
   surveyQuestions,
   demographicsQuestions,
   setIsCSVReady,
-  SCQAnswers
+  SCQAnswers,
+  showTestData,
+  responseValue
 }: {
   classStudents: any[];
   surveyQuestions: any[];
@@ -33,7 +35,8 @@ const useCsv = ({
   selectedUnit: any;
   selectedClassRoom: any;
   selectedSurvey: any;
-
+  showTestData: boolean;
+  responseValue: boolean;
   setIsCSVReady: any;
 }) => {
   const [csvGettingReady, setCsvGettingReady] = useState(false);
@@ -63,6 +66,17 @@ const useCsv = ({
     try {
       setCsvGettingReady(true);
       let students = classStudents;
+
+      if (!showTestData) {
+        // filter students with isZoiq flag true or status as TRAINING
+        // remove test data
+        students = students.filter(
+          (student) => !Boolean(student.isZoiq) || student.status !== 'TRAINING'
+        );
+      } else {
+        students = classStudents;
+      }
+
       let qids: any = [];
       let takenSurvey = 0;
       let notTakenSurvey = 0;
@@ -104,6 +118,8 @@ const useCsv = ({
         ...demographicsQuestionHeaders, // Enable this line for demographics question
         ...surveyQuestionHeaders
       ]);
+
+      const label = responseValue ? 'label' : 'text';
 
       let data = students.map((stu: any) => {
         let surveyAnswerDates: any = [];
@@ -153,7 +169,7 @@ const useCsv = ({
                       hasTakenSurvey = true; // * <== but here
                       universalSurveyStudentID = answerArray.id; // * <== but here-
                       studentAnswers[singleAnswer.domID] = cleanString(
-                        selectedOption[0].text
+                        selectedOption[0][label]
                       );
                     } else {
                       studentAnswers[singleAnswer.domID] = '';
@@ -258,10 +274,11 @@ const useCsv = ({
     if (isCSVReady) {
       getCSVReady();
     }
-  }, [isCSVReady]);
+  }, [isCSVReady, responseValue, showTestData]);
 
   return {
     mappedHeaders,
+
     isCSVDownloadReady,
     csvGettingReady,
     setCSVData,
