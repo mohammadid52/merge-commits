@@ -130,7 +130,7 @@ const UploadLessonPlanModal = ({
       showHeader
       scrollHidden
       showFooter={false}>
-      <div className="min-w-132 max-w-256">
+      <div className="">
         <>
           {file && (
             <File
@@ -190,16 +190,18 @@ const UploadLessonPlanModal = ({
 
         {(!file || isUpdated) && (
           <div className="flex mt-8 justify-center px-6 pb-4">
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-4">
               <Buttons
                 disabled={isLoading}
                 onClick={onClose}
                 label={'Cancel'}
+                size="middle"
                 transparent
               />
               <Buttons
                 label={isLoading ? 'Uploading' : 'Upload'}
                 type="submit"
+                size="middle"
                 onClick={onUpload}
                 disabled={isLoading}
               />
