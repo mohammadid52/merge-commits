@@ -373,7 +373,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
       setFilteredList([]);
     } else {
       setSearchInput({...searchInput, isActive: true});
-      const filtered = currentList.filter((_d: any) => filterName === _d.status);
+
+      const filtered = lessonsData.filter((_d: any) => filterName === _d.status);
       setFilteredList(filtered);
       setFilters(filterName);
       setSelectedInstitution({});

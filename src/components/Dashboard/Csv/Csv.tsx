@@ -313,20 +313,15 @@ const Csv = () => {
 
   const [showWarnModal, setShowWarnModal] = useState<any>(false);
 
-  const {
-    clearCSVData,
-    mappedHeaders,
-    isCSVDownloadReady,
-    setCSVData,
-    statistics,
-    CSVData
-  } = useCsv({
+  const {clearCSVData, mappedHeaders, isCSVDownloadReady, statistics, CSVData} = useCsv({
     classStudents,
     isCSVReady,
     setIsCSVReady,
     DCQAnswers,
     selectedInst,
     selectedClassRoom,
+    showTestData,
+    responseValue,
     selectedCurriculum,
     selectedSurvey,
     selectedUnit,
@@ -340,7 +335,6 @@ const Csv = () => {
     onClick: () => {},
     id: listItem.id,
     name: `${listItem.firstName} ${listItem.lastName}`,
-
     email: listItem.email,
     takenSurvey: listItem?.hasTakenSurvey ? 'Yes' : 'No',
     completedDate: getFormatedDate(listItem?.last)

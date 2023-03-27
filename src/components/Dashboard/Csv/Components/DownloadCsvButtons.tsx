@@ -35,8 +35,8 @@ const DownloadCsvButtons = ({
 
   const disabled = !isCSVDownloadReady;
   return (
-    <div className="w-auto   py-4 justify-between xl:justify-end md:gap-4 relative flex items-center">
-      {/* <div className="flex items-center gap-4">
+    <div className="w-auto   py-4 justify-between md:gap-4 relative flex items-center">
+      <div className="flex items-center gap-4">
         <Tooltip title={disabled ? DISABLED_TEXT : 'Include test data in result'}>
           <Form.Item
             style={{margin: 0}}
@@ -68,7 +68,7 @@ const DownloadCsvButtons = ({
             />
           </Form.Item>
         </Tooltip>
-      </div> */}
+      </div>
 
       <div className="flex items-center gap-4">
         <Buttons
