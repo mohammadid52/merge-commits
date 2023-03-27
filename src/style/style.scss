@@ -1836,3 +1836,19 @@ $translation-fab-width: 50px;
     color: white;
   }
 }
+
+.ant-dropdown-trigger {
+  &:hover {
+    & div .ant-space-item:nth-child(1) {
+      border-bottom: 1px solid $theme-500;
+    }
+    & div .ant-space-item:nth-child(2) svg {
+      transform: rotate(180deg);
+      transition: all 0.3s ease-in-out;
+    }
+  }
+  & div .ant-space-item:nth-child(2) svg {
+    transition: all 0.3s ease-in-out;
+    transform: rotate(0);
+  }
+}
