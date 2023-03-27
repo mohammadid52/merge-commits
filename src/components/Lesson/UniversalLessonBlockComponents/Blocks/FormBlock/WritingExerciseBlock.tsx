@@ -32,7 +32,9 @@ const WritingExerciseBlock = ({
   return (
     <div
       id={`${inputID}_for_error`}
-      className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
+      className={`w-full max-w-256  mx-auto  flex flex-col justify-between items-center ${
+        !Boolean(label) && !title ? 'p-4' : ''
+      } rounded-2xl dark-blue ${title ? 'rounded-b-none' : 'rounded-t-none'}`}>
       {!title ? (
         <EditingBlock options={options} inputID={inputID} id={inputID} value={value[0]} />
       ) : (
