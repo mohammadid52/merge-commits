@@ -3,7 +3,7 @@ import {
   useTabs
 } from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import useAuth from '@customHooks/useAuth';
-import {Card, Descriptions} from 'antd';
+import {Card, Descriptions, Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -126,16 +126,16 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
     isStudent && {
       name: dict['demographics'],
       current: false
-    },
-    isStudent && {
-      name: dict['private'],
-      current: false
     }
+    // isStudent && {
+    //   name: dict['private'],
+    //   current: false
+    // }
   ].filter(Boolean) as any[];
 
   const {curTab, setCurTab, helpers} = useTabs(tabsData);
 
-  const [onPersonal] = helpers;
+  const [onPersonal, onDemographics] = helpers;
 
   const hideDeleteBtn = user.authId === authId_auth;
 
@@ -260,6 +260,14 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
               <Descriptions.Item label={dict['role']}>
                 <UserRole role={user.role} />
               </Descriptions.Item>
+
+              <Descriptions.Item span={2} label={dict['email']}>
+                {user.email}
+              </Descriptions.Item>
+              <Descriptions.Item label={dict['ondemand']}>
+                <Status status={user?.onDemand ? 'YES' : 'NO'} />
+              </Descriptions.Item>
+              <Descriptions.Item label={dict['account']}>{created()}</Descriptions.Item>
               <Descriptions.Item label={dict['status']}>
                 <Status useDefault status={user.status} />{' '}
                 {Boolean(user.inactiveStatusDate) && (
@@ -272,58 +280,55 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
                   </span>
                 )}
               </Descriptions.Item>
-              <Descriptions.Item span={2} label={dict['email']}>
-                {user.email}
-              </Descriptions.Item>
-              <Descriptions.Item label={dict['account']}>{created()}</Descriptions.Item>
-              <Descriptions.Item label={dict['ondemand']}>
-                <Status status={user?.onDemand ? 'YES' : 'NO'} />
-              </Descriptions.Item>
             </Descriptions>
           </Card>
         )}
 
         {/* CHECKPOINTS AND DEMOGRAPHIC QUESTIONS */}
-        {!onPersonal && checkpoints.length > 0 && (
-          <Fragment>
-            {checkpoints.map((checkpoint: any) => (
-              <Fragment key={`checkpoint_${checkpoint.id}`}>
-                <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-                  <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
-                      {checkpoint.title}
-                    </h3>
+        {onDemographics &&
+          (checkpoints.length > 0 ? (
+            <Fragment>
+              {checkpoints.map((checkpoint: any) => (
+                <Fragment key={`checkpoint_${checkpoint.id}`}>
+                  <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
+                    <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+                        {checkpoint.title}
+                      </h3>
+                    </div>
+                    <div className="px-4 py-5 sm:px-6">
+                      <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
+                        {checkpoint.questions?.items.map((item: any) => (
+                          <div key={item.question.id} className="sm:col-span-1 p-2">
+                            <dt className="text-sm leading-5 font-medium text-gray-500">
+                              {item.question.question}
+                            </dt>
+                            <dd className="mt-1 text-sm leading-5 text-gray-900">
+                              {item.question.type !== 'link' ? (
+                                getQuestionResponse(checkpoint.id, item.question.id) ||
+                                '--'
+                              ) : (
+                                <a
+                                  className="text-blue-400 hover:text-blue-600 transition-all"
+                                  href={getQuestionResponse(
+                                    checkpoint.id,
+                                    item.question.id
+                                  )}>
+                                  {getQuestionResponse(checkpoint.id, item.question.id)}
+                                </a>
+                              )}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
                   </div>
-                  <div className="px-4 py-5 sm:px-6">
-                    <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                      {checkpoint.questions?.items.map((item: any) => (
-                        <div key={item.question.id} className="sm:col-span-1 p-2">
-                          <dt className="text-sm leading-5 font-medium text-gray-500">
-                            {item.question.question}
-                          </dt>
-                          <dd className="mt-1 text-sm leading-5 text-gray-900">
-                            {item.question.type !== 'link' ? (
-                              getQuestionResponse(checkpoint.id, item.question.id) || '--'
-                            ) : (
-                              <a
-                                className="text-blue-400 hover:text-blue-600 transition-all"
-                                href={getQuestionResponse(
-                                  checkpoint.id,
-                                  item.question.id
-                                )}>
-                                {getQuestionResponse(checkpoint.id, item.question.id)}
-                              </a>
-                            )}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                </div>
-              </Fragment>
-            ))}
-          </Fragment>
-        )}
+                </Fragment>
+              ))}
+            </Fragment>
+          ) : (
+            <Empty description={'No demographics data'} />
+          ))}
 
         <Modal
           open={resetPasswordServerResponse.show}

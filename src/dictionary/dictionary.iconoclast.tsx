@@ -607,7 +607,7 @@ const editClassDict: EditClassDictInterface = {
     SUBTITLE: 'Edit class information',
     NAME_INPUT_LABEL: 'Class Name',
     STUDENTS: 'STUDENTS',
-    ADD_STUDENT_PLACEHOLDER: 'Select student',
+    ADD_STUDENT_PLACEHOLDER: 'Add student',
     ADD_STUDENT_LABEL: 'Add students to class',
     ADD_STUDENT_FROM_REGSITER: 'Add students from register to class',
     ADD_STUDENT_BUTTON: 'Add',

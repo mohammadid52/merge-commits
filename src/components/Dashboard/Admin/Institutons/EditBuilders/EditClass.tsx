@@ -15,7 +15,7 @@ import Table, {ITableProps} from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
-import {Divider} from 'antd';
+import {Card, Divider, Tooltip} from 'antd';
 import {PersonStatus, Role} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
@@ -31,6 +31,7 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
+import Placeholder from '@components/Atoms/Placeholder';
 
 interface EditClassProps {
   instId: string;
@@ -38,6 +39,8 @@ interface EditClassProps {
   toggleUpdateState?: () => void;
   roomData: any;
 }
+
+const {Meta} = Card;
 
 const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProps) => {
   const history = useHistory();
@@ -507,7 +510,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
    * @returns {Array} - An array of student objects. Each object has an added 'disabled' property which is a boolean indicating whether or not the student is already in the classStudents array.
    */
 
-  const addDisablePropertyToAlreadySelectedStudents = () => {
+  const addDisablePropertyToAlreadySelectedStudents = (): Array<any> => {
     if (
       allStudents && // check if allStudents is not null
       classStudents && // check if classStudents is not null
@@ -519,9 +522,25 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           (classStudent) => classStudent.student.authId === student.authId
         );
       return allStudents.map((student) => {
+        const disabled = Boolean(isStudentAlreadyAdded(student));
+        const label = `${student.firstName} ${student.lastName}`;
         return {
           ...student,
-          disabled: Boolean(isStudentAlreadyAdded(student))
+          disabled,
+          value: (
+            <Tooltip title={disabled ? 'Already in class' : ''}>
+              <Card.Meta
+                className={`flex ${
+                  disabled ? 'opacity-50 pointer-events-none' : ''
+                } items-center`}
+                title={label}
+                description={student?.email}
+                avatar={
+                  <Placeholder size="h-8 w-8 mr-2" image={student?.image} name={label} />
+                }
+              />
+            </Tooltip>
+          )
         };
       });
     } else {
@@ -564,10 +583,11 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         withButton={
           <div className={`w-auto flex gap-x-4 justify-end items-center`}>
             <Selector
-              width={300}
+              width={400}
               dataCy="edit-class"
               selectedItem={newMember.label}
               showSearch
+              optionFilterProp="name"
               disabled={classStudentsLoading || loading}
               list={addDisablePropertyToAlreadySelectedStudents()}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
@@ -667,8 +687,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 showHeader={true}
                 showHeaderBorder={false}
                 showFooter={false}
-                maxWidth="min-w-256"
                 scrollHidden={true}
+                width={1000}
                 closeAction={() => setUserModalFormOpen(false)}>
                 <User
                   shouldNavigate={false}

@@ -504,8 +504,7 @@ const User = (props: IUserProps) => {
             {/* <BreadCrums items={breadCrumsList} /> */}
 
             <SectionTitleV3
-              title="User Lookup"
-              bgColor={insideModalPopUp ? 'bg-gray-200' : 'bg-white'}
+              title={''}
               fontSize="xl"
               backButton
               fontStyle="semibold"
