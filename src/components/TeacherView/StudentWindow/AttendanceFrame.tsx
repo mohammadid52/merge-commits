@@ -6,12 +6,11 @@ import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 
 import Modal from 'atoms/Modal';
 import AttendanceList from './AttendanceFrame/AttendanceList';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
 };
-
-const limit: number = 10;
 
 interface IAttendanceProps {
   selectedRoomId?: string;
@@ -80,7 +79,7 @@ const Attendance = ({
         roomID: selectedRoomId,
         sortDirection: 'DESC',
         date,
-        limit
+        limit: SEARCH_LIMIT
       };
       if (nextToken) {
         payload.nextToken = nextToken;

@@ -1,9 +1,9 @@
-import { useQuery } from "@customHooks/urlParam";
-import { CreateUniversalArchiveDataInput, PartInput, TeachingStyle } from "API";
-import { API, graphqlOperation } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as mutations from "graphql/mutations";
-import * as queries from "graphql/queries";
+import {useQuery} from '@customHooks/urlParam';
+import {CreateUniversalArchiveDataInput, PartInput, TeachingStyle} from 'API';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 
 import {
   PagePart,
@@ -11,17 +11,18 @@ import {
   PartContentSub,
   StudentPageInput,
   UniversalLessonPage,
-  UniversalLessonStudentData,
-} from "interfaces/UniversalLessonInterfaces";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getLocalStorageData } from "utilities/localStorage";
-import { v4 as uuidV4 } from "uuid";
-import { ILessonSurveyApp } from "./Lesson";
-import LessonSurveyAppWrapper from "./LessonSurveyAppWrapper";
+  UniversalLessonStudentData
+} from 'interfaces/UniversalLessonInterfaces';
+import {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {v4 as uuidV4} from 'uuid';
+import {SEARCH_LIMIT} from './constants';
+import {ILessonSurveyApp} from './Lesson';
+import LessonSurveyAppWrapper from './LessonSurveyAppWrapper';
 
 const SurveyApp = (props: ILessonSurveyApp) => {
-  const { getLessonCurrentPage } = props;
+  const {getLessonCurrentPage} = props;
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useGlobalContext();
@@ -32,9 +33,9 @@ const SurveyApp = (props: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
 
-  const getRoomData = getLocalStorageData("room_info");
+  const getRoomData = getLocalStorageData('room_info');
   const urlParams: any = useParams();
-  const { lessonID } = urlParams;
+  const {lessonID} = urlParams;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -45,9 +46,9 @@ const SurveyApp = (props: ILessonSurveyApp) => {
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const leaveUnload = () => {
-      lessonDispatch({ type: "CLEANUP" });
+      lessonDispatch({type: 'CLEANUP'});
     };
-    console.log("survey loaded....");
+    console.log('survey loaded....');
     return () => {
       leaveUnload();
     };
@@ -62,8 +63,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
   // ##################################################################### //
-  const [studentDataInitialized, setStudentDataInitialized] =
-    useState<boolean>(false);
+  const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
 
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
 
@@ -86,7 +86,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
               },
               pagePart: PagePart
             ) => {
-              if (pagePart.hasOwnProperty("partContent")) {
+              if (pagePart.hasOwnProperty('partContent')) {
                 const partInputs = pagePart.partContent.reduce(
                   (
                     partInputAcc: {
@@ -96,16 +96,16 @@ const SurveyApp = (props: ILessonSurveyApp) => {
                     partContent: PartContent
                   ) => {
                     //  CHECK WHICH INPUT TYPE  //
-                    const isForm = /form/g.test(partContent.type || "");
+                    const isForm = /form/g.test(partContent.type || '');
 
-                    const isOtherInput = /input/g.test(partContent?.type || "");
+                    const isOtherInput = /input/g.test(partContent?.type || '');
 
                     // -------- IF FORM ------- //
                     if (isForm) {
                       const formSubInputs = partContent.value.reduce(
                         // @ts-ignore
                         (
-                          subPartAcc: { reqId: string[]; pgInput: any[] },
+                          subPartAcc: {reqId: string[]; pgInput: any[]},
                           partContentSub: PartContentSub
                         ) => {
                           return {
@@ -117,25 +117,25 @@ const SurveyApp = (props: ILessonSurveyApp) => {
                               ...subPartAcc.pgInput,
                               {
                                 domID: partContentSub.id,
-                                input: [""],
-                              },
-                            ],
+                                input: ['']
+                              }
+                            ]
                           };
                         },
-                        { reqId: [], pgInput: [] }
+                        {reqId: [], pgInput: []}
                       );
 
                       return {
                         requiredIdAcc: [
                           ...partInputAcc.requiredIdAcc,
                           // @ts-ignore
-                          ...formSubInputs.reqId,
+                          ...formSubInputs.reqId
                         ],
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
                           // @ts-ignore
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -148,32 +148,32 @@ const SurveyApp = (props: ILessonSurveyApp) => {
                           ...partInputAcc.pageInputAcc,
                           {
                             domID: partContent.id,
-                            input: [""],
-                          },
-                        ],
+                            input: ['']
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
                     }
                   },
-                  { requiredIdAcc: [], pageInputAcc: [] }
+                  {requiredIdAcc: [], pageInputAcc: []}
                 );
 
                 return {
                   requiredIdAcc: [
                     ...pageInputsAcc.requiredIdAcc,
-                    ...partInputs.requiredIdAcc,
+                    ...partInputs.requiredIdAcc
                   ],
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
               }
             },
-            { requiredIdAcc: [], pageInputAcc: [] }
+            {requiredIdAcc: [], pageInputAcc: []}
           );
 
           return {
@@ -181,23 +181,23 @@ const SurveyApp = (props: ILessonSurveyApp) => {
             initialized: [
               ...inputs.initialized,
               // @ts-ignore
-              ...reducedPageInputs?.pageInputAcc,
-            ],
+              ...reducedPageInputs?.pageInputAcc
+            ]
           };
         },
 
-        { required: [], initialized: [] }
+        {required: [], initialized: []}
       );
 
       const exerciseData = lessonState.exerciseData;
 
       lessonDispatch({
-        type: "SET_INITIAL_STUDENT_DATA",
+        type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
           requiredInputs: mappedPages.required,
           studentData: mappedPages.initialized,
-          exerciseData,
-        },
+          exerciseData
+        }
       });
       setStudentDataInitialized(true);
     }
@@ -220,18 +220,15 @@ const SurveyApp = (props: ILessonSurveyApp) => {
       {
         id: surveyDataRowObj.id,
         pageIdx: 0,
-        lessonPageID: "",
-        update: false,
-      },
+        lessonPageID: '',
+        update: false
+      }
     ];
   };
 
   // ~~~~~~~~ FILTER EXTRA QUESTIONS ~~~~~~~ //
 
-  const filterExtraQuestions = (
-    initialDataFlattened: any[],
-    surveyData: any[]
-  ) => {
+  const filterExtraQuestions = (initialDataFlattened: any[], surveyData: any[]) => {
     //@ts-ignore
     const extraQuestionsArray = initialDataFlattened.reduce(
       (extraQuestions: any[], question: PartInput) => {
@@ -273,14 +270,14 @@ const SurveyApp = (props: ILessonSurveyApp) => {
         studentAuthID: authId,
         studentEmail: email,
         roomID: getRoomData.id,
-        currentLocation: "0",
-        lessonProgress: "0",
-        surveyData: initialDataFlattened.flat(),
+        currentLocation: '0',
+        lessonProgress: '0',
+        surveyData: initialDataFlattened.flat()
       };
 
       const newSurveyData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalSurveyStudentData, {
-          input,
+          input
         })
       );
 
@@ -288,7 +285,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
 
       return returnedData;
     } catch (e) {
-      console.error("error creating survey data - ", e);
+      console.error('error creating survey data - ', e);
       return {};
     }
   };
@@ -311,14 +308,13 @@ const SurveyApp = (props: ILessonSurveyApp) => {
         graphqlOperation(queries.listUniversalSurveyStudentData, {
           ...filterObj,
           nextToken: nextToken,
-          limit: 500,
+          limit: SEARCH_LIMIT
         })
       );
 
       let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
 
-      let theNextToken =
-        surveyData.data.listUniversalSurveyStudentData?.nextToken;
+      let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
 
       combined = [...outArray, ...surveyDataRow];
 
@@ -328,7 +324,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
       setLessonDataLoaded(true);
       return combined;
     } catch (e) {
-      console.error("loopFetchStudentData - ", e);
+      console.error('loopFetchStudentData - ', e);
       return [];
     }
   };
@@ -336,9 +332,9 @@ const SurveyApp = (props: ILessonSurveyApp) => {
   const teachingStyle = getRoomData.teachingStyle;
 
   const isStudent =
-    user.role !== "ST" && teachingStyle === TeachingStyle.PERFORMER
+    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
       ? true
-      : user.role === "ST";
+      : user.role === 'ST';
 
   const params = useQuery(location.search);
 
@@ -349,15 +345,15 @@ const SurveyApp = (props: ILessonSurveyApp) => {
 
       // existing student rows
 
-      const dynamicUser = isStudent ? user : { authId: params.get("sId") };
+      const dynamicUser = isStudent ? user : {authId: params.get('sId')};
 
       const listFilter = {
         filter: {
-          studentAuthID: { eq: dynamicUser.authId },
-          lessonID: { eq: lessonID },
-          syllabusLessonID: { eq: getRoomData.activeSyllabus },
-          roomID: { eq: getRoomData.id },
-        },
+          studentAuthID: {eq: dynamicUser.authId},
+          lessonID: {eq: lessonID},
+          syllabusLessonID: {eq: getRoomData.activeSyllabus},
+          roomID: {eq: getRoomData.id}
+        }
       };
 
       // existing student rows
@@ -370,10 +366,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
         lessonState?.studentData,
         surveyDataResponses
       ); //  flat 1D - array
-      if (
-        surveyDataRow === undefined ||
-        (surveyDataRow && surveyDataRow?.length === 0)
-      ) {
+      if (surveyDataRow === undefined || (surveyDataRow && surveyDataRow?.length === 0)) {
         if (isStudent) {
           const createNewRecords = await createSurveyData(
             lessonState?.studentData,
@@ -386,10 +379,10 @@ const SurveyApp = (props: ILessonSurveyApp) => {
 
             if (newRecords?.length > 0) {
               lessonDispatch({
-                type: "LOAD_SURVEY_DATA",
+                type: 'LOAD_SURVEY_DATA',
                 payload: {
-                  dataIdReferences: surveyDataId(newRecords),
-                },
+                  dataIdReferences: surveyDataId(newRecords)
+                }
               });
             }
           }
@@ -398,11 +391,11 @@ const SurveyApp = (props: ILessonSurveyApp) => {
         const finalData: any = [...surveyDataResponses, ...extraQuestions];
 
         lessonDispatch({
-          type: "LOAD_SURVEY_DATA",
+          type: 'LOAD_SURVEY_DATA',
           payload: {
             dataIdReferences: surveyDataId(surveyDataRow[0]),
-            surveyData: finalData,
-          },
+            surveyData: finalData
+          }
         });
       }
     } catch (err) {
@@ -415,7 +408,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
   useEffect(() => {
     if (!lessonState.loaded && PAGES.length > 0) {
       initializeSurveyData().then(() => {
-        lessonDispatch({ type: "LESSON_LOADED", payload: true });
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
       });
     }
   }, [PAGES]);
@@ -443,15 +436,18 @@ const SurveyApp = (props: ILessonSurveyApp) => {
   const loopCreateStudentArchiveAndExcerciseData = async () => {
     const listFilter = {
       filter: {
-        studentAuthID: { eq: user.authId },
-        lessonID: { eq: lessonID },
-        syllabusLessonID: { eq: getRoomData.activeSyllabus },
-        roomID: { eq: getRoomData.id },
-      },
+        studentAuthID: {eq: user.authId},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: getRoomData.activeSyllabus},
+        roomID: {eq: getRoomData.id}
+      }
     };
 
-    const studentDataRows: UniversalLessonStudentData[] =
-      await fetchSurveyDataRow(listFilter, undefined, []);
+    const studentDataRows: UniversalLessonStudentData[] = await fetchSurveyDataRow(
+      listFilter,
+      undefined,
+      []
+    );
 
     const currentPageLocation = await getLessonCurrentPage();
     const lessonPageID = PAGES[currentPageLocation].id;
@@ -468,17 +464,17 @@ const SurveyApp = (props: ILessonSurveyApp) => {
         roomID: item.roomID,
         currentLocation: currentPageLocation.toString(),
         lessonProgress: (PAGES.length - 1).toString(),
-        pageData: item.surveyData,
+        pageData: item.surveyData
       };
       let newStudentData: any;
       let returnedData: any;
 
       newStudentData = await API.graphql(
         graphqlOperation(mutations.createUniversalArchiveData, {
-          input,
+          input
         })
       );
-      console.info("\x1b[33m *Archiving rest of the pages... \x1b[0m");
+      console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
 
       returnedData = newStudentData.data.createUniversalArchiveData;
 
@@ -491,13 +487,13 @@ const SurveyApp = (props: ILessonSurveyApp) => {
   const createStudentArchiveData = async (onSuccessCallback?: () => void) => {
     try {
       const result = await loopCreateStudentArchiveAndExcerciseData();
-      if (onSuccessCallback && typeof onSuccessCallback === "function") {
+      if (onSuccessCallback && typeof onSuccessCallback === 'function') {
         onSuccessCallback();
       }
       return result;
     } catch (e) {
       console.error(
-        "error @createStudentArchiveData in LessonApp.tsx creating journal data - ",
+        'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
         e
       );
       return null;

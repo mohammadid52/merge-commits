@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Error} from '@components/Atoms/Alerts/Info';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {updatePageState} from '@graphql/functions';
@@ -130,7 +131,7 @@ const Anthology = ({
   const getStudentData = async () => {
     try {
       const listFilter = {
-        limit: 500,
+        limit: SEARCH_LIMIT,
         filter: {
           studentAuthID: {eq: studentAuthID},
           hasExerciseData: {eq: true}
@@ -264,7 +265,7 @@ const Anthology = ({
   const listUniversalJournalData = async () => {
     try {
       const listFilter = {
-        limit: 500,
+        limit: SEARCH_LIMIT,
         filter: {
           studentAuthID: {eq: studentAuthID}
         }
@@ -609,7 +610,7 @@ const Anthology = ({
     try {
       const archiveData: any = await API.graphql(
         graphqlOperation(queries.listUniversalArchiveData, {
-          limit: 500,
+          limit: SEARCH_LIMIT,
           filter: {
             studentID: {
               eq: dynamicAuthID
@@ -630,7 +631,7 @@ const Anthology = ({
     try {
       const _allUniversalClassData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
-          limit: 500,
+          limit: SEARCH_LIMIT,
           filter: {
             studentID: {
               eq: dynamicAuthID

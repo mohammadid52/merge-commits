@@ -35,41 +35,7 @@ const DownloadCsvButtons = ({
 
   const disabled = !isCSVDownloadReady;
   return (
-    <div className="w-auto   py-4 justify-between xl:justify-end md:gap-4 relative flex items-center">
-      {/* <div className="flex items-center gap-4">
-        <Tooltip title={disabled ? DISABLED_TEXT : 'Include test data in result'}>
-          <Form.Item
-            style={{margin: 0}}
-            label={'include test data'}
-            valuePropName="checked">
-            <Checkbox
-              disabled={disabled}
-              checked={showTestData}
-              onChange={(e) => setShowTestData(e.target.checked)}
-            />
-          </Form.Item>
-        </Tooltip>
-        <Tooltip
-          title={
-            disabled
-              ? DISABLED_TEXT
-              : responseValue
-              ? 'Show responses as values'
-              : 'Show responses as texts'
-          }>
-          <Form.Item
-            style={{margin: 0}}
-            label={'Values as responses'}
-            valuePropName="checked">
-            <Switch
-              checked={responseValue}
-              disabled={disabled}
-              onClick={() => setResponseValue(!responseValue)}
-            />
-          </Form.Item>
-        </Tooltip>
-      </div> */}
-
+    <div className="w-auto   py-4 justify-between md:gap-4 relative flex items-center">
       <div className="flex items-center gap-4">
         <Buttons
           disabled={disabled && lessonPDFData.length === 0}
@@ -108,6 +74,39 @@ const DownloadCsvButtons = ({
             </CSVLink>
           }
         />
+      </div>
+      <div className="flex items-center gap-4">
+        <Tooltip title={disabled ? DISABLED_TEXT : 'Include test data in result'}>
+          <Form.Item
+            style={{margin: 0}}
+            label={'Include Test Data'}
+            valuePropName="checked">
+            <Switch
+              checked={showTestData}
+              disabled={disabled}
+              onClick={() => setShowTestData(!showTestData)}
+            />
+          </Form.Item>
+        </Tooltip>
+        <Tooltip
+          title={
+            disabled
+              ? DISABLED_TEXT
+              : responseValue
+              ? 'Show responses as values'
+              : 'Show responses as texts'
+          }>
+          <Form.Item
+            style={{margin: 0}}
+            label={'Values As Responses'}
+            valuePropName="checked">
+            <Switch
+              checked={responseValue}
+              disabled={disabled}
+              onClick={() => setResponseValue(!responseValue)}
+            />
+          </Form.Item>
+        </Tooltip>
       </div>
     </div>
   );

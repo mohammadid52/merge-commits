@@ -5,5 +5,7 @@ export const UPLOAD_KEYS = {
   TEACHER_UPLOAD: 'ULB/teachers_upload/',
   getStudentDataUploadKey,
   COMMUNITY: 'community/',
-  ULB: 'ulb/',
+  ULB: 'ulb/'
 };
+
+export const SEARCH_LIMIT = 2000;
