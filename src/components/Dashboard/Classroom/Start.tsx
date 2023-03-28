@@ -14,6 +14,7 @@ import {useHistory} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {tableCleanupUrl} from 'utilities/urls';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -109,7 +110,7 @@ const Start: React.FC<StartProps> = ({
         const list: any = await API.graphql(
           graphqlOperation(queries.listAttendances, {
             filter,
-            limit: 500
+            limit: SEARCH_LIMIT
           })
         );
         if (isMounted) {

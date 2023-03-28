@@ -1,5 +1,6 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
@@ -26,7 +27,7 @@ const SurveyList = ({
   const {data, isLoading, isFetched} = useGraphqlQuery<any, PersonLessonsData[]>(
     'listPersonLessonsData',
     {
-      limit: 500,
+      limit: SEARCH_LIMIT,
       filter: {
         or: roomIdFilter,
         studentAuthID: {eq: studentAuthID},

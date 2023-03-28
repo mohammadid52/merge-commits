@@ -1,6 +1,7 @@
 import Buttons from '@components/Atoms/Buttons';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
@@ -21,7 +22,7 @@ const UploadLogsPage = () => {
     UploadLogs[]
   >(
     'listUploadLogs',
-    {limit: 150},
+    {limit: SEARCH_LIMIT},
     {
       custom: true,
       enabled: checkIfAdmin(),

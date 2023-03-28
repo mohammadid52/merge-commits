@@ -28,6 +28,7 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -203,7 +204,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const fetchAllPerson = async (filter?: any) => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
-        limit: 1000,
+        limit: SEARCH_LIMIT,
 
         filter: withZoiqFilter(filter, zoiqFilter)
       })
@@ -420,7 +421,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       setLoading(true);
       const classStudents: any = await API.graphql(
         graphqlOperation(customQueries.listClassUserLookup, {
-          limit: 500,
+          limit: SEARCH_LIMIT,
           filter: {classID: {eq: classId}}
         })
       );

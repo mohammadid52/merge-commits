@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Modal from '@components/Atoms/Modal';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
@@ -115,7 +116,7 @@ const Csv = () => {
           syllabusLessonID: {eq: syllabusLessonID},
           ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email')
         },
-        limit: 2000
+        limit: SEARCH_LIMIT
       })
     );
     let studentsAnswersDemographicsCheckpointsQuestions =
@@ -232,7 +233,7 @@ const Csv = () => {
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalSurveyStudentData, {
         nextToken: nextToken,
-        limit: 2000,
+        limit: SEARCH_LIMIT,
         filter: {
           lessonID: {eq: lessonId},
           ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
@@ -273,7 +274,7 @@ const Csv = () => {
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalArchiveData, {
         nextToken: nextToken,
-        limit: 2000,
+        limit: SEARCH_LIMIT,
         filter: {
           lessonID: {eq: lessonId},
           ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
