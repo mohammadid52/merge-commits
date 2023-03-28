@@ -120,7 +120,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listClassStudentsForRoom, {
-          limit: 500,
+          limit: 2000,
           ...filter,
           nextToken: nextToken
         })
@@ -144,7 +144,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          limit: 500,
+          limit: 2000,
           filter: {
             role: {eq: Role.ST},
             or: [
@@ -529,7 +529,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           disabled,
           value: (
             <Tooltip title={disabled ? 'Already in class' : ''}>
-              <Card.Meta
+              <Meta
                 className={`flex ${
                   disabled ? 'opacity-50 pointer-events-none' : ''
                 } items-center`}
