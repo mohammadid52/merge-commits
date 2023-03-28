@@ -599,7 +599,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                     <Divider style={{margin: '8px 0'}} />
                     <Buttons
                       onClick={() => setShowRegistrationForm(true)}
-                      label={'Register new student to this class'}
+                      label={'Register a new student to this class'}
                       className="w-full"
                       size="middle"
                       Icon={PlusCircleOutlined}
