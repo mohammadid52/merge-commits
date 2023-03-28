@@ -1,6 +1,7 @@
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
@@ -21,7 +22,7 @@ const DictionaryPage = () => {
     refetch
   } = useGraphqlQuery<ListDicitionariesQueryVariables, Dicitionary[]>(
     'listDicitionaries',
-    {limit: 150},
+    {limit: SEARCH_LIMIT},
     {
       onSuccess: (data) => {
         if (data.length > 0) {

@@ -14,6 +14,7 @@ import React, {useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
+import {SEARCH_LIMIT} from './constants';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
 
@@ -561,7 +562,7 @@ const Lesson = () => {
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
           },
-          limit: 500
+          limit: SEARCH_LIMIT
         })
       );
 

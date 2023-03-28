@@ -182,7 +182,7 @@ const SentimentTab = ({
 
       let payload: any = {
         personAuthID: authId,
-        limit: 8,
+        limit: 8, // keeping this limit to 8 because we don't want more than 8 here
         sortDirection: 'DESC',
         nextToken: nextToken || null
       };

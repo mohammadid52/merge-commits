@@ -32,6 +32,7 @@ import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
 import Placeholder from '@components/Atoms/Placeholder';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface EditClassProps {
   instId: string;
@@ -120,7 +121,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listClassStudentsForRoom, {
-          limit: 2000,
+          limit: SEARCH_LIMIT,
           ...filter,
           nextToken: nextToken
         })
@@ -144,7 +145,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          limit: 2000,
+          limit: SEARCH_LIMIT,
           filter: {
             role: {eq: Role.ST},
             or: [
