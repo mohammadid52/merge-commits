@@ -31,6 +31,7 @@ import FloatingActionTranslation from './FloatingActionTranslation';
 import SyllabusSwitch from './SyllabusSwitch';
 import ClassroomsList from './ClassroomsList';
 import {Skeleton} from 'antd';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface Artist {
   id: string;
@@ -388,7 +389,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
           },
-          limit: 500
+          limit: SEARCH_LIMIT
         })
       );
 

@@ -12,8 +12,7 @@ import Table, {ITableProps} from '@components/Molecules/Table';
 import type {DatePickerProps} from 'antd';
 import {DatePicker} from 'antd';
 import {map} from 'lodash';
-
-const limit: number = 500;
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface IAttendanceProps {
   id: string;
@@ -63,7 +62,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         studentID: id,
         sortDirection: 'DESC',
         date,
-        limit
+        limit: SEARCH_LIMIT
       };
       if (nextToken) {
         payload.nextToken = nextToken;

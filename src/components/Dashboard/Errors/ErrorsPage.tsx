@@ -1,5 +1,6 @@
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
@@ -194,7 +195,7 @@ const deleteClosedErrors = async () => {
     date.setDate(date.getDate() - 7);
     const res: any = await API.graphql(
       graphqlOperation(queries.listErrorLogs, {
-        limit: 500,
+        limit: SEARCH_LIMIT,
 
         filter: {
           errorTime: {lt: date.toISOString()},
@@ -233,7 +234,7 @@ const ErrorsPage = () => {
   >(
     'listErrorLogs',
     {
-      limit: 200,
+      limit: SEARCH_LIMIT,
       filter: {
         errorTime: {
           gt: date.toISOString()

@@ -238,7 +238,9 @@ const UserLookupLocation = ({
               </span>
             </>
           ) : (
-            <span className="">Created On {moment(item?.createdAt).format('ll')}</span>
+            <span className="">
+              Created On {moment(item?.createdAt || item?.createAt).format('ll')}
+            </span>
           )}
         </span>
       )}

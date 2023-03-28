@@ -18,6 +18,7 @@ import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 let strippedString = (str: string) =>
   str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
@@ -424,7 +425,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
 
       const notesData: any = await API.graphql(
         graphqlOperation(queries.listUniversalJournalData, {
-          limit: 500,
+          limit: SEARCH_LIMIT,
           filter: {...listFilter.filter, type: {eq: 'class-note'}}
         })
       );

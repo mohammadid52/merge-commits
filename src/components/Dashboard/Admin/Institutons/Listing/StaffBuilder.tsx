@@ -36,6 +36,7 @@ import {map} from 'lodash';
 import moment from 'moment';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -100,7 +101,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
           filter: withZoiqFilter(filter, zoiqFilter),
-          limit: 500
+          limit: SEARCH_LIMIT
         })
       );
       let data = list.data.listPeople.items;

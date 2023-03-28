@@ -36,6 +36,7 @@ interface SelectorProps {
     | undefined;
 
   showSearch?: boolean;
+  optionFilterProp?: string;
 }
 
 // turn this component into a ref component
@@ -56,7 +57,8 @@ const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
     placement,
     label,
     isRequired,
-    dropdownRender
+    dropdownRender,
+    optionFilterProp
   } = selectorProps;
 
   const uniqKey = list && list.length > 0 && list[0]?.label ? 'label' : 'name';
@@ -70,6 +72,7 @@ const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
         value={selectedItem || undefined}
         status={error.length === 0 ? '' : 'error'}
         style={{width, borderRadius: 99}}
+        optionFilterProp={optionFilterProp}
         disabled={loading || disabled}
         showSearch={showSearch}
         ref={ref}
