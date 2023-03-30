@@ -2,8 +2,8 @@
 
 branch=$(git symbolic-ref --short HEAD)
 
-echo "Do you want to run cypress test on this branch? (y/N) " 
-read run_test
+# echo "Do you want to run cypress test on this branch? (y/N) " 
+# read run_test
 
 PURPLE='\033[01;35m'
 NONE='\033[00m'
