@@ -293,8 +293,6 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       console.error('error updating journal data - ', e);
     } finally {
       console.log('updated journal data...');
-      // if (notesChanged) setNotesChanged(false);
-      // if (saveInProgress) setSaveInProgress(false);
     }
   };
 

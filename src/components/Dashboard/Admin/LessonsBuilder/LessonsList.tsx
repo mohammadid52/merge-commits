@@ -61,6 +61,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     currentList: _currentList,
     allAsProps,
     setCurrentList,
+    resetPagination,
     getIndex
   } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
 
@@ -525,6 +526,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
             <Filters
               loading={status !== 'done'}
               list={currentList}
+              resetPagination={resetPagination}
               updateFilter={updateFilter}
               filters={filters}
               showingCount={{

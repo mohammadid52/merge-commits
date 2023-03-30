@@ -255,6 +255,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     setTotalPages,
     currentList,
     allAsProps,
+    resetPagination,
     setCurrentList
   } = usePagination(courseList, loading ? 0 : totalNum);
 
@@ -449,6 +450,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         <Filters
           loading={loading}
           list={courseList}
+          resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
           showingCount={{

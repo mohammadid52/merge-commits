@@ -623,6 +623,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         <Filters
           loading={loading}
           list={currentList}
+          resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
           customFilters={['ADMIN', 'BUILDER', 'FELLOW', 'STUDENT']}

@@ -74,7 +74,8 @@ export const UnitList = ({
     currentList,
     allAsProps,
     setCurrentList,
-    getIndex
+    getIndex,
+    resetPagination
   } = usePagination(units, loading ? 0 : totalNum);
 
   useEffect(() => {
@@ -602,6 +603,7 @@ export const UnitList = ({
           loading={loading}
           list={units}
           updateFilter={updateFilter}
+          resetPagination={resetPagination}
           showingCount={
             isFromLesson
               ? null

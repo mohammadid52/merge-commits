@@ -1,20 +1,24 @@
+import {CloseCircleOutlined} from '@ant-design/icons';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {Radio} from 'antd';
 import {RadioChangeEvent} from 'antd/es/radio';
 import {useState} from 'react';
+import Buttons from './Buttons';
 
 export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
 
 const Filters = ({
   updateFilter,
-
-  customFilters
+  filters,
+  customFilters,
+  resetPagination
 }: {
   loading: boolean;
   updateFilter: any;
   filters: SortType | null;
   list?: any[];
   customFilters?: string[];
+  resetPagination?: () => void;
   showingCount?: {
     totalResults: number;
     currentPage: number;
@@ -25,17 +29,18 @@ const Filters = ({
   const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
   const filter = customFilters ? customFilters : defaultFilterMapping;
 
-  const [mode, setMode] = useState(filter[0]);
+  const [mode, setMode] = useState(null);
 
   const handleModeChange = (e: RadioChangeEvent) => {
-    const mode = e.target.value;
-    setMode(mode);
-    updateFilter(mode);
+    const newMode = e.target.value;
+    setMode(newMode);
+    updateFilter(newMode);
+    resetPagination?.();
   };
 
   return (
     <ErrorBoundary componentName="Filters">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-start gap-4">
         <Radio.Group
           onChange={handleModeChange}
           value={mode}
@@ -47,19 +52,20 @@ const Filters = ({
           ))}
         </Radio.Group>
 
-        {/* <AnimatedContainer duration="500" animationType="slideIn" show={!loading}>
-          {!loading && !isEmpty(filters) ? (
-            <h5 className="text-sm text-gray-700 text-right w-auto">
-              {filters !== undefined && filters !== null
-                ? `${getLen(filters)} ${filters?.toLocaleLowerCase()} items - `
-                : ''}{' '}
-              Total {list?.length} items
-            </h5>
-          ) : (
-            Boolean(showingCount) &&
-            showingCount?.totalResults && <ShowingCount {...showingCount} />
-          )}
-        </AnimatedContainer> */}
+        {/* Add clear reset button */}
+        {mode && (
+          <Buttons
+            label={'Clear filters'}
+            transparent
+            Icon={CloseCircleOutlined}
+            size="middle"
+            onClick={() => {
+              updateFilter(filters);
+              setMode(null);
+              resetPagination?.();
+            }}
+          />
+        )}
       </div>
     </ErrorBoundary>
   );

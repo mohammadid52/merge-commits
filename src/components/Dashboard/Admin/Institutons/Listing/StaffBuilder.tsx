@@ -375,6 +375,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     allAsProps,
     setTotalPages,
     setFirstPage,
+    resetPagination,
     setLastPage,
     pageCount,
     getIndex
@@ -527,6 +528,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           <Filters
             loading={dataLoading}
             list={finalList}
+            resetPagination={resetPagination}
             updateFilter={updateFilter}
             filters={filters}
             showingCount={{

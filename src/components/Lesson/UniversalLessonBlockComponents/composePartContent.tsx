@@ -2,7 +2,7 @@ import {Divider} from 'antd';
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import ActivityBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
-import DocsBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
+
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import map from 'lodash/map';
@@ -182,12 +182,6 @@ const composePartContent = (
     return (
       <ErrorBoundary componentName="NotesBlock">
         <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />
-      </ErrorBoundary>
-    );
-  } else if (type.includes(FORM_TYPES.DOCS)) {
-    return (
-      <ErrorBoundary componentName="DocsBlock">
-        <DocsBlock value={value} />
       </ErrorBoundary>
     );
   } else if (type.includes(GAME_CHANGERS) || type === 'square') {

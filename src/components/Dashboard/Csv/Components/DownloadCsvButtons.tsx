@@ -1,9 +1,9 @@
 import Buttons from '@components/Atoms/Buttons';
-import {PDFDownloadLink} from '@react-pdf/renderer';
-import {getTodayDate} from '@utilities/functions';
-import {Checkbox, Form, Switch, Tooltip} from 'antd';
-import {CSVLink} from 'react-csv';
-import {BsDownload} from 'react-icons/bs';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { getTodayDate } from '@utilities/functions';
+import { Form, Switch, Tooltip } from 'antd';
+import { CSVLink } from 'react-csv';
+import { BsDownload } from 'react-icons/bs';
 import SurveyPDF from '../SurveyPDF';
 
 interface DownloadCsvButtonsInterface {

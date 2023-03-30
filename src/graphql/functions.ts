@@ -1,6 +1,6 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+// import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {formatPageName} from 'utilities/functions';
-
+import {API, graphqlOperation} from 'aws-amplify';
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';

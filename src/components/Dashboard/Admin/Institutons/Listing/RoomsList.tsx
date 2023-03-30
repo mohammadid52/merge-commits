@@ -214,6 +214,7 @@ const RoomsList = (props: RoomListProps) => {
     setTotalPages,
     currentList,
     allAsProps,
+    resetPagination,
     getIndex
   } = usePagination(roomList, loading ? 0 : totalNum);
 
@@ -387,6 +388,7 @@ const RoomsList = (props: RoomListProps) => {
 
         <Filters
           loading={loading}
+          resetPagination={resetPagination}
           list={roomList}
           updateFilter={updateFilter}
           filters={filters}

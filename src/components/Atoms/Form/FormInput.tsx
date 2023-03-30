@@ -30,6 +30,7 @@ interface FormInputProps {
   Icon?: any;
   suffix?: React.ReactNode;
   inputClassName?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const {Password, TextArea} = Input;
@@ -54,7 +55,8 @@ const FormInput: React.FC<FormInputProps> = ({
   suffix,
   min,
   tooltip,
-  Icon
+  Icon,
+  onKeyDown
 }: FormInputProps) => {
   const inputProps: any = {
     disabled,
@@ -71,7 +73,8 @@ const FormInput: React.FC<FormInputProps> = ({
     status: error ? 'error' : '',
     prefix: error ? <BiErrorCircle /> : Icon ? <Icon /> : undefined,
     suffix,
-    showCount: showCharacterUsage
+    showCount: showCharacterUsage,
+    onKeyDown
   };
 
   return (

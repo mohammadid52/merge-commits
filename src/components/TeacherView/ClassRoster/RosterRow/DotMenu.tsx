@@ -6,9 +6,10 @@ import {BiDotsVerticalRounded} from 'react-icons/bi';
 interface IDotMenuProps {
   menuItems?: {label: string; action?: Function; danger?: boolean}[];
   extraContent?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-const DotMenu = ({menuItems, extraContent}: IDotMenuProps) => {
+const DotMenu = ({menuItems, extraContent, children}: IDotMenuProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
 
   const content = (
@@ -32,7 +33,7 @@ const DotMenu = ({menuItems, extraContent}: IDotMenuProps) => {
 
   return (
     <Popover content={content} trigger="click">
-      <Buttons Icon={BiDotsVerticalRounded} variant="text" />
+      {children || <Buttons Icon={BiDotsVerticalRounded} variant="text" />}
     </Popover>
   );
 };
