@@ -620,7 +620,7 @@ const LessonControl = () => {
                 <Suspense
                   fallback={
                     <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                      <ComponentLoading />
+                      <ComponentLoading from="LessonControl" />
                     </div>
                   }>
                   <ErrorBoundary

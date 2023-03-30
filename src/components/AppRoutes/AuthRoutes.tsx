@@ -14,7 +14,7 @@ const AuthRoutes = () => {
   const {signOut} = useAuth();
 
   return (
-    <Suspense fallback={<ComponentLoading />}>
+    <Suspense fallback={<ComponentLoading from="AuthRoutes" />}>
       <LogoutAfterInactivity
         logout={() => {
           signOut();

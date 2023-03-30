@@ -57,6 +57,7 @@ const Filters = ({
   // Remove mode if not filters in url
   useEffect(() => {
     if (!filtersFromUrl) {
+      updateFilter(filters);
       setMode(null);
     }
   }, [filtersFromUrl]);

@@ -107,10 +107,12 @@ const MainRouter: React.FC = () => {
           <Suspense
             fallback={
               <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
-                <ComponentLoading />
+                <ComponentLoading from="AppMainRouter Suspense" />
               </div>
             }>
-            {authState === 'loading' && <ComponentLoading />}
+            {authState === 'loading' && (
+              <ComponentLoading from="AppMainRouter loading state" />
+            )}
             {authState === 'loggedIn' && <AuthRoutes />}
             {authState === 'notLoggedIn' && <UnauthRoutes />}
           </Suspense>

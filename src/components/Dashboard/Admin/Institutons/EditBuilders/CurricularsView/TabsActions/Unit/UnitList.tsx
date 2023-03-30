@@ -30,6 +30,7 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import moment from 'moment';
 import AttachedCourses from './AttachedCourses';
 import UnitFormComponent from './UnitFormComponent';
+import {useQuery} from '@tanstack/react-query';
 
 export const UnitList = ({
   instId,
@@ -143,6 +144,18 @@ export const UnitList = ({
       );
 
       const items = result.data?.listUniversalSyllabi.items;
+      setLoading(false);
+      return items;
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useQuery({
+    queryKey: ['listUnits'],
+    queryFn: fetchSyllabusList,
+    onSuccess(data) {
+      const items = data;
       setAllUnits(items);
 
       if (isFromLesson) {
@@ -177,12 +190,8 @@ export const UnitList = ({
         setLastPage(!(updatedList.length > pageCount));
         setUnits(updatedList);
       }
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
     }
-  };
+  });
 
   const updateUnitList = (inputObj: any) => {
     setUnits(units.filter((unitObj: any) => unitObj.id !== inputObj.id));

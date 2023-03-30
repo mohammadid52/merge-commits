@@ -21,7 +21,7 @@ const usePagination = (data: any[], totalResults: number) => {
 
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
-  const [pageCount, setPageCount] = useState(Number(getQuery('pageCount')) || 10);
+  const [pageCount, setPageCount] = useState(Number(getQuery('pageSize')) || 10);
   const [currentList, setCurrentList] = useState<any[]>([]);
 
   const getIndex = (idx: number) => idx + 1 + pageCount * (currentPage - 1);

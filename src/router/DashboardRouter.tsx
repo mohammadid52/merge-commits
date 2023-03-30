@@ -73,7 +73,7 @@ const DashboardRouter = () => {
       <Suspense
         fallback={
           <div className="min-h-screen w-full flex flex-col justify-center items-center">
-            <ComponentLoading />
+            <ComponentLoading from="DashboardRouter 1" />
           </div>
         }>
         <Switch>
@@ -99,7 +99,7 @@ const DashboardRouter = () => {
               } else
                 return (
                   <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    <ComponentLoading />
+                    <ComponentLoading from="DashboardRouter" />
                   </div>
                 );
             }}

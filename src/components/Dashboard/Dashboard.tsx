@@ -2,6 +2,7 @@ import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
 import {logError, updatePageState} from '@graphql/functions';
+import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -221,6 +222,15 @@ const Dashboard = () => {
     );
   };
 
+  useQuery({
+    queryKey: ['user'],
+    queryFn: getUser,
+    enabled: !stateUser?.firstName,
+    onSuccess(data) {
+      setUser(data);
+    }
+  });
+
   async function getUser() {
     const userEmail = stateUser?.email ? stateUser?.email : cookies.auth?.email;
     const userAuthId = stateUser?.authId ? stateUser?.authId : cookies.auth?.authId;
@@ -233,8 +243,7 @@ const Dashboard = () => {
       const user: any = await API.graphql(
         graphqlOperation(queries.getPerson, queryObj.valueObj)
       );
-
-      setUser(user.data.getPerson);
+      return user.data.getPerson;
     } catch (error) {
       console.log('Removing cookies - Something went wrong');
       if (!userEmail && !userAuthId) {
@@ -250,7 +259,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!stateUser?.firstName) {
-      getUser();
+      // do nothing
     } else {
       setUserData({
         role: stateUser?.role,
@@ -743,7 +752,7 @@ const Dashboard = () => {
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading />
+                <ComponentLoading from="Dashboard 1" />
               </div>
             }>
             <Switch>
@@ -769,7 +778,7 @@ const Dashboard = () => {
                   } else
                     return (
                       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <ComponentLoading />
+                        <ComponentLoading from="Dashbaord 2" />
                       </div>
                     );
                 }}

@@ -1,4 +1,5 @@
 import Placeholder from '@components/Atoms/Placeholder';
+import {useQuery} from '@tanstack/react-query';
 import {getImageFromS3} from '@utilities/services';
 import {Card, Descriptions} from 'antd';
 import {RoomStatus} from 'API';
@@ -79,10 +80,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     action: () => {}
   });
 
-  useEffect(() => {
-    fetchCurriculums();
-  }, []);
-
   const instituteChange = (value: string) => {
     setSelectedInstitution({name: value, id: value});
 
@@ -102,14 +99,13 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const [totalNum, setTotalNum] = useState(0);
 
-  const fetchCurriculums = async () => {
-    try {
-      setLoading(true);
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
-      );
+  const {} = useQuery({
+    queryKey: ['curriculumList'],
+    queryFn: () => fetchCurriculums(),
+    onSuccess: (data) => {
+      console.log(data);
 
-      const updatedList: ICurricular[] = list.data?.listCurricula?.items
+      const updatedList: ICurricular[] = data
         ?.map((item: ICurricular) => {
           if (item) {
             return {
@@ -146,6 +142,17 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       setFirstPage(true);
       setLastPage(!(updatedList.length > pageCount));
       setCourseList(updatedList);
+    }
+  });
+
+  const fetchCurriculums = async () => {
+    try {
+      setLoading(true);
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
+      );
+
+      return list.data?.listCurricula?.items;
     } catch (error) {
       logError(error, {authId, email}, 'CurriculumList @fetchCurriculums');
     } finally {
