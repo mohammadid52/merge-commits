@@ -1,3 +1,4 @@
+import {getQuery} from '@utilities/urls';
 import {useEffect, useState} from 'react';
 
 export interface ListBottomBar {
@@ -20,63 +21,36 @@ const usePagination = (data: any[], totalResults: number) => {
 
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
-  const [pageCount, setPageCount] = useState(10);
+  const [pageCount, setPageCount] = useState(Number(getQuery('pageCount')) || 10);
   const [currentList, setCurrentList] = useState<any[]>([]);
 
   const getIndex = (idx: number) => idx + 1 + pageCount * (currentPage - 1);
 
-  const goNextPage = () => {
-    const pageHigherLimit = totalPages - 1;
-    if (firstPage) {
-      setFirstPage(false);
-    }
-    if (currentPage === pageHigherLimit - 1) {
-      setLastPage(true);
-    }
-    setCurrentPage(currentPage + 1);
-  };
+  const goNextPage = () => {};
 
-  const goPrevPage = () => {
-    if (lastPage) {
-      setLastPage(false);
-    }
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-    else {
-      setFirstPage(true);
-    }
-  };
+  const goPrevPage = () => {};
 
   const resetPagination = () => {
     setCurrentPage(1);
     currentPageData();
-    setFirstPage(true);
-    if (totalPages === 1) {
-      setLastPage(true);
-    } else {
-      setLastPage(false);
-    }
   };
 
   const currentPageData = () => {
     const initialItem = (currentPage - 1) * pageCount;
 
     const updatedList = data.slice(initialItem, initialItem + pageCount) || [];
+
     setCurrentList(updatedList);
   };
 
   useEffect(() => {
     resetPagination();
-    setFirstPage(true);
-    setLastPage(false);
+
     const totalListPages = Math.floor(totalResults / pageCount);
     if (pageCount * totalListPages === totalResults) {
       setTotalPages(totalListPages);
     } else {
       setTotalPages(totalListPages + 1);
-    }
-    if (totalPages === 1 && totalListPages === 0) {
-      setFirstPage(true);
-      setLastPage(true);
     }
   }, [pageCount]);
 
@@ -85,13 +59,6 @@ const usePagination = (data: any[], totalResults: number) => {
       currentPageData();
     }
   }, [currentPage, totalResults, pageCount, data.length]);
-
-  useEffect(() => {
-    if (totalPages === 1) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [totalPages]);
 
   const allAsProps: ListBottomBar = {
     totalPages,

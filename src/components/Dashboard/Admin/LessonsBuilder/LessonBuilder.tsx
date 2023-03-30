@@ -55,12 +55,12 @@ export interface InputValueObject {
 }
 interface LessonBuilderProps {
   designersList: any[];
-  institutionList: any[];
+
   instId: string;
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const {institutionList, instId} = props;
+  const {instId} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
@@ -540,7 +540,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             setSelectedDesigners={setSelectedDesigners}
             postLessonCreation={postLessonCreation}
             allMeasurement={[]}
-            institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
             fetchStaffByInstitution={fetchStaffByInstitution}
           />

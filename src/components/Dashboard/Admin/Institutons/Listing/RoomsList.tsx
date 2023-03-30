@@ -9,18 +9,23 @@ import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
+import {useQueries} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {ModelRoomFilterInput} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
-import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import {map, orderBy, uniqBy} from 'lodash';
+import {map, orderBy} from 'lodash';
+import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
+
+// as of 9:15 am 30th march 2023. load time of this page is 5.67 seconds
+// my goal is to bring it down to 3-4 seconds by 31st march 2023
+// update: Success - 3.5 seconds
 
 interface RoomListProps {
   instId: string;
@@ -46,10 +51,9 @@ const RoomsList = (props: RoomListProps) => {
 
   const [loading, setLoading] = useState(true);
 
-  const [institutionList, setInstitutionList] = useState<any[]>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
-  const [messages, setMessages] = useState({
+  const [messages] = useState({
     show: false,
     message: InstitueRomms[userLanguage]['messages']['nothaveclass'],
     isError: false
@@ -73,67 +77,56 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
-  const fetchInstitutions = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions, {
-          filter: withZoiqFilter({})
-        })
-      );
+  const {authId, isFellow, isTeacher, isSuperAdmin, isAdmin, isBuilder} = useAuth();
 
-      const institutions = list?.data?.listInstitutions?.items;
+  const filter: ModelRoomFilterInput =
+    isFellow || isTeacher
+      ? {
+          teacherAuthID: {eq: authId}
+        }
+      : {};
 
-      setInstitutionList(
-        uniqBy(institutions, 'name').map((d: any) => ({
-          id: d.id,
-          label: d.name,
-          value: d.name
-        }))
-      );
-
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-
-      setLoading(false);
-    }
+  const fetchRooms = async () => {
+    const assignedRoomsAsTeachers: any = await API.graphql(
+      graphqlOperation(customQueries.listRoomsDashboard, {
+        filter: withZoiqFilter(filter, zoiqFilter)
+      })
+    );
+    const teachersList = assignedRoomsAsTeachers?.data?.listRooms?.items;
+    return teachersList;
   };
 
-  const {authId, isFellow, isTeacher, role, isSuperAdmin, isAdmin, isBuilder} = useAuth();
+  const fetchRoomCoTeachers = async () => {
+    const assignedRoomsAsCoTeacher: any = await API.graphql(
+      graphqlOperation(queries.listRoomCoTeachers, {
+        filter: filter
+      })
+    );
 
-  const fetchRoomList = async () => {
-    try {
-      const filter: ModelRoomFilterInput =
-        isFellow || isTeacher
-          ? {
-              teacherAuthID: {eq: authId}
-            }
-          : {};
+    return assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || [];
+  };
 
-      const assignedRoomsAsTeachers: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard, {
-          filter: withZoiqFilter(filter, zoiqFilter)
-        })
-      );
+  const [response1, response2] = useQueries({
+    queries: [
+      {
+        queryKey: ['rooms'],
+        queryFn: fetchRooms,
 
-      let assignedRoomsAsCoTeacher: any;
+        enabled: instId === associateInstitute[0]?.institution?.id
+      },
+      {
+        queryKey: ['roomsCoteachers'],
+        queryFn: fetchRoomCoTeachers,
 
-      if (isFellow || isTeacher) {
-        assignedRoomsAsCoTeacher = await API.graphql(
-          graphqlOperation(queries.listRoomCoTeachers, {
-            filter: filter
-          })
-        );
+        enabled:
+          instId === associateInstitute[0]?.institution?.id && (isFellow || isTeacher)
       }
+    ]
+  });
 
-      const teachersList = assignedRoomsAsTeachers?.data?.listRooms?.items;
-      const coTeachersList =
-        isFellow || isTeacher
-          ? assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || []
-          : [];
-
-      // cause co teachers list return different data structure
-      const updatedCoTeachersList = coTeachersList.map((coTeacher: any) => {
+  const handleAfterFetch = () => {
+    const updatedCoTeachersList =
+      response2?.data?.map((coTeacher: any) => {
         const {room, teacher} = coTeacher;
         return {
           ...coTeacher,
@@ -141,55 +134,38 @@ const RoomsList = (props: RoomListProps) => {
           status: teacher?.status || '',
           isCoteacher: true
         };
-      });
+      }) || [];
 
-      const merged = [...teachersList, ...updatedCoTeachersList];
+    const merged = [...response1.data, ...updatedCoTeachersList].filter(Boolean);
 
-      const updatedMerge = merged.map((room: any) => {
-        return {
-          ...room,
-          institutionId: room.institution?.id,
-          institutionName: room.institution?.name
-        };
-      });
+    const updatedMerge = merged.map((room: any) => {
+      return {
+        ...room,
+        institutionId: room.institution?.id,
+        institutionName: room.institution?.name
+      };
+    });
 
-      const totalListPages = Math.floor(merged.length / pageCount);
+    const totalListPages = Math.floor(merged.length / pageCount);
 
-      setTotalPages(
-        totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
-      );
+    setTotalPages(
+      totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
+    );
 
-      setTotalNum(merged.length);
+    setTotalNum(merged.length);
 
-      setFirstPage(true);
-      setLastPage(!(merged.length > pageCount));
+    setFirstPage(true);
+    setLastPage(!(merged.length > pageCount));
 
-      setRoomList(updatedMerge);
-
-      setLoading(false);
-    } catch (e) {
-      console.error(e);
-      setMessages({
-        show: true,
-        message: InstitueRomms[userLanguage]['messages']['fetcherr'],
-        isError: true
-      });
-      setLoading(false);
-    }
+    setRoomList(updatedMerge);
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (instId === associateInstitute[0]?.institution?.id) {
-      fetchRoomList();
+    if (response1.isFetched || response2.isFetched) {
+      handleAfterFetch();
     }
-  }, [instId]);
-
-  useEffect(() => {
-    if (isSuperAdmin || isAdmin || isBuilder) {
-      fetchInstitutions();
-      fetchRoomList();
-    }
-  }, [role]);
+  }, [response1.isFetched, response2.isFetched]);
 
   const instituteChange = (value: string) => {
     setSelectedInstitution({value});
@@ -230,7 +206,7 @@ const RoomsList = (props: RoomListProps) => {
         }
       }
     }
-  }, [loading]);
+  }, [loading, roomList?.length]);
 
   const updateRoomList = (institutionId: string) => {
     const filteredByInstitution = filterBySearchQuery(institutionId, ['institutionId']);
@@ -329,7 +305,7 @@ const RoomsList = (props: RoomListProps) => {
     dataList,
     config: {
       dataList: {
-        loading,
+        loading: loading,
 
         pagination: {
           showPagination: true,
@@ -355,12 +331,8 @@ const RoomsList = (props: RoomListProps) => {
             withButton={
               <div className={`w-auto flex gap-x-4 justify-end items-center`}>
                 {(isSuperAdmin || isAdmin || isBuilder) && (
-                  <Selector
-                    width={300}
-                    showSearch
-                    placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
-                    list={institutionList}
-                    selectedItem={selectedInstitution?.label}
+                  <InsitutionSelector
+                    selectedInstitution={selectedInstitution?.label}
                     onChange={instituteChange}
                   />
                 )}

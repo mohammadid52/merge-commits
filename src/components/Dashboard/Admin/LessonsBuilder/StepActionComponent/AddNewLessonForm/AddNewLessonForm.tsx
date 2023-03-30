@@ -28,7 +28,7 @@ interface AddNewLessonFormProps {
   postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
   lessonId: string;
-  institutionList: any[];
+
   setUnsavedChanges: Function;
   fetchStaffByInstitution: (institutionID: string) => void;
   lessonPlanAttachment?: any;

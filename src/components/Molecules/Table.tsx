@@ -3,6 +3,7 @@ import {Table, TableProps} from 'antd';
 import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
 import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
+import {setQuery} from '@utilities/urls';
 
 interface IDataListItem {
   [key: string]: any;
@@ -80,8 +81,10 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
           showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
           responsive: true,
           showSizeChanger: true,
-          onShowSizeChange: (_, pageSize) =>
-            paginationConfig?.allAsProps.setPageCount(pageSize)
+          onShowSizeChange: (_, pageSize) => {
+            setQuery('page', pageSize.toString());
+            paginationConfig?.allAsProps.setPageCount(pageSize);
+          }
         }
       : undefined,
     dataSource: dataSource,
