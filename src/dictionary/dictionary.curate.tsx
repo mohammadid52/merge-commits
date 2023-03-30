@@ -609,7 +609,7 @@ const editClassDict: EditClassDictInterface = {
     STUDENTS: 'STUDENTS',
     ADD_STUDENT_PLACEHOLDER: 'Select student',
     ADD_STUDENT_LABEL: 'Add students to class',
-    ADD_STUDENT_FROM_REGSITER: 'Add students from register to class',
+    ADD_STUDENT_FROM_REGSITER: 'Register a new student to this class',
     ADD_STUDENT_BUTTON: 'Add',
     GROUP: 'Group',
     GROUP_PLACEHOLDER: 'Select Group',
