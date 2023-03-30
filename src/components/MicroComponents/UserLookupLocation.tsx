@@ -1,6 +1,6 @@
 import Loader from '@components/Atoms/Loader';
-import Popover from '@components/Atoms/Popover';
 import {formatPageName} from '@utilities/functions';
+import {Descriptions, Popover as AntdPopover} from 'antd';
 import {GetPersonLocationQueryVariables, PersonStatus, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import * as customQueries from 'customGraphql/customQueries';
@@ -22,10 +22,9 @@ type LocationInfoType = {
 };
 
 const LocationInfo = ({
-  idx,
   authId,
   createdAt,
-  setShowLocationInfo,
+
   showLocationInfo,
   email,
   pageState,
@@ -109,71 +108,43 @@ const LocationInfo = ({
 
   return (
     <>
-      <Popover
-        bottom={idx < 2 ? -3 : 1.5}
-        minHeight="null"
-        minWidth={inLesson ? 96 : 52}
-        className="w-auto"
-        show={showLocationInfo}
+      <AntdPopover
         content={
-          <div className="w-auto">
-            <dl className="grid grid-cols-1 gap-x-4 gap-y-1">
-              <div className="flex w-auto items-end justify-between">
-                <dt className="w-auto text-sm font-medium text-gray-500">Status:</dt>
-                <dd className="w-auto mt-1 text-sm break-all text-gray-700 font-medium">
-                  {loggedIn && !loggedOut ? (
-                    <span className="capitalize">
-                      {localPageState.pageState === UserPageState.LOGGED_IN
-                        ? 'Logged In'
-                        : inLesson
-                        ? `in Lesson`
-                        : `on ${localPageState.pageState?.toLowerCase()}`}
-                    </span>
-                  ) : (
-                    formatPageName(localPageState.pageState)
-                  )}
-                </dd>
-              </div>
-
+          showLocationInfo && (
+            <>
               {!isStaff && inLesson && isLoading && (
                 <div className="flex items-center justify-center h-full">
-                  <Loader className="theme-text text-xs" />
+                  <Loader />
                 </div>
               )}
+              {!isLoading && (
+                <Descriptions column={1} rootClassName="w-56">
+                  <Descriptions.Item label="Status">
+                    {loggedIn && !loggedOut ? (
+                      <span className="capitalize">
+                        {localPageState.pageState === UserPageState.LOGGED_IN
+                          ? 'Logged In'
+                          : inLesson
+                          ? `in Lesson`
+                          : `on ${localPageState.pageState?.toLowerCase()}`}
+                      </span>
+                    ) : (
+                      formatPageName(localPageState.pageState)
+                    )}
+                  </Descriptions.Item>
 
-              {!isStaff &&
-                inLesson &&
-                !isLoading &&
-                isPersonLocationFetched &&
-                liveLessonData && (
-                  <>
-                    <div className="flex w-auto items-end justify-between">
-                      <dt className="w-auto text-sm font-medium text-gray-500">
-                        Lesson:
-                      </dt>
-                      <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                        {liveLessonData?.lesson?.title || '-'}
-                      </dd>
-                    </div>
+                  <Descriptions.Item label="Lesson">
+                    {liveLessonData?.lesson?.title || '-'}
+                  </Descriptions.Item>
 
-                    <div className="flex w-auto items-end justify-between">
-                      <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
-                      <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                        {liveLessonData?.room?.name || '-'}
-                      </dd>
-                    </div>
-                  </>
-                )}
-
-              {_lastPageStateUpdate !== null && (
-                <span className="border-t-0 theme-border-200 text-gray-600 pt-1 mt-1 text-xs text-center">
-                  Since {_lastPageStateUpdate}
-                </span>
+                  <Descriptions.Item label="Room">
+                    {liveLessonData?.room?.name || '-'}
+                  </Descriptions.Item>
+                </Descriptions>
               )}
-            </dl>
-          </div>
-        }
-        setShow={setShowLocationInfo}>
+            </>
+          )
+        }>
         {loggedOut ? (
           <span className="flex flex-col">
             <span>Logged Out</span>
@@ -185,7 +156,13 @@ const LocationInfo = ({
           formatPageName(localPageState.pageState) ||
           `Created on ${moment(createdAt).format('lll')}`
         )}
-      </Popover>
+      </AntdPopover>
+
+      {_lastPageStateUpdate !== null && !loggedOut && (
+        <span className="text-gray-600 text-xs">
+          (since {moment(lastPageStateUpdate).format('ll')})
+        </span>
+      )}
     </>
   );
 };
@@ -209,7 +186,7 @@ const UserLookupLocation = ({
   return (
     <div
       onMouseEnter={() => {
-        if (item.role === 'ST' && item.pageState !== null) {
+        if (item.role === 'ST' && item.pageState === 'LESSON') {
           setShowLocationInfo(true);
         }
       }}

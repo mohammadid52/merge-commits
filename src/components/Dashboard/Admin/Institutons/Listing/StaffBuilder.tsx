@@ -375,6 +375,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     allAsProps,
     setTotalPages,
     setFirstPage,
+    resetPagination,
     setLastPage,
     pageCount,
     getIndex
@@ -384,6 +385,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   useEffect(() => {
     if (!dataLoading && currentList.length > 0) {
       const query = checkSearchQueryFromUrl();
+
       if (query) {
         const items = filterBySearchQuery(query);
         if (Boolean(items)) {
@@ -391,7 +393,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         }
       }
     }
-  }, [dataLoading]);
+  }, [dataLoading, currentList?.length]);
 
   const searchStaff = () => {
     const searched = searchAndFilter(searchInput.value);
@@ -527,6 +529,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           <Filters
             loading={dataLoading}
             list={finalList}
+            resetPagination={resetPagination}
             updateFilter={updateFilter}
             filters={filters}
             showingCount={{

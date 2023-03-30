@@ -1,9 +1,7 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {withZoiqFilter} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
 import {useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
@@ -22,7 +20,6 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
   const match = useRouteMatch();
 
   const [designersList, setDesignersList] = useState<any[]>([]);
-  const [institutionList, setInstitutionList] = useState<any[]>([]);
 
   useEffect(() => {
     dispatch({
@@ -50,24 +47,8 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
     setDesignersList(updatedList);
   };
 
-  const fetchInstitutionsList = async () => {
-    const result: any = await API.graphql(
-      graphqlOperation(queries.listInstitutions, {
-        filter: withZoiqFilter({})
-      })
-    );
-    const savedData = result.data.listInstitutions;
-    const updatedList = savedData?.items.map((item: {id: string; name: string}) => ({
-      id: item?.id,
-      name: item?.name || '',
-      value: item?.name || ''
-    }));
-    setInstitutionList(updatedList);
-  };
-
   useEffect(() => {
     fetchPersonsList();
-    fetchInstitutionsList();
   }, []);
 
   /**
@@ -95,11 +76,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
             path={`${match.url}/add`}
             render={() => (
               <ErrorBoundary componentName="LessonBuilder">
-                <LessonBuilder
-                  designersList={designersList}
-                  institutionList={institutionList}
-                  instId={instId}
-                />
+                <LessonBuilder designersList={designersList} instId={instId} />
               </ErrorBoundary>
             )} // Add new lesson form
           />
@@ -109,11 +86,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
             render={() => (
               // <LessonEdit designersList={designersList} />
               <ErrorBoundary componentName="LessonBuilder">
-                <LessonBuilder
-                  designersList={designersList}
-                  institutionList={institutionList}
-                  instId={instId}
-                />
+                <LessonBuilder designersList={designersList} instId={instId} />
               </ErrorBoundary>
             )} // Edit lesson, assessment or survey form
           />

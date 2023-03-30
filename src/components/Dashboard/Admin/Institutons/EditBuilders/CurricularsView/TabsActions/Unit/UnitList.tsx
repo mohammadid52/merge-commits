@@ -11,6 +11,7 @@ import Filters, {SortType} from 'components/Atoms/Filters';
 import Modal from 'components/Atoms/Modal';
 import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
 
+import InsitutionSelector from '@components/Dashboard/Admin/InsitutionSelector';
 import {Descriptions, List, Tooltip} from 'antd';
 import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -27,9 +28,9 @@ import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
 import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import moment from 'moment';
-import {withZoiqFilter} from 'utilities/functions';
 import AttachedCourses from './AttachedCourses';
 import UnitFormComponent from './UnitFormComponent';
+import {useQuery} from '@tanstack/react-query';
 
 export const UnitList = ({
   instId,
@@ -50,7 +51,7 @@ export const UnitList = ({
   const {UnitLookupDict} = useDictionary();
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
-  const [institutionList, setInstitutionList] = useState<any>([]);
+
   const [units, setUnits] = useState<any>([]);
 
   const [addModalShow, setAddModalShow] = useState(false);
@@ -74,12 +75,12 @@ export const UnitList = ({
     currentList,
     allAsProps,
     setCurrentList,
-    getIndex
+    getIndex,
+    resetPagination
   } = usePagination(units, loading ? 0 : totalNum);
 
   useEffect(() => {
     fetchSyllabusList();
-    fetchInstitutions();
   }, [addedSyllabus]);
 
   const getUpdatedList = (items: any[]) => {
@@ -143,6 +144,18 @@ export const UnitList = ({
       );
 
       const items = result.data?.listUniversalSyllabi.items;
+      setLoading(false);
+      return items;
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useQuery({
+    queryKey: ['listUnits'],
+    queryFn: fetchSyllabusList,
+    onSuccess(data) {
+      const items = data;
       setAllUnits(items);
 
       if (isFromLesson) {
@@ -177,12 +190,8 @@ export const UnitList = ({
         setLastPage(!(updatedList.length > pageCount));
         setUnits(updatedList);
       }
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
     }
-  };
+  });
 
   const updateUnitList = (inputObj: any) => {
     setUnits(units.filter((unitObj: any) => unitObj.id !== inputObj.id));
@@ -241,21 +250,6 @@ export const UnitList = ({
     history.push(`${match.url}/${unitId}/edit`);
   };
 
-  const fetchInstitutions = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions, {
-          filter: withZoiqFilter({})
-        })
-      );
-      setInstitutionList(
-        list.data?.listInstitutions?.items.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        )
-      );
-    } catch (error) {}
-  };
-
   const updateRoomList = (institutionId: string) => {
     const filteredByInstitution = filterBySearchQuery(institutionId, ['institutionId']);
 
@@ -303,7 +297,7 @@ export const UnitList = ({
         }
       }
     }
-  }, [loading]);
+  }, [loading, units?.length]);
 
   const searchRoom = () => {
     const searched = searchAndFilter(searchInput.value);
@@ -543,10 +537,8 @@ export const UnitList = ({
           withButton={
             <div className={`w-auto flex gap-x-4 justify-end items-center`}>
               {isSuperAdmin && (
-                <Selector
-                  placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
+                <InsitutionSelector
+                  selectedInstitution={selectedInstitution?.label}
                   onChange={instituteChange}
                 />
               )}
@@ -602,6 +594,7 @@ export const UnitList = ({
           loading={loading}
           list={units}
           updateFilter={updateFilter}
+          resetPagination={resetPagination}
           showingCount={
             isFromLesson
               ? null

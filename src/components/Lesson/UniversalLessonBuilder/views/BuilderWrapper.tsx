@@ -39,7 +39,7 @@ import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
 
 import ActivityModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
-import DocsModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal';
+
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
@@ -383,8 +383,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.REVIEW_SLIDER:
         return <ReviewSliderModal {...commonProps} />;
 
-      case FORM_TYPES.DOCS:
-        return <DocsModal {...commonProps} />;
       case SQUARE:
       case FOUR_SEVEN_EIGHT:
       case THINK_ABOUT_IT:

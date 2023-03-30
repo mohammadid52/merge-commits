@@ -94,3 +94,25 @@ const getUrls = getCorrectUrl(getBackendKey(awsconfig2));
 export const createUserUrl = getUrls.createUserUrl;
 export const requestResetPassword = getUrls.requestResetPassword;
 export const tableCleanupUrl = getUrls.tableCleanupUrl;
+
+export const setQuery = (query: string, value: string) => {
+  const url = new URL(window.location.href);
+
+  url.searchParams.set(query, value);
+
+  // build a new search string with updated query parameters and push it to the history
+  const newSearch = `?${url.searchParams.toString()}`;
+  window.history.pushState(null, '', newSearch);
+};
+
+export const getQuery = (query: string) => {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(query);
+};
+
+export const removeQuery = (query: string) => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(query);
+  const newSearch = `?${url.searchParams.toString()}`;
+  window.history.pushState(null, '', newSearch);
+};

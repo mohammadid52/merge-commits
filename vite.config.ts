@@ -1,13 +1,16 @@
 import react from '@vitejs/plugin-react';
 
 import path from 'path';
+import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
 import {defineConfig} from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
 
 export default defineConfig({
   root: process.cwd(),
-
+  output: {
+    dir: 'dist',
+    format: 'es'
+  },
   build: {
     chunkSizeWarningLimit: 2000,
     sourcemap: false,
@@ -20,8 +23,6 @@ export default defineConfig({
       },
 
       plugins: [
-        // Enable rollup polyfills plugin
-        // used during production bundling
         // @ts-ignore
         rollupNodePolyFill()
       ]

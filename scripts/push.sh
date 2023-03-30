@@ -2,8 +2,8 @@
 
 branch=$(git symbolic-ref --short HEAD)
 
-echo "Do you want to run cypress test on this branch? (y/N) " 
-read run_test
+# echo "Do you want to run cypress test on this branch? (y/N) " 
+# read run_test
 
 PURPLE='\033[01;35m'
 NONE='\033[00m'
@@ -36,13 +36,4 @@ case $branch in
           
 esac
 
-
-if [ "$run_test" = "y" ] || [ "$run_test" = "Y" ]; then
-  echo "Running cypress test..."
-  npm run cypress:run-everything
-  final
-
-else 
-    echo "Skipping cypress test..."
-    final
-    fi
+final

@@ -3,6 +3,7 @@ import {Table, TableProps} from 'antd';
 import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
 import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
+import {removeQuery, setQuery} from '@utilities/urls';
 
 interface IDataListItem {
   [key: string]: any;
@@ -54,6 +55,11 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
     };
   });
 
+  const resetOtherQueries = () => {
+    removeQuery('filter');
+    removeQuery('search');
+  };
+
   const tableProps: TableProps<any> = {
     bordered: true,
     expandable: config?.dataList?.expandable
@@ -76,12 +82,20 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
           total: paginationConfig?.allAsProps.totalResults,
           pageSize: paginationConfig?.allAsProps.pageCount,
           current: paginationConfig?.allAsProps.currentPage,
-          onChange: paginationConfig?.allAsProps.setCurrentPage,
+          onChange: (page) => {
+            resetOtherQueries();
+            removeQuery('pageSize');
+            setQuery('page', page.toString());
+            paginationConfig?.allAsProps.setCurrentPage(page);
+          },
           showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
           responsive: true,
           showSizeChanger: true,
-          onShowSizeChange: (_, pageSize) =>
-            paginationConfig?.allAsProps.setPageCount(pageSize)
+          onShowSizeChange: (_, pageSize) => {
+            resetOtherQueries();
+            setQuery('pageSize', pageSize.toString());
+            paginationConfig?.allAsProps.setPageCount(pageSize);
+          }
         }
       : undefined,
     dataSource: dataSource,

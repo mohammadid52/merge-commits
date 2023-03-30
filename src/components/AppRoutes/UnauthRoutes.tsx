@@ -9,7 +9,7 @@ const PrivacyPolicy = lazy(() => import('components/Auth/PrivacyPolicy'));
 
 const UnauthRoutes = () => {
   return (
-    <Suspense fallback={<ComponentLoading />}>
+    <Suspense fallback={<ComponentLoading from=" UnauthRoutes" />}>
       <Switch>
         <PublicRoute path="/login" restricted={true}>
           <Login />

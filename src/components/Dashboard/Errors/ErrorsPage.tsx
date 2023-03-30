@@ -365,7 +365,8 @@ const ErrorsPage = () => {
               )}
 
               <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
-                {isLoading && Array.from({length: 4}).map(() => <Card loading />)}
+                {isLoading &&
+                  Array.from({length: 4}).map((_, index) => <Card key={index} loading />)}
                 {filteredList.length > 0 ? (
                   filteredList.map((error, idx) => (
                     <ErrorItem
