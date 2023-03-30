@@ -1,10 +1,10 @@
 import Placeholder from '@components/Atoms/Placeholder';
+import {useQuery} from '@tanstack/react-query';
 import {getImageFromS3} from '@utilities/services';
 import {Card, Descriptions} from 'antd';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
-import Selector from 'atoms/Form/Selector';
 import {API, graphqlOperation} from 'aws-amplify';
 import Filters, {SortType} from 'components/Atoms/Filters';
 import Highlighted from 'components/Atoms/Highlighted';
@@ -26,7 +26,7 @@ import {isEmpty, map, orderBy} from 'lodash';
 import moment from 'moment';
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import {withZoiqFilter} from 'utilities/functions';
+import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface CurriculumListProps {
@@ -58,8 +58,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
 
-  const [institutionList, setInstitutionList] = useState<any>([]);
-
   const {isSuperAdmin} = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -82,13 +80,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     action: () => {}
   });
 
-  useEffect(() => {
-    fetchCurriculums();
-    if (isSuperAdmin) {
-      fetchInstitutions();
-    }
-  }, [isSuperAdmin]);
-
   const instituteChange = (value: string) => {
     setSelectedInstitution({name: value, id: value});
 
@@ -108,14 +99,13 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const [totalNum, setTotalNum] = useState(0);
 
-  const fetchCurriculums = async () => {
-    try {
-      setLoading(true);
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
-      );
+  const {} = useQuery({
+    queryKey: ['curriculumList'],
+    queryFn: () => fetchCurriculums(),
+    onSuccess: (data) => {
+      console.log(data);
 
-      const updatedList: ICurricular[] = list.data?.listCurricula?.items
+      const updatedList: ICurricular[] = data
         ?.map((item: ICurricular) => {
           if (item) {
             return {
@@ -152,28 +142,19 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       setFirstPage(true);
       setLastPage(!(updatedList.length > pageCount));
       setCourseList(updatedList);
-    } catch (error) {
-      logError(error, {authId, email}, 'CurriculumList @fetchCurriculums');
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
-  const fetchInstitutions = async () => {
+  const fetchCurriculums = async () => {
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions, {
-          filter: withZoiqFilter({})
-        })
+        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
-      setInstitutionList(
-        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        )
-      );
+
+      return list.data?.listCurricula?.items;
     } catch (error) {
-      logError(error, {authId, email}, 'CurriculumList @fetchInstitutions');
+      logError(error, {authId, email}, 'CurriculumList @fetchCurriculums');
     } finally {
       setLoading(false);
     }
@@ -255,6 +236,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     setTotalPages,
     currentList,
     allAsProps,
+    resetPagination,
     setCurrentList
   } = usePagination(courseList, loading ? 0 : totalNum);
 
@@ -280,7 +262,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         }
       }
     }
-  }, [loading]);
+  }, [loading, currentList?.length]);
 
   const searchRoom = () => {
     const searched = searchAndFilter(searchInput.value);
@@ -420,10 +402,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
           withButton={
             <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
               {isSuperAdmin && (
-                <Selector
-                  placeholder={InstitueCurriculum[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
+                <InsitutionSelector
+                  selectedInstitution={selectedInstitution?.label}
                   onChange={instituteChange}
                 />
               )}
@@ -449,6 +429,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         <Filters
           loading={loading}
           list={courseList}
+          resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
           showingCount={{

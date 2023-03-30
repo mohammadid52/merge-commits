@@ -1,20 +1,17 @@
-import useAuth from "@customHooks/useAuth";
-import { logError, uploadImageToS3 } from "@graphql/functions";
-import { Transition } from "@headlessui/react";
-import { getAsset } from "assets";
-import FormInput from "atoms/Form/FormInput";
-import Label from "atoms/Form/Label";
-import {
-  COMMUNITY_UPLOAD_KEY,
-  IFile,
-} from "components/Community/constants.community";
-import File from "components/Community/File";
-import { REGEX } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
-import isEmpty from "lodash/isEmpty";
-import update from "lodash/update";
-import { nanoid } from "nanoid";
-import React, { useCallback, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import useAuth from '@customHooks/useAuth';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import {Transition} from '@headlessui/react';
+import {getAsset} from 'assets';
+import FormInput from 'atoms/Form/FormInput';
+import Label from 'atoms/Form/Label';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import File from 'components/Community/File';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import isEmpty from 'lodash/isEmpty';
+import update from 'lodash/update';
+import {nanoid} from 'nanoid';
+import React, {useCallback, useRef, useState} from 'react';
+import {useDropzone} from 'react-dropzone';
 
 interface MediaProps {
   file?: IFile;
@@ -29,26 +26,26 @@ const Media = ({
   file,
   setFile,
   setError,
-  initialImage = "",
+  initialImage = '',
   videoLink,
-  setVideoLink,
+  setVideoLink
 }: MediaProps) => {
-  const updateProgress = (file: IFile, progress: IFile["progress"]) => {
+  const updateProgress = (file: IFile, progress: IFile['progress']) => {
     update(file, `progress`, () => progress);
-    setFile?.({ ...file });
+    setFile?.({...file});
   };
 
-  const updateStatus = (file: IFile, _status: IFile["_status"]) => {
+  const updateStatus = (file: IFile, _status: IFile['_status']) => {
     update(file, `_status`, () => _status);
-    setFile?.({ ...file });
+    setFile?.({...file});
   };
 
-  const updateImgId = (file: IFile, fileKey: IFile["fileKey"]) => {
+  const updateImgId = (file: IFile, fileKey: IFile['fileKey']) => {
     update(file, `fileKey`, () => fileKey);
-    setFile?.({ ...file });
+    setFile?.({...file});
   };
 
-  const { authId, email } = useAuth();
+  const {authId, email} = useAuth();
 
   const _uploadImageToS3 = async (
     file: any,
@@ -57,27 +54,27 @@ const Media = ({
     currentFile: any
   ) => {
     uploadImageToS3(file, `${COMMUNITY_UPLOAD_KEY}${id}`, type, {
-      auth: { authId, email },
+      auth: {authId, email},
       onSuccess: (result: any) => {
-        console.log("File successfully uploaded to s3", result);
-        updateStatus(currentFile, "success");
+        console.log('File successfully uploaded to s3', result);
+        updateStatus(currentFile, 'success');
         updateProgress(currentFile, null);
-        setError("");
+        setError('');
       },
 
       onError: (error: any) => {
-        updateStatus(currentFile, "failed");
+        updateStatus(currentFile, 'failed');
         updateProgress(currentFile, null);
-        logError(error, { authId: authId, email: email }, "Media");
-        console.error("Error in uploading file to s3", error);
+        logError(error, {authId: authId, email: email}, 'Media');
+        console.error('Error in uploading file to s3', error);
       },
-      progressCallback: ({ progress }: { progress: number }): void => {
+      progressCallback: ({progress}: {progress: number}): void => {
         if (progress) {
-          updateStatus(currentFile, "progress");
+          updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress?.toFixed(0));
         }
-      },
+      }
     });
   };
 
@@ -86,26 +83,21 @@ const Media = ({
     const fakeInitProgress = Math.floor(Math.random() * 10) + 1;
 
     const initState: IFile = {
-      _status: "progress",
+      _status: 'progress',
       progress: fakeInitProgress.toString(),
       file: acceptedFile,
       fileName: acceptedFile.name,
-      id,
+      id
     };
 
-    setFile?.({ ...initState });
-    let temp = initState.file.name.split(".");
+    setFile?.({...initState});
+    let temp = initState?.file?.name?.split('.');
     const extension = temp.pop();
     const fileName = `${Date.now()}_${temp
-      .join(" ")
-      .replace(new RegExp(/[ +!@#$%^&*().]/g), "_")}.${extension}`;
+      .join(' ')
+      .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
     updateImgId(initState, fileName);
-    await _uploadImageToS3(
-      initState.file,
-      fileName,
-      initState.file.type,
-      initState
-    );
+    await _uploadImageToS3(initState.file, fileName, initState.file.type, initState);
   };
 
   const uploadFile = useCallback(
@@ -115,10 +107,10 @@ const Media = ({
     [file]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
     // @ts-ignore
-    accept: "image/x-png,image/gif,image/jpeg",
+    accept: 'image/x-png,image/gif,image/jpeg'
   });
 
   const handleFileSelection = async (e: any) => {
@@ -130,21 +122,20 @@ const Media = ({
   const inputOther = useRef<any>(null);
   const openFilesExplorer = () => inputOther.current.click();
 
-  const fileIcon = getAsset("general", "fileImg");
+  const fileIcon = getAsset('general', 'fileImg');
 
-  const [errors, setErrors] = useState({ videoLink: "" });
+  const [errors, setErrors] = useState({videoLink: ''});
   const uploadedVideoLink: boolean =
-    !isEmpty(file) &&
-    (file._status === "success" || file._status === "progress");
+    !isEmpty(file) && (file._status === 'success' || file._status === 'progress');
 
   const onVideoLinkChange = (e: any): void => {
-    const { value = "" } = e.target;
+    const {value = ''} = e.target;
     setVideoLink?.(value);
     const isValidUrl = REGEX.Youtube.test(value);
     if (isValidUrl) {
-      setErrors({ ...errors, videoLink: "" });
+      setErrors({...errors, videoLink: ''});
     } else {
-      setErrors({ ...errors, videoLink: "Invalid url" });
+      setErrors({...errors, videoLink: 'Invalid url'});
     }
   };
 
@@ -158,9 +149,8 @@ const Media = ({
         <div
           {...getRootProps()}
           className={`border-${
-            isDragActive ? "blue" : "gray"
-          }-400 border-2 relative transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}
-        >
+            isDragActive ? 'blue' : 'gray'
+          }-400 border-2 relative transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
           <input
             {...getInputProps()}
             ref={inputOther}
@@ -184,11 +174,8 @@ const Media = ({
             </p>
           ) : (
             <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-              Drag 'n' drop your files here, or{" "}
-              <span
-                onClick={openFilesExplorer}
-                className="text-blue-500 cursor-pointer"
-              >
+              Drag 'n' drop your files here, or{' '}
+              <span onClick={openFilesExplorer} className="text-blue-500 cursor-pointer">
                 browse
               </span>
             </p>
@@ -202,11 +189,10 @@ const Media = ({
           leave="transition-opacity duration-500"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          className="mt-4 flex flex-col  gap-y-6"
-        >
+          className="mt-4 flex flex-col  gap-y-6">
           {!isEmpty(file) && (
             <File
-              fileKey={file?.fileKey || "file"}
+              fileKey={file?.fileKey || 'file'}
               file={file.file}
               id={file.id}
               _status={file._status}

@@ -24,7 +24,6 @@ import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidenc
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
-// import ClassroomLoader from "./ClassroomLoader";
 
 import FloatingAction from './FloatingActionForTeacherAndStudents';
 import FloatingActionTranslation from './FloatingActionTranslation';

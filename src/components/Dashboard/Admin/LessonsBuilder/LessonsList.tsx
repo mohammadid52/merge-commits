@@ -4,14 +4,12 @@ import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 
-import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
@@ -27,6 +25,7 @@ import {useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import InsitutionSelector from '../InsitutionSelector';
 import {Status} from '../UserManagement/UserStatus';
 
 import CloneLesson from './CloneLesson';
@@ -61,6 +60,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     currentList: _currentList,
     allAsProps,
     setCurrentList,
+    resetPagination,
     getIndex
   } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
 
@@ -72,7 +72,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     asc: true
   });
 
-  const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const breadCrumsList = [
@@ -237,7 +236,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   };
 
   useEffect(() => {
-    fetchInstitutions();
     getLessonsList();
   }, []);
 
@@ -271,23 +269,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   });
 
   const checkIfRemovable = (lessonObj: any) => !lessonObj?.isUsed;
-
-  const fetchInstitutions = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions, {
-          filter: withZoiqFilter({})
-        })
-      );
-      setInstitutionList(
-        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        )
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
     if (!deleteModal.show) {
@@ -351,7 +332,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
         }
       }
     }
-  }, [status]);
+  }, [status, currentList?.length]);
 
   const searchLesson = () => {
     const searched = searchAndFilter(searchInput.value);
@@ -470,10 +451,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
               withButton={
                 <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
                   {isSuperAdmin && (
-                    <Selector
-                      placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}
-                      list={institutionList}
-                      selectedItem={selectedInstitution?.name}
+                    <InsitutionSelector
+                      selectedInstitution={selectedInstitution?.label}
                       onChange={instituteChange}
                     />
                   )}
@@ -525,6 +504,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
             <Filters
               loading={status !== 'done'}
               list={currentList}
+              resetPagination={resetPagination}
               updateFilter={updateFilter}
               filters={filters}
               showingCount={{

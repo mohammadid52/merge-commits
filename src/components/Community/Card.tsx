@@ -1,7 +1,6 @@
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Modal from 'atoms/Modal';
-import Popover from 'atoms/Popover';
 import {API, graphqlOperation} from 'aws-amplify';
 import Comments from 'components/Community/Components/Comments';
 import HandleMedia from 'components/Community/Components/HandleMedia';
@@ -16,14 +15,40 @@ import {IChat, ICommunityCard} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
 
 import Placeholder from '@components/Atoms/Placeholder';
+import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {logError} from '@graphql/functions';
+import {Button, Card as AntdCard, Divider} from 'antd';
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {AiOutlineHeart} from 'react-icons/ai';
-import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
-import {Card as AntdCard} from 'antd';
+
+const getType = (cardType: string) => {
+  switch (cardType) {
+    case communityTypes.ANNOUNCEMENTS:
+      return 'Announcement';
+
+    case communityTypes.CHECK_IT_OUT:
+      return 'Check it out';
+
+    case communityTypes.SPOTLIGHT:
+      return 'Spotlight';
+
+    case communityTypes.EVENT:
+      return 'Event';
+
+    default:
+      return 'Announcement';
+  }
+};
+
+const CardTitle = ({cardType, cardDate}: {cardType?: string; cardDate?: string}) => {
+  return (
+    <div className="">
+      {cardType && getType(cardType)} <UploadDate cardDate={cardDate} />
+    </div>
+  );
+};
 
 const EditChatModal = ({
   chatConfig,
@@ -122,46 +147,25 @@ const BottomSection = ({
 
   return (
     <>
-      <div className="flex w-full border-t-0 border-gray-100">
-        <div className="mt-3 mx-5 flex flex-row w-auto">
-          <div className="flex text-gray-700 font-normal text-sm rounded-md mb-2 mr-4 items-center">
-            Comments:
-            <div className="ml-1 text-gray-500 font-medium text-sm">
-              {' '}
-              {chatCount || 0}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-3 mx-5 w-full flex justify-end">
-          <div className="flex text-gray-700 font-normal w-auto text-sm rounded-md mb-2 mr-4 items-center">
-            <div
-              data-cy="like-button"
-              onClick={() => likeAction()}
-              className={`${
-                isLiked
-                  ? 'bg-pink-500 text-white'
-                  : 'bg-pink-100 hover:bg-pink-200 text-pink-500'
-              } rounded-full p-2 mr-2 w-auto cursor-pointer z-100 transition-all`}>
-              <AiOutlineHeart className=" text-xl " />
-            </div>
-            Likes:{' '}
-            <div
-              data-cy="likes-count"
-              className="ml-1 text-gray-500 w-auto font-medium text-sm">
-              {' '}
-              {cardDetails?.likes?.length || 0}
-            </div>
-          </div>
-        </div>
+      <Divider />
+      <div className="flex w-full  justify-end border-t-0 border-gray-100">
+        <Button.Group>
+          <Buttons
+            onClick={() => likeAction()}
+            size="small"
+            tooltip={isLiked ? 'Undo like' : 'Like'}
+            transparent={!isLiked}
+            label={`${cardDetails?.likes?.length || 0} Like`}
+          />
+          <Buttons
+            tooltip={showComments ? 'Hide Comments' : `Show Comments (${chatCount || 0})`}
+            onClick={() => setShowComments(!showComments)}
+            size="small"
+            transparent
+            label={`${chatCount || 0} Comments`}
+          />
+        </Button.Group>
       </div>
-
-      <button
-        data-cy="show-comments-button"
-        onClick={() => setShowComments(!showComments)}
-        className={`text-blue-500 hover:underline text-sm w-auto mx-5`}>
-        {showComments ? 'hide' : 'show'} comments
-      </button>
     </>
   );
 };
@@ -221,22 +225,15 @@ const PostComment = ({
   const {image, firstName, lastName} = useAuth();
 
   return (
-    <div className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
-      {image ? (
-        <img
-          className="w-10 h-10 object-cover rounded-full shadow mr-2 cursor-pointer"
-          alt="User avatar"
-          src={getImageFromS3Static(image)}
-        />
-      ) : (
-        <Placeholder
-          firstName={firstName}
-          lastName={lastName}
-          className="mr-4"
-          size="w-10 h-10"
-        />
-      )}
-      <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
+    <div className="w-full gap-4 mt-4 flex items-center">
+      <Placeholder
+        image={image}
+        firstName={firstName}
+        lastName={lastName}
+        className="mr-4"
+        size="w-10 h-10"
+      />
+      {/* <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
         <button
           type="submit"
           className="p-1 focus:outline-none focus:shadow-none hover:text-blue-500">
@@ -254,14 +251,12 @@ const PostComment = ({
             />
           </svg>
         </button>
-      </span>
-      <input
-        data-cy="comment-input"
-        type="search"
-        className="w-full py-2 pl-4 pr-10 text-sm border-gray-400 bg-gray-100 border border-transparent appearance-none rounded-tg placeholder-gray-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue rounded-full"
-        placeholder="Post a comment..."
-        autoComplete="off"
+      </span> */}
+
+      <FormInput
+        placeHolder="Post a comment..."
         value={postText}
+        className="w-full"
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             onPost();
@@ -274,8 +269,6 @@ const PostComment = ({
 };
 
 const Menu = ({
-  showMenu,
-  setShowMenu,
   onDelete = () => {},
   cardId,
   fileKey = '',
@@ -291,44 +284,19 @@ const Menu = ({
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <div className="w-auto absolute top-0 right-0 p-4 z-1000">
-      <Popover
-        show={showMenu}
-        bottom={0.6}
-        dir={'top'}
-        minWidth={48}
-        minHeight={16}
-        rounded="lg"
-        setShow={setShowMenu}
-        content={
-          <dl className="grid grid-cols-1 gap-y-3">
-            <div className="col-span-1">
-              <dt
-                onClick={() => onCardEdit?.(cardDetails)}
-                className={`cursor-pointer text-gray-900  transition-all `}>
-                Edit
-              </dt>
-            </div>
-            <div className="col-span-1">
-              <dt
-                data-cy="card-delete-button"
-                onClick={() => onDelete?.(cardId, fileKey)}
-                className={`cursor-pointer text-red-500 transition-all`}>
-                Delete
-              </dt>
-            </div>
-          </dl>
-        }>
-        <span
-          data-cy="popover-button"
-          className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
-          <BiDotsVerticalRounded
-            title="show menu"
-            className="h-full w-full text-lg text-gray-500"
-          />
-        </span>
-      </Popover>
-    </div>
+    <DotMenu
+      menuItems={[
+        {
+          label: 'Edit',
+          action: () => onCardEdit?.(cardDetails)
+        },
+        {
+          label: 'Delete',
+          action: () => onDelete(cardId, fileKey),
+          danger: true
+        }
+      ]}
+    />
   );
 };
 
@@ -354,20 +322,20 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   if (cardDetails.cardType === communityTypes.ANNOUNCEMENTS) {
     return (
       <div className="relative">
-        <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-2">
+        {/* <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-0">
           Announcement <UploadDate cardDate={cardDetails.cardDate} />
-        </div>
+        </div> */}
         <div className="flex max-w-xl  mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
-              <div className="text-gray-400 community-media font-medium text-sm mb-7 mt-3 px-2">
+              <div className="text-gray-400 community-media font-medium text-sm mb-7 mt-0 px-0">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
             </div>
           </div>
         </div>
         {cardDetails?.cardName && (
-          <h1 className=" text-lg text-gray-800  font-semibold mb-2 mx-5">
+          <h1 className=" text-lg text-gray-800  font-semibold mb-2 mx-0">
             {cardDetails.cardName}
           </h1>
         )}
@@ -375,7 +343,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
           dangerouslySetInnerHTML={{
             __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
           }}
-          className=" text-sm mb-2 mx-3 px-2"></div>
+          className=" text-sm mb-0 mx-0 px-0"></div>
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
@@ -385,9 +353,9 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
 
     return (
       <div className="flex-col relative max-w-xl bg-gray-100 rounded-lg  mx-auto">
-        <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-2">
+        {/* <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-0">
           Event <UploadDate />
-        </div>
+        </div> */}
         <div className=" w-full lg:max-w-full lg:flex">
           <div
             className="h-48 bg-center lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
@@ -445,14 +413,16 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
         <div className="flex">
           <div className="flex items-center w-full">
             <div className="w-full">
-              <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-2">
+              {/* <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-0">
                 {cardDetails.cardType === communityTypes.SPOTLIGHT
                   ? 'Spotlight'
                   : 'Check It Out'}
                 <UploadDate />
-              </div>
+                
+              </div> */}
+
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
-                <div className="flex flex-row mt-2 px-2 py-3 mx-3">
+                <div className="flex flex-row mt-2 px-0 py-3 mx-3">
                   <div className="w-auto h-auto rounded-full">
                     <img
                       className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
@@ -473,11 +443,11 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 </div>
               )}
 
-              <div className="text-gray-400 font-medium community-media text-sm mb-7 mt-3 px-2">
+              <div className="text-gray-400 font-medium community-media text-sm mb-7 mt-0 px-0">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
 
-              <div className="mb-2 mx-3 px-2">
+              <div className="mb-0 mx-0 px-0">
                 {cardDetails?.cardName && (
                   <h1 className=" text-lg  text-gray-800 font-semibold mb-2">
                     {cardDetails.cardName}
@@ -557,7 +527,6 @@ const Card = ({
     }
   }, [isFetched, showComments]);
 
-  const [showMenu, setShowMenu] = useState(false);
   const {authId, email} = useAuth();
   const iAmOwnerOfTheCard = cardDetails.personAuthID === authId;
 
@@ -577,15 +546,16 @@ const Card = ({
       onDelete={onDelete}
       onCardEdit={onCardEdit}
       cardId={cardDetails.id}
-      showMenu={showMenu}
-      setShowMenu={setShowMenu}
     />
   );
   const [chatCount, setChatCount] = useState<number>(cardDetails?.chatCount || 0);
 
   return (
-    <AntdCard>
-      {MenuOptions}
+    <AntdCard
+      title={
+        <CardTitle cardDate={cardDetails.cardDate} cardType={cardDetails.cardType} />
+      }
+      extra={MenuOptions}>
       <EditChatModal
         chatConfig={chatConfig}
         setChatEditModal={setChatEditModal}
