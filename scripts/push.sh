@@ -36,13 +36,4 @@ case $branch in
           
 esac
 
-
-if [ "$run_test" = "y" ] || [ "$run_test" = "Y" ]; then
-  echo "Running cypress test..."
-  npm run cypress:run-everything
-  final
-
-else 
-    echo "Skipping cypress test..."
-    final
-    fi
+final
