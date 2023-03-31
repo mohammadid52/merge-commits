@@ -4,8 +4,7 @@ import {
   CreateUniversalLessonWritingExcercisesInput,
   UniversalLessonStudentData as UniversalLessonStudentDataFromAPI
 } from 'API';
-import 'components/Dashboard/GameChangers/styles/Flickity.scss';
-import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
+
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';

@@ -8,17 +8,12 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import RichTextEditor from 'atoms/RichTextEditor';
-import {
-  Tabs3,
-  useTabs
-} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
-import {Form, Switch} from 'antd';
+import {Form, Switch, Tabs, TabsProps} from 'antd';
 import {useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
@@ -263,136 +258,138 @@ const HeaderModalComponent = ({
     });
   };
 
-  const {curTab, setCurTab, helpers} = useTabs();
-  const [onSetupTab, onPreviewTab] = helpers;
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: `Component Details`,
+      children: (
+        <>
+          <div className="grid grid-cols-2 my-2 gap-4">
+            <div className="col-span-2">
+              <FormInput
+                onChange={onChange}
+                label={'Title'}
+                isRequired
+                value={inputFields.title}
+                id={'title'}
+                placeHolder={`Enter title`}
+                type="text"
+                error={errors.title}
+              />
+            </div>
+
+            <div className="col-span-1">
+              <Selector
+                label={'Select font size'}
+                onChange={(name: string) =>
+                  setSelectedValues({...selectedValues, size: name})
+                }
+                list={fontSizeList}
+                placeholder="Select font size"
+                selectedItem={selectedValues.size}
+              />
+            </div>
+
+            <div className="col-span-1 relative h-full">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                Select Border Color
+              </label>
+              <button
+                onClick={() => setColorPickerActive(!colorPickerActive)}
+                className={`border-0 border-gray-300 rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                  {selectedValues.color.split('-')[0]}
+                </span>
+
+                <span
+                  className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-gray-400`}></span>
+              </button>
+              {colorPickerActive && (
+                <ColorPicker
+                  isMainPage
+                  noneLabel="No Border"
+                  onNoneClick={() => {
+                    setSelectedValues({
+                      ...selectedValues,
+                      color: 'No Border'
+                    });
+                    setColorPickerActive(false);
+                  }}
+                  classString={classString}
+                  callbackColor={handleColorPickerSelect}
+                  styleString={{top: '100%'}}
+                />
+              )}
+            </div>
+          </div>
+          <div className="col-span-1 my-4 flex items-center w-auto">
+            <Form.Item label="Animated title" valuePropName="checked">
+              <Switch
+                checked={Boolean(inputFields.animated)}
+                disabled={NO_BORDER_SELECTED}
+                onClick={onAnimationToggle}
+              />
+            </Form.Item>
+          </div>
+          <div className="col-span-1 my-4 flex items-center w-auto">
+            <Form.Item label="Instructions" valuePropName="checked">
+              <Switch
+                checked={Boolean(inputFields.instructions)}
+                onClick={() => onToggle('instructions')}
+              />
+            </Form.Item>
+          </div>
+          {inputFields.instructions && (
+            <div className="col-span-2 max-w-256">
+              <RichTextEditor
+                withStyles
+                initialValue={inputFields?.instructionsText || ''}
+                onChange={(htmlContent, plainText) =>
+                  onEditorStateChange(htmlContent, plainText)
+                }
+              />
+            </div>
+          )}
+          <div className="flex mt-8 justify-end px-6 pb-4">
+            <div className="flex justify-end gap-4">
+              <Buttons
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                onClick={askBeforeClose}
+                size="middle"
+                transparent
+              />
+              <Buttons
+                size="middle"
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                onClick={onHeaderCreate}
+              />
+            </div>
+          </div>
+        </>
+      )
+    },
+    {
+      key: '2',
+      label: `Preview`,
+      children: (
+        <PreviewLayout
+          notAvailable={
+            inputFields.title.length < 3 ? 'Please add title to see preview' : false
+          }>
+          <HeaderBlock
+            classString={classValue}
+            mode="building"
+            value={[{id: uuidv4().toString(), value: inputFields.title}]}
+          />
+          <DummyContent />
+        </PreviewLayout>
+      )
+    }
+  ];
 
   return (
     <div>
-      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
-
-      <AnimatedContainer animationType="scale" show={onSetupTab}>
-        {onSetupTab && (
-          <>
-            <div className="grid grid-cols-2 my-2 gap-4">
-              <div className="col-span-2">
-                <FormInput
-                  onChange={onChange}
-                  label={'Title'}
-                  isRequired
-                  value={inputFields.title}
-                  id={'title'}
-                  placeHolder={`Enter title`}
-                  type="text"
-                  error={errors.title}
-                />
-              </div>
-
-              <div className="col-span-1">
-                <Selector
-                  label={'Select font size'}
-                  onChange={(name: string) =>
-                    setSelectedValues({...selectedValues, size: name})
-                  }
-                  list={fontSizeList}
-                  placeholder="Select font size"
-                  selectedItem={selectedValues.size}
-                />
-              </div>
-
-              <div className="col-span-1 relative h-full">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Select Border Color
-                </label>
-                <button
-                  onClick={() => setColorPickerActive(!colorPickerActive)}
-                  className={`border-0 border-gray-300 rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}>
-                  <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                    {selectedValues.color.split('-')[0]}
-                  </span>
-
-                  <span
-                    className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-gray-400`}></span>
-                </button>
-                {colorPickerActive && (
-                  <ColorPicker
-                    isMainPage
-                    noneLabel="No Border"
-                    onNoneClick={() => {
-                      setSelectedValues({
-                        ...selectedValues,
-                        color: 'No Border'
-                      });
-                      setColorPickerActive(false);
-                    }}
-                    classString={classString}
-                    callbackColor={handleColorPickerSelect}
-                    styleString={{top: '100%'}}
-                  />
-                )}
-              </div>
-            </div>
-            <div className="col-span-1 my-4 flex items-center w-auto">
-              <Form.Item label="Animated title" valuePropName="checked">
-                <Switch
-                  checked={Boolean(inputFields.animated)}
-                  disabled={NO_BORDER_SELECTED}
-                  onClick={onAnimationToggle}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-span-1 my-4 flex items-center w-auto">
-              <Form.Item label="Instructions" valuePropName="checked">
-                <Switch
-                  checked={Boolean(inputFields.instructions)}
-                  onClick={() => onToggle('instructions')}
-                />
-              </Form.Item>
-            </div>
-            {inputFields.instructions && (
-              <div className="col-span-2 max-w-256">
-                <RichTextEditor
-                  withStyles
-                  initialValue={inputFields?.instructionsText || ''}
-                  onChange={(htmlContent, plainText) =>
-                    onEditorStateChange(htmlContent, plainText)
-                  }
-                />
-              </div>
-            )}
-            <div className="flex mt-8 justify-end px-6 pb-4">
-              <div className="flex justify-end gap-4">
-                <Buttons
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                  onClick={askBeforeClose}
-                  size="middle"
-                  transparent
-                />
-                <Buttons
-                  size="middle"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-                  onClick={onHeaderCreate}
-                />
-              </div>
-            </div>
-          </>
-        )}
-      </AnimatedContainer>
-
-      <AnimatedContainer animationType="scale" show={onPreviewTab}>
-        {onPreviewTab && (
-          <PreviewLayout
-            notAvailable={
-              inputFields.title.length < 3 ? 'Please add title to see preview' : false
-            }>
-            <HeaderBlock
-              classString={classValue}
-              mode="building"
-              value={[{id: uuidv4().toString(), value: inputFields.title}]}
-            />
-            <DummyContent />
-          </PreviewLayout>
-        )}
-      </AnimatedContainer>
+      <Tabs items={items} defaultActiveKey="1" />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import FormInput from 'atoms/Form/FormInput';
@@ -356,13 +357,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
         })
       ) : (
         <>
-          <div className="p-12 flex flex-center items-center">
-            <p className="text-center text-lg text-gray-500">
-              {subSection === 'Work'
+          <Empty
+            description={
+              subSection === 'Work'
                 ? 'No writing exercises are in your notebook for your course yet.'
-                : `No content for ${subSection} section`}
-            </p>
-          </div>
+                : `No content for ${subSection} section`
+            }
+          />
         </>
       )}
     </>

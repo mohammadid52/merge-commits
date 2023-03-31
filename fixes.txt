@@ -1,0 +1,92 @@
+✅ add this if done
+
+1. make sure these three things works together
+    -> Search
+    -> Filter
+    -> Pagination
+
+    Data shouldn't show blank on playing with any of these options
+
+2. Update tags colors (Show tags for only [Classroom, Demand, User status])
+
+3. Reset password shows popover confirm before resetting password
+
+4. Create two buttons component consists of cancel and submit buttons
+
+5. Make sure all CRUD operations works
+
+    1. Institution Manager
+        -> Add 
+        -> Edit 
+        -> Service Vendors
+
+    2. Staff Manager
+        -> Add ~ Make sure creation of all roles works (Add cancel button too)
+        -> Edit ~ Make sure edit of all roles works (Add cancel button too)
+
+    3. User Registry
+        -> Component is same as Staff Manager
+
+    4. Course Manager
+        -> New course ~ Assigning units ~ Learning Objectives ~ Demographics and Information
+           (All the steps in the flow should work)
+
+        -> Edit course (Add cancel button too) ~ Unit Manager  ~
+           (information about inactive isn't pretty clear, use warning alert instead)
+
+    5. Unit Manager
+        -> New Unit ~ General Information ~ Lesson Plan Manager (UI doesn't look nice) 
+        -> Edit Unit ~ General Information ~ Lesson Plan Manager (UI doesn't look nice)
+
+    6. Classroom Manager
+        -> New Classroom ~ Every step should work with perfect UI
+        -> Edit Classroom ~ Every step should work with perfect UI
+
+            ---- Make sure date picker works for unit planner ✅
+            ---- Fix the UI for Unit Planner section ✅
+            --- Holiday modal ✅
+
+
+6. Deleting Orphan Data
+    
+    1. User 
+        -> Student - make sure student is not in any class.
+            -- Tables to look for
+                1. ClassroomGroups
+                2. ClassroomGroupStudents
+        -> Teacher or Fellow - Make sure they are not running any class, course.
+            -- Tables to look for 
+                1. Staff
+                2. Room
+                3. RoomCoTeachers
+    
+    2. Course
+        -> Units - Make sure connected units are none
+        -> Learning Objectives - Make sure connected objectives are none
+        -> Demographics - Make sure connected demographics are none
+
+        *---- If all conditions are meet. then only one can remove the current course
+   
+    3. Unit 
+        -> Lessons - Make sure there are no lessons connected 
+        -> Courses - Make sure there are no attached courses
+
+        *---- If all conditions are meet. then only one can remove the current unit
+
+    3. Lesson 
+        -> Lesson Plan - Make sure lesson has no lesson plan 
+        -> Units - Make sure no units are assigned to current lesson
+
+    4. Classroom
+        -> Students - Make sure there are no students connected to current classroom  
+        -> Holidays - Make sure Holiday table is clear
+
+7. Add Errors or Succes notifiers
+
+8. Fix dropdowns for Community 
+
+
+---END---
+
+
+

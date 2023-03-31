@@ -20,16 +20,20 @@ interface IRoomViewCardProps {
   bannerImage?: string;
   type?: string;
   name?: string;
+  studentImage?: string | null;
+  isTeacher?: boolean;
 }
 
 const RoomViewCard = ({
   handleSectionSelect,
   roomID = '',
   mainSection,
+  isTeacher,
   sectionRoomID,
   sectionTitle,
   curriculumName,
   bannerImage,
+  studentImage,
   type = '',
   name
 }: IRoomViewCardProps) => {
@@ -100,11 +104,17 @@ const RoomViewCard = ({
                     className="absolute z-100 w-auto h-auto top-1 right-1 fill-current text-white"
                     size={32}
                   />
-                  <img
-                    className="h-full  w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
-                    src={getImageFromS3(image) as string}
-                    alt={image ? 'notebook cover' : 'default notebook cover'}
-                  />
+                  {(studentImage || image) && (
+                    <img
+                      className="h-full  w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
+                      src={
+                        getImageFromS3(
+                          studentImage && isTeacher ? studentImage : image
+                        ) as string
+                      }
+                      alt={'notebook cover'}
+                    />
+                  )}
                 </div>
               )
             )}

@@ -6,6 +6,8 @@ import App from 'components/App';
 import {createRoot} from 'react-dom/client';
 import 'style/style.css';
 import 'style/style.scss';
+import 'components/Dashboard/GameChangers/styles/Flickity.scss';
+import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 
 Amplify.configure(awsconfig);
 

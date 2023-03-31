@@ -33,9 +33,7 @@ const EmptyViewWrapper = ({
       ${
         !revealContents && timedRevealInt === undefined
           ? `${
-              wrapperClass
-                ? wrapperClass
-                : 'min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4'
+              wrapperClass ? wrapperClass : 'min-h-48 pb-4 overflow-hidden bg-white mb-4'
             }`
           : ''
       }`}>

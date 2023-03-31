@@ -3,13 +3,14 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {LockOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
-import {Card, Descriptions} from 'antd';
+import {Card, Descriptions, Tabs, TabsProps} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './Profile';
 import useAuth from '@customHooks/useAuth';
+import DemographicsInfo from '../Demographics/DemographicsInfo';
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -20,7 +21,7 @@ interface UserInfoProps {
 const ProfileInfo = (props: UserInfoProps) => {
   const {user, status, stdCheckpoints, questionData} = props;
   const {userLanguage} = useGlobalContext();
-  const {dashboardProfileDict} = useDictionary();
+  const {dashboardProfileDict, UserInformationDict} = useDictionary();
 
   const PersonalInfoDict = dashboardProfileDict[userLanguage]['PERSONAL_INFO'];
 
@@ -64,9 +65,13 @@ const ProfileInfo = (props: UserInfoProps) => {
     return <LessonLoading />;
   }
 
-  {
-    return (
-      <div className="w-full md:px-4 pt-4">
+  const dict = UserInformationDict[userLanguage];
+
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: dict['heading'],
+      children: (
         <Card>
           <Descriptions
             extra={
@@ -117,47 +122,23 @@ const ProfileInfo = (props: UserInfoProps) => {
             </Descriptions.Item>
           </Descriptions>
         </Card>
+      )
+    },
 
-        {stdCheckpoints?.length > 0 ? (
-          <Fragment>
-            {stdCheckpoints.map((checkpoint: any) => (
-              <Fragment key={checkpoint.id}>
-                <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-                  <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
-                      {checkpoint.title}
-                    </h3>
-                  </div>
-                  <div className="px-4 py-5 sm:px-6">
-                    <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                      {checkpoint.questions?.items.map((item: any) => (
-                        <div key={item.question.id} className="sm:col-span-1 p-2">
-                          <dt className="text-sm leading-5 font-medium text-gray-500">
-                            {item.question.question}
-                          </dt>
-                          <dd className="mt-1 text-sm leading-5 text-gray-900">
-                            {item.question.type !== 'link' ? (
-                              getQuestionResponse(checkpoint.id, item.question.id) || '--'
-                            ) : (
-                              <a
-                                className="text-blue-400 hover:text-blue-600 transition-all"
-                                href={getQuestionResponse(
-                                  checkpoint.id,
-                                  item.question.id
-                                )}>
-                                {getQuestionResponse(checkpoint.id, item.question.id)}
-                              </a>
-                            )}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                </div>
-              </Fragment>
-            ))}
-          </Fragment>
-        ) : null}
+    {
+      disabled: !isStudent,
+      key: '2',
+      label: dict['demographics'],
+      children: (
+        <DemographicsInfo checkpoints={stdCheckpoints} questionData={questionData} />
+      )
+    }
+  ];
+
+  {
+    return (
+      <div className="w-full md:px-4 pt-4">
+        <Tabs animated defaultActiveKey="1" items={items} />
       </div>
     );
   }

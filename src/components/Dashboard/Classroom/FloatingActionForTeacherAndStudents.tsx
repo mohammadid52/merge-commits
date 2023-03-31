@@ -493,7 +493,7 @@ const FloatingAction = ({
         }}
         title={isActive ? '' : name === 'teacher' ? labelForTeacher : labelForStudent}
         className="theme-bg floating-item  relative p-2 customShadow rounded-full  border-white border-2 hover:theme-bg:500 transition-all cursor-pointer ">
-        <div className="text-lg text-white w-auto">
+        <div className="text-lg  flex items-center justify-center text-white w-auto">
           {name === 'teacher' ? <AiOutlineUsergroupDelete /> : <HiOutlineUserGroup />}
         </div>
 

@@ -92,11 +92,22 @@ const MainRouter: React.FC = () => {
 
   const theme = useTheme();
 
+  const getPrimaryPalette = () => {
+    switch (clientKey) {
+      case 'iconoclast':
+        return theme.iconoclast;
+      case 'curate':
+        return theme.curate;
+      default:
+        return theme.curate;
+    }
+  };
+
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: clientKey === 'iconoclast' ? theme.iconoclast : theme.curate
+          colorPrimary: getPrimaryPalette()
         }
       }}>
       <div

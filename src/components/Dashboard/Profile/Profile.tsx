@@ -1,22 +1,20 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import PageWrapper from '@components/Atoms/PageWrapper';
-import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import UserProfileImage from '@components/Molecules/UserProfileImage';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {Language, PersonStatus, Role, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {updatePageState, uploadImageToS3} from 'graphql/functions';
-import DroppableMedia from 'molecules/DroppableMedia';
-import React, {Fragment, lazy, useEffect, useState} from 'react';
-import {FaEdit, FaPlus} from 'react-icons/fa';
+import React, {lazy, useEffect, useState} from 'react';
+import {FaEdit} from 'react-icons/fa';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
@@ -331,67 +329,22 @@ const Profile = () => {
 
               <div className={``}>
                 <div className="h-9/10 flex flex-col lg:flex-row">
-                  <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
-                    <div className="relative">
-                      {person.image ? (
-                        <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                          {!imageLoading ? (
-                            <Fragment>
-                              <DroppableMedia
-                                setImage={(img: any, file: any) => {
-                                  setUpImage(img);
-                                  setFileObj(file);
-                                }}
-                                toggleCropper={toggleCropper}
-                                mediaRef={mediaRef}>
-                                <Placeholder
-                                  size="w-20 h-20 md:w-40 md:h-40"
-                                  image={imageUrl}
-                                />
-                              </DroppableMedia>
-                            </Fragment>
-                          ) : (
-                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                              <Loader />
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <label
-                          className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
-                          {!imageLoading ? (
-                            <FaPlus color="#4a5568" size={'3rem'} />
-                          ) : (
-                            <Loader />
-                          )}
-                          <DroppableMedia
-                            mediaRef={mediaRef}
-                            setImage={(img: any, file: any) => {
-                              setUpImage(img);
-                              setFileObj(file);
-                            }}
-                            toggleCropper={toggleCropper}>
-                            <div />
-                          </DroppableMedia>
-                        </label>
-                      )}
-                    </div>
-                    <p className="text-gray-600 my-2">
-                      {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
-                    </p>
-                    <div
-                      className={`text-sm md:text-xl font-bold text-gray-900 mt-2 md:mt-4 w-52`}>
-                      {`${
-                        person.preferredName ? person.preferredName : person.firstName
-                      } ${person.lastName}`}
-                    </div>
-                  </div>
+                  <UserProfileImage
+                    imageUrl={imageUrl}
+                    image={person.image}
+                    mediaRef={mediaRef}
+                    setImage={(img: any, file: any) => {
+                      setUpImage(img);
+                      setFileObj(file);
+                    }}
+                    toggleCropper={toggleCropper}
+                    imageLoading={imageLoading}
+                    name={`${
+                      person.preferredName ? person.preferredName : person.firstName
+                    } ${person.lastName}`}
+                  />
 
                   <div className="relative w-full">
-                    {/* TODO : Need to convert this into tabs instead of buttons. 
-                    Currently we have only single tab so hiding this.
-                */}
-
                     <Switch>
                       <Route
                         exact

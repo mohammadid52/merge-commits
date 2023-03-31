@@ -1,4 +1,5 @@
-import Spinner from '@components/Atoms/Spinner';
+import Loader from '@components/Atoms/Loader';
+import {Empty} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 import * as queries from 'graphql/queries';
 import {useCallback, useEffect, useState} from 'react';
@@ -166,9 +167,12 @@ const UploadsTab = ({
   return (
     <>
       <EmptyViewWrapper
-        wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
         revealContents={loaded}
-        fallbackContents={<Spinner />}>
+        fallbackContents={
+          <div className="flex items-center w-full justify-center">
+            <Loader />
+          </div>
+        }>
         {filteredLessonIds && filteredLessonIds.length > 0 ? (
           filteredLessonIds.map((idString: string) => (
             <ContentLessonWrapper key={idString} lessonID={idString}>
@@ -205,11 +209,7 @@ const UploadsTab = ({
             </ContentLessonWrapper>
           ))
         ) : (
-          <div className="p-12 flex flex-center items-center">
-            <p className="text-center text-lg text-gray-500">
-              No content for {subSection} section
-            </p>
-          </div>
+          <Empty description={`No content for ${subSection} section`} />
         )}
       </EmptyViewWrapper>
     </>

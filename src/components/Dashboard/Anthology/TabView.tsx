@@ -20,6 +20,7 @@ import {
 import {filter, orderBy} from 'lodash';
 import {IoIosJournal} from 'react-icons/io';
 import {stringToHslColor} from 'utilities/strings';
+import {Tabs, TabsProps} from 'antd';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -163,24 +164,23 @@ const TabView = ({
   );
   // ~~~~~~~~~~~~~~~~~ TABS ~~~~~~~~~~~~~~~~ //
 
-  const CLASS_TABS = [
+  const CLASS_TABS: TabsProps['items'] = [
     {
-      index: 0,
-      title: anthologyDict[userLanguage].TABS.B,
-      id: 'Work',
-      content: WrittenContent
+      key: '1',
+      label: anthologyDict[userLanguage].TABS.B,
+      children: WrittenContent,
+      id: 'Work'
     },
     {
-      index: 1,
-      title: anthologyDict[userLanguage].TABS.C,
-      id: 'Notes',
-      content: WrittenContent
+      key: '2',
+      label: anthologyDict[userLanguage].TABS.C,
+      children: WrittenContent,
+      id: 'Notes'
     },
     {
-      index: 2,
-      title: anthologyDict[userLanguage].TABS.D,
-      id: 'Uploads',
-      content: (
+      key: '3',
+      label: anthologyDict[userLanguage].TABS.D,
+      children: (
         <UploadsTab
           personAuthID={state?.user?.authId}
           personEmail={state?.user?.email}
@@ -192,27 +192,32 @@ const TabView = ({
           mainSection={mainSection}
           subSection={subSection}
         />
-      )
+      ),
+      id: 'Uploads'
     }
   ];
 
-  const JOURNAL_TABS = [
+  const JOURNAL_TABS: TabsProps['items'] = [
     {
-      index: 0,
-      title: 'Check-In',
+      key: '1',
+      label: 'Check-In',
       id: 'checkIn',
-      content: <SentimentTab />
+      children: <SentimentTab />
     },
     {
-      index: 1,
-      title: anthologyDict[userLanguage].TABS.A,
+      key: '2',
+      label: anthologyDict[userLanguage].TABS.A,
       id: 'Journal',
-      content: WrittenContent
+      children: WrittenContent
     }
   ];
 
-  const handleTabSelect = (index: number, tabSubSection: string) => {
-    setTab(index);
+  const items = mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS;
+
+  const handleTabSelect = (activeKey: string) => {
+    // get id of tab by activeKey
+    const tabSubSection = items.find((item) => item.key === activeKey)?.id;
+    // setTab(index);
     setSubSection(tabSubSection);
   };
 
@@ -261,13 +266,12 @@ const TabView = ({
             </AnimatedContainer>
           </div>
           <div
-            className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
-            <AnthologyUnderlinedTabs
-              hideTooltip
-              activeTab={tab}
-              mainSection={mainSection}
-              tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
-              handleTabSelect={handleTabSelect}
+            className={`w-full min-h-48 p-4 overflow-hidden bg-white rounded-b-lg mb-12`}>
+            <Tabs
+              animated
+              defaultActiveKey="1"
+              onChange={handleTabSelect}
+              items={items}
             />
           </div>
         </div>

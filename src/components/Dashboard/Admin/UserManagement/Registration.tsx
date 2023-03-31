@@ -441,7 +441,7 @@ const Registration = ({
                             onChange={(e) =>
                               setFieldValue('isSelfPaced', e.target.checked)
                             }>
-                            {RegistrationDict[userLanguage]['paceLabel']}
+                            Self Paced
                           </Checkbox>
                         </div>
                       </>

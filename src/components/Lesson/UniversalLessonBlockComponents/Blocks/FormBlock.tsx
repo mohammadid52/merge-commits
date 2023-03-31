@@ -24,10 +24,10 @@ export const FormLabel = ({
   label = '',
   required = false
 }: {
-  index: string;
-  numbered: boolean;
+  index?: string;
+  numbered?: boolean;
   label: string;
-  required: boolean;
+  required?: boolean;
 }) => {
   const gContext = useGlobalContext();
   const gState = gContext.state;

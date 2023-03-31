@@ -19,6 +19,7 @@ interface IRoomViewProps {
   studentEmail?: string;
   sectionRoomID?: string;
   sectionTitle?: string;
+  studentImage?: string | null;
   handleSectionSelect?: (
     section: string,
     roomIdString: string,
@@ -32,7 +33,9 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  roomIdList
+  studentImage,
+  roomIdList,
+  isTeacher
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -228,6 +231,8 @@ const RoomView = ({
             className="mt-2 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             <RoomViewCard
               roomID={'private'}
+              studentImage={studentImage}
+              isTeacher={isTeacher}
               mainSection={mainSection}
               sectionRoomID={sectionRoomID}
               sectionTitle={sectionTitle}

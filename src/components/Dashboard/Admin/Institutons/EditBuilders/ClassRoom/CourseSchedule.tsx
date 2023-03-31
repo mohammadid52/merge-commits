@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {CgNotes} from 'react-icons/cg';
 import {FaCalendarDay} from 'react-icons/fa';
 import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
-
+import dayJs from 'dayjs';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutation from 'graphql/mutations';
 
@@ -19,8 +19,9 @@ import {awsFormatDate, dateString, timeIntervals} from 'utilities/time';
 import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 
-import {DatePicker} from 'antd';
+import {DatePicker, Divider} from 'antd';
 import Modal from 'atoms/Modal';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 
 interface ICourseScheduleProps {
   roomData: any;
@@ -56,8 +57,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     endTime: ''
   });
   const [scheduleData, setScheduleData] = useState<ICourseScheduleFields>({
-    startDate: null,
-    endDate: null,
+    startDate: new Date(),
+    endDate: new Date(),
     startTime: '',
     endTime: '',
     frequency: 'One Time',
@@ -246,16 +247,13 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="mt-3">
-          <div className="text-lg font-medium mb-4">
-            {CourseScheduleDict[userLanguage].HEADING}
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+        <div className="">
+          <SectionTitleV3 title={CourseScheduleDict[userLanguage].HEADING} />
           <div className="mt-8">
             <div className="flex mt-4">
               <DatePicker
-                // @ts-ignore
-                defaultValue={moment(scheduleData.startDate)}
+                defaultValue={dayJs(scheduleData.startDate)}
                 placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_DATE}
                 onChange={(_, dateString: string) =>
                   handleDateChange(dateString, 'startDate')
@@ -267,8 +265,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
 
               <DatePicker
-                // @ts-ignore
-                defaultValue={moment(scheduleData.endDate)}
+                defaultValue={dayJs(scheduleData.endDate)}
                 placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_DATE}
                 onChange={(_, dateString: string) =>
                   handleDateChange(dateString, 'startDate')
@@ -364,6 +361,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           />
         </div>
       </div>
+
+      <Divider />
+
       <UnitPlanner
         lessonImpactLogs={lessonImpactLogs}
         logsChanged={logsChanged || unsavedChanges}

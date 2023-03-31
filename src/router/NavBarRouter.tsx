@@ -3,7 +3,8 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {UniversalLessonBuilderProvider} from 'contexts/UniversalLessonBuilderContext';
 
 import ErrorBoundary from 'components/Error/ErrorBoundary';
-import {lazy} from 'react';
+import {lazy, Suspense} from 'react';
+import Loader from '@components/Atoms/Loader';
 const InstitutionBuilder = lazy(
   () =>
     import('dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder')
@@ -71,242 +72,244 @@ const NavBarRouter = (instProps: any) => {
   const match = useRouteMatch();
 
   return (
-    <Switch>
-      <Route
-        path={`${match.url}/class`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="ClassList">
-            <ClassList
-              classes={institute?.classes}
-              instId={institute?.id}
-              instName={institute?.name}
-            />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/class-rooms`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="RoomsList">
-            <RoomsList instId={institute?.id} instName={institute?.name} />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/room-creation`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="ClassRoomBuilder">
-            <ClassRoomBuilder instId={institute?.id} />
-          </ErrorBoundary>
-        )} // Create new room
-      />
-      <Route
-        path={`${match.url}/room-edit/:roomId`}
-        render={() => (
-          <ErrorBoundary componentName="ClassRoomBuilderWithID">
-            <ClassRoomBuilder instId={institute?.id} />
-          </ErrorBoundary>
-        )} // Edit current room.
-      />
-      <Route
-        path={`${match.url}/register-user`}
-        render={() => (
-          <ErrorBoundary componentName="Registration">
-            <Registration isInInstitute instId={institute?.id} />
-          </ErrorBoundary>
-        )} // Register new user to roo,
-      />
-      <Route
-        path={`${match.url}/students`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="Students">
-            <Students instituteId={instProps?.institute?.id} isInInstitute />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/courses`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="CurriculumList">
-            <CurriculumList
-              updateCurricularList={updateCurricularList}
-              curricular={curricular && curricular}
-              instId={institute?.id}
-              instName={institute?.name}
-            />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/units`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="UnitList">
-            <UnitList
-              curricular={curricular}
-              instId={institute?.id}
-              instName={institute?.name}
-            />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        exact
-        path={`${match.url}/units/add`}
-        render={() => (
-          <ErrorBoundary componentName="UnitBuilder">
-            <UnitBuilder instId={institute?.id} />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        exact
-        path={`${match.url}/units/:unitId/edit`}
-        render={() => (
-          <ErrorBoundary componentName="UnitBuilder">
-            <UnitBuilder curricular={curricular} instId={institute?.id} />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/research-and-analytics`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="Csv">
-            <Csv />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/research-and-analytics/upload-csv`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="UploadCsv">
-            <UploadCsv institutionId={institute?.id} />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/research-and-analytics/analytics-dashboard`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="AnalyticsDashboard">
-            <AnalyticsDashboard />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/staff`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="StaffBuilder">
-            <StaffBuilder
-              serviceProviders={institute.serviceProviders}
-              instituteId={instProps?.institute?.id}
-              instName={institute?.name}
-            />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/edit`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="InstitutionBuilder">
-            <InstitutionBuilder
-              institutionId={institute?.id}
-              institute={instProps.institute}
-              loading={instProps.loading}
-              postInfoUpdate={instProps.postInfoUpdate}
-              updateServiceProviders={instProps.updateServiceProviders}
-              toggleUpdateState={instProps.toggleUpdateState}
-            />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/manage-users`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="UserLookup">
-            <UserLookup instituteId={instProps?.institute?.id} isInInstitute />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/manage-users/:userId`}
-        render={() => (
-          <ErrorBoundary componentName="User">
-            <User instituteId={instProps?.institute?.id} />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/manage-users/:userId/staff`}
-        render={() => (
-          <ErrorBoundary componentName="User">
-            <User instituteId={instProps?.institute?.id} />
-          </ErrorBoundary>
-        )}
-      />
-      <Route
-        path={`${match.url}/course-builder`}
-        exact
-        render={() => (
-          <ErrorBoundary componentName="CourseBuilder">
-            <CourseBuilder instId={institute?.id} />
-          </ErrorBoundary>
-        )} // Create new course
-      />
-      <Route
-        exact
-        path={`${match.url}/course-builder/:courseId`}
-        render={() => (
-          <ErrorBoundary componentName="CourseBuilder">
-            <CourseBuilder instId={institute?.id} />
-          </ErrorBoundary>
-        )} // Edit course
-      />
-      <Route
-        path={`${match.url}/course-builder/:courseId/checkpoint/addNew`}
-        render={() => (
-          <ErrorBoundary componentName="AddProfileCheckpoint">
-            <AddProfileCheckpoint />
-          </ErrorBoundary>
-        )} // Edit course
-      />
-      <Route
-        path={`${match.url}/course-builder/:courseId/checkpoint/addPrevious`}
-        render={() => (
-          <ErrorBoundary componentName="ProfileCheckpointlookup">
-            <ProfileCheckpointlookup />
-          </ErrorBoundary>
-        )} // Edit course
-      />
-      <Route
-        path={`${match.url}/course-builder/:courseId/checkpoint/edit/:id`}
-        render={() => (
-          <ErrorBoundary componentName="EditProfileCheckpoint">
-            <EditProfileCheckpoint />
-          </ErrorBoundary>
-        )} // Edit course
-      />
-      <UniversalLessonBuilderProvider>
+    <Suspense fallback={<Loader />}>
+      <Switch>
         <Route
-          path={`${match.url}/lessons`}
+          path={`${match.url}/class`}
+          exact
           render={() => (
-            <ErrorBoundary componentName="LessonsBuilderHome">
-              <LessonsBuilderHome instId={institute?.id} />
+            <ErrorBoundary componentName="ClassList">
+              <ClassList
+                classes={institute?.classes}
+                instId={institute?.id}
+                instName={institute?.name}
+              />
             </ErrorBoundary>
           )}
         />
-      </UniversalLessonBuilderProvider>
-    </Switch>
+        <Route
+          path={`${match.url}/class-rooms`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="RoomsList">
+              <RoomsList instId={institute?.id} instName={institute?.name} />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/room-creation`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="ClassRoomBuilder">
+              <ClassRoomBuilder instId={institute?.id} />
+            </ErrorBoundary>
+          )} // Create new room
+        />
+        <Route
+          path={`${match.url}/room-edit/:roomId`}
+          render={() => (
+            <ErrorBoundary componentName="ClassRoomBuilderWithID">
+              <ClassRoomBuilder instId={institute?.id} />
+            </ErrorBoundary>
+          )} // Edit current room.
+        />
+        <Route
+          path={`${match.url}/register-user`}
+          render={() => (
+            <ErrorBoundary componentName="Registration">
+              <Registration isInInstitute instId={institute?.id} />
+            </ErrorBoundary>
+          )} // Register new user to roo,
+        />
+        <Route
+          path={`${match.url}/students`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="Students">
+              <Students instituteId={instProps?.institute?.id} isInInstitute />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/courses`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="CurriculumList">
+              <CurriculumList
+                updateCurricularList={updateCurricularList}
+                curricular={curricular && curricular}
+                instId={institute?.id}
+                instName={institute?.name}
+              />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/units`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="UnitList">
+              <UnitList
+                curricular={curricular}
+                instId={institute?.id}
+                instName={institute?.name}
+              />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          exact
+          path={`${match.url}/units/add`}
+          render={() => (
+            <ErrorBoundary componentName="UnitBuilder">
+              <UnitBuilder instId={institute?.id} />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          exact
+          path={`${match.url}/units/:unitId/edit`}
+          render={() => (
+            <ErrorBoundary componentName="UnitBuilder">
+              <UnitBuilder curricular={curricular} instId={institute?.id} />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/research-and-analytics`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="Csv">
+              <Csv />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/research-and-analytics/upload-csv`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="UploadCsv">
+              <UploadCsv institutionId={institute?.id} />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/research-and-analytics/analytics-dashboard`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="AnalyticsDashboard">
+              <AnalyticsDashboard />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/staff`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="StaffBuilder">
+              <StaffBuilder
+                serviceProviders={institute.serviceProviders}
+                instituteId={instProps?.institute?.id}
+                instName={institute?.name}
+              />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/edit`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="InstitutionBuilder">
+              <InstitutionBuilder
+                institutionId={institute?.id}
+                institute={instProps.institute}
+                loading={instProps.loading}
+                postInfoUpdate={instProps.postInfoUpdate}
+                updateServiceProviders={instProps.updateServiceProviders}
+                toggleUpdateState={instProps.toggleUpdateState}
+              />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/manage-users`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="UserLookup">
+              <UserLookup instituteId={instProps?.institute?.id} isInInstitute />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/manage-users/:userId`}
+          render={() => (
+            <ErrorBoundary componentName="User">
+              <User instituteId={instProps?.institute?.id} />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/manage-users/:userId/staff`}
+          render={() => (
+            <ErrorBoundary componentName="User">
+              <User instituteId={instProps?.institute?.id} />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/course-builder`}
+          exact
+          render={() => (
+            <ErrorBoundary componentName="CourseBuilder">
+              <CourseBuilder instId={institute?.id} />
+            </ErrorBoundary>
+          )} // Create new course
+        />
+        <Route
+          exact
+          path={`${match.url}/course-builder/:courseId`}
+          render={() => (
+            <ErrorBoundary componentName="CourseBuilder">
+              <CourseBuilder instId={institute?.id} />
+            </ErrorBoundary>
+          )} // Edit course
+        />
+        <Route
+          path={`${match.url}/course-builder/:courseId/checkpoint/addNew`}
+          render={() => (
+            <ErrorBoundary componentName="AddProfileCheckpoint">
+              <AddProfileCheckpoint />
+            </ErrorBoundary>
+          )} // Edit course
+        />
+        <Route
+          path={`${match.url}/course-builder/:courseId/checkpoint/addPrevious`}
+          render={() => (
+            <ErrorBoundary componentName="ProfileCheckpointlookup">
+              <ProfileCheckpointlookup />
+            </ErrorBoundary>
+          )} // Edit course
+        />
+        <Route
+          path={`${match.url}/course-builder/:courseId/checkpoint/edit/:id`}
+          render={() => (
+            <ErrorBoundary componentName="EditProfileCheckpoint">
+              <EditProfileCheckpoint />
+            </ErrorBoundary>
+          )} // Edit course
+        />
+        <UniversalLessonBuilderProvider>
+          <Route
+            path={`${match.url}/lessons`}
+            render={() => (
+              <ErrorBoundary componentName="LessonsBuilderHome">
+                <LessonsBuilderHome instId={institute?.id} />
+              </ErrorBoundary>
+            )}
+          />
+        </UniversalLessonBuilderProvider>
+      </Switch>
+    </Suspense>
   );
 };
 

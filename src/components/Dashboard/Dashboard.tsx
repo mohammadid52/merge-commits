@@ -1,4 +1,4 @@
-import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
+import Loader from '@components/Atoms/Loader';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
 import {logError, updatePageState} from '@graphql/functions';
@@ -6,16 +6,12 @@ import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import Community from 'components/Community/Community';
-import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
-// import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
-import Csv from 'components/Dashboard/Csv/Csv';
+
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
-import 'components/Dashboard/GameChangers/styles/Flickity.scss';
-import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
+
 import Home from 'components/Dashboard/Home/Home';
 import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
-// import LessonPlanHome from "components/Dashboard/LessonPlanner/LessonPlanHome";
+
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import EmojiFeedback from 'components/General/EmojiFeedback';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -25,21 +21,20 @@ import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
-
-const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
-const UploadLogsPage = lazy(() => import('components/Dashboard/Csv/UploadLogsPage'));
-
-const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
-const Anthology = lazy(() => import('components/Dashboard/Anthology/Anthology'));
-const Profile = lazy(() => import('components/Dashboard/Profile/Profile'));
-// const TestCases = lazy(() => import('components/Dashboard/TestCases/TestCases'));
-const Registration = lazy(
-  () => import('components/Dashboard/Admin/UserManagement/Registration')
+// Routes
+const Classroom = lazy(() => import('dashboard/Classroom/Classroom'));
+const UploadLogsPage = lazy(() => import('dashboard/Csv/UploadLogsPage'));
+const GameChangers = lazy(() => import('dashboard/GameChangers/GameChangers'));
+const Anthology = lazy(() => import('dashboard/Anthology/Anthology'));
+const Profile = lazy(() => import('dashboard/Profile/Profile'));
+const Registration = lazy(() => import('dashboard/Admin/UserManagement/Registration'));
+const ErrorsPage = lazy(() => import('dashboard/Errors/ErrorsPage'));
+const DictionaryPage = lazy(() => import('dashboard/Dictionary/DictionaryPage'));
+const Community = lazy(() => import('components/Community/Community'));
+const InstitutionsHome = lazy(
+  () => import('dashboard/Admin/Institutons/InstitutionsHome')
 );
-const ErrorsPage = lazy(() => import('components/Dashboard/Errors/ErrorsPage'));
-const DictionaryPage = lazy(
-  () => import('components/Dashboard/Dictionary/DictionaryPage')
-);
+const Csv = lazy(() => import('dashboard/Csv/Csv'));
 
 const conditionalRender = (children: JSX.Element, condition: boolean) => {
   if (condition) {
@@ -752,7 +747,7 @@ const Dashboard = () => {
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading from="Dashboard 1" />
+                <Loader />
               </div>
             }>
             <Switch>
@@ -778,7 +773,7 @@ const Dashboard = () => {
                   } else
                     return (
                       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <ComponentLoading from="Dashbaord 2" />
+                        <Loader />
                       </div>
                     );
                 }}

@@ -41,7 +41,7 @@ const BottomBar = (props: LessonCardProps) => {
     <div>
       <div
         style={{borderTop: '1px solid rgba(237, 242, 247,1)'}}
-        className={`bg-transparent py-2 relative flex justify-around items-center px-4 `}>
+        className={`bg-transparent py-2 relative flex justify-between items-center px-4 `}>
         {/* TIME */}
         <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
           <div className="flex items-center text-gray-500">
@@ -76,7 +76,7 @@ const BottomBar = (props: LessonCardProps) => {
         </div>
 
         {/* START */}
-        <div className="w-4/10 hidden sm:block">
+        <div className="hidden sm:block">
           <Start {...startButtonProps} />
         </div>
       </div>

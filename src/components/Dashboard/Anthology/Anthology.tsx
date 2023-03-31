@@ -47,6 +47,7 @@ export interface IAnthologyProps {
   studentEmail?: string;
   studentName?: string;
   isTeacher?: boolean;
+  studentImage?: string | null;
 }
 export interface ViewEditMode {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -59,7 +60,8 @@ const Anthology = ({
   studentAuthID,
   studentEmail,
   studentName,
-  isTeacher
+  isTeacher,
+  studentImage
 }: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   // const {state, dispatch, userLanguage, theme, clientKey} = useGlobalContext();
@@ -933,6 +935,7 @@ const Anthology = ({
                 roomIdList={roomCardIds}
                 mainSection={mainSection}
                 sectionRoomID={sectionRoomID}
+                studentImage={studentImage}
                 sectionTitle={sectionTitle}
                 handleSectionSelect={handleSectionSelect}
                 isTeacher={isTeacher}

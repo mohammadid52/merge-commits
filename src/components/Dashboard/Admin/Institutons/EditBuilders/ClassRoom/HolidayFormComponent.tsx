@@ -7,11 +7,11 @@ import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
+import Label from '@components/Atoms/Form/Label';
 import {DatePicker} from 'antd';
+import dayJs from 'dayjs';
 import * as mutation from 'graphql/mutations';
-import moment from 'moment';
 import {awsFormatDate, dateString} from 'utilities/time';
-
 const durationOptions = [
   {id: 1, label: '.25', value: '.25'},
   {id: 2, label: '.5', value: '.5'},
@@ -56,7 +56,7 @@ const HolidayFormComponent = ({
 
   const [loading, setLoading] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<IImpactLog>({
-    impactDate: null,
+    impactDate: new Date(),
     reasonComment: '',
     lessonImpact: '1',
     adjustment: 'Push'
@@ -161,69 +161,66 @@ const HolidayFormComponent = ({
   };
 
   return (
-    <div className="min-w-172">
-      <div className="w-full m-auto">
-        <div className="">
-          <div className="grid grid-cols-2">
-            <div className="px-3 py-4">
-              <label className={'text-gray-700 block text-xs font-semibold leading-5'}>
-                Date<span className="text-red-500">*</span>
-              </label>
-              <DatePicker
-                // @ts-ignore
-                defaultValue={moment(formValues.impactDate)}
-                placeholder={'Date'}
-                // @ts-ignore
-                onChange={(value) => handleDateChange(value?.$d)}
-              />
-              <div className="text-red-500">{errors.impactDate}</div>
-            </div>
-            <div className="px-3 py-4">
-              <FormInput
-                value={formValues.reasonComment}
-                onChange={handleInputChange}
-                name="reasonComment"
-                label={'Reason'}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2">
-            <div className="px-3 py-4">
-              <Selector
-                onChange={(name: string) => handleSelection(name, 'lessonImpact')}
-                selectedItem={formValues.lessonImpact}
-                list={durationOptions}
-                label={'Time Impact'}
-                placeholder={'Select time impact'}
-              />
-            </div>
-            <div className="px-3 py-4">
-              <Selector
-                onChange={(name: string) => handleSelection(name, 'adjustment')}
-                selectedItem={formValues.adjustment}
-                list={adjustmentOptions}
-                label={'Adjustment'}
-                placeholder={'Select adjustment'}
-              />
-            </div>
-          </div>
+    <div className="">
+      <div className="grid grid-cols-2">
+        <div className="px-3 py-4 flex flex-col">
+          <Label isRequired label={'Date'} />
+
+          <DatePicker
+            defaultValue={dayJs(formValues.impactDate)}
+            placeholder={'Date'}
+            // @ts-ignore
+            onChange={(value) => handleDateChange(value?.$d)}
+          />
+          <div className="text-red-500">{errors.impactDate}</div>
+        </div>
+        <div className="px-3 py-4">
+          <FormInput
+            value={formValues.reasonComment}
+            onChange={handleInputChange}
+            name="reasonComment"
+            label={'Reason'}
+          />
         </div>
       </div>
+      <div className="grid grid-cols-2">
+        <div className="px-3 py-4">
+          <Selector
+            onChange={(name: string) => handleSelection(name, 'lessonImpact')}
+            selectedItem={formValues.lessonImpact}
+            list={durationOptions}
+            label={'Time Impact'}
+            placeholder={'Select time impact'}
+          />
+        </div>
+        <div className="px-3 py-4">
+          <Selector
+            onChange={(name: string) => handleSelection(name, 'adjustment')}
+            selectedItem={formValues.adjustment}
+            list={adjustmentOptions}
+            label={'Adjustment'}
+            placeholder={'Select adjustment'}
+          />
+        </div>
+      </div>
+
       <div className="py-2 m-auto text-center">
         <p className={`${serverSideLog.isError ? 'text-red-600' : 'text-green-600'}`}>
           {serverSideLog.message}
         </p>
       </div>
-      <div className="flex my-8 justify-center">
+      <div className="flex my-8 gap-4 justify-end">
         <Buttons
           label={BUTTONS[userLanguage]['CANCEL']}
           onClick={handleCancel}
           transparent
+          size="middle"
         />
         <Buttons
           label={BUTTONS[userLanguage]['SAVE']}
           onClick={handleSubmit}
           disabled={loading}
+          size="middle"
         />
       </div>
     </div>

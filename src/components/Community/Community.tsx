@@ -371,43 +371,44 @@ const Community = () => {
 
   if (isStudent) {
     return (
-      <div className="w-full">
-        <div className="w-full">
-          <HeroBanner imgUrl={bannerImg} title={'Community'} />
-        </div>
-
+      <DashboardContainer
+        showTitleBanner={false}
+        bannerImg={bannerImg}
+        bannerTitle={CommunityDict[userLanguage]['TITLE']}>
         <HeaderTextBar>Here is what is happening today</HeaderTextBar>
-        <div className="px-10">
-          <TitleBar
-            selectedFilterType={selectedFilterType}
-            filterList={filterList}
-            changeFilter={changeFilter}
-          />
-          <CardsModal
-            navState={navState}
-            editMode={isCardEditMode}
-            setNavState={setNavState}
-            functions={{
-              onCheckItOutSubmit
-            }}
-            instId={instId}
-            showCardsModal={showCardsModal}
-            setShowCardsModal={setShowCardsModal}
-          />
+        <PageWrapper>
+          <div className="px-10">
+            <TitleBar
+              selectedFilterType={selectedFilterType}
+              filterList={filterList}
+              changeFilter={changeFilter}
+            />
+            <CardsModal
+              navState={navState}
+              editMode={isCardEditMode}
+              setNavState={setNavState}
+              functions={{
+                onCheckItOutSubmit
+              }}
+              instId={instId}
+              showCardsModal={showCardsModal}
+              setShowCardsModal={setShowCardsModal}
+            />
 
-          <CommonList
-            selectedFilterType={selectedFilterType}
-            filteredList={filteredList}
-            list={list}
-            onDelete={onDelete}
-            onCardEdit={onCardEdit}
-            error={error}
-            isFetched={isFetched}
-            isLoading={isLoading}
-            setShowCardsModal={setShowCardsModal}
-          />
-        </div>
-      </div>
+            <CommonList
+              selectedFilterType={selectedFilterType}
+              filteredList={filteredList}
+              list={list}
+              onDelete={onDelete}
+              onCardEdit={onCardEdit}
+              error={error}
+              isFetched={isFetched}
+              isLoading={isLoading}
+              setShowCardsModal={setShowCardsModal}
+            />
+          </div>
+        </PageWrapper>
+      </DashboardContainer>
     );
   }
 
