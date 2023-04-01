@@ -129,11 +129,7 @@ const EditBackstory = ({
             dataCy="backstory-button"
             disabled={saving}
             label={
-              !saving ? (
-                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
-              ) : (
-                <Loader className="text-white" />
-              )
+              !saving ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVE'] : <Loader />
             }
             onClick={updateBackstory}
           />
@@ -307,7 +303,7 @@ const SentimentTab = ({
           appear
           show={loadingSentiments}>
           <div className="flex h-96 items-center justify-center text-center">
-            <Loader className="text-gray-500 text-lg" />
+            <Loader />
           </div>
         </Transition>
 

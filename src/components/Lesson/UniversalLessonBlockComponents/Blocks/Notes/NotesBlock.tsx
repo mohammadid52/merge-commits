@@ -25,7 +25,7 @@ const genSticky = (
   cb?: any
 ) => {
   wait(50).then(() => {
-    var $container = $('#container'),
+    let $container = $('#container'),
       gridWidth = 250,
       gridHeight = 250,
       gridRows = rows || 2,
@@ -190,8 +190,6 @@ const NotesBlock = ({
   const [notesChanged, setNotesChanged] = useState<boolean>(false);
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
-  // window.onbeforeunload = onUnload;
-
   const updateNotesContent = (html: string, noteId: string) => {
     const idx = findIndex(notesData.entryData, ['domID', noteId]);
 
@@ -201,7 +199,9 @@ const NotesBlock = ({
   };
 
   const updateText = (e: any, noteId: string) => {
-    notesInitialized ? updateNotesContent(e.target.value, noteId) : noop;
+    if (notesInitialized) {
+      updateNotesContent(e.target.value, noteId);
+    }
     setDataValue(noteId, [e.target.value]);
   };
 
@@ -506,7 +506,7 @@ const NotesBlock = ({
                   </button>
                 </Tooltip>
               )}
-              {saveInProgress && <Loader className="text-yellow-500 text-base" />}
+              {saveInProgress && <Loader />}
             </div>
           )}
           <div id="container" className="sticky-container blackboard w-full text-white">

@@ -170,7 +170,7 @@ const RoomTiles = (props: {
           </p>
         ) : roomsLoading ? (
           <div className="min-h-56 flex items-center justify-center ">
-            <Loader className="w-auto text-gray-400" withText="Loading classrooms..." />
+            <Loader withText="Loading classrooms..." />
           </div>
         ) : finalList.length > 0 ? (
           <div className="relative">

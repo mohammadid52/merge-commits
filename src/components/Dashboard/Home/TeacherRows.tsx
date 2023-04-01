@@ -182,7 +182,7 @@ const TeacherRows = (props: {
           </ul>
         ) : loading ? (
           <div className="min-h-56 flex items-center justify-center ">
-            <Loader className="w-auto text-gray-400" withText="Loading teachers..." />
+            <Loader withText="Loading teachers..." />
           </div>
         ) : (
           <Empty description={'No teachers found'} />

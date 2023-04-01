@@ -145,7 +145,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
               {imageLoading ? (
                 <div
                   className={`w-10 h-10  flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
-                  <Loader className="text-gray-400" />
+                  <Loader />
                 </div>
               ) : institute?.image ? (
                 imageUrl ? (

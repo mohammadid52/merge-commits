@@ -175,7 +175,7 @@ const StudentsTiles = (props: {
               </ul>
             ) : loading ? (
               <div className="min-h-56 flex items-center justify-center ">
-                <Loader className="w-auto text-gray-400" withText="Loading students..." />
+                <Loader withText="Loading students..." />
               </div>
             ) : (
               <Empty description={StudentDict[userLanguage].NO_STUDENT} />
