@@ -98,4 +98,5 @@ const ProfileFrameEdit = ({
     </div>
   );
 };
+
 export default ProfileFrameEdit;

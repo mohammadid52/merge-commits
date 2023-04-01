@@ -149,7 +149,7 @@ const SelectedEmotionsContainer = () => {
                 disabled={isLoading}
                 className={`${'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'} inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
                 onClick={onSave}>
-                {isLoading ? <Loader color="#fff" /> : 'Yes, Save It!'}
+                {isLoading ? <Loader /> : 'Yes, Save It!'}
               </button>
             </p>
 

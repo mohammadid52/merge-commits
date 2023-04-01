@@ -511,7 +511,7 @@ const AnalyticsDashboard = () => {
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
               <div className="w-5/10">
-                <Loader color="rgba(107, 114, 128, 1)" />
+                <Loader />
                 <p className="mt-2 text-center text-lg text-gray-500">
                   Preparing data please wait....
                 </p>

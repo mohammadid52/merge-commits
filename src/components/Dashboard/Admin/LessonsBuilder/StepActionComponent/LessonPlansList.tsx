@@ -86,7 +86,7 @@ const LessonPlansList = ({
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
               <div className="items-center flex justify-center flex-col">
-                <Loader color="rgba(160, 174, 192, 1)" />
+                <Loader />
                 <p className="mt-2 text-center text-lg text-gray-500">
                   {/* @Mohammad TODO: Add this to dictionary  */}
                   Loading Lessons

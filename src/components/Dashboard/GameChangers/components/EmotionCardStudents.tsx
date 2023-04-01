@@ -87,7 +87,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
 
   return listLoading ? (
     <div className="flex items-center justify-center h-32">
-      <Loader color="#fff" />
+      <Loader />
     </div>
   ) : (
     <>

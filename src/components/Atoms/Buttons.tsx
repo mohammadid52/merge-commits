@@ -40,6 +40,8 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
 
   return (
     <Tooltip title={tooltip}>
+      {/* add icon if transparent is true */}
+
       <Button
         loading={loading}
         danger={redBtn}

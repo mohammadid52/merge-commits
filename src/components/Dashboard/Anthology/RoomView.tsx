@@ -207,7 +207,7 @@ const RoomView = ({
         <div className="relative  p-6 mx-auto">
           {!loaded && (
             <div className="my-4">
-              <Loader color="rgba(160, 174, 192, 1)" />
+              <Loader />
             </div>
           )}
 

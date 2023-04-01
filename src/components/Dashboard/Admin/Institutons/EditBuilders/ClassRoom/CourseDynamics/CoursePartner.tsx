@@ -150,7 +150,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
+              <Loader />
             </div>
           </div>
         ) : classRoomGroups?.length ? (
