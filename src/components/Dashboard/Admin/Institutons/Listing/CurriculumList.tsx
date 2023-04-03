@@ -103,8 +103,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     queryKey: ['curriculumList'],
     queryFn: () => fetchCurriculums(),
     onSuccess: (data) => {
-      console.log(data);
-
       const updatedList: ICurricular[] = data
         ?.map((item: ICurricular) => {
           if (item) {

@@ -67,7 +67,7 @@ const AuthCard = ({
             {showFooter && (
               <div className="h-auto mb-4 transition-all ">
                 <img
-                  className=""
+                  className={clientKey === 'curate' ? '"h-[7rem]"' : ''}
                   src={getAsset(clientKey, 'login_page_logo')}
                   alt="login_page_logo"
                 />

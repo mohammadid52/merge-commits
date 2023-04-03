@@ -1,4 +1,4 @@
-import {Card, CardProps, theme} from 'antd';
+import {Card, CardProps} from 'antd';
 
 import Buttons from '@components/Atoms/Buttons';
 import React from 'react';
@@ -12,46 +12,53 @@ interface PageLayoutProps {
   footer?: React.ReactNode;
   extra?: React.ReactNode;
   type?: CardProps['type'];
-  onBack?: () => void;
+  onBackUrl?: string;
 }
 
-const {useToken} = theme;
+// add jsDocs for this component
+
+/**
+ *
+ * @example
+ *
+ * <PageLayout extra={<div>Button1</div>} title="Page Title">
+ * <div>Page Content</div>
+ * </PageLayout>
+ *
+ */
 
 const PageLayout = ({
   children,
   footer = null,
   extra,
   title,
-  subtitle,
+
   type,
-  onBack
+  onBackUrl
 }: PageLayoutProps) => {
   const history = useHistory();
-  const {token} = useToken();
 
   return (
-    <div className="px-2 py-8 md:px-4 lg:p-8">
+    <div className="px-2 flex flex-col items-start  gap-2 py-8 md:px-4 lg:p-8">
+      <Buttons
+        Icon={MdOutlineKeyboardBackspace}
+        label={'Go back'}
+        // variant="text"
+
+        onClick={() => {
+          if (onBackUrl) {
+            history.push(onBackUrl);
+          } else {
+            history.goBack();
+          }
+        }}
+        variant="link"
+      />
       <Card
+        className="w-full"
         bordered={type === 'inner' ? true : false}
         type={type}
-        title={
-          <div className="flex items-center">
-            <Buttons
-              size="large"
-              variant="text"
-              onClick={onBack ?? history.goBack}
-              Icon={MdOutlineKeyboardBackspace}
-            />
-            <h1
-              style={{
-                color: token.colorText,
-                fontSize: token.fontSizeHeading5,
-                fontWeight: 500
-              }}>
-              {title}
-            </h1>
-          </div>
-        }
+        title={title}
         extra={extra}>
         {children}
       </Card>

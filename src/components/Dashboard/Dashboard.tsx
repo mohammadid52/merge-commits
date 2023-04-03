@@ -1,4 +1,5 @@
 import Loader from '@components/Atoms/Loader';
+import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
 import {logError, updatePageState} from '@graphql/functions';
@@ -707,7 +708,7 @@ const Dashboard = () => {
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <Loader />
+                <ComponentLoading />
               </div>
             }>
             <Switch>

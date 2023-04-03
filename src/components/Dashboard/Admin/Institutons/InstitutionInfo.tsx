@@ -29,20 +29,18 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   return (
     <div>
-      <div className="">
-        {/* Profile section */}
+      {/* Profile section */}
 
-        <div className="flex flex-1 overflow-x-hidden mb-8">
-          <div className="w-full">
-            <NavBarRouter
-              {...instProps}
-              updateCurricularList={updateCurricularList}
-              curricular={curricular}
-            />
-          </div>
-
-          {/* <InstitutionProfile institute={institute} /> */}
+      <div className="flex flex-1 overflow-x-hidden mb-8">
+        <div className="w-full">
+          <NavBarRouter
+            {...instProps}
+            updateCurricularList={updateCurricularList}
+            curricular={curricular}
+          />
         </div>
+
+        {/* <InstitutionProfile institute={institute} /> */}
       </div>
     </div>
   );

@@ -8,7 +8,6 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 import Filters from '@components/Atoms/Filters';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import UserLookupAction from '@components/MicroComponents/UserLookupAction';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
@@ -23,13 +22,13 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import PageLayout from 'layout/PageLayout';
 import {map, orderBy, uniqBy} from 'lodash';
 import moment from 'moment';
 import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities/strings';
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
-import PageLayout from 'layout/PageLayout';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {

@@ -4,7 +4,6 @@ import {useHistory, useRouteMatch} from 'react-router';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
@@ -19,10 +18,10 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
-import PageLayout from 'layout/PageLayout';
 
 // as of 9:15 am 30th march 2023. load time of this page is 5.67 seconds
 // my goal is to bring it down to 3-4 seconds by 31st march 2023

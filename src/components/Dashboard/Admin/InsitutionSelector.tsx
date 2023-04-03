@@ -54,6 +54,7 @@ const InsitutionSelector = ({selectedInstitution, onChange}: InsitutionSelectorP
   return (
     <Selector
       width={300}
+      size="middle"
       showSearch
       placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
       list={institutionList}
