@@ -107,11 +107,15 @@ const MainRouter: React.FC = () => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: getPrimaryPalette()
+          colorPrimary: getPrimaryPalette(),
+          lineHeight: 1.5,
+          borderRadius: 8,
+          colorBgContainer: theme.light.white,
+          colorText: theme.light.darkest
         }
       }}>
       <div
-        className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
+        className={`bg-lightest  h-screen md:max-w-full md:h-screen w-full overflow-x-hidden flex flex-col`}>
         {deviceDetected.mobile ? (
           <MobileOops userAgent={deviceDetected.device} />
         ) : (

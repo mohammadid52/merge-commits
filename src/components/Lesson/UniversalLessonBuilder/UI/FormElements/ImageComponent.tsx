@@ -283,7 +283,7 @@ const ImageFormComponent = ({
   const getStyles = () => {
     let styles = '';
     if (selectedStyles.isBorder) {
-      styles = styles + ' border-2 dark:border-gray-600 border-gray-400';
+      styles = styles + ' border-2 dark:border-medium  border-light ';
     }
     if (selectedStyles.isRounded) {
       styles = styles + ' rounded-2xl';
@@ -308,7 +308,7 @@ const ImageFormComponent = ({
           <div className={`grid grid-cols-2 gap-6`}>
             <div
               className={
-                ' col-span-2 border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
+                ' col-span-2 border-0 border-dashed border-light  rounded-lg h-35 cursor-pointer p-2'
               }>
               <ULBFileUploader
                 acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
@@ -322,7 +322,7 @@ const ImageFormComponent = ({
             </div>
             <div className="disabled col-span-1">
               <Label dark={false} label="Styles" />
-              <div className="mt-1 flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
+              <div className="mt-1 flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-lightest  py-2 px-3 rounded-md shadow-sm ">
                 <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
                   <ToggleForModal
                     label="Corners rounded"

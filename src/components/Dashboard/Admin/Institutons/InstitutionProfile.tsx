@@ -79,7 +79,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
   const handleImageClick = () => mediaRef?.current?.click();
 
   const imageClass =
-    'profile w-10 h-10 hover:theme-border rounded-full border-0 flex flex-shrink-0 border-gray-400 customShadow cursor-pointer';
+    'profile w-10 h-10 hover:theme-border rounded-full border-0 flex flex-shrink-0 border-light  customShadow cursor-pointer';
 
   return (
     <>
@@ -99,14 +99,14 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
         onClick={() => {}}>
         {isEmpty(institute.name) && (
           <div className="w-full animate-pulse mt-2 flex justify-between">
-            <div className="h-6 bg-gray-400 rounded w-5/10 mb-2 mr-2"></div>
-            <div className="h-6 bg-gray-400 rounded w-5/10 mb-2 ml-2"></div>
+            <div className="h-6 bg-light  rounded w-5/10 mb-2 mr-2"></div>
+            <div className="h-6 bg-light  rounded w-5/10 mb-2 ml-2"></div>
           </div>
         )}
 
         {!isEmpty(institute.name) && (
           <>
-            <div className="my-5 text-gray-600 w-auto px-4 mr-2 flex lg:items-center items-start justify-center 2xl:mr-4">
+            <div className="my-5 text-medium  w-auto px-4 mr-2 flex lg:items-center items-start justify-center 2xl:mr-4">
               <div className="flex w-auto ">
                 <span className="w-auto mr-2 mt-0.5">
                   <BsEnvelope className="w-4 h-4" />
@@ -182,7 +182,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
                 </div>
               )}
 
-              <div className="text-base cursor-pointer hover:underline hover:theme-text  flex text-gray-600">
+              <div className="text-base cursor-pointer hover:underline hover:theme-text  flex text-medium ">
                 <p className="w-auto">{institute?.name || '--'}</p>
               </div>
             </div>

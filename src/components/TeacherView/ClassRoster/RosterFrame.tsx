@@ -110,7 +110,7 @@ const RosterFrame = ({
       <div
         ref={sidebarRef}
         onClick={() => toggleMiniOut()}
-        className={`absolute bg-white h-full flex flex-col items-center border-r-0 border-gray-600 border-opacity-50 z-100`}
+        className={`absolute bg-white h-full flex flex-col items-center border-r-0 border-medium  border-opacity-50 z-100`}
         style={{
           width: '36px',
           display: breakpoint === 'xl' || breakpoint === '2xl' ? 'none' : 'block'
@@ -128,7 +128,7 @@ const RosterFrame = ({
       {/* SLIDE OUT ROSTER */}
       <div
         ref={miniFrameRef}
-        className={`absolute bg-white flex flex-col items-center  w-full h-full lg:w-2.5/10 max-w-128 transform -translate-x-full border-r-0 border-gray-600 border-opacity-50 z-100`}
+        className={`absolute bg-white flex flex-col items-center  w-full h-full lg:w-2.5/10 max-w-128 transform -translate-x-full border-r-0 border-medium  border-opacity-50 z-100`}
         style={{
           display: breakpoint === 'xl' || breakpoint === '2xl' ? 'none' : 'block'
         }}>

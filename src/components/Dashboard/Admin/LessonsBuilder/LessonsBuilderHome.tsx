@@ -8,7 +8,6 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
-import LessonTabView from './StepActionComponent/LessonTabView';
 
 interface ILessonBuilderHomeProps {
   instId?: string;
@@ -90,15 +89,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
               </ErrorBoundary>
             )} // Edit lesson, assessment or survey form
           />
-          <Route
-            exact
-            path={`${match.url}/lesson/view`}
-            render={() => (
-              <ErrorBoundary componentName="LessonTabView">
-                <LessonTabView designersList={designersList} />
-              </ErrorBoundary>
-            )}
-          />
+
           {/* <Route
             exact
             path={`${match.url}/lesson/add/lesson-plan`}

@@ -148,7 +148,7 @@ const BottomSection = ({
   return (
     <>
       <Divider />
-      <div className="flex w-full  justify-end border-t-0 border-gray-100">
+      <div className="flex w-full  justify-end border-t-0 border-lightest ">
         <Button.Group>
           <Buttons
             onClick={() => likeAction()}
@@ -238,7 +238,7 @@ const PostComment = ({
           type="submit"
           className="p-1 focus:outline-none focus:shadow-none hover:text-blue-500">
           <svg
-            className="w-6 h-6 transition ease-out duration-300 hover:text-blue-500 text-gray-400"
+            className="w-6 h-6 transition ease-out duration-300 hover:text-blue-500 text-light "
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -302,7 +302,7 @@ const Menu = ({
 
 const UploadDate = ({cardDate}: {cardDate?: string}) => {
   return (
-    <span className="text-gray-600 font-thin w-auto text-xs ml-2">
+    <span className="text-medium  font-thin w-auto text-xs ml-2">
       • {moment(cardDate).fromNow()}
     </span>
   );
@@ -322,20 +322,20 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   if (cardDetails.cardType === communityTypes.ANNOUNCEMENTS) {
     return (
       <div className="relative">
-        {/* <div className="text-gray-600 font-semibold text-lg my-2 mx-3 px-0">
+        {/* <div className="text-medium  font-semibold text-lg my-2 mx-3 px-0">
           Announcement <UploadDate cardDate={cardDetails.cardDate} />
         </div> */}
         <div className="flex max-w-xl  mx-auto">
           <div className="flex items-center w-full">
             <div className="w-full">
-              <div className="text-gray-400 community-media font-medium text-sm mb-7 mt-0 px-0">
+              <div className="text-light  community-media font-medium text-sm mb-7 mt-0 px-0">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
             </div>
           </div>
         </div>
         {cardDetails?.cardName && (
-          <h1 className=" text-lg text-gray-800  font-semibold mb-2 mx-0">
+          <h1 className=" text-lg text-darkest     font-semibold mb-2 mx-0">
             {cardDetails.cardName}
           </h1>
         )}
@@ -352,18 +352,18 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
     const address = info && info[1] ? info[1] : '';
 
     return (
-      <div className="flex-col relative max-w-xl bg-gray-100 rounded-lg  mx-auto">
-        {/* <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-0">
+      <div className="flex-col relative max-w-xl bg-lightest  rounded-lg  mx-auto">
+        {/* <div className="text-medium  font-semibold flex items-center text-lg my-2 mx-3 px-0">
           Event <UploadDate />
         </div> */}
         <div className=" w-full lg:max-w-full lg:flex">
           <div
             className="h-48 bg-center lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
             style={{backgroundImage: `url(${media})`}}></div>
-          <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+          <div className="border-r-0 border-b-0 border-l-0 border-light  lg:border-l-none lg:border-t-0 lg:border-light  bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div className="mb-8">
               {cardDetails?.cardName && (
-                <h1 className=" text-lg text-gray-800  font-semibold mb-2">
+                <h1 className=" text-lg text-darkest     font-semibold mb-2">
                   {cardDetails.cardName}
                 </h1>
               )}
@@ -375,29 +375,29 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
-                <p className="text-gray-600 leading-none">
+                <p className="text-medium  leading-none">
                   Date:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
+                  <span className="w-auto text-dark   font-medium">
                     {moment(date).format('DD MMM')}
                   </span>
                 </p>
-                <p className="text-gray-600">
+                <p className="text-medium ">
                   Address:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
+                  <span className="w-auto text-dark   font-medium">
                     {address || '--'}
                   </span>
                 </p>
               </div>
               <div className="text-sm w-auto">
-                <p className="text-gray-600 leading-none">
+                <p className="text-medium  leading-none">
                   Start time:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
+                  <span className="w-auto text-dark   font-medium">
                     {moment(cardDetails.startTime).format('LT')}
                   </span>
                 </p>
-                <p className="text-gray-600">
+                <p className="text-medium ">
                   End time:{' '}
-                  <span className="w-auto text-gray-700 font-medium">
+                  <span className="w-auto text-dark   font-medium">
                     {moment(cardDetails.endTime).format('LT')}
                   </span>
                 </p>
@@ -413,7 +413,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
         <div className="flex">
           <div className="flex items-center w-full">
             <div className="w-full">
-              {/* <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-0">
+              {/* <div className="text-medium  font-semibold flex items-center text-lg my-2 mx-3 px-0">
                 {cardDetails.cardType === communityTypes.SPOTLIGHT
                   ? 'Spotlight'
                   : 'Check It Out'}
@@ -431,11 +431,11 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     />
                   </div>
                   <div className="flex flex-col mb-2 ml-4 mt-1">
-                    <div className="text-gray-600 text-sm font-semibold">
+                    <div className="text-medium  text-sm font-semibold">
                       {person?.firstName} {person?.lastName}
                     </div>
                     <div className="flex  mt-1">
-                      <div className="text-gray-500 font-thin w-auto text-xs">
+                      <div className="text-medium  font-thin w-auto text-xs">
                         {moment(cardDetails.cardDate).fromNow()}
                       </div>
                     </div>
@@ -443,13 +443,13 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 </div>
               )}
 
-              <div className="text-gray-400 font-medium community-media text-sm mb-7 mt-0 px-0">
+              <div className="text-light  font-medium community-media text-sm mb-7 mt-0 px-0">
                 <HandleMedia cardDetails={cardDetails} />
               </div>
 
               <div className="mb-0 mx-0 px-0">
                 {cardDetails?.cardName && (
-                  <h1 className=" text-lg  text-gray-800 font-semibold mb-2">
+                  <h1 className=" text-lg  text-darkest    font-semibold mb-2">
                     {cardDetails.cardName}
                   </h1>
                 )}
@@ -457,7 +457,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                   dangerouslySetInnerHTML={{
                     __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
                   }}
-                  className="text-gray-600 text-sm"></div>
+                  className="text-medium  text-sm"></div>
               </div>
             </div>
           </div>

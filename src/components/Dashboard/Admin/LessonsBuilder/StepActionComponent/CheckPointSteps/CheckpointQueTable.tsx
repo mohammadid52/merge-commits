@@ -93,17 +93,17 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
         </div>
       )}
       <div className="mb-4">
-        <div className="flex justify-between w-full lg:w-9/10 px-4 lg:px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
-          <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+        <div className="flex justify-between w-full lg:w-9/10 px-4 lg:px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-light">
+          <div className="w-1/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
             <span>{CheckpointQueTableDict[userLanguage]['NO']}</span>
           </div>
-          <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-7/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
             <span>{CheckpointQueTableDict[userLanguage]['QUESTION']}</span>
           </div>
-          <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
             <span>{CheckpointQueTableDict[userLanguage]['TYPE']}</span>
           </div>
-          {/* <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          {/* <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
             <span>Language</span>
           </div> */}
         </div>
@@ -116,7 +116,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
                     questionsList.map((item, index) => (
                       <div
                         key={item.id}
-                        className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                        className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-light">
                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                           {index + 1}.
                         </div>
@@ -146,7 +146,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
               )}
             </Fragment>
           ) : (
-            <div className="py-12 my-6 text-center text-gray-700">
+            <div className="py-12 my-6 text-center text-dark  ">
               <p> {CheckpointQueTableDict[userLanguage]['FETCHING']}</p>
             </div>
           )}

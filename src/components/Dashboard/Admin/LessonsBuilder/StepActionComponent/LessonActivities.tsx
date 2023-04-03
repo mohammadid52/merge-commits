@@ -154,7 +154,7 @@ const LessonActivities = ({
       />
 
       <div className=" m-auto justify-center">
-        {/* <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
+        {/* <h3 className="text-lg leading-6 font-bold text-darkest   pb-8 pl-4">
             {lessonName}
           </h3> */}
         <div className="flex justify-between">
@@ -171,7 +171,7 @@ const LessonActivities = ({
 
         {pages.length === 0 ? (
           <Fragment>
-            <div className="text-center text-lg text-gray-600 font-medium">
+            <div className="text-center text-lg text-medium  font-medium">
               <p>You don't have any pages</p>
             </div>
             <div className="flex justify-center my-4">
@@ -191,7 +191,7 @@ const LessonActivities = ({
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
             <div className="items-center flex justify-center flex-col">
               <Loader />
-              <p className="mt-2 text-center text-lg text-gray-500">Loading Activities</p>
+              <p className="mt-2 text-center text-lg text-medium ">Loading Activities</p>
             </div>
           </div>
         ) : pages.length > 0 ? (
@@ -216,23 +216,23 @@ const LessonActivities = ({
                 />
               </span>
             </div>
-            <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-              <div className="w-3/10 px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-full flex justify-between border-b-0 border-lightest mt-8">
+              <div className="w-3/10 px-4 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{dict['ACTIVITY_LABEL']}</span>
               </div>
-              <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{dict['ACTIVITY_NAME']}</span>
               </div>
-              <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{dict['INTERACTION_TYPE']}</span>
               </div>
-              <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{dict['INSTRUCTION']}</span>
               </div>
-              <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{dict['ESTIMATED_TIME']}</span>
               </div>
-              <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-2/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{dict['ACTION']}</span>
               </div>
             </div>
@@ -243,7 +243,7 @@ const LessonActivities = ({
           </div>
         ) : (
           <Fragment>
-            <div className="text-center text-lg text-gray-600 font-medium">
+            <div className="text-center text-lg text-medium  font-medium">
               <p>You don't have any pages</p>
             </div>
             <div className="flex justify-center my-4">

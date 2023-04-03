@@ -215,7 +215,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
         className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
         {rightView?.view === 'lessonInfo' && (
           <>
-            <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
+            <div className="absolute w-full h-full bg-darkest    bg-opacity-50 z-40"></div>
             <Modal
               open={rightView?.view === 'lessonInfo'}
               customTitle={customTitle()}
@@ -227,9 +227,9 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
               position="absolute"
               width="w-full"
               maxWidth="max-w-128">
-              <ul className="rounded border-0 border-gray-400 border-opacity-20">
+              <ul className="rounded border-0 border-light  border-opacity-20">
                 {roster && roster.length < 5 && (
-                  <li className="w-full p-2 flex flex-row text-center bg-white rounded mb-2 text-sm text-gray-600">
+                  <li className="w-full p-2 flex flex-row text-center bg-white rounded mb-2 text-sm text-medium ">
                     You need at least 5 students in-class to check sentiments.
                   </li>
                 )}
@@ -237,7 +237,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                 {loading ? (
                   <li
                     key={`sentimentRow_loading`}
-                    className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                    className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-medium ">
                     <Loader />
                   </li>
                 ) : roster && roster.length > 0 && sentimentStore ? (
@@ -246,8 +246,8 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                       <li
                         key={`sentimentRow_${idx}`}
                         className={`${
-                          idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'
-                        } w-full h-8 p-4 flex flex-row items-center text-sm text-gray-600`}>
+                          idx % 2 === 0 ? 'bg-light' : 'bg-lightest'
+                        } w-full h-8 p-4 flex flex-row items-center text-sm text-medium `}>
                         <span className="w-2.5/10 h-auto flex justify-center">
                           {EMOJIS[sentimentKey] ? (
                             <img

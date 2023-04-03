@@ -77,18 +77,14 @@ const LessonTopMenu = ({
 
             <Button
               className={
-                canContinue
-                  ? 'bg-sea-green cursor-pointer'
-                  : 'bg-dark-gray cursor-default'
+                canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark cursor-default'
               }
               onClick={() => handleForward?.(false)}>
               <AiOutlineArrowLeft size={'1.5rem'} className="text-white" />
             </Button>
             <Button
               className={
-                canContinue
-                  ? 'bg-sea-green cursor-pointer'
-                  : 'bg-dark-gray cursor-default'
+                canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark cursor-default'
               }
               onClick={() => handleForward?.()}>
               <AiOutlineArrowRight size={'1.5rem'} className="text-white" />

@@ -324,7 +324,7 @@ const Spotlight = ({
   return (
     <div className="">
       <div className="px-3 py-4">
-        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+        <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
           Step 1: Select person in the community to spotlight
           <span className="text-red-500"> *</span>
         </label>
@@ -365,7 +365,7 @@ const Spotlight = ({
       )}
 
       <div className="px-3 py-4">
-        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+        <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
           Add a note about the person
           <span className="text-red-500"> *</span>
         </label>
@@ -380,7 +380,7 @@ const Spotlight = ({
             }
           />
 
-          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
+          <div className="text-right text-light ">{fields.summary.length} of 750</div>
         </div>
       </div>
       <AnimatedContainer show={Boolean(error)}>

@@ -148,7 +148,7 @@ const LocationInfo = ({
         {loggedOut ? (
           <span className="flex flex-col">
             <span>Logged Out</span>
-            <span className="text-gray-600 text-xs">
+            <span className="text-medium  text-xs">
               (since {moment(lastPageStateUpdate).format('ll')})
             </span>
           </span>
@@ -159,7 +159,7 @@ const LocationInfo = ({
       </AntdPopover>
 
       {_lastPageStateUpdate !== null && !loggedOut && (
-        <span className="text-gray-600 text-xs">
+        <span className="text-medium  text-xs">
           (since {moment(lastPageStateUpdate).format('ll')})
         </span>
       )}
@@ -210,7 +210,7 @@ const UserLookupLocation = ({
           {item.lastLoggedOut || item.lastLoggedIn ? (
             <>
               <span>Logged Out</span>
-              <span className="text-gray-600 text-xs">
+              <span className="text-medium  text-xs">
                 (since {moment(item?.lastLoggedOut || item?.lastLoggedIn).format('ll')})
               </span>
             </>

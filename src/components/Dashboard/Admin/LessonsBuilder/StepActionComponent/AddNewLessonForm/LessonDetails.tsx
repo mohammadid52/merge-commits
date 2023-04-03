@@ -160,7 +160,7 @@ const UploadLessonPlanModal = ({
                   File deleted successfully
                 </p>
               )}
-              <p className="mb-4 mt-2 text-gray-500 text-center text-sm">
+              <p className="mb-4 mt-2 text-medium  text-center text-sm">
                 ----- Or upload new file -----
               </p>
             </>

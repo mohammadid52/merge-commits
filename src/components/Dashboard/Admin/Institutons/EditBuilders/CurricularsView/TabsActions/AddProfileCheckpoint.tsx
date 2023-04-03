@@ -300,7 +300,7 @@ const AddProfileCheckpoint = () => {
         ) : (
           <Fragment>
             <div className="w-8/10 m-auto">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+              <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
                 {AddProfileCheckpointDict[userLanguage]['heading']}
               </h3>
             </div>
@@ -337,7 +337,7 @@ const AddProfileCheckpoint = () => {
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-3">
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {AddProfileCheckpointDict[userLanguage]['selectdesigner']}
                     </label>
                     <MultipleSelector
@@ -348,7 +348,7 @@ const AddProfileCheckpoint = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       Select Scope
                     </label>
                     <Selector
@@ -366,7 +366,7 @@ const AddProfileCheckpoint = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {AddProfileCheckpointDict[userLanguage]['languageselect']}
                     </label>
                     <Selector
@@ -381,8 +381,8 @@ const AddProfileCheckpoint = () => {
                 </div>
 
                 {/* Question table */}
-                <div className="p-6 border-gray-400  border-0 my-4 mx-2">
-                  <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
+                <div className="p-6 border-light   border-0 my-4 mx-2">
+                  <p className="text-m font-medium leading-5 text-dark   my-2 text-center">
                     {AddProfileCheckpointDict[userLanguage]['checkpointq']}:{' '}
                   </p>
                   {!checkpQuestions?.length ? (
@@ -407,19 +407,19 @@ const AddProfileCheckpoint = () => {
                   ) : (
                     <Fragment>
                       <div className="max-h-112 overflow-auto">
-                        <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
-                          <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-light">
+                          <div className="w-.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>{AddProfileCheckpointDict[userLanguage]['no']}</span>
                           </div>
-                          <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-6/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>
                               {AddProfileCheckpointDict[userLanguage]['question']}
                             </span>
                           </div>
-                          <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>{AddProfileCheckpointDict[userLanguage]['type']}</span>
                           </div>
-                          <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-1.5/10 px-8 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>
                               {AddProfileCheckpointDict[userLanguage]['option']}
                             </span>
@@ -432,8 +432,8 @@ const AddProfileCheckpoint = () => {
                               <Fragment key={item.id}>
                                 <div
                                   key={item.id}
-                                  className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                                    questionOptions.quesId === item.id && 'bg-gray-200'
+                                  className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-lightest ${
+                                    questionOptions.quesId === item.id && 'bg-light'
                                   }`}>
                                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                     {' '}
@@ -468,8 +468,8 @@ const AddProfileCheckpoint = () => {
                                   </div>
                                 </div>
                                 {questionOptions.quesId === item.id && (
-                                  <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
-                                    <p className="text-gray-900 px-2 py-2 text-base">
+                                  <div className="px-16 py-4 flex flex-col text-dark   font-medium text-sm border-b-0 border-light">
+                                    <p className="text-darkest   px-2 py-2 text-base">
                                       {AddProfileCheckpointDict[userLanguage]['option']}:
                                     </p>
                                     {questionOptions.options?.map((item, index) => (

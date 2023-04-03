@@ -490,7 +490,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
 
             <div>
               <span
-                className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
+                className={`mr-0 float-right text-sm md:text-base text-medium  text-right`}>
                 <DateAndTime />
               </span>
             </div>

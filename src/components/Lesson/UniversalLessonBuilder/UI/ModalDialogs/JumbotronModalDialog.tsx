@@ -36,14 +36,14 @@ const Toggle = ({
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch.Label as="span" className="mr-3 w-auto">
-        <span className="text-sm font-medium text-gray-900">{text}</span>
+        <span className="text-sm font-medium text-darkest">{text}</span>
       </Switch.Label>
       <Switch
         disabled={disabled}
         checked={checked}
         onChange={onClick}
         className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          checked ? 'bg-indigo-600' : 'bg-light',
           'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
         )}>
         <span
@@ -468,7 +468,7 @@ const JumbotronModalDialog = ({
                     acceptedFilesFormat={'image/*'}
                     error={errors?.url}
                     classString={
-                      'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2 mb-1'
+                      'border-0 border-dashed border-light  rounded-lg h-35 cursor-pointer p-2 mb-1'
                     }
                   />
                 );
@@ -519,7 +519,7 @@ const JumbotronModalDialog = ({
                   description={inputFieldsArray[3]?.value || ''}
                 />
               </div>
-              <p className="italic text-xs text-right text-gray-600">
+              <p className="italic text-xs text-right text-medium ">
                 This is how jumbotron will look on page
               </p>
               <h4 className="font-semibold text-lg">Edit Jumbotron Styles: </h4>
@@ -537,18 +537,18 @@ const JumbotronModalDialog = ({
                 </div>
 
                 <div className="relative h-full">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                     Select Background Color
                   </label>
                   <button
                     onClick={() => setColorPickerActive(!colorPickerActive)}
-                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                    <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                    className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                    <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                       {selectedStyles.bgColor.split('-')[1]}
                     </span>
 
                     <span
-                      className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-gray-400`}></span>
+                      className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-light `}></span>
                   </button>
                   {colorPickerActive && (
                     <ColorPicker
@@ -581,7 +581,7 @@ const JumbotronModalDialog = ({
               </div>
             </div>
           ) : (
-            <div className="text-center text-gray-500 my-4">
+            <div className="text-center text-medium  my-4">
               <div className="text-lg">Preview not available yet.</div>
               {/* <div className="text-sm mt-2">
               <span

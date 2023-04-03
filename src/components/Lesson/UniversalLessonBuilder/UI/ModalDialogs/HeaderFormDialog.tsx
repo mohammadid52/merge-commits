@@ -291,18 +291,18 @@ const HeaderModalComponent = ({
             </div>
 
             <div className="col-span-1 relative h-full">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                 Select Border Color
               </label>
               <button
                 onClick={() => setColorPickerActive(!colorPickerActive)}
-                className={`border-0 border-gray-300 rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}>
-                <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                className={`border-0 border-lightest  rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}>
+                <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                   {selectedValues.color.split('-')[0]}
                 </span>
 
                 <span
-                  className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-gray-400`}></span>
+                  className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-light `}></span>
               </button>
               {colorPickerActive && (
                 <ColorPicker

@@ -220,7 +220,7 @@ const UnitPlanner = ({
   return (
     <div className="py-0">
       <div className="flex my-4">
-        <h3 className="text-xl leading-6 font-bold text-gray-900">Schedule</h3>
+        <h3 className="text-xl leading-6 font-bold text-darkest">Schedule</h3>
       </div>
       <div className="my-8">
         {loading ? (
@@ -234,9 +234,7 @@ const UnitPlanner = ({
             {syllabusList.map((syllabus: any) => {
               const tableProps = tableConfig(syllabus?.lessons?.items);
               return (
-                <div
-                  className="border-0 border-gray-400 rounded-md my-2"
-                  key={syllabus.id}>
+                <div className="border-0 border-light  rounded-md my-2" key={syllabus.id}>
                   <SectionTitleV3
                     title={syllabus.name}
                     subtitle={`Start Date: ${
@@ -253,7 +251,7 @@ const UnitPlanner = ({
                 </div>
               );
             })}
-            <div className="flex text-gray-500 justify-end">*Past course end date</div>
+            <div className="flex text-medium  justify-end">*Past course end date</div>
           </>
         ) : (
           <Empty description="No unit added in the course" />

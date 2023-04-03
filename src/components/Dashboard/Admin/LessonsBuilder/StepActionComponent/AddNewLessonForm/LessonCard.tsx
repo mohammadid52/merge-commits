@@ -87,7 +87,7 @@ const LessonCard = ({
             ) : (
               <div
                 onClick={handleImage}
-                className={`profile justify-center align-center items-center content-center w-50 h-60 md:w-50 md:h-60 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                className={`profile justify-center align-center items-center content-center w-50 h-60 md:w-50 md:h-60 bg-lightest  border flex-shrink-0 flex border-light `}>
                 <IoCamera className="fill-current text-gray-80" size={32} />
               </div>
             )}

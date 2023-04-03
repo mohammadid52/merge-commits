@@ -349,20 +349,20 @@ const EditCurricular = (props: EditCurricularProps) => {
                   {imageUrl ? (
                     <img
                       onClick={handleImage}
-                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-light `}
                       src={imageUrl}
                     />
                   ) : (
                     <div
                       onClick={handleImage}
-                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-lightest  border flex-shrink-0 flex border-light `}>
                       <IoImage className="fill-current text-gray-80" size={32} />
                     </div>
                   )}
                 </DroppableMedia>
               </label>
             </button>
-            <p className="text-sm text-gray-600 my-4">Click to edit curricular image</p>
+            <p className="text-sm text-medium  my-4">Click to edit curricular image</p>
           </div>
           <div className="h-6/10 md:flex-row">
             <div className="px-3 py-4">

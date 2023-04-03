@@ -11,7 +11,7 @@ const MainSummary = (props: LessonCardProps) => {
         {lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}
       </h1>
 
-      <p className="mt-1  text-gray-500 text-left leading-5">
+      <p className="mt-1  text-medium  text-left leading-5">
         {lessonProps.lesson?.summary}
       </p>
     </div>

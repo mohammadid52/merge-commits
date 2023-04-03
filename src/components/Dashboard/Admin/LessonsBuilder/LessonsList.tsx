@@ -445,7 +445,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
               title={LessonsListDict[userLanguage][isInInstitution ? 'HEADING' : 'TITLE']}
               fontSize="xl"
               fontStyle="semibold"
-              extraClass="leading-6 text-gray-900"
+              extraClass="leading-6 text-darkest"
               borderBottom
               shadowOff
               withButton={
@@ -465,7 +465,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                         onChange={setSortingValue}
                       />
                       <button
-                        className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+                        className={`w-28 bg-lightest  mr-4 p-3 border-light   border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
                         onClick={toggleSortDimention}>
                         {sortingType.asc ? (
                           <AiOutlineArrowUp className="theme-text" size="1.5rem" />

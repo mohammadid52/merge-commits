@@ -312,11 +312,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   return (
     <div className="">
       <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
           {roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}
         </h3>
         <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
           onClick={() =>
             history.push(
               isSuperAdmin
@@ -339,8 +339,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
           />
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 mt-8 lg:mt-0">
-            {/* <div className="border-0 lg:border-t-none border-gray-200"> */}
+          <div className="grid grid-cols-1 divide-x-0 divide-light  px-8 mt-8 lg:mt-0">
+            {/* <div className="border-0 lg:border-t-none border-light"> */}
             {currentStepComp(activeStep)}
             {/* </div> */}
           </div>

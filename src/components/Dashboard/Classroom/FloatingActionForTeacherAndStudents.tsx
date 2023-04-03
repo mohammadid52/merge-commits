@@ -94,10 +94,10 @@ const Item = ({
       <div
         onClick={(e) => onShowDetails(e)}
         className="flex items-center whitespace-pre ">
-        <span className="text-gray-500 text-xs w-auto mr-2">{idx + 1}.</span>
+        <span className="text-medium  text-xs w-auto mr-2">{idx + 1}.</span>
 
         {item.image ? (
-          <img className="h-8 w-8 bg-gray-200 rounded-full" src={item?.image} alt="" />
+          <img className="h-8 w-8 bg-lightest rounded-full" src={item?.image} alt="" />
         ) : (
           <Placeholder name={name} size="h-8 w-8" />
         )}
@@ -106,14 +106,14 @@ const Item = ({
           <p className="text-sm font-medium theme-text">
             {name}{' '}
             {Boolean(showPageState && item?.pageState) ? (
-              <span className="text-xs text-gray-500 w-auto">
+              <span className="text-xs text-medium  w-auto">
                 ({formatPageName(item?.pageState)})
               </span>
             ) : null}
           </p>
           <p
             style={{overflowWrap: 'anywhere', whiteSpace: 'break-spaces'}}
-            className="flex items-center text-sm text-gray-500">
+            className="flex items-center text-sm text-medium ">
             {item.email}
           </p>
         </div>
@@ -502,12 +502,12 @@ const FloatingAction = ({
             <div
               className={`${
                 name === 'teacher' ? 'teacher-card' : 'student-card'
-              } bg-gray-200 item-open cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl`}>
+              } bg-lightest item-open cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl`}>
               {homeData && homeData.length > 0 ? (
                 //  @ts-ignore
                 isLoaded && <Content {...props} />
               ) : (
-                <p className="text-gray-500 text-center text-sm">No data</p>
+                <p className="text-medium  text-center text-sm">No data</p>
               )}
             </div>
           )}

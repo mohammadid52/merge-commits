@@ -48,14 +48,14 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
 
   return (
     <div
-      className={`relative ${bgClass} w-full md:h-96 flex flex-grow items-center rounded text-gray-200`}
+      className={`relative ${bgClass} w-full md:h-96 flex flex-grow items-center rounded text-light`}
       onMouseEnter={toggleHeroDescription}
       onMouseLeave={toggleHeroDescription}>
       {/* READ ICON */}
       {description ? (
         <div
           id="read-icon"
-          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50">
+          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-lightest z-50">
           <AiOutlineRead className="w-auto cursor-pointer" size={'2rem'} />
         </div>
       ) : null}

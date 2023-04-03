@@ -22,10 +22,8 @@ const EvidenceTab = ({
   const [loading, setLoading] = useState(false);
 
   useUpdateEffect(() => {
-    if (curTab === 'Evidences') {
-      if (selectedCurriculumList.length === 0) {
-        fetchCurriculum();
-      }
+    if (selectedCurriculumList.length === 0) {
+      fetchCurriculum();
     }
   }, [curTab]);
 
@@ -185,12 +183,12 @@ const EvidenceTab = ({
         <div className="flex items-center justify-center min-h-32">
           <Loader
             withText="Loading Evidences..."
-            className="text-gray-500 flex-col text-lg"
+            className="text-medium  flex-col text-lg"
           />
         </div>
       ) : checkedEvidence.length === 0 ? (
         <div className="flex text-center items-center justify-center min-h-32">
-          <p className="text-gray-400 w-auto font-medium text-lg leading-3">
+          <p className="text-light  w-auto font-medium text-lg leading-3">
             No Evidences Listed
           </p>
         </div>
@@ -207,9 +205,9 @@ const EvidenceTab = ({
           {checkedEvidence.map((evidence: any) => (
             <div
               key={evidence.id}
-              className="flex items-center w-auto col-span-1 border-0 border-gray-200 dark:border-gray-700 px-4 p-2 rounded-lg justify-start">
+              className="flex items-center w-auto col-span-1 border-0 border-lightest dark:border-dark   px-4 p-2 rounded-lg justify-start">
               <AiFillCheckCircle className="mr-2 w-auto text-green-500" />
-              <p className="text-gray-900 dark:text-white  w-auto">{evidence.name}</p>
+              <p className="text-darkest   dark:text-white  w-auto">{evidence.name}</p>
             </div>
           ))}
         </Transition>

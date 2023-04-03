@@ -1,12 +1,12 @@
-import Buttons from "@components/Atoms/Buttons";
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import useAuth from "@customHooks/useAuth";
-import useGraphqlQuery from "@customHooks/useGraphqlQuery";
-import { addNewDictionary, logError } from "@graphql/functions";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { AiOutlineBook } from "react-icons/ai";
-import { v4 as uuidV4 } from "uuid";
+import Buttons from '@components/Atoms/Buttons';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useAuth from '@customHooks/useAuth';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {addNewDictionary, logError} from '@graphql/functions';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
+import {AiOutlineBook} from 'react-icons/ai';
+import {v4 as uuidV4} from 'uuid';
 
 export const TranslationInsideComponent = ({
   setActive,
@@ -15,9 +15,9 @@ export const TranslationInsideComponent = ({
   loading,
   setContentHeight,
   setFinalSearchResult,
-  inClassroom = false,
+  inClassroom = false
 }: any) => {
-  const { email, authId } = useAuth();
+  const {email, authId} = useAuth();
 
   const onCancel = () => {
     setActive(false);
@@ -28,19 +28,19 @@ export const TranslationInsideComponent = ({
     setIsSimilar(null);
   };
 
-  const { refetch } = useGraphqlQuery(
-    "listDicitionaries",
+  const {refetch} = useGraphqlQuery(
+    'listDicitionaries',
     {},
     {
       custom: true,
-      enabled: false,
+      enabled: false
     }
   );
 
   const [searchInput, setSearchInput] = useState({
     isActive: false,
-    value: "",
-    isTyping: false,
+    value: '',
+    isTyping: false
   });
 
   const searchFromTable = async () => {
@@ -48,15 +48,15 @@ export const TranslationInsideComponent = ({
       const data = await refetch({
         filter: {
           englishPhrase: {
-            contains: searchInput.value,
-          },
-        },
+            contains: searchInput.value
+          }
+        }
       });
 
       return Boolean(data) ? data : [];
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "TranslationModule @searchFromTable");
+      logError(error, {authId, email}, 'TranslationModule @searchFromTable');
     }
   };
 
@@ -90,23 +90,23 @@ export const TranslationInsideComponent = ({
       }
 
       const data = response.data[0];
-      const definition = data.meanings[0]?.definitions[0]?.definition || "";
+      const definition = data.meanings[0]?.definitions[0]?.definition || '';
 
       const audio =
         data?.phonetics?.length > 0
-          ? data.phonetics.find((d: { audio: any }) => Boolean(d.audio))?.audio
-          : "";
+          ? data.phonetics.find((d: {audio: any}) => Boolean(d.audio))?.audio
+          : '';
 
-      return { definition, audio, spanishResult };
+      return {definition, audio, spanishResult};
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "TranslationModule @searchFromApi");
+      logError(error, {authId, email}, 'TranslationModule @searchFromApi');
       return null;
     }
   };
 
   const onSearchInputChange = (e: any) => {
-    setSearchInput({ isActive: true, isTyping: true, value: e.target.value });
+    setSearchInput({isActive: true, isTyping: true, value: e.target.value});
   };
 
   const _addNewDictionary = async (
@@ -124,19 +124,15 @@ export const TranslationInsideComponent = ({
         translation: [
           {
             id: uuidV4(),
-            translateLanguage: "Spanish",
-            languageTranslation: languageTranslation || "",
-            languageDefinition: "",
-          },
-        ],
+            translateLanguage: 'Spanish',
+            languageTranslation: languageTranslation || '',
+            languageDefinition: ''
+          }
+        ]
       });
     } catch (error) {
       console.error(error);
-      logError(
-        error,
-        { authId, email },
-        "TranslationModule @_addNewDictionary"
-      );
+      logError(error, {authId, email}, 'TranslationModule @_addNewDictionary');
     }
   };
 
@@ -157,29 +153,27 @@ export const TranslationInsideComponent = ({
         fromTable[0]?.englishPhrase !== searchInput.value &&
           setIsSimilar(fromTable[0]?.englishPhrase);
         setFinalSearchResult &&
-          setFinalSearchResult(
-            fromTable[0]?.englishDefinition || "No results found"
-          );
+          setFinalSearchResult(fromTable[0]?.englishDefinition || 'No results found');
         setSpanishResult(fromTable[0]?.translation[0]?.languageTranslation);
       } else {
         const response = await searchFromApi();
         if (Boolean(response)) {
           setFinalSearchResult &&
-            setFinalSearchResult(response?.definition || "No results found");
+            setFinalSearchResult(response?.definition || 'No results found');
           await _addNewDictionary(
             response?.definition,
             response?.audio,
             response?.spanishResult
           );
         } else {
-          setFinalSearchResult && setFinalSearchResult("No results found");
+          setFinalSearchResult && setFinalSearchResult('No results found');
         }
       }
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "TranslationModule @onSearch");
+      logError(error, {authId, email}, 'TranslationModule @onSearch');
     } finally {
-      setSearchInput({ ...searchInput, isActive: true, isTyping: false });
+      setSearchInput({...searchInput, isActive: true, isTyping: false});
       setLoading && setLoading(false);
     }
   };
@@ -188,16 +182,16 @@ export const TranslationInsideComponent = ({
 
   useEffect(() => {
     if (Boolean(finalSearchResult && !loading && searchInput.isActive)) {
-      const el = document.querySelector(".search-results");
+      const el = document.querySelector('.search-results');
       setContentHeight((el?.clientHeight || 0) + BUFFER_HEIGHT);
     }
   }, [finalSearchResult, loading, searchInput.isActive]);
 
   const [isSimilar, setIsSimilar] = useState<any | null>(null);
 
-  const { language } = useAuth();
+  const {language} = useAuth();
 
-  const isSpanish = language === "ES";
+  const isSpanish = language === 'ES';
 
   return (
     <>
@@ -213,12 +207,10 @@ export const TranslationInsideComponent = ({
           onChange={onSearchInputChange}
           onKeyDown={(e) => e.keyCode === 13 && onSearch()}
           placeholder="Search meaning..."
-          className={`text-base ${
-            loading ? "cursor-disabled pointer-events-none" : ""
-          } ${
+          className={`text-base ${loading ? 'cursor-disabled pointer-events-none' : ''} ${
             inClassroom
-              ? " bg-gray-400 border-0 theme-border  text-gray-800"
-              : "border-none bg-gray-700 text-white"
+              ? ' bg-light  border-0 theme-border  text-darkest   '
+              : 'border-none bg-dark   text-white'
           }  outline-none rounded-full px-4 py-2`}
         />
 
@@ -229,21 +221,17 @@ export const TranslationInsideComponent = ({
             <div
               className={`search-results ${
                 inClassroom && finalSearchResult?.length > 0
-                  ? "bg-white rounded-xl p-4"
-                  : ""
-              }`}
-            >
+                  ? 'bg-white rounded-xl p-4'
+                  : ''
+              }`}>
               {isSimilar && <h5>Similar: {isSimilar}</h5>}
               {Boolean(finalSearchResult) && (
                 <div className="flex flex-col">
                   <span className="italic theme-text">Definition: </span>
                   <p
                     className={`${
-                      inClassroom
-                        ? "text-gray-700 text-sm"
-                        : "text-white text-base"
-                    } `}
-                  >
+                      inClassroom ? 'text-dark   text-sm' : 'text-white text-base'
+                    } `}>
                     {finalSearchResult}
                   </p>
                 </div>
@@ -251,9 +239,8 @@ export const TranslationInsideComponent = ({
               {Boolean(spanishResult && isSpanish) && (
                 <div
                   className={`${
-                    inClassroom ? "border-gray-200" : " border-gray-700"
-                  } flex flex-col mt-2 pt-2 border-t-0`}
-                >
+                    inClassroom ? 'border-light' : ' border-dark  '
+                  } flex flex-col mt-2 pt-2 border-t-0`}>
                   <span className="italic theme-text">Translation: </span>
                   <p>{spanishResult}</p>
                 </div>
@@ -262,15 +249,9 @@ export const TranslationInsideComponent = ({
           ) : null}
         </div>
         <div
-          className={`bottom-0.5 right-1 absolute  translation-module__actions flex items-center justify-end space-x-4`}
-        >
-          <Buttons
-            size="small"
-            label={"Cancel"}
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons size="small" label={"Search"} onClick={onSearch} />
+          className={`bottom-0.5 right-1 absolute  translation-module__actions flex items-center justify-end space-x-4`}>
+          <Buttons size="small" label={'Cancel'} onClick={onCancel} transparent />
+          <Buttons size="small" label={'Search'} onClick={onSearch} />
         </div>
       </div>
     </>
@@ -295,9 +276,8 @@ const ThreeDotsLoading = () => {
         <div
           key={idx}
           className={`w-1.5 h-1.5 rounded-full ${
-            current === idx ? "bg-gray-700 " : "bg-gray-600 "
-          }`}
-        ></div>
+            current === idx ? 'bg-dark   ' : 'bg-medium  '
+          }`}></div>
       ))}
     </div>
   );
@@ -316,9 +296,7 @@ const TranslationModule = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [finalSearchResult, setFinalSearchResult] = useState<string | null>(
-    null
-  );
+  const [finalSearchResult, setFinalSearchResult] = useState<string | null>(null);
 
   return (
     // <ClickAwayListener onClickAway={() => setActive(false)}>
@@ -327,24 +305,20 @@ const TranslationModule = () => {
         onClick={onModuleOpen}
         style={{
           minHeight: loading
-            ? "170px"
+            ? '170px'
             : active && finalSearchResult
             ? `${150 + contentHeight}px`
             : active && !finalSearchResult
-            ? "150px"
-            : "unset",
+            ? '150px'
+            : 'unset'
         }}
         className={`${
-          active ? "active" : " "
-        } translation-module__main relative transition-all duration-300 bg-gray-800 border-0 border-gray-700 w-auto`}
-      >
+          active ? 'active' : ' '
+        } translation-module__main relative transition-all duration-300 bg-darkest    border-0 border-dark   w-auto`}>
         <AnimatedContainer
-          className={active ? "" : "h-full flex justify-center items-center"}
-          show={!active}
-        >
-          {!active && (
-            <AiOutlineBook title="Search meaning" className="text-white" />
-          )}
+          className={active ? '' : 'h-full flex justify-center items-center'}
+          show={!active}>
+          {!active && <AiOutlineBook title="Search meaning" className="text-white" />}
         </AnimatedContainer>
 
         <AnimatedContainer
@@ -352,8 +326,7 @@ const TranslationModule = () => {
           animationType="translateY"
           duration="500"
           className="h-full"
-          delay={"500ms"}
-        >
+          delay={'500ms'}>
           {active && (
             <TranslationInsideComponent
               setLoading={setLoading}

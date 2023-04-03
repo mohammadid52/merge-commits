@@ -924,7 +924,7 @@ const Anthology = ({
               fontStyle="semibold"
               extraContainerClass="px-6"
               borderBottom
-              extraClass="leading-6 text-gray-900"
+              extraClass="leading-6 text-darkest"
             />
             <EmptyViewWrapper
               wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
@@ -947,7 +947,7 @@ const Anthology = ({
             wrapperClass={`min-h-24 py-4 overflow-hidden mb-4`}
             revealContents={sectionRoomID !== 'none' || !loading}
             fallbackContents={
-              <p className="text-center text-lg text-gray-500">
+              <p className="text-center text-lg text-medium ">
                 Please select a notebook above to view your data
               </p>
             }>

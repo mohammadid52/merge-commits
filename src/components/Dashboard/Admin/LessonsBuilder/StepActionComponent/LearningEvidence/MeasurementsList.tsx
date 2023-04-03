@@ -1,8 +1,8 @@
-import CheckBox from "atoms/Form/CheckBox";
-import Loader from "atoms/Loader";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import React from "react";
+import CheckBox from 'atoms/Form/CheckBox';
+import Loader from 'atoms/Loader';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import React from 'react';
 
 interface IMeasurementList {
   setAddModalShow?: any;
@@ -19,48 +19,36 @@ const MeasurementsList = ({
   handleCheckboxChange,
   learningEvidenceList,
   loading,
-  selectedMeasurements,
+  selectedMeasurements
 }: IMeasurementList) => {
-  const { userLanguage } = useGlobalContext();
-  const { LessonBuilderDict } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {LessonBuilderDict} = useDictionary();
 
   return (
     <>
-      <div className="w-full flex justify-between border-b-0 border-gray-200 mt-4">
-        <div className="w-6/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+      <div className="w-full flex justify-between border-b-0 border-lightest mt-4">
+        <div className="w-6/10 px-4 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
           <span>
             {
-              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
-                "LEARNING_OBJECTIVE"
+              LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS'][
+                'LEARNING_OBJECTIVE'
               ]
             }
           </span>
         </div>
-        <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+        <div className="w-4/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
           <span>
-            {
-              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
-                "TOPICS"
-              ]
-            }
+            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['TOPICS']}
           </span>
         </div>
-        <div className="w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+        <div className="w-4/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
           <span>
-            {
-              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
-                "MEASUREMENTS"
-              ]
-            }
+            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['MEASUREMENTS']}
           </span>
         </div>
-        <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+        <div className="w-2/10 px-8 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
           <span>
-            {
-              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
-                "MEASURED"
-              ]
-            }
+            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['MEASURED']}
           </span>
         </div>
       </div>
@@ -70,30 +58,25 @@ const MeasurementsList = ({
         </div>
       ) : (
         learningEvidenceList?.map((item: any, index: number) => (
-          <div
-            className="w-full m-auto max-h-88 overflow-y-auto"
-            key={item.rubricId}
-          >
+          <div className="w-full m-auto max-h-88 overflow-y-auto" key={item.rubricId}>
             <div
               className={`flex justify-between bg-white w-full border-b-0 ${
-                index % 2 === 0 ? "bg-white" : "bg-gray-100"
-              }`}
-            >
-              <div className="w-6/10 flex items-center px-4 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal">
+                index % 2 === 0 ? 'bg-white' : 'bg-lightest '
+              }`}>
+              <div className="w-6/10 flex items-center px-4 py-3 hover:text-medium  cursor-pointer text-sm leading-5 font-medium text-darkest   whitespace-normal">
                 <span>{item.learningObjectiveName}</span>
               </div>
-              <div className="w-4/10 flex items-center px-8 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium whitespace-normal text-gray-500">
+              <div className="w-4/10 flex items-center px-8 py-3 hover:text-medium  cursor-pointer text-sm leading-5 font-medium whitespace-normal text-medium ">
                 <span>{item.topicName}</span>
               </div>
-              <div className="w-4/10 flex items-center px-8 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium whitespace-normal text-gray-500">
+              <div className="w-4/10 flex items-center px-8 py-3 hover:text-medium  cursor-pointer text-sm leading-5 font-medium whitespace-normal text-medium ">
                 <span>{item.measurementName}</span>
               </div>
-              <div className="w-2/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-500">
+              <div className="w-2/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-medium ">
                 <CheckBox
                   value={
                     selectedMeasurements.find(
-                      (measurement: any) =>
-                        measurement.rubricID === item.rubricId
+                      (measurement: any) => measurement.rubricID === item.rubricId
                     )?.checked
                   }
                   onChange={(e) => handleCheckboxChange(e, item.rubricId)}

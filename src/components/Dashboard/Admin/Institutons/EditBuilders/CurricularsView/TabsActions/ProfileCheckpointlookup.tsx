@@ -152,11 +152,11 @@ const ProfileCheckpointlookup = () => {
         </div>
       </div> */}
       <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
           {ProfileCheckpointlookupDict[userLanguage]['subtitle']}
         </h3>
         <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
           // onClick={() =>
           //   history.push(
           //     isSuperAdmin
@@ -175,12 +175,12 @@ const ProfileCheckpointlookup = () => {
       {/* Body section */}
       {/* <PageWrapper> */}
       {/* <div className="w-8/10 m-auto">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+        <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
           {ProfileCheckpointlookupDict[userLanguage]['heading']}
         </h3>
       </div> */}
       <div className="flex justify-between my-4 px-8">
-        <p className="text-sm font-medium text-gray-600 flex items-center w-2/4">
+        <p className="text-sm font-medium text-medium  flex items-center w-2/4">
           {' '}
           {selectedCheckpointIds?.length}{' '}
           {ProfileCheckpointlookupDict[userLanguage]['selectcheckpoint']}
@@ -194,17 +194,17 @@ const ProfileCheckpointlookup = () => {
       </div>
       <div className="px-8">
         <Fragment>
-          <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-gray-200">
-            <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-light">
+            <div className="w-1.5/10 px-6 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               <span>{ProfileCheckpointlookupDict[userLanguage]['selection']}</span>
             </div>
-            <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               {ProfileCheckpointlookupDict[userLanguage]['checkpoint']}
             </div>
-            <div className="w-2/10 px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-2/10 px-6 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               {ProfileCheckpointlookupDict[userLanguage]['language']}
             </div>
-            <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-1.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               <span></span>
             </div>
           </div>
@@ -220,7 +220,7 @@ const ProfileCheckpointlookup = () => {
                           {/* Table row */}
                           <div
                             key={item.id}
-                            className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                            className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-lightest ${
                               expandId === item.id
                                 ? 'border-0 border-indigo-400 rounded-lg'
                                 : ''
@@ -238,7 +238,7 @@ const ProfileCheckpointlookup = () => {
                               <div>
                                 <span>{item.title}</span>
                                 <br />
-                                <span className="text-sm leading-6 text-gray-500">
+                                <span className="text-sm leading-6 text-medium ">
                                   {item.subtitle ? item.subtitle : ''}
                                 </span>
                               </div>

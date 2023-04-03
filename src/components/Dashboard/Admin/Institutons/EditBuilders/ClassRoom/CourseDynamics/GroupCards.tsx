@@ -32,7 +32,7 @@ const GroupCard = ({
   return (
     <div className="flex shadow flex-col white_back overflow-hidden">
       <div className="flex-shrink-0">
-        <div className="p-4 bg-gray-200">
+        <div className="p-4 bg-light">
           <div className="flex">
             <div className="text-xl font-bold flex items-center justify-center">
               {group.groupName}
@@ -73,7 +73,7 @@ const GroupCard = ({
                   return (
                     <div
                       key={student.id}
-                      className="w-full p-2 cursor-pointer hover:bg-gray-200 rounded-md"
+                      className="w-full p-2 cursor-pointer hover:bg-lightest rounded-md"
                       onClick={() => redirectToUserPage(student.id)}>
                       <div className="w-full">
                         <div className="flex items-center justify-center">

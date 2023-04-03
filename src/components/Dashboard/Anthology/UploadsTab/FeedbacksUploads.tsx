@@ -448,7 +448,7 @@ const FeedbacksUploads = ({
 
   const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
   const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
-  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 ${
+  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-medium  ${
     themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
   }`;
 
@@ -490,7 +490,7 @@ const FeedbacksUploads = ({
                 cols={125}
                 rows={1}
                 placeholder="Edit Feedback"
-                className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded"
+                className="text-sm w-96 p-2 px-4 pt-3 text-dark   border-0 border-lightest rounded"
                 value={editCommentInput}
                 onChange={(e) => setEditCommentInput(e.target.value)}
               />
@@ -546,7 +546,7 @@ const FeedbacksUploads = ({
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
                 <Loader />
-                <p className="mt-2 text-center text-lg text-gray-500">
+                <p className="mt-2 text-center text-lg text-medium ">
                   Loading Comments...
                   {/* @Mohammad: Add this to dict */}
                 </p>
@@ -570,22 +570,22 @@ const FeedbacksUploads = ({
           ) : (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
-                <p className="mt-2 text-center text-lg text-gray-500">
+                <p className="mt-2 text-center text-lg text-medium ">
                   Be the first to give feedback
                   {/* @Mohammad: Add this to dict */}
                 </p>
               </div>
             </div>
           )}
-          <div className="comment-box w-auto flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
+          <div className="comment-box w-auto flex flex-col border-0 border-lightest h-auto rounded mt-4">
             <div
               style={{minHeight: '2.5rem'}}
-              className="flex comment-box__inner flex-col border-b-0 border-gray-200">
+              className="flex comment-box__inner flex-col border-b-0 border-light">
               <textarea
                 onKeyUp={(e) => doResize(e.target)}
                 style={{resize: 'none'}}
                 placeholder="Add Feedback"
-                className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
+                className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-dark  "
                 rows={1}
                 cols={125}
                 value={comment}
@@ -594,52 +594,52 @@ const FeedbacksUploads = ({
               {/* ------------------------- Preview Section Start -------------------------------- */}
               <div className={`${fileObject.name ? 'block px-4 py-2' : 'hidden'}`}>
                 {isImage && (
-                  <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                  <div className="h-auto w-80 p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
                     <img
                       style={{objectFit: 'cover'}}
                       id="output_image"
                       className="h-16 w-16 mr-2 rounded-lg"
                     />
-                    <p className="truncate w-auto font-light text-gray-600">
+                    <p className="truncate w-auto font-light text-medium ">
                       {fileObject?.name}
                     </p>
                     <span
                       onClick={() => setFileObject({})}
                       className={
-                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-medium  '
                       }>
                       <MdCancel />
                     </span>
                   </div>
                 )}
                 {isVideo && (
-                  <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                  <div className="h-auto w-80 p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
                     <video id="output_video" className="h-20 mr-2 w-20 rounded-lg">
                       <source type={fileObject.type} />
                       Your browser does not support the video tag.
                     </video>
-                    <p className="truncate w-auto font-light text-gray-600">
+                    <p className="truncate w-auto font-light text-medium ">
                       {fileObject?.name}
                     </p>
                     <span
                       onClick={() => setFileObject({})}
                       className={
-                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-medium  '
                       }>
                       <MdCancel />
                     </span>
                   </div>
                 )}
                 {!isVideo && !isImage && (
-                  <div className="h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-                    <p className="truncate w-auto font-light text-gray-600">
+                  <div className="h-12 w-80 p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                    <p className="truncate w-auto font-light text-medium ">
                       {fileObject?.name}
                     </p>
 
                     <span
                       onClick={() => setFileObject({})}
                       className={
-                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-medium  '
                       }>
                       <MdCancel />
                     </span>

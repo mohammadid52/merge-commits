@@ -113,7 +113,7 @@ const ColorPicker = (props: ColorPickerProps) => {
       </div>
       <div className={`bg-white shadow-lg  my-3 rounded-lg p-6`}>
         <div className="flex items-center mb-2 justify-between">
-          <p className={`text-gray-900 w-auto font-medium text-2xl`}>Select a color</p>
+          <p className={`text-darkest   w-auto font-medium text-2xl`}>Select a color</p>
           {noneLabel && <Buttons onClick={onNoneClick} label={noneLabel} />}
         </div>
         <div className={`my-4 ${customColors ? 'flex items-center' : ''}`}>

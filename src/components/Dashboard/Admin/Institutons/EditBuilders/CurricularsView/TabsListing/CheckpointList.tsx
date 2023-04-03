@@ -145,7 +145,7 @@ const CheckpointList = (props: CheckpointListProps) => {
               </Fragment>
             ) : (
               <Fragment>
-                <p className="text-gray-500 p-16 text-sm text-center">
+                <p className="text-medium  p-16 text-sm text-center">
                   {CHECKPOINTSDICT[userLanguage]['INFO']}
                 </p>
               </Fragment>
@@ -155,7 +155,7 @@ const CheckpointList = (props: CheckpointListProps) => {
               <Loader
                 withText={CHECKPOINTSDICT[userLanguage]['FETCH']}
                 animation
-                className="text-gray-500"
+                className="text-medium "
               />
             </div>
           )}
@@ -164,7 +164,7 @@ const CheckpointList = (props: CheckpointListProps) => {
             {isInactive && (
               <>
                 <hr />
-                <p className="mt-4 text-gray-500 text-sm text-center">
+                <p className="mt-4 text-medium  text-sm text-center">
                   This course is inactive. Adding demographics and information to this
                   course has been disabled
                 </p>

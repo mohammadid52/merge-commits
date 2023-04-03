@@ -50,7 +50,7 @@ const SingleRoomCard = ({
       key={`homepage__classrooms-${idx}`}
       data-cy={`homepage__classrooms-${idx}`}
       className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
-      <div className="flex-shrink-0 bg-gray-500">
+      <div className="flex-shrink-0 bg-medium ">
         <img
           className="room-image h-56 w-full object-cover hover:scale-105 transform transition-transform duration-300"
           src={bannerImage || fallbackUrls.room}
@@ -59,14 +59,14 @@ const SingleRoomCard = ({
       </div>
       <div className="flex-1 bg-white room_card-body p-6 flex flex-col justify-between">
         <div className="flex-1">
-          <p className="room-type  text-xs tracking-wide uppercase font-medium text-gray-500">
+          <p className="room-type  text-xs tracking-wide uppercase font-medium text-medium ">
             {type}
           </p>
           <div data-cy="classroom-cards" className="block mt-2">
             <h4 className="text-base room-name tracking-wider font-medium 2xl:text-lg theme-text">
               <Highlighted text={name} highlight={searchTerm} />
             </h4>
-            <p className="mt-2 room-summary text-xs 2xl:text-sm text-gray-600">
+            <p className="mt-2 room-summary text-xs 2xl:text-sm text-medium ">
               {limitDesc(summary, 50)}
             </p>
           </div>
@@ -86,12 +86,12 @@ const SingleRoomCard = ({
             )}
           </div>
           <div className="ml-3 w-auto">
-            <p className="text-xs room-teacher-name 2xl:text-sm font-medium text-gray-900">
+            <p className="text-xs room-teacher-name 2xl:text-sm font-medium text-darkest">
               {(preferredName || firstName) + ' ' + lastName}
             </p>
             <p
               title={roomName}
-              className="overflow-hidden room-desc pr-2 overflow-ellipsis space-x-1 text-xs 2xl:text-sm text-gray-500">
+              className="overflow-hidden room-desc pr-2 overflow-ellipsis space-x-1 text-xs 2xl:text-sm text-medium ">
               {limitDesc(roomName, 30)}
             </p>
           </div>
@@ -158,12 +158,12 @@ const RoomTiles = (props: {
         }
         fontSize="xl"
         fontStyle="semibold"
-        extraClass="leading-6 text-gray-900"
+        extraClass="leading-6 text-darkest"
         borderBottom
       />
       <ContentCard hasBackground={false}>
         {!isTeacher && isInactive ? (
-          <p className="text-gray-500 text-sm text-center py-8 px-4">
+          <p className="text-medium  text-sm text-center py-8 px-4">
             Your account is inactive. If you think this status is incorrect contact our
             administration team. Acces to your writing exercises and journal are still
             available
@@ -176,7 +176,7 @@ const RoomTiles = (props: {
           <div className="relative">
             <div className="relative max-w-7xl mx-auto  px-6 mt-4">
               {finalList.length > 3 && (
-                <h4 className="w-auto text-gray-600">
+                <h4 className="w-auto text-medium ">
                   Showing {showMore ? finalList.length : 3} out of {finalList.length}
                 </h4>
               )}

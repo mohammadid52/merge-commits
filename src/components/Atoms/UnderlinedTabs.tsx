@@ -58,10 +58,10 @@ const UnderlinedTabs = ({updateTab, tabs, activeTab = 0, hideTooltip}: TabsProps
               id={tab.id}
               className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center ${
                 tab.disabled
-                  ? 'cursor-not-allowed opacity-50 bg-gray-500 text-gray-200 border'
+                  ? 'cursor-not-allowed opacity-50 bg-medium  text-lightest border'
                   : `hover:${theme.borderColor[themeColor]} ${theme.outlineNone} ${
                       openTab === tab.index
-                        ? `bg-gray-100 ${theme.borderColor[themeColor]}`
+                        ? `bg-lightest  ${theme.borderColor[themeColor]}`
                         : ''
                     }`
               }`}

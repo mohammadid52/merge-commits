@@ -533,7 +533,7 @@ const CourseFormComponent = ({
           onClick={() => handleToggleDelete(courseData.name, courseData)}
           disabled={checkIfRemovable()}
           className={`${
-            checkIfRemovable() ? 'text-red-500' : 'pointer-events-none text-gray-500'
+            checkIfRemovable() ? 'text-red-500' : 'pointer-events-none text-medium '
           }  w-auto ml-12 hover:underline text-sm uppercase`}>
           Delete course
         </button> */}

@@ -117,7 +117,7 @@ const TeacherRows = (props: {
                         ? '#'
                         : `/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`
                     }
-                    className={`block no-underline hover:bg-gray-200 ${
+                    className={`block no-underline hover:bg-lightest ${
                       isStudent ? 'pointer-events-none' : ''
                     }`}
                     style={{borderRadius: 'inherit'}}>
@@ -135,9 +135,9 @@ const TeacherRows = (props: {
                             <h4 className="text-sm mb-0 font-medium text-indigo-600 truncate">
                               {teacher.firstName + ' ' + teacher.lastName}
                             </h4>
-                            <p className="mt-2 flex mb-0 items-center text-sm text-gray-500">
+                            <p className="mt-2 flex mb-0 items-center text-sm text-medium ">
                               <svg
-                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-light "
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 20 20"
                                 fill="currentColor"
@@ -167,7 +167,7 @@ const TeacherRows = (props: {
                                     `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
                                   );
                                 }}
-                                className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                                className="text-medium   transition-all hover:underline hover:theme-text:500 rounded-md px-2">
                                 {d.name}
                               </li>
                             ))}

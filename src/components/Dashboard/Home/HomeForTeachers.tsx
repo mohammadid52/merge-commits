@@ -293,7 +293,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 fontStyle="semibold"
                 extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
                 borderBottom
-                extraClass="leading-6 text-gray-900"
+                extraClass="leading-6 text-darkest"
               />
               <TeacherRows
                 loading={Boolean(roomsLoading)}

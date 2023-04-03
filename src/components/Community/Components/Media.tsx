@@ -203,7 +203,7 @@ const Media = ({
         </Transition>
       </div>
 
-      <p className="text-center text-gray-600 mt-2"> --- or --- </p>
+      <p className="text-center text-medium  mt-2"> --- or --- </p>
 
       <Label label="Upload Youtube/Vimeo link" />
       <FormInput

@@ -243,7 +243,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       key: '1',
       children: (
         <div className="h-full px-4 py-5 sm:px-6">
-          <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
+          <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-darkest">
             <>
               <div className="sm:col-span-3 p-2">
                 <FormInput

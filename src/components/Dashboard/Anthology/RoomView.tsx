@@ -216,7 +216,7 @@ const RoomView = ({
             animationType="opacity"
             show={sectionRoomID === ''}>
             {sectionRoomID === '' && (
-              <p className="text-base inline text-gray-500">
+              <p className="text-base inline text-medium ">
                 Select a notebook to continue
               </p>
             )}

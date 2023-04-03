@@ -112,7 +112,7 @@ const Topic = ({
                 <li
                   className="flex show-action-on-hover justify-between items-center py-1 truncate"
                   key={rubric.id}>
-                  <span className="pr-2 text-gray-600 text-base truncate">
+                  <span className="pr-2 text-medium  text-base truncate">
                     {topicIndex + 1}.{rubricIndex + 1} {rubric.name}
                   </span>
 
@@ -604,7 +604,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
               <Loader
                 withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
                 animation
-                className="text-gray-500"
+                className="text-medium "
               />
             </div>
           )}
@@ -657,7 +657,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
 
         <AnimatedContainer show={isInactive}>
           {isInactive && (
-            <p className="text-gray-500 text-sm text-center">
+            <p className="text-medium  text-sm text-center">
               This course is inactive. Adding units to this course has been disabled
             </p>
           )}

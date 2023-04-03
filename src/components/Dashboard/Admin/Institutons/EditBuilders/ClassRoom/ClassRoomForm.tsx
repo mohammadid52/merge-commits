@@ -925,7 +925,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               title={
                 <div className="flex flex-col">
                   <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
-                  <span className="text-gray-500 w-auto font-normal mt-2 text-sm">
+                  <span className="text-medium  w-auto font-normal mt-2 text-sm">
                     {moment(roomData.createdAt).format('ll')}
                   </span>
                 </div>
@@ -1093,7 +1093,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 <CheckBox
                   dataCy="isZoiq"
                   label={'ZOIQ'}
-                  className="group:hover:bg-gray-500"
+                  className="group:hover:bg-medium "
                   value={roomData.isZoiq}
                   onChange={(e) => setRoomData({...roomData, isZoiq: e.target.checked})}
                   name="isZoiq"
@@ -1124,7 +1124,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
         <AnimatedContainer show={status === RoomStatus.INACTIVE}>
           {status === RoomStatus.INACTIVE && (
-            <p className="text-gray-500 text-sm text-center">
+            <p className="text-medium  text-sm text-center">
               This classroom is inactive and not available in the classroom
             </p>
           )}

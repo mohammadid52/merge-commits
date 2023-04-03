@@ -203,7 +203,7 @@ const InstitutionBuilder = ({
     <div className={`w-full h-full ${isEditPage ? '' : 'pt-0'} px-0`}>
       {back && (
         <div
-          className="px-8 flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          className="px-8 flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
           onClick={() => history.push(back)}>
           <span className="w-auto mr-2">
             <BsArrowLeft />
@@ -212,7 +212,7 @@ const InstitutionBuilder = ({
         </div>
       )}
       {isEditPage ? (
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize py-4 px-12">
+        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize py-4 px-12">
           {InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION']}
         </h3>
       ) : (
@@ -246,7 +246,7 @@ const InstitutionBuilder = ({
               handleTabSwitch={handleTabSwitch}
             />
             <div
-              className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-2 lg:px-8 mt-4 lg:mt-0`}>
+              className={`grid grid-cols-1 divide-x-0 divide-light  px-2 lg:px-8 mt-4 lg:mt-0`}>
               {loading ? (
                 <div className="h-100 flex justify-center items-center">
                   <div className="w-5/10">
@@ -257,7 +257,7 @@ const InstitutionBuilder = ({
                   </div>
                 </div>
               ) : (
-                <div className="border-0 lg:border-t-none border-gray-200">
+                <div className="border-0 lg:border-t-none border-light">
                   {currentStepComp(activeStep)}
                 </div>
               )}

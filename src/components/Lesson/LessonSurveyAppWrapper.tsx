@@ -77,7 +77,7 @@ const LessonSurveyAppWrapper = ({
       ref={topLessonRef}>
       {contextHolder}
       <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-        <h6 className="text-xs text-shadow text-gray-500">{NAME}</h6>
+        <h6 className="text-xs text-shadow text-medium ">{NAME}</h6>
       </div>
 
       <div className="fixed w-full" style={{zIndex: 5000}}>

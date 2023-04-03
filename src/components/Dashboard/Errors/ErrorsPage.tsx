@@ -143,7 +143,7 @@ const ErrorItem = ({
           <Tooltip placement="topLeft" title={error.componentName}>
             <h4 className="mb-0">{error.componentName}</h4>
           </Tooltip>
-          <p className=" text-sm text-gray-500">{error.email}</p>
+          <p className=" text-sm text-medium ">{error.email}</p>
         </div>
       }>
       <div className="absolute top-0 w-auto p-4 right-0">
@@ -155,7 +155,7 @@ const ErrorItem = ({
       </h4>
 
       <Divider />
-      <div className="absolute w-full left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
+      <div className="absolute w-full left-0  bottom-0 border-t-0 pt-1 border-lightest flex items-center justify-between px-4 py-2">
         <Buttons
           onClick={() => error?.pageUrl && history.push(error?.pageUrl)}
           variant="link"
@@ -181,7 +181,7 @@ const ErrorItem = ({
             />
           </Popconfirm>
         )}
-        <p className="mb-0 text-gray-500 font-light w-auto">
+        <p className="mb-0 text-medium  font-light w-auto">
           {moment(error.errorTime).format('lll')}
         </p>
       </div>
@@ -359,7 +359,7 @@ const ErrorsPage = () => {
 
             <div className="overflow-hidden">
               {isLoading ? null : (
-                <h6 className="text-base mb-4 text-gray-800">
+                <h6 className="text-base mb-4 text-darkest   ">
                   {pendingLength} pending errors - total {data.length} errors
                 </h6>
               )}
@@ -380,7 +380,7 @@ const ErrorsPage = () => {
                     />
                   ))
                 ) : isLoading ? null : (
-                  <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                  <p className="min-h-56 flex items-center w-full justify-center text-medium ">
                     {filters !== undefined
                       ? `No errors found for status - ${filters}`
                       : 'Woahhh.. no errors.'}

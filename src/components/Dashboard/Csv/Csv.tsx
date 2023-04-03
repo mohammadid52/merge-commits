@@ -39,10 +39,8 @@ export const DataValue = ({
       className={` w-auto flex mb-2 flex-col items-start justify-start ${
         withBg ? 'bg-white rounded-md px-4 py-2' : ''
       } ${className}`}>
-      <span className="text-sm mb-1 text-gray-500">{title}</span>
-      <span className="text-dark-gray font-medium text-left w-auto text-sm">
-        {content}
-      </span>
+      <span className="text-sm mb-1 text-medium ">{title}</span>
+      <span className="text-dark font-medium text-left w-auto text-sm">{content}</span>
     </div>
   );
 };
@@ -378,7 +376,7 @@ const Csv = () => {
         <div className="flex flex-col justify-center items-center gap-y-4">
           <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
           <hr />
-          <p className="text-gray-600 pt-0 p-4 text-center">
+          <p className="text-medium  pt-0 p-4 text-center">
             If you will be using this file to upload results to the app, please do not
             change column header or tab names
           </p>

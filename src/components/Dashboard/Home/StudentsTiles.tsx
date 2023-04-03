@@ -85,7 +85,7 @@ const StudentsTiles = (props: {
         fontSize="xl"
         fontStyle="semibold"
         borderBottom
-        extraClass="leading-6  text-gray-900"
+        extraClass="leading-6  text-darkest"
         withButton={
           <div className={`flex items-center w-auto justify-end`}>
             {isTeacher && (

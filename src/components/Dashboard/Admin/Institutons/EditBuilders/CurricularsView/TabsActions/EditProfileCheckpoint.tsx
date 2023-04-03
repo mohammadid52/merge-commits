@@ -395,7 +395,7 @@ const EditProfileCheckpoint = () => {
         ) : (
           <Fragment>
             <div className="md:w-full lg:w-8/10 m-auto">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+              <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
                 {EditProfileCheckpointDict[userLanguage]['heading']}
               </h3>
             </div>
@@ -432,7 +432,7 @@ const EditProfileCheckpoint = () => {
 
                 <div className="py-4 grid gap-x-6 grid-cols-3">
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {EditProfileCheckpointDict[userLanguage]['designer']}
                     </label>
                     <MultipleSelector
@@ -443,7 +443,7 @@ const EditProfileCheckpoint = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       Select Scope
                     </label>
                     <Selector
@@ -456,7 +456,7 @@ const EditProfileCheckpoint = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {EditProfileCheckpointDict[userLanguage]['language']}
                     </label>
                     <Selector
@@ -470,7 +470,7 @@ const EditProfileCheckpoint = () => {
 
                 {/* Question table */}
                 <div className="p-6 inner_card my-4">
-                  <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
+                  <p className="text-m font-medium leading-5 text-dark   my-2 text-center">
                     {EditProfileCheckpointDict[userLanguage]['checkpoint']}:{' '}
                   </p>
                   {!checkpQuestions?.length ? (
@@ -493,19 +493,19 @@ const EditProfileCheckpoint = () => {
                   ) : (
                     <Fragment>
                       <div className="max-h-112 overflow-auto">
-                        <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
-                          <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-light">
+                          <div className="w-.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>{EditProfileCheckpointDict[userLanguage]['no']}</span>
                           </div>
-                          <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-6/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>
                               {EditProfileCheckpointDict[userLanguage]['question']}
                             </span>
                           </div>
-                          <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>{EditProfileCheckpointDict[userLanguage]['type']}</span>
                           </div>
-                          <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-1.5/10 px-8 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>
                               {EditProfileCheckpointDict[userLanguage]['option']}
                             </span>
@@ -526,8 +526,8 @@ const EditProfileCheckpoint = () => {
                                     }
                                   }}
                                   key={item.id}
-                                  className={`flex cursor-pointer justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                                    questionOptions.quesId === item.id && 'bg-gray-200'
+                                  className={`flex cursor-pointer justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-lightest ${
+                                    questionOptions.quesId === item.id && 'bg-light'
                                   }`}>
                                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                     {' '}
@@ -553,8 +553,8 @@ const EditProfileCheckpoint = () => {
                                   </div>
                                 </div>
                                 {questionOptions.quesId === item.id && (
-                                  <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
-                                    <p className="text-gray-900 px-2 py-2 text-base">
+                                  <div className="px-16 py-4 flex flex-col text-dark   font-medium text-sm border-b-0 border-light">
+                                    <p className="text-darkest   px-2 py-2 text-base">
                                       {EditProfileCheckpointDict[userLanguage]['option']}:
                                     </p>
                                     {questionOptions.options?.map((item, index) => (

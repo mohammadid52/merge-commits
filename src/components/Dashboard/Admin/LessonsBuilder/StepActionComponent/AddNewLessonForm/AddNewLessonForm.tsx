@@ -351,9 +351,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   };
 
   return (
-    <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-gray-200">
-      {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+    <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-light">
+      {/* <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-darkest">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
         </h3>
       </div> */}

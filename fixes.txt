@@ -85,6 +85,9 @@
 
 8. Fix dropdowns for Community 
 
+9. Remove UnderlinedTabs component
+
+10. Make sure all tables are from Table component
 
 ---END---
 

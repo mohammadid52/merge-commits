@@ -285,8 +285,8 @@ const CurricularView = (props: CurricularViewProps) => {
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-full">
             <div className="bg-white shadow-5 sm:rounded-lg mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex">
-                <h3 className="text-lg flex items-center justify-center leading-6 font-medium text-gray-900">
+              <div className="px-4 py-5 border-b-0 border-lightest sm:px-6 flex">
+                <h3 className="text-lg flex items-center justify-center leading-6 font-medium text-darkest">
                   {curricularviewdict[userLanguage]['HEADING']}
                   <Tooltip key={'id'} text={'Edit Curriculum Details'} placement="top">
                     <span
@@ -300,30 +300,30 @@ const CurricularView = (props: CurricularViewProps) => {
                 </h3>
               </div>
 
-              <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
+              <div className="grid grid-cols-2 divide-x-0 divide-light  p-4">
                 <div className="p-8">
-                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">
+                  <p className="text-base leading-5 font-medium text-medium  my-3 flex">
+                    <span className="text-darkest   mr-2 w-3/10">
                       {curricularviewdict[userLanguage]['NAME']}:
                     </span>
                     <span className="w-auto">{name || '--'}</span>
                   </p>
-                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">
+                  <p className="text-base leading-5 font-medium text-medium  my-3 flex">
+                    <span className="text-darkest   mr-2 w-3/10">
                       {curricularviewdict[userLanguage]['OWNER']}:
                     </span>
                     <span className="w-auto">{institute.name || '--'}</span>
                   </p>
-                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">
+                  <p className="text-base leading-5 font-medium text-medium  my-3 flex">
+                    <span className="text-darkest   mr-2 w-3/10">
                       {curricularviewdict[userLanguage]['DESCRIPTION']}:
                     </span>
                     <span className="w-7/10">{description || '--'}</span>
                   </p>
                 </div>
                 <div className="p-8">
-                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">
+                  <p className="text-base leading-5 font-medium text-medium  my-3 flex">
+                    <span className="text-darkest   mr-2 w-3/10">
                       {curricularviewdict[userLanguage]['DESIGNER']}:
                     </span>
                     <span className="w-auto">
@@ -335,8 +335,8 @@ const CurricularView = (props: CurricularViewProps) => {
                         : '--'}
                     </span>
                   </p>
-                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">
+                  <p className="text-base leading-5 font-medium text-medium  my-3 flex">
+                    <span className="text-darkest   mr-2 w-3/10">
                       {curricularviewdict[userLanguage]['LANGUAGE']}:
                     </span>
                     <span className="w-auto">
@@ -349,8 +349,8 @@ const CurricularView = (props: CurricularViewProps) => {
                         : '--'}
                     </span>
                   </p>
-                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">
+                  <p className="text-base leading-5 font-medium text-medium  my-3 flex">
+                    <span className="text-darkest   mr-2 w-3/10">
                       {curricularviewdict[userLanguage]['OBJECTIVE']}:
                     </span>
                     <span className="w-7/10">

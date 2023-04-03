@@ -456,7 +456,7 @@ const UserEdit = (props: UserInfoProps) => {
       label: UserEditDict[userLanguage]['heading'],
       key: '1',
       children: (
-        <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
+        <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-darkest">
           <div className="sm:col-span-3 p-2">
             <FormInput
               value={editUser.firstName}
@@ -549,7 +549,7 @@ const UserEdit = (props: UserInfoProps) => {
             <CheckBox
               dataCy="isZoiq"
               label={'ZOIQ'}
-              className="group:hover:bg-gray-500"
+              className="group:hover:bg-medium "
               value={Boolean(editUser.isZoiq)}
               onChange={(e) => setEditUser({...editUser, isZoiq: e.target.checked})}
               name="isZoiq"

@@ -170,7 +170,7 @@ const LinestarterModalDialog = ({
               <div className="mb-2" key={`linestarter_${idx}`}>
                 <label
                   htmlFor={'Link'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                  className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
                   Line-starter {idx + 1}:
                 </label>
                 <div className="mb-2 relative">

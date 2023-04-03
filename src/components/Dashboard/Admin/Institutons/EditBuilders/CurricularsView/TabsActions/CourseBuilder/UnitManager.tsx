@@ -335,7 +335,7 @@ const UnitManager = ({
         title={'Unit List'}
         fontSize="xl"
         fontStyle="semibold"
-        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
+        extraClass="leading-6 text-darkest    mb-2 lg:mb-0"
         extraContainerClass="flex-col lg:flex-row "
         borderBottom
         withButton={
@@ -393,7 +393,7 @@ const UnitManager = ({
 
       <AnimatedContainer show={isInactive}>
         {isInactive && (
-          <p className="text-gray-500 text-sm text-center">
+          <p className="text-medium  text-sm text-center">
             This course is inactive. Adding units to this course has been disabled
           </p>
         )}

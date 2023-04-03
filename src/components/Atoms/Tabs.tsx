@@ -32,7 +32,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             const tab = tabsData.find((_d) => _d.label === e.target.value);
             updateTab(tab);
           }}
-          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full">
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-lightest  rounded-full">
           {tabsData.map((tab: ITabElements) => (
             <option value={tab.label} className="transition-all" key={tab.label}>
               {tab.label}

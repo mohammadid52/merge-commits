@@ -8,12 +8,12 @@ function classNames(...classes: any[]) {
 
 const Toggle = ({
   enabled,
-  enabledColor = 'bg-gray-600',
+  enabledColor = 'bg-medium ',
   disabledColor = 'bg-orange-200',
   setEnabled,
   enableIcon: EIcon,
   disableIcon: DIcon,
-  disabled,
+  disabled
 }: {
   enableIcon?: IconType;
   disableIcon?: IconType;

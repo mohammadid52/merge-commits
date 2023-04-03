@@ -187,11 +187,11 @@ const File = ({
                 </div>
                 <Transition
                   style={{bottom: '1.5rem'}}
-                  className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
+                  className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-lightest min-h-32 min-w-140 p-4"
                   show={showMenu}>
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File preview</dt>
+                      <dt className="text-sm font-medium text-medium ">File preview</dt>
                       <img
                         onClick={onImageClick}
                         src={imageUrl}
@@ -200,14 +200,14 @@ const File = ({
                       />
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File name</dt>
-                      <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
+                      <dt className="text-sm font-medium text-medium ">File name</dt>
+                      <dd className="mt-1 text-sm break-all text-dark   font-medium">
                         {removeExtension(_fileName)}
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">Size</dt>
-                      <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                      <dt className="text-sm font-medium text-medium ">Size</dt>
+                      <dd className="mt-1 flex items-center justify-between  text-sm text-dark   font-medium">
                         <p className="w-auto">{getSizeInBytes(file?.size)}</p>
                       </dd>
                     </div>
@@ -467,8 +467,8 @@ const UploadAttachment = ({
 
   return (
     <>
-      <div className="w-full h-full border-t-0 border-gray-200">
-        <h4 className="text-lg text-gray-600 font-medium">Upload Additional Files</h4>
+      <div className="w-full h-full border-t-0 border-light">
+        <h4 className="text-lg text-medium  font-medium">Upload Additional Files</h4>
         <div
           {...getRootProps()}
           className={`border-${

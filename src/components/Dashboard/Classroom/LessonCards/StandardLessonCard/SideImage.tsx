@@ -24,7 +24,7 @@ const SideImage = (props: LessonCardProps) => {
         <div className="">
           <div className="flex flex-row-reverse ">
             <h2
-              className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest absolute bottom-1 px-3 text-gray-200`}
+              className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest absolute bottom-1 px-3 text-light`}
               style={{textShadow: '1px 1px black'}}>
               {lessonProps?.lesson?.cardCaption}
             </h2>

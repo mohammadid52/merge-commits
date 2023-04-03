@@ -17,12 +17,6 @@ import {
   LINK
 } from '../common/constants';
 
-/**
- * @param classes multipple classes separeted bt comma
- * @returns multiple classes into a single class
- * */
-export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
-
 const UniversalInput = (props: any) => {
   const {
     closeAction,
@@ -163,7 +157,7 @@ const UniversalInput = (props: any) => {
                         </>
                       )}
                       {!hideBtns && (
-                        <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                        <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-lightest  py-2 px-3 rounded-md shadow-sm">
                           <Checkbox
                             checked={input.required}
                             onClick={() => makeRequired(idx, input.required)}>
@@ -201,7 +195,7 @@ const UniversalInput = (props: any) => {
                 )}
               </div>
               {shouldShowActions && (
-                <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+                <div className="border-b-2 border-dashed border-lightest  my-4 "></div>
               )}
             </div>
           );

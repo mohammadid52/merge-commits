@@ -324,7 +324,7 @@ const Registration = ({
         onSubmit={handleSubmit}
         className={`${
           !isInInstitute
-            ? 'test border-2 border-gray-300 rounded bg-gray-200 shadow-elem-light px-12 py-8'
+            ? 'test border-2 border-lightest  rounded bg-lightest shadow-elem-light px-12 py-8'
             : ''
         } w-full flex flex-col`}>
         <div className="">
@@ -459,7 +459,7 @@ const Registration = ({
                   ) : message.type === 'success' ? (
                     <SuccessMessage note={message.message} />
                   ) : message.type === 'loading' ? (
-                    <div className="my-2 text-sm leading-5 text-gray-900">
+                    <div className="my-2 text-sm leading-5 text-darkest">
                       {messageDict['loading']}
                     </div>
                   ) : null}

@@ -382,7 +382,7 @@ const LearningEvidence = ({
   return (
     <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-2 xl:px-8 bg-gray-100 border-0 border-gray-200">
+        <PageWrapper defaultClass="px-2 xl:px-8 bg-lightest  border-0 border-light">
           <SectionTitleV3
             withButton={
               Boolean(learnings?.length) && (
@@ -435,7 +435,7 @@ const LearningEvidence = ({
             </>
           ) : (
             <div className="py-12 my-6 text-center">
-              <p className="text-gray-600 font-medium">
+              <p className="text-medium  font-medium">
                 {AddNewLessonFormDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}
               </p>
             </div>

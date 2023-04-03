@@ -100,7 +100,7 @@ const CloseLesson = ({}) => {
     <div className="w-8 flex flex-col content-between ">
       <div
         title="Close lesson/survey"
-        className={`text-gray-600 hover:iconoclast:text-500 hover:curate:text-500 cursor-pointer`}
+        className={`text-medium  hover:iconoclast:text-500 hover:curate:text-500 cursor-pointer`}
         onClick={onShowModal}>
         <AiOutlineCloseCircle size="1.5rem" />
       </div>

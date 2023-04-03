@@ -98,7 +98,7 @@ const DividerModal = (props: Divider) => {
                 placeHolder={'eg. to be continued'}
               />
             </div>
-            <p className="text-gray-400 text-sm italic">
+            <p className="text-light  text-sm italic">
               {isEditingMode ? 'Remove' : 'Skip'} this if you want to add plain divider
             </p>
           </div>

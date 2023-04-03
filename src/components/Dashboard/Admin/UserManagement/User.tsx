@@ -487,7 +487,7 @@ const User = (props: IUserProps) => {
       label: 'User Information',
       key: '1',
       children: (
-        <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
+        <div className={`border-0 border-lightest  rounded-xl p-4 mb-8`}>
           <div className="h-1/2 flex flex-col md:flex-row">
             <UserProfileImage
               imageUrl={imageUrl}
@@ -643,7 +643,7 @@ const User = (props: IUserProps) => {
             fontSize="xl"
             backButton
             fontStyle="semibold"
-            extraClass="leading-6 text-gray-900"
+            extraClass="leading-6 text-darkest"
             shadowOff
           />
 

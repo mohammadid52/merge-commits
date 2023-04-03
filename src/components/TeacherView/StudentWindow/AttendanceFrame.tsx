@@ -142,7 +142,7 @@ const Attendance = ({
           <span
             className={`w-auto ${
               fieldName === sortConfig.fieldName && sortConfig.order === 'desc'
-                ? 'text-dark-gray'
+                ? 'text-dark'
                 : ''
             }`}>
             <FaArrowDown className="w-2" />
@@ -150,7 +150,7 @@ const Attendance = ({
           <span
             className={`w-auto ${
               fieldName === sortConfig.fieldName && sortConfig.order === 'asc'
-                ? 'text-dark-gray'
+                ? 'text-dark'
                 : ''
             }`}>
             <FaArrowUp className="w-2" />

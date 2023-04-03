@@ -4,10 +4,9 @@ import {useHistory} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {getUserRoleString} from 'utilities/strings';
+import {getUserRoleString, createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 
 import {getImageFromS3} from 'utilities/services';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
@@ -478,7 +477,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           title={dictionary['TITLE']}
           fontSize="xl"
           fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-darkest"
           borderBottom
           shadowOff
           withButton={

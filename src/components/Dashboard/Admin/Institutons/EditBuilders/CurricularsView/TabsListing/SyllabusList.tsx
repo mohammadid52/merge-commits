@@ -83,7 +83,7 @@ const SyllabusList = (props: SyllabusListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {SyllabusDict[userLanguage]['TITLE']}
           </h3>
           {loading && (
@@ -102,14 +102,14 @@ const SyllabusList = (props: SyllabusListProps) => {
                   </div>
                   <div className="my-8 w-8/10 m-auto">
                     {/* Table Headers */}
-                    <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-light">
+                      <div className="w-1/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                         <span>{SyllabusDict[userLanguage]['NO']}</span>
                       </div>
-                      <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <div className="w-7/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                         <span>{SyllabusDict[userLanguage]['NAME']}</span>
                       </div>
-                      <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                         <span>{SyllabusDict[userLanguage]['ACTION']}</span>
                       </div>
                     </div>
@@ -131,7 +131,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}>
                                       <div
-                                        className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer"
+                                        className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-lightest cursor-pointer"
                                         onClick={() => editCurrentSyllabus(item.id)}>
                                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                                           {index + 1}.

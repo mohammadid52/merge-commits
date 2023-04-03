@@ -192,21 +192,21 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
     <div className={`h-full w-full ${fromWhere !== 'notebook' ? 'md:px-4 pt-4' : ''}`}>
       <div
         className={`h-auto  mb-4 ${
-          fromWhere !== 'notebook' ? ' border-l-0 border-gray-200 bg-white' : ''
+          fromWhere !== 'notebook' ? ' border-l-0 border-lightest bg-white' : ''
         }`}>
         {fromWhere !== 'notebook' && (
-          <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+          <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-darkest">
               {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['TITLE']}
             </h3>
           </div>
         )}
 
         <div
-          className={`h-full  text-gray-800 ${
+          className={`h-full  text-darkest    ${
             fromWhere !== 'notebook' ? 'px-4 py-5 sm:px-6' : ''
           }`}>
-          <div className="text-center text-gray-600 text-sm">
+          <div className="text-center text-medium  text-sm">
             {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['INFO']}
           </div>
           <div className="w-full gap-4 h-auto flex flex-col justify-between items-center my-4">

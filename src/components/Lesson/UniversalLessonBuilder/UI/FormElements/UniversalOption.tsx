@@ -64,7 +64,7 @@ const InputContainer = ({
                         value={item.text}
                         className={`${
                           item.label === 'other' || item.label === 'noneOfAbove'
-                            ? 'text-gray-600'
+                            ? 'text-medium '
                             : ''
                         }`}
                         id={`formFieldRadioOption_${idx}_${index}`}
@@ -79,7 +79,7 @@ const InputContainer = ({
                           onClick={() => onOptionAdd(idx, index)}
                           className={`text-center w-20 transition-all duration-200 ${getColor(
                             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                          )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                          )} text-xs font-semibold text-light  border-lightest px-2 py-1 cursor-pointer rounded  border-2 hover:text-medium `}>
                           Add
                         </button>
                       </div>
@@ -93,7 +93,7 @@ const InputContainer = ({
                     </div>
                   </div>
                   {index === input.options.length - 1 && (
-                    <div className="text-gray-400 flex items-center mt-2">
+                    <div className="text-light  flex items-center mt-2">
                       <p
                         onClick={() => {
                           if (
@@ -121,7 +121,7 @@ const InputContainer = ({
           {selForm === SELECT_ONE && (
             <div>
               <div className="my-4  flex flex-col items-center justify-center space-y-2">
-                <p className="text-gray-500 text-center text-sm">
+                <p className="text-medium  text-center text-sm">
                   ----- Or use suggested options -----
                 </p>
                 <Buttons
@@ -199,7 +199,7 @@ const InputContainer = ({
         )}
       </div>
       {shouldShowActions && (
-        <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+        <div className="border-b-2 border-dashed border-lightest  my-4 "></div>
       )}
     </div>
   );
@@ -418,7 +418,7 @@ const UniversalOption = ({
     } = useGlobalContext();
 
     const themePlaceholderColor =
-      lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+      lessonPageTheme === 'light' ? 'placeholder-darkest   ' : '';
     return (
       <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
         <input
@@ -427,7 +427,7 @@ const UniversalOption = ({
           data-value={label}
           type="checkbox"
           className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
-            checked ? 'bg-blueberry border-white' : 'bg-white border-black '
+            checked ? 'theme-bg border-white' : 'bg-white border-black '
           }`}
           onChange={onChange}
           checked={checked}
@@ -451,7 +451,7 @@ const UniversalOption = ({
     const {label, text, id} = item;
 
     const themePlaceholderColor =
-      lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+      lessonPageTheme === 'light' ? 'placeholder-darkest   ' : '';
     return (
       <div className={`w-auto flex justify-center items-center mr-8 `}>
         <input
@@ -460,7 +460,7 @@ const UniversalOption = ({
           data-value={label}
           type="radio"
           className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-            checked ? 'bg-blueberry border-white' : 'bg-white border-black '
+            checked ? 'theme-bg border-white' : 'bg-white border-black '
           }`}
           onChange={onChange}
           checked={checked}
@@ -482,7 +482,7 @@ const UniversalOption = ({
       return (
         <div
           className={`mt-2 flex flex-wrap ${themeTextColor} ${
-            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            lessonPageTheme === 'light' ? 'bg-light' : 'bg-darker-gray'
           } py-2 px-4 rounded-xl ${
             inLine ? 'flex-row items-center' : 'flex-col items-start space-y-4 py-4'
           }`}>
@@ -576,7 +576,7 @@ const UniversalOption = ({
       label: `Preview`,
       children: (
         <div>
-          <div className="h-56 overflow-y-auto rounded-lg shadow bg-dark-gray py-4 px-2">
+          <div className="h-56 overflow-y-auto rounded-lg shadow bg-dark py-4 px-2">
             {filterCompleteQuestions.length > 0 &&
             filterCompleteQuestions[0].options[0].text ? (
               filterCompleteQuestions.map(

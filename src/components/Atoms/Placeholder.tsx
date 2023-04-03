@@ -25,7 +25,7 @@ const Placeholder = ({
     const shouldUseS3 = !image.includes('https');
     const finalImage = shouldUseS3 ? (getImageFromS3(image) as string) : image;
 
-    const imageClass = 'rounded-full w-full h-full  customShadow bg-gray-500';
+    const imageClass = 'rounded-full w-full h-full  customShadow bg-medium ';
     return (
       <div className={`${size} rounded-full flex justify-center items-center`}>
         {useAntdImage ? (

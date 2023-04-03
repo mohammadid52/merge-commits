@@ -35,7 +35,7 @@ const FloatingActionTranslation = () => {
                   ? '150px'
                   : 'unset'
               }}
-              className="bg-gray-200 item-open translation transition-all cursor-default  z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
+              className="bg-lightest item-open translation transition-all cursor-default  z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
               <TranslationInsideComponent
                 setContentHeight={setContentHeight}
                 inClassroom

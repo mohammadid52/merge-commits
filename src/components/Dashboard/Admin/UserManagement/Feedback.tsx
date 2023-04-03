@@ -102,10 +102,10 @@ const Feedback = ({
     <div
       key={feedback.id}
       className="relative comment-main flex items-center justify-between px-6 w-auto py-3 my-2">
-      <div className="text-sm text-gray-900 flex items-start">
+      <div className="text-sm text-darkest   flex items-start">
         {user.image ? (
           <img
-            className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
+            className="h-10 w-10 rounded-md bg-light  flex items-center justify-center"
             src={getImageFromS3Static(user.image)}
             alt=""
           />
@@ -122,19 +122,19 @@ const Feedback = ({
               ' ' +
               user.lastName}
 
-            <span className="text-xs text-gray-600 font-normal ml-2">
+            <span className="text-xs text-medium  font-normal ml-2">
               {getFormattedDate(feedback.createdAt)}
             </span>
             <p
               className={`${
                 user.role === role
                   ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-800'
+                  : 'bg-lightest  text-darkest   '
               } ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium w-auto`}>
               {getUserRoleString(user.role)}
             </p>
             {feedback.edited && (
-              <span className="text-gray-600 font-light text-xs ml-2">(edited)</span>
+              <span className="text-medium  font-light text-xs ml-2">(edited)</span>
             )}
           </h5>
           <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>

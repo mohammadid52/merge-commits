@@ -3,7 +3,7 @@ import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
 import {logError, updatePageState} from '@graphql/functions';
 import {useQuery} from '@tanstack/react-query';
-import {withZoiqFilter} from '@utilities/functions';
+import {reorderSyllabus, withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 
@@ -42,46 +42,6 @@ const conditionalRender = (children: JSX.Element, condition: boolean) => {
   } else {
     return <Redirect to={`/dashboard/home`} />;
   }
-};
-
-export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
-  const filteredSyllabusArray = syllabusArray.filter((d) => d.unit !== null);
-
-  let getSyllabusInSequence =
-    sequenceArray && sequenceArray.length > 0
-      ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
-          return [
-            ...acc,
-            filteredSyllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
-          ];
-        }, [])
-      : filteredSyllabusArray;
-
-  let mapSyllabusToSequence =
-    sequenceArray && sequenceArray.length > 0
-      ? getSyllabusInSequence
-          ?.map((syllabus: any) => {
-            return {
-              ...syllabus,
-              ...syllabus.unit,
-              lessons: {
-                ...syllabus?.unit?.lessons,
-                items:
-                  syllabus?.unit.lessons?.items?.length > 0
-                    ? syllabus?.unit.lessons.items
-                        .map((t: any) => {
-                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                          return {...t, index};
-                        })
-                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-                    : []
-              }
-            };
-          })
-          .map(({unit, ...rest}: any) => rest)
-      : getSyllabusInSequence;
-
-  return mapSyllabusToSequence;
 };
 
 type userObject = {
@@ -731,7 +691,7 @@ const Dashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="relative h-screen flex overflow-hidden container_background ">
+      <div className="relative h-screen flex overflow-hidden bg-lightest  ">
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 
@@ -979,7 +939,7 @@ const Dashboard = () => {
         </div>
         {/* </ResizablePanels> */}
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-900"></div>
+      <div className="w-full flex justify-center items-center bg-darkest"></div>
     </>
   );
 };

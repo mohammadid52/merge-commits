@@ -577,7 +577,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       <SectionTitleV3
         fontSize="xl"
         fontStyle="semibold"
-        extraClass="leading-6 text-gray-900"
+        extraClass="leading-6 text-darkest"
         borderBottom
         shadowOff
         title={roomData.name}

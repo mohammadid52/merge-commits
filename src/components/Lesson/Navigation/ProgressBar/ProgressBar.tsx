@@ -150,11 +150,11 @@ const ProgressBar = ({
             <span
               onClick={() => (isExitBtn ? handleHome?.() : handleLink(route.index))}
               className={`${isExitBtn ? '!text-red-500' : ''} ${
-                another ? '!text-gray-600' : ''
-              } ${!active ? '!text-gray-500' : 'theme-text:400'} ${
+                another ? '!text-medium ' : ''
+              } ${!active ? '!text-medium ' : 'theme-text:400'} ${
                 route.disabled
-                  ? '!text-gray-600 pointer-events-none cursor-not-allowed'
-                  : '!text-gray-500 cursor-pointer'
+                  ? '!text-medium  pointer-events-none cursor-not-allowed'
+                  : '!text-medium  cursor-pointer'
               }`}>
               {route.title}
             </span>

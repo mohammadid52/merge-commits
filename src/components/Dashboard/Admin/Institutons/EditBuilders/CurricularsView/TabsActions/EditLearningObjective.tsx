@@ -128,7 +128,7 @@ const EditLearningObjective = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {EditLearningObjectiveDict[userLanguage]['heading']}
           </h3>
         </div>
@@ -150,7 +150,7 @@ const EditLearningObjective = () => {
                   ) : null}
                 </div>
                 {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-m font-medium leading-5 text-dark   mb-1">
                 Select Sequence
               </label>
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />

@@ -95,14 +95,14 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
   return (
     <Fragment>
       <div className="w-full m-auto">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+        <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
           {SelectPreviousQuestionDict[userLanguage]['heading']}
         </h3>
       </div>
       <div className="w-full m-auto">
         <div className="">
           <div className="flex justify-between my-4">
-            <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14">
+            <p className="text-sm font-medium text-medium  flex items-center w-2/4 px-14">
               {' '}
               {selectedQuestionIds?.length}{' '}
               {SelectPreviousQuestionDict[userLanguage]['qselectd']}
@@ -116,17 +116,17 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
           </div>
           <div>
             <Fragment>
-              <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-light">
+                <div className="w-1.5/10 px-6 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span>{SelectPreviousQuestionDict[userLanguage]['selection']}</span>
                 </div>
-                <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span>{SelectPreviousQuestionDict[userLanguage]['question']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span>{SelectPreviousQuestionDict[userLanguage]['type']}</span>
                 </div>
-                <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span>{SelectPreviousQuestionDict[userLanguage]['language']}</span>
                 </div>
               </div>
@@ -140,7 +140,7 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
                           questionsList.map((item) => (
                             <div
                               key={item.id}
-                              className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                              className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-light">
                               <div className="flex w-1.5/10 items-center px-6 py-3 text-left text-s leading-4">
                                 <span>
                                   <CheckBox

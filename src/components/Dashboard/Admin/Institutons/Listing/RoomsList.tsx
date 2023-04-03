@@ -33,7 +33,7 @@ interface RoomListProps {
 }
 
 const RoomsList = (props: RoomListProps) => {
-  const {instId} = props;
+  const {instId = ''} = props;
   const {
     state: {
       user: {associateInstitute}
@@ -125,47 +125,71 @@ const RoomsList = (props: RoomListProps) => {
   });
 
   const handleAfterFetch = () => {
-    const updatedCoTeachersList =
-      response2?.data?.map((coTeacher: any) => {
-        const {room, teacher} = coTeacher;
-        return {
-          ...coTeacher,
-          name: room?.name || '',
-          status: teacher?.status || '',
-          isCoteacher: true
-        };
-      }) || [];
+    const updatedCoTeachersList: any[] =
+      response2?.data
+        ?.map((coTeacher: any) => {
+          if (coTeacher) {
+            const {room, teacher} = coTeacher;
+            return {
+              ...coTeacher,
+              name: room?.name || '',
+              status: teacher?.status || '',
+              isCoteacher: true
+            };
+          }
+        })
+        .filter(Boolean) || [];
 
-    const merged = [...response1.data, ...updatedCoTeachersList].filter(Boolean);
+    if (
+      (response1 && response1.isSuccess && response1?.data.length > 0) ||
+      (response2 &&
+        response2.isSuccess &&
+        response2.data &&
+        updatedCoTeachersList.length > 0)
+    ) {
+      const merged = [...response1?.data, ...updatedCoTeachersList].filter(Boolean);
 
-    const updatedMerge = merged.map((room: any) => {
-      return {
-        ...room,
-        institutionId: room.institution?.id,
-        institutionName: room.institution?.name
-      };
-    });
+      const updatedMerge = merged
+        ?.map((room: any) => {
+          if (room) {
+            return {
+              ...room,
+              institutionId: room.institution?.id,
+              institutionName: room.institution?.name
+            };
+          }
+        })
+        .filter(Boolean);
 
-    const totalListPages = Math.floor(merged.length / pageCount);
+      const totalListPages = Math.floor(merged.length / pageCount);
 
-    setTotalPages(
-      totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
-    );
+      setTotalPages(
+        totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
+      );
 
-    setTotalNum(merged.length);
+      setTotalNum(merged.length);
 
-    setFirstPage(true);
-    setLastPage(!(merged.length > pageCount));
+      setFirstPage(true);
+      setLastPage(!(merged.length > pageCount));
 
-    setRoomList(updatedMerge);
-    setLoading(false);
+      setRoomList(updatedMerge);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (response1.isFetched || response2.isFetched) {
+    if (
+      (response1.isFetched && response1.isSuccess) ||
+      (response2.isFetched && response2.isSuccess)
+    ) {
       handleAfterFetch();
     }
-  }, [response1.isFetched, response2.isFetched]);
+  }, [
+    response1.isFetched,
+    response1.isSuccess,
+    response2.isFetched,
+    response2.isSuccess
+  ]);
 
   const instituteChange = (value: string) => {
     setSelectedInstitution({value});
@@ -260,7 +284,7 @@ const RoomsList = (props: RoomListProps) => {
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
         className="w-auto  cursor-pointer">
-        <Highlighted text={item.name} highlight={searchInput.value} />
+        <Highlighted text={item?.name} highlight={searchInput.value} />
       </div>
     ),
     institutionName: (
@@ -272,10 +296,10 @@ const RoomsList = (props: RoomListProps) => {
               `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
             );
         }}>
-        <Highlighted text={item.institutionName} highlight={searchInput.value} />
+        <Highlighted text={item?.institutionName} highlight={searchInput.value} />
       </div>
     ),
-    teacher: `${item.teacher?.firstName || ''} ${item.teacher?.lastName || ''}`,
+    teacher: `${item?.teacher?.firstName || ''} ${item?.teacher?.lastName || ''}`,
     course: (
       <div
         className="w-auto"
@@ -325,7 +349,7 @@ const RoomsList = (props: RoomListProps) => {
             title={InstitueRomms[userLanguage]['TITLE']}
             fontSize="xl"
             fontStyle="semibold"
-            extraClass="leading-6 text-gray-900"
+            extraClass="leading-6 text-darkest"
             borderBottom
             shadowOff
             withButton={

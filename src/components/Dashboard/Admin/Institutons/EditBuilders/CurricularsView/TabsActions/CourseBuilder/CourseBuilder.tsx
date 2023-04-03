@@ -209,11 +209,11 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   return (
     <div className="w-full h-full">
       <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
           {courseData?.name}
         </h3>
         <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
           onClick={() =>
             history.push(
               isSuperAdmin
@@ -234,14 +234,14 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-light  px-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
                 <Loader
                   animation
                   withText="Fetching course details please wait..."
-                  className="text-gray-500"
+                  className="text-medium "
                 />
               </div>
             </div>

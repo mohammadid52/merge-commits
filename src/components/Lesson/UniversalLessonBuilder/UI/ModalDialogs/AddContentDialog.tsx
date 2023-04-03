@@ -285,7 +285,7 @@ const AddContentDialog = ({
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
         } ${
           isDisabled ? 'opacity-60 pointer-events-none' : 'pointer-events-auto'
-        } form-button rounded-lg border-0 border-gray-300  bg-dark-blue p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
+        } form-button rounded-lg border-0 border-lightest   bg-dark-blue p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
         <>
@@ -305,7 +305,7 @@ const AddContentDialog = ({
                   <p className="text-xs mb-0 2xl:text-sm font-medium text-white">
                     {content.name}
                   </p>
-                  <p className="text-xs mb-0 2xl:text-sm text-gray-500 truncate">
+                  <p className="text-xs mb-0 2xl:text-sm text-medium  truncate">
                     {content.subtitle}
                   </p>
                 </div>
@@ -321,7 +321,7 @@ const AddContentDialog = ({
         </>
         <>
           {onOptions && (
-            <div className="px-2 dark:text-gray-500 flex  w-full flex-col gap-2">
+            <div className="px-2 dark:text-medium  flex  w-full flex-col gap-2">
               <Buttons
                 onClick={onCustomPositionClick}
                 variant="primary"
@@ -338,7 +338,7 @@ const AddContentDialog = ({
             </div>
           )}
           {onReplace && (
-            <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
+            <div className="px-2 dark:text-medium  flex  flex-col gap-2">
               <Buttons
                 onClick={handleReplace}
                 transparent

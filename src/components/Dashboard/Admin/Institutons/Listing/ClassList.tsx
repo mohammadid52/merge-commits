@@ -30,7 +30,7 @@ const ClassList = (props: ClassListProps) => {
         {classes.items && classes.items.length > 0 ? (
           <Fragment>
             <div className="flex justify-between items-center w-full m-auto">
-              <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
+              <h3 className="text-lg leading-6 uppercase text-medium  w-auto">
                 {Institute_class[userLanguage]['TITLE']}
               </h3>
               <AddButton
@@ -39,18 +39,18 @@ const ClassList = (props: ClassListProps) => {
               />
             </div>
 
-            <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
-                <div className="w-1/10 px-8 py-3  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-full pt-8 m-auto border-b-0 border-light">
+              <div className="flex justify-between bg-lightest px-8 whitespace-nowrap">
+                <div className="w-1/10 px-8 py-3  text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span>{Institute_class[userLanguage]['NO']}</span>
                 </div>
-                <div className="w-8/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-8/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span>{Institute_class[userLanguage]['CLASSNAME']}</span>
                 </div>
-                {/* <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                {/* <div className="w-4/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                       <span>Active Students</span>
                     </div> */}
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                   <span className="w-auto">
                     {Institute_class[userLanguage]['ACTION']}
                   </span>
@@ -61,8 +61,8 @@ const ClassList = (props: ClassListProps) => {
               {classes.items.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`flex justify-between w-full px-8 py-2 whitespace-nowrap border-b-0 border-gray-200 ${
-                    index % 2 !== 0 ? 'bg-gray-50' : ''
+                  className={`flex justify-between w-full px-8 py-2 whitespace-nowrap border-b-0 border-lightest ${
+                    index % 2 !== 0 ? 'bg-lightest' : ''
                   }`}>
                   <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                     {index + 1}.

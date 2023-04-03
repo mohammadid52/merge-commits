@@ -348,7 +348,7 @@ const NotesBlock = ({
   if (loading) {
     return (
       <div className="flex items-center overflow-hidden justify-center min-h-32">
-        <Loader withText="Loading Notes..." className="text-gray-500 flex-col text-lg" />
+        <Loader withText="Loading Notes..." className="text-medium  flex-col text-lg" />
       </div>
     );
   } else
@@ -361,14 +361,14 @@ const NotesBlock = ({
           open={showDeleteModal.show}
           setOpen={modalBtns.delete.cancel}>
           <div className="">
-            <p className="text-gray-900 dark:text-white mb-4">
+            <p className="text-darkest   dark:text-white mb-4">
               Are you sure you want to delete this note?
             </p>
             <div className="flex space-x-4 items-center justify-end">
               <button
                 onClick={modalBtns.delete.cancel}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-lightest  shadow-sm text-xs font-medium rounded text-dark   bg-white hover:bg-lightest focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Cancel
               </button>
               <button
@@ -392,12 +392,12 @@ const NotesBlock = ({
               onChange={noop}
               className={`${genSize(
                 currentSelectedSize || 'medium'
-              )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
+              )} preview-note bg-gradient-to-t text-darkest   from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
               id={'note'}
               value={showEditModal?.value}
             />
 
-            <div className="border-0 p-2 py-3 my-4 flex items-center justify-around border-gray-200 dark:border-gray-700 rounded-lg ">
+            <div className="border-0 p-2 py-3 my-4 flex items-center justify-around border-lightest dark:border-dark   rounded-lg ">
               {map(colorList, (color) => (
                 <div
                   key={color.id}
@@ -416,7 +416,7 @@ const NotesBlock = ({
             <div className="mb-4">
               <label
                 htmlFor={'size'}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-400">
+                className="mb-2 block text-xs font-semibold leading-5 text-light ">
                 Select size
               </label>
               <Selector
@@ -435,7 +435,7 @@ const NotesBlock = ({
               <button
                 onClick={modalBtns.edit.cancel}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-lightest  shadow-sm text-xs font-medium rounded text-dark   bg-white hover:bg-lightest focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Cancel
               </button>
               <button

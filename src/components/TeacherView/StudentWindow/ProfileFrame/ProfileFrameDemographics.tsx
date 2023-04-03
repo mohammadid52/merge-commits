@@ -248,8 +248,8 @@ const ProfileFrameDemographics = ({
   } else if (!loading && checkpoints.length === 0) {
     return (
       <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-        <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+        <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+          <h3 className="text-lg leading-6 font-medium text-darkest   uppercase">
             No checkpoints found
           </h3>
         </div>
@@ -261,8 +261,8 @@ const ProfileFrameDemographics = ({
         {checkpoints.map((checkpoint: any) => (
           <Fragment key={`checkpoint_${checkpoint.id}`}>
             <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+              <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+                <h3 className="text-lg leading-6 font-medium text-darkest   uppercase">
                   {checkpoint.title}
                 </h3>
               </div>
@@ -270,10 +270,10 @@ const ProfileFrameDemographics = ({
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
                   {checkpoint.questions?.items.map((item: any) => (
                     <div key={item.question.id} className="sm:col-span-1 p-2">
-                      <dt className="text-sm leading-5 font-medium text-gray-500">
+                      <dt className="text-sm leading-5 font-medium text-medium ">
                         {item.question.question}
                       </dt>
-                      <dd className="mt-1 text-sm leading-5 text-gray-900">
+                      <dd className="mt-1 text-sm leading-5 text-darkest">
                         {item.question.type !== 'link' ? (
                           getQuestionResponse(checkpoint.id, item.question.id) || '--'
                         ) : (

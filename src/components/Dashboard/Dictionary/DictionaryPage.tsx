@@ -77,7 +77,7 @@ const DictionaryPage = () => {
             dict?.translation?.map((translation) => {
               return (
                 <li key={translation?.id}>
-                  <div className="font-medium text-gray-600">
+                  <div className="font-medium text-medium ">
                     In {translation?.translateLanguage || '--'}:
                   </div>
                   <p>{translation?.languageTranslation || '--'}</p>
@@ -97,7 +97,7 @@ const DictionaryPage = () => {
             dict?.translation?.map((translation) => {
               return (
                 <li key={translation?.id}>
-                  <div className="font-medium text-gray-600">
+                  <div className="font-medium text-medium ">
                     In {translation?.translateLanguage || '--'}:
                   </div>
                   <p>{translation?.languageDefinition || '--'}</p>
@@ -149,7 +149,7 @@ const DictionaryPage = () => {
           title={'Glossary'}
           fontSize="xl"
           fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-darkest"
           borderBottom
           shadowOff
           withButton={

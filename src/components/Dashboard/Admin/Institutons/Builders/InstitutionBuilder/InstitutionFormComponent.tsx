@@ -365,7 +365,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     name="isZoiq"
                     dataCy="isZoiq"
                     label={'ZOIQ'}
-                    className="group:hover:bg-gray-500"
+                    className="group:hover:bg-medium "
                     value={instituteData.isZoiq}
                     onChange={(e) => {
                       setInstituteData({

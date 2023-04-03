@@ -294,10 +294,10 @@ const GroupFormComponent = ({
             <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
               <div className="flex-1">
                 {/* Header */}
-                <div className="px-4 py-6 bg-gray-50 sm:px-6">
+                <div className="px-4 py-6 bg-lightest sm:px-6">
                   <div className="flex items-start justify-between space-x-3">
                     <div className="space-y-1">
-                      <Dialog.Title className="text-lg font-medium text-gray-900">
+                      <Dialog.Title className="text-lg font-medium text-darkest">
                         {GroupFormDict[userLanguage]['HEADING']}
                       </Dialog.Title>
                     </div>
@@ -305,7 +305,7 @@ const GroupFormComponent = ({
                       <button
                         ref={cancelButtonRef}
                         type="button"
-                        className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-auto bg-white rounded-md text-light  hover:text-medium  focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         onClick={onCancel}>
                         <span className="sr-only">Close panel</span>
                         <CloseOutlined />
@@ -316,7 +316,7 @@ const GroupFormComponent = ({
 
                 {/* Divider container */}
                 <div style={{minHeight: 'calc(100vh - 170px)'}}>
-                  <div className="p-6 gap-6 flex flex-col sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
+                  <div className="p-6 gap-6 flex flex-col sm:py-0 sm:space-y-0 sm:divide-y sm:divide-light">
                     <div className={'space-y-1  sm:space-y-0 sm:grid sm:grid-cols-4 '}>
                       <div className="sm:col-span-3">
                         <FormInput
@@ -416,7 +416,7 @@ const GroupFormComponent = ({
                 <Divider />
 
                 {/* Action buttons */}
-                <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
+                <div className="flex-shrink-0 px-4 border-t border-lightest py-5 sm:px-6">
                   <div className="space-x-3 flex justify-end">
                     <Buttons
                       label={BUTTONS[userLanguage]['CANCEL']}

@@ -1,11 +1,7 @@
 import Label from '@components/Atoms/Form/Label';
-import {Modal, Table} from 'antd';
+import {Modal, Table, Tabs, TabsProps} from 'antd';
 import {UniversalLesson} from 'API';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {
-  Tabs3,
-  useTabs
-} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+
 import map from 'lodash/map';
 
 import {lazy, useState} from 'react';
@@ -46,29 +42,62 @@ const WithHtml = ({html, emptyText = '--'}: {html: string; emptyText: string}) =
     <div>
       <span
         dangerouslySetInnerHTML={{__html: html || '<p>---</p>'}}
-        className="text-gray-400  remove-draft-styles font-medium text-lg leading-7"
+        className="text-light   remove-draft-styles font-medium text-lg leading-7"
       />
     </div>
   ) : (
     <div className="flex items-center justify-center min-h-32">
-      <p className="text-gray-400 font-medium text-lg leading-3 w-auto">{emptyText}</p>
+      <p className="text-light  font-medium text-lg leading-3 w-auto">{emptyText}</p>
     </div>
   );
 };
 
 const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [open, setOpen] = useState(true);
-  const tabs = [
-    {name: 'Objectives', current: true},
-    {name: 'Evidences', current: false},
-    {name: 'Resources', current: false}
-  ];
+
   const [selectedMeasurements, setSelectedMeasurements] = useState<any[]>([]);
   const [checkedEvidence, setCheckedEvidence] = useState<any[]>([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState<any[]>([]);
 
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
-  const [onObjectivesTab, onEvidencesTab, onResourcesTab] = helpers;
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: 'Objectives',
+      children: (
+        <WithHtml
+          emptyText="No Objectives Listed"
+          html={currentLesson?.objectives?.[0] || ''}
+        />
+      )
+    },
+
+    {
+      key: '2',
+      label: 'Evidences',
+      children: (
+        <WithHtml
+          emptyText="No Resources Listed"
+          html={currentLesson?.studentMaterials || ''}
+        />
+      )
+    },
+
+    {
+      key: '3',
+      label: 'Resources',
+      children: (
+        <EvidenceTab
+          selectedMeasurements={selectedMeasurements}
+          setSelectedMeasurements={setSelectedMeasurements}
+          checkedEvidence={checkedEvidence}
+          setCheckedEvidence={setCheckedEvidence}
+          selectedCurriculumList={selectedCurriculumList}
+          setSelectedCurriculumList={setSelectedCurriculumList}
+          currentLesson={currentLesson}
+        />
+      )
+    }
+  ];
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson?.label,
@@ -105,62 +134,12 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
       footer={null}
       width={1000}
       className="dark-modal"
-      // dark={Boolean(
-      //   currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true
-      // )}
-      // subHeader={currentLesson?.summary || ''}
       title={`${currentLesson?.title} - Overview`}
       open={open}
       onCancel={() => setOpen(false)}>
       <div className="bg-dark-blue">
-        <div className="my-2 border-b-0 border-gray-700 py-4 min-h-56">
-          <Tabs3
-            config={{fullColor: true}}
-            setCurTab={setCurTab}
-            curTab={curTab}
-            tabs={tabs}
-          />
+        <Tabs items={items} defaultActiveKey="1" />
 
-          <div className="mt-4">
-            <AnimatedContainer
-              duration="500"
-              show={onObjectivesTab}
-              animationType="scale">
-              {onObjectivesTab && (
-                <>
-                  <WithHtml
-                    emptyText="No Objectives Listed"
-                    html={currentLesson?.objectives?.[0] || ''}
-                  />
-                </>
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer duration="500" show={onResourcesTab} animationType="scale">
-              {onResourcesTab && (
-                <>
-                  <WithHtml
-                    emptyText="No Resources Listed"
-                    html={currentLesson?.studentMaterials || ''}
-                  />
-                </>
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer duration="500" show={onEvidencesTab} animationType="scale">
-              {onEvidencesTab && (
-                <EvidenceTab
-                  selectedMeasurements={selectedMeasurements}
-                  setSelectedMeasurements={setSelectedMeasurements}
-                  checkedEvidence={checkedEvidence}
-                  setCheckedEvidence={setCheckedEvidence}
-                  curTab={curTab}
-                  selectedCurriculumList={selectedCurriculumList}
-                  setSelectedCurriculumList={setSelectedCurriculumList}
-                  currentLesson={currentLesson}
-                />
-              )}
-            </AnimatedContainer>
-          </div>
-        </div>
         <div className="min-h-56 py-4">
           <Label dark label="Lesson Plan" />
 

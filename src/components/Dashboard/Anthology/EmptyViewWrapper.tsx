@@ -46,7 +46,7 @@ const EmptyViewWrapper = ({
         {fallbackContents ? (
           fallbackContents
         ) : (
-          <p className="text-center text-lg text-gray-500">
+          <p className="text-center text-lg text-medium ">
             Please select a notebook above to view your data
           </p>
         )}

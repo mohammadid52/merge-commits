@@ -167,21 +167,8 @@ module.exports = {
     },
     colors: {
       transparent: 'transparent',
-      current: 'currentColor',
-      black: '#000',
-      white: '#fff',
-      gray: {
-        50: '#F9FAFB',
-        100: '#f7fafc',
-        200: '#edf2f7',
-        300: '#e2e8f0',
-        400: '#cbd5e0',
-        500: '#a0aec0',
-        600: '#718096',
-        700: '#4a5568',
-        800: '#2d3748',
-        900: '#1a202c'
-      },
+      black: '#000', // check this color.. it shouldnt be used
+
       red: {
         100: '#fff5f5',
         200: '#fed7d7',
@@ -283,23 +270,17 @@ module.exports = {
       },
       black20: 'rgba(0,0,0,.2)',
       black50: 'rgba(0,0,0,.5)',
-      black80: 'rgba(0,0,0,.8)',
-      background: '#f2f2f2',
-      blueberry: '#488AC7',
-      charcoal: '#20262b',
-      container: '#f0f2f5',
-      'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
-      'dark-red': '#CA2222',
+
       'dark-blue': '#1C2C42',
       'darker-blue': '#384f68',
-      'dark-gray': '#32323e',
+
       'darker-gray': '#272730',
       'medium-gray': '#505062',
       'light-gray': '#797986',
       'theme-blue': '#0081CB', //Projectcurate theme blue color.
 
       // Official iconoclast blue
-      dark: '#051429',
+
       'dark-bg': '#333449',
       'dark-block': '#4b4c63',
       'fire-orange': '#FF5733',
@@ -309,10 +290,10 @@ module.exports = {
       'grayscale-bg': '#fafafa',
       'grayscale-light': '#959aa3',
       'grayscale-lighter': '#f9f9f947',
-      'grayscale-lightest': '#fffbfb',
+      'grayscale-lightest ': '#fffbfb',
       ketchup: '#CA2222',
       'sea-green': '#17A589',
-      transparent: '#ffffff00',
+
       'lighter-blue': '#1a202c',
       'medium-blue': '#30445e',
       'med-dark-blue': '#273548',
@@ -322,7 +303,24 @@ module.exports = {
       'orange-light': '#e4a04f',
       'orange-medium': '#e4714f',
       'pink-light': '#c64575',
-      white20: 'rgba(255,255,255,.2)'
+      white20: 'rgba(255,255,255,.2)',
+
+      // This is new colors
+      // light
+      primary: '#667eea', // used for actions like buttons
+      darkest: '#141a33', // used for heading text like title
+      dark: '#505673', // Used for secondary text like subtitle or description
+      medium: '#878ca8', // Used for non-decorative borders like border for search input
+      light: '#dadef2', // Used for decorative borders like dividers
+      lightest: '#f5f6fa', // Used for alternative backgrounds
+      white: '#ffffff' // Used for main background
+
+      // // dark
+      // 'lightest -dark': '#c4ccca', // Used for secondary text like subtitle or description
+      // 'light-dark': '#9ca6a3', // Used for non-decorative borders like border for search input
+      // 'medium-dark': '#4d5453', // Used for decorative borders like dividers
+      // 'dark-dark': '#353b39', // Used for alternative backgrounds like card bg
+      // 'darkest-dark': '#222625' // Used for main background
     },
     extend: {
       transitionProperty: {
@@ -333,8 +331,7 @@ module.exports = {
         'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
-          "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
-        'demo-bg': "url('https://selready.s3.us-east-2.amazonaws.com/login-min.jpg')"
+          "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')"
       }),
       backgroundOpacity: {
         10: '0.1',

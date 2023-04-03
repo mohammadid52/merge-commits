@@ -30,14 +30,14 @@ const ProfileFrameEdit = ({
   return (
     <div className="m-auto p-2 bg-white rounded z-50">
       {/* <div className="flex justify-end py-2 mb-2 w-full">
-        <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
+        <h3 className="text-sm md:text-lg leading-6 font-medium text-darkest   uppercase">
           {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
         </h3>
       </div> */}
       {/* SAVE */}
       <form>
         <div className="h-full">
-          <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
+          <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-darkest">
             <>
               <div className="sm:col-span-3 p-2">
                 <FormInput

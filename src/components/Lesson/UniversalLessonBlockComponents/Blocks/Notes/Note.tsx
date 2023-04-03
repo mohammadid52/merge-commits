@@ -64,7 +64,7 @@ const InnerNote = React.memo(
         style={{transform: 'rotate(' + angle + 'deg)'}}
         className={`_sticky ${genSize(
           size
-        )}  group bg-gradient-to-t text-gray-900 note-${bgColor} rounded leading-8 p-6`}>
+        )}  group bg-gradient-to-t text-darkest   note-${bgColor} rounded leading-8 p-6`}>
         <textarea
           data-cy={`input-note-${note.id}`}
           style={{fontSize: `${genFontSize(size)}px`}}

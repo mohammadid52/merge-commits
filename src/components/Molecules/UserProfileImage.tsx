@@ -38,7 +38,7 @@ const UserProfileImage = ({
                 </DroppableMedia>
               </Fragment>
             ) : (
-              <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
+              <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-light  shadow-elem-lightI">
                 <Loader />
               </div>
             )}
@@ -52,10 +52,10 @@ const UserProfileImage = ({
           </DroppableMedia>
         )}
       </div>
-      {/* <p className="text-gray-600 my-2">
+      {/* <p className="text-medium  my-2">
         {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
       </p> */}
-      <div className={`text-sm md:text-xl font-bold text-gray-900 mt-2 md:mt-4 w-52`}>
+      <div className={`text-sm md:text-xl font-bold text-darkest   mt-2 md:mt-4 w-52`}>
         {name}
       </div>
     </div>

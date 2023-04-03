@@ -679,7 +679,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   return (
     <div className="w-full h-full">
-      <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
+      <h3 className="text-lg leading-6 uppercase text-medium  w-auto px-8 pb-8">
         {LessonBuilderDict[userLanguage]['TITLE']}
       </h3>
       <div className="w-full m-auto">
@@ -689,12 +689,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           handleTabSwitch={handleTabSwitch}
         />
 
-        <div className="grid mt-4 grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
+        <div className="grid mt-4 grid-cols-1 divide-x-0 divide-light  px-2 xl:px-8">
           {loading ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
                 <Loader
-                  className="text-gray-500"
+                  className="text-medium "
                   animation
                   withText="Fetching lesson details please wait..."
                 />

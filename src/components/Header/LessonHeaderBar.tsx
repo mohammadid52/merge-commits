@@ -283,7 +283,7 @@ const LessonHeaderBar = ({
       <div
         style={{zIndex: 3000}}
         className={` relative center w-full 
-        h-.7/10 text-gray-200 shadow-2xl  
+        h-.7/10 text-lightest shadow-2xl  
         ${theme.toolbar.bg} `}>
         {/* LEAVE POPUP */}
 

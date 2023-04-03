@@ -74,8 +74,8 @@ export const globalState: GlobalStateType = {
   lessonPage: {
     theme: 'dark',
     themeTextColor: 'text-white',
-    themeBackgroundColor: 'bg-dark-gray',
-    themeSecBackgroundColor: 'bg-gray-700'
+    themeBackgroundColor: 'bg-dark',
+    themeSecBackgroundColor: 'bg-dark  '
   },
   user: {
     id: '',
@@ -119,8 +119,8 @@ export const standardTheme = {
     'w-full md:max-w-none lg:max-w-192 2xl:max-w-256  mx-auto  flex flex-col justify-between items-center ',
   elem: {
     bg: 'bg-dark-block',
-    title: 'text-lg font-semibold text-gray-200',
-    text: 'text-sm text-gray-200',
+    title: 'text-lg font-semibold text-light',
+    text: 'text-sm text-light',
     textDark: 'text-sm text-darker-gray',
     textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
     shadow: 'shadow-elem-dark',
@@ -128,18 +128,18 @@ export const standardTheme = {
   },
   toolbar: {
     bg: 'bg-black',
-    text: 'text-gray-200'
+    text: 'text-light'
   },
   dashboard: {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
-    card: 'p-2 relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex',
+    card: 'p-2 relative bg-white rounded  border-0 border-dark border-opacity-10 h-auto flex',
     cardNoBG: 'relative h-auto p-2 flex'
   },
   lessonCard: {
     title: 'flex items-center text-lg 2xl:text-2xl  text-black text-left',
-    subtitle: 'text-sm text-gray-400',
-    border: 'border-dark-gray border-opacity-20'
+    subtitle: 'text-sm text-light ',
+    border: 'border-dark border-opacity-20'
   },
   sidemenu: {
     bg: 'bg-darker-gray',
@@ -150,12 +150,12 @@ export const standardTheme = {
   },
   block: {
     bg: 'bg-dark-blue',
-    text: 'text-gray-200',
+    text: 'text-light',
     shadow: 'shadow-elem-dark'
   },
   footer: {
     bg: 'bg-dark-blue',
-    text: 'text-gray-200'
+    text: 'text-light'
   },
   btn: {
     iconoclastIndigo:
@@ -165,7 +165,7 @@ export const standardTheme = {
     delete: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-600 focus:bg-red-600',
     confirm:
       'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
-    cancel: 'bg-white text-gray-600  border-0 border-gray-600 hover:bg-gray-200',
+    cancel: 'bg-white text-medium   border-0 border-medium  hover:bg-light',
     lessonStart:
       'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
     surveyStart:
@@ -176,11 +176,11 @@ export const standardTheme = {
     curateBlue: 'text-theme-blue border-theme-blue hover:text-blue-500'
   },
   text: {
-    default: 'text-black80',
-    secondary: 'text-gray-500',
+    default: 'text-darkest',
+    secondary: 'text-medium ',
     active: 'text-indigo-500'
   },
-  formSelect: 'bg-white border-gray-400 text-gray-900 border-0',
+  formSelect: 'bg-white border-light  text-darkest   border-0',
   outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
   verticalBorder: {
     iconoclastRed: 'border-red-600',
@@ -218,12 +218,12 @@ export const standardTheme = {
   },
   modals: {
     header:
-      'flex items-center justify-between p-4 border-solid rounded-t-xl bg-gray-100 text-gray-900 border-gray-200',
+      'flex items-center justify-between p-4 border-solid rounded-t-xl bg-lightest  text-darkest   border-light',
     footer:
-      'flex items-center justify-end px-4 py-2 gap-x-4 border-t-0 border-solid rounded-b-xl bg-gray-200 text-gray-900 border-gray-200',
+      'flex items-center justify-end px-4 py-2 gap-x-4 border-t-0 border-solid rounded-b-xl bg-lightest text-darkest   border-light',
     content:
-      'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
-    hideBg: `border-transparent  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-transparent text-gray-900`
+      'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-darkest',
+    hideBg: `border-transparent  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-transparent text-darkest`
   },
   notice: {
     bar: '',

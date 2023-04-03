@@ -495,14 +495,14 @@ const AnalyticsDashboard = () => {
     <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
-          <h3 className="text-lg leading-6 text-gray-600 w-auto">
+          <h3 className="text-lg leading-6 text-medium  w-auto">
             {CsvDict[userLanguage]['TITLE']}
           </h3>
           {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
             <span>{CsvDict[userLanguage]['TITLE']}</span>
           </div> */}
           <div className="w-auto">
-            <span className={`mr-0 float-right text-gray-600 text-right`}>
+            <span className={`mr-0 float-right text-medium  text-right`}>
               <DateAndTime />
             </span>
           </div>
@@ -512,7 +512,7 @@ const AnalyticsDashboard = () => {
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
               <div className="w-5/10">
                 <Loader />
-                <p className="mt-2 text-center text-lg text-gray-500">
+                <p className="mt-2 text-center text-lg text-medium ">
                   Preparing data please wait....
                 </p>
               </div>

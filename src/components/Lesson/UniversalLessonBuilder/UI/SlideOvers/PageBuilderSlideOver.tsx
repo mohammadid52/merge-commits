@@ -65,7 +65,7 @@ const BottomButtonWithMessage = ({
       <div
         className={` justify-${
           btns.length === 1 ? 'center' : 'between'
-        } flex px-2 w-full dark:text-gray-500 items-center mt-2 2xl:mt-0`}>
+        } flex px-2 w-full dark:text-medium  items-center mt-2 2xl:mt-0`}>
         {map(btns, (btn, idx) => (
           <Buttons
             disabled={btn.disabled}
@@ -258,8 +258,8 @@ const Popup = ({show, text}: {show: boolean; text: string}) => (
       leave="transform transition ease-in-out duration-300 delay-1000"
       leaveFrom="translate-y-0"
       leaveTo="translate-y-full"
-      className="shadow-lg bg-transparent border-gray-200 dark:border-gray-700 flex items-center justify-center border-t-0">
-      {show && <p className="text-gray-500 w-auto p-4">{text}</p>}
+      className="shadow-lg bg-transparent border-lightest dark:border-dark   flex items-center justify-center border-t-0">
+      {show && <p className="text-medium  w-auto p-4">{text}</p>}
     </Transition>
   </div>
 );
@@ -281,7 +281,7 @@ const OverlayHeaderTitle = ({
     <div className={'flex items-center justify-start'} id="page_builder_overlay--header">
       {showBackBtn && (
         <div className="w-auto" onClick={onBack}>
-          <AiOutlineArrowLeft className="text-gray-400 hover:text-gray-500 transition-all text-lg 2xl:text-xl cursor-pointer" />
+          <AiOutlineArrowLeft className="text-light  hover:text-medium  transition-all text-lg 2xl:text-xl cursor-pointer" />
         </div>
       )}
 
@@ -323,7 +323,7 @@ const Item = ({
       className={`${className} ${
         selected
           ? 'iconoclast:border-500 curate:border-500'
-          : `border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
+          : `border-dark   hover:curate:border-500 hover:iconoclast:border-500`
       } w-full relative my-6 2xl:my-8 cursor-pointer form-button 2xl:mt-4  rounded-lg border-0 bg-dark-blue shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
       {Icon && (
         <span className={classNames('rounded-lg inline-flex w-auto')}>
@@ -346,7 +346,7 @@ const Item = ({
           {label}
         </p>
         {subTitle && (
-          <p className="text-sm w-auto font-light ml-2 text-gray-500">{subTitle}</p>
+          <p className="text-sm w-auto font-light ml-2 text-medium ">{subTitle}</p>
         )}
       </div>
 

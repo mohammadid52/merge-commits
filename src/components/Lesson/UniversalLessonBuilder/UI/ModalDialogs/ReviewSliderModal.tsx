@@ -83,9 +83,9 @@ const ReviewSliderModal = ({
     value: ['1'],
     range: '1-5',
     previewValue: ['1'],
-    bgColor: 'gray-700',
-    fgColor: 'gray-800',
-    cardBgColor: 'gray-700',
+    bgColor: 'dark  ',
+    fgColor: 'darkest   ',
+    cardBgColor: 'dark  ',
     cardCorners: roundedCornerList[3].label
   });
 
@@ -130,7 +130,7 @@ const ReviewSliderModal = ({
   const onReviewSliderCreate = async () => {
     const isValid = validate();
     if (isValid) {
-      // HOW TO READ BELOW CONSTANT -- '1-10 || red-100 || red-400 || gray-700 || rounded-lg
+      // HOW TO READ BELOW CONSTANT -- '1-10 || red-100 || red-400 || dark   || rounded-lg
       const reviewSliderArray = [
         {
           id: uuidv4().toString(),
@@ -203,7 +203,7 @@ const ReviewSliderModal = ({
           <div className="col-span-1 ">
             <label
               htmlFor={'range'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select range
             </label>
             <Selector
@@ -219,19 +219,19 @@ const ReviewSliderModal = ({
           <div className="col-span-1 relative h-full">
             <label
               htmlFor={'bgColor'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select background color
             </label>
             <button
               onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+              className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+              <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                 {reviewFields.bgColor?.split('-')[0]}{' '}
                 {getColorDensity(reviewFields.bgColor?.split('-')[1])}
               </span>
 
               <span
-                className={`h-4 block w-4 bg-${reviewFields.bgColor} rounded-full border-3 border-gray-400`}></span>
+                className={`h-4 block w-4 bg-${reviewFields.bgColor} rounded-full border-3 border-light `}></span>
             </button>
             {colorPickerActiveBG && (
               <ColorPicker
@@ -248,19 +248,19 @@ const ReviewSliderModal = ({
           <div className="col-span-1 relative h-full">
             <label
               htmlFor={'foreground'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select foreground color
             </label>
             <button
               onClick={() => setColorPickerActiveFG(!colorPickerActiveFG)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+              className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+              <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                 {reviewFields.fgColor?.split('-')[0]}{' '}
                 {getColorDensity(reviewFields.fgColor?.split('-')[1])}
               </span>
 
               <span
-                className={`h-4 block w-4 bg-${reviewFields.fgColor} rounded-full border-3 border-gray-400`}></span>
+                className={`h-4 block w-4 bg-${reviewFields.fgColor} rounded-full border-3 border-light `}></span>
             </button>
             {colorPickerActiveFG && (
               <ColorPicker
@@ -278,19 +278,19 @@ const ReviewSliderModal = ({
           <div className="col-span-1 relative h-full">
             <label
               htmlFor={'foreground'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select card background color
             </label>
             <button
               onClick={() => setColorPickerActiveCardBG(!colorPickerActiveCardBG)}
-              className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+              className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+              <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                 {reviewFields.cardBgColor?.split('-')[0]}{' '}
                 {getColorDensity(reviewFields.cardBgColor?.split('-')[1])}
               </span>
 
               <span
-                className={`h-4 block w-4 bg-${reviewFields.cardBgColor} rounded-full border-3 border-gray-400`}></span>
+                className={`h-4 block w-4 bg-${reviewFields.cardBgColor} rounded-full border-3 border-light `}></span>
             </button>
             {colorPickerActiveCardBG && (
               <ColorPicker
@@ -307,7 +307,7 @@ const ReviewSliderModal = ({
           <div className="col-span-1 ">
             <label
               htmlFor={'range'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select corners
             </label>
             <Selector

@@ -34,7 +34,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     loading = false,
     greenBtn,
     insideElement = null,
-    size = 'large',
+    size = 'middle',
     className
   } = btnProps;
 

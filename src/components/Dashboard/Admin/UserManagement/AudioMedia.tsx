@@ -35,7 +35,7 @@ const AudioMedia = ({attachment, type}: any) => {
   return attachment.url === 'loading' ? (
     <div
       style={{width: '30rem'}}
-      className="h-12 relative p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+      className="h-12 relative p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
       <p className="truncate w-auto">{attachment.filename}</p>
       <Size size={attachment.size} />
 
@@ -46,8 +46,8 @@ const AudioMedia = ({attachment, type}: any) => {
   ) : (
     <div
       style={{width: '30rem'}}
-      className="relative h-auto border-0 p-4 border-gray-300">
-      <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
+      className="relative h-auto border-0 p-4 border-lightest ">
+      <p className="truncate text-left min-w-auto p-2 pt-0 text-medium ">
         {attachment.filename}
       </p>
       <Size size={attachment.size} />
@@ -67,7 +67,7 @@ const AudioMedia = ({attachment, type}: any) => {
           }}
           className={`${
             themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
-          } flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 text-lg`}>
+          } flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-medium  text-lg`}>
           <BiCloudDownload />
         </span>
       </div>

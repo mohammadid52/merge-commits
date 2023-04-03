@@ -470,7 +470,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       <div className="w-auto flex justify-center flex-col">
         <UserStatus status={item.status ? item.status : '--'} />
         {item.status === PersonStatus.INACTIVE && item.inactiveStatusDate !== null && (
-          <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
+          <span className=" text-medium  pt-1 text-xs text-left -ml-4">
             Since {moment(item.inactiveStatusDate).format('ll')}
           </span>
         )}
@@ -531,7 +531,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           fontSize="xl"
           fontStyle="semibold"
           extraContainerClass="px-4"
-          extraClass="leading-6 text-gray-900 uppercase"
+          extraClass="leading-6 text-darkest   uppercase"
           borderBottom
           shadowOff
           title={
@@ -610,7 +610,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         <div className="">
           <div
             className={`${
-              isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
+              isInInstitute ? '' : 'white_back border-b-0 border-lightest py-4 mt-2'
             }`}>
             <Table {...tableConfig} />
           </div>

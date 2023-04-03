@@ -537,7 +537,7 @@ const ClassRoster = ({
       <div className={`w-full h-full   overflow-y-auto overflow-x-hidden pb-48`}>
         {/* */}
         <div className="px-4">
-          <div className="text-sm w-full pt-2 font-semibold text-gray-600 border-b-0 border-gray-600 pb-1">
+          <div className="text-sm w-full pt-2 font-semibold text-medium  border-b-0 border-medium  pb-1">
             <p>Student Roster</p>
           </div>
         </div>

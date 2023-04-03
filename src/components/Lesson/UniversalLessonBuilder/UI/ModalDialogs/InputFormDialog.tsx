@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from 'react';
 
-import { map } from "lodash";
+import {map} from 'lodash';
 
-import { v4 as uuidv4 } from "uuid";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import {v4 as uuidv4} from 'uuid';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
   FORM_TYPES,
   INPUT,
@@ -12,11 +12,11 @@ import {
   LINK,
   SELECT_MANY,
   DATE_PICKER,
-  ATTACHMENTS,
-} from "../common/constants";
-import TextInput from "../FormElements/TextInput";
-import UniversalOption from "../FormElements/UniversalOption";
-import UniversalInput from "../FormElements/UniversalInput";
+  ATTACHMENTS
+} from '../common/constants';
+import TextInput from '../FormElements/TextInput';
+import UniversalOption from '../FormElements/UniversalOption';
+import UniversalInput from '../FormElements/UniversalInput';
 
 interface InputModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -31,16 +31,15 @@ const InputModalComponent = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   setUnsavedChanges,
-  askBeforeClose,
+  askBeforeClose
 }: InputModalComponentProps) => {
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      setNumbered(contentType.includes("numbered"));
+      setNumbered(contentType.includes('numbered'));
       if (inputObj[0].type === FORM_TYPES.RADIO) {
-        const inLine =
-          inputObj[0]?.class && inputObj[0].class.includes("flex-row");
+        const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
         setRadioList(
           inputObj.map((input: any) => ({
             id: input.id,
@@ -48,13 +47,12 @@ const InputModalComponent = ({
             label: input.label,
             required: input.isRequired,
             inLine: inLine,
-            type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
+            type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY
           }))
         );
         setSelectedFormType(SELECT_ONE);
       } else if (inputObj[0].type === FORM_TYPES.MULTIPLE) {
-        const inLine =
-          inputObj[0]?.class && inputObj[0].class.includes("flex-row");
+        const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
         setManyOptionList(
           inputObj.map((input: any) => {
             return {
@@ -63,7 +61,7 @@ const InputModalComponent = ({
               label: input.label,
               inLine: inLine,
               required: input.isRequired,
-              type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
+              type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY
             };
           })
         );
@@ -74,7 +72,7 @@ const InputModalComponent = ({
             ...input,
             title: input.label,
             placeholder: input.value,
-            required: input.isRequired,
+            required: input.isRequired
           }))
         );
         setSelectedFormType(INPUT_WITH_EMOJI);
@@ -84,7 +82,7 @@ const InputModalComponent = ({
             ...input,
             title: input.label,
             placeholder: input.value,
-            required: input.isRequired,
+            required: input.isRequired
           }))
         );
         setSelectedFormType(LINK);
@@ -92,10 +90,10 @@ const InputModalComponent = ({
         setInputList(
           inputObj.map((input: any) => ({
             ...input,
-            textArea: input.type.includes("area"),
+            textArea: input.type.includes('area'),
             title: input.label,
             placeholder: input.value,
-            required: input.isRequired,
+            required: input.isRequired
           }))
         );
         setSelectedFormType(INPUT);
@@ -106,64 +104,63 @@ const InputModalComponent = ({
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST STARTS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   const [inputList, setInputList] = useState([
-    { id: uuidv4(), textArea: false, label: "", value: "", required: false },
+    {id: uuidv4(), textArea: false, label: '', value: '', required: false}
   ]);
   const [emojiInputList, setEmojiInputList] = useState([
-    { id: uuidv4(), label: "", value: "", required: false },
+    {id: uuidv4(), label: '', value: '', required: false}
   ]);
   const [manyOptionList, setManyOptionList] = useState([
     {
       id: uuidv4(),
-      label: "",
+      label: '',
       required: false,
       inLine: true,
       type: FORM_TYPES.MULTIPLE,
       options: [
-        { label: "1", text: "", id: uuidv4() },
-        { label: "2", text: "", id: uuidv4() },
-      ],
-    },
+        {label: '1', text: '', id: uuidv4()},
+        {label: '2', text: '', id: uuidv4()}
+      ]
+    }
   ]);
 
   const [radioList, setRadioList] = useState([
     {
       id: uuidv4(),
-      label: "",
+      label: '',
       type: FORM_TYPES.RADIO,
       required: false,
       inLine: true,
       options: [
-        { label: "1", text: "", id: uuidv4() },
-        { label: "2", text: "", id: uuidv4() },
-      ],
-    },
+        {label: '1', text: '', id: uuidv4()},
+        {label: '2', text: '', id: uuidv4()}
+      ]
+    }
   ]);
 
   const [linkList, setLinkList] = useState([
-    { id: uuidv4(), require: false, label: "", value: "" },
+    {id: uuidv4(), require: false, label: '', value: ''}
   ]);
   const [attachmentList, setAttachmentList] = useState([
-    { id: uuidv4(), require: false, label: "", value: "" },
+    {id: uuidv4(), require: false, label: '', value: ''}
   ]);
   const [datePickerList, setDatePickerList] = useState([
-    { id: uuidv4(), require: false, label: "", value: "" },
+    {id: uuidv4(), require: false, label: '', value: ''}
   ]);
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST ENDS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   const formTypes = [
-    { label: INPUT, type: FORM_TYPES.TEXT },
-    { label: SELECT_ONE, type: FORM_TYPES.RADIO },
-    { label: SELECT_MANY, type: FORM_TYPES.MULTIPLE },
-    { label: LINK, type: FORM_TYPES.LINK },
-    { label: INPUT_WITH_EMOJI, type: FORM_TYPES.EMOJI },
-    { label: ATTACHMENTS, type: FORM_TYPES.ATTACHMENTS },
-    { label: DATE_PICKER, type: FORM_TYPES.DATE_PICKER },
+    {label: INPUT, type: FORM_TYPES.TEXT},
+    {label: SELECT_ONE, type: FORM_TYPES.RADIO},
+    {label: SELECT_MANY, type: FORM_TYPES.MULTIPLE},
+    {label: LINK, type: FORM_TYPES.LINK},
+    {label: INPUT_WITH_EMOJI, type: FORM_TYPES.EMOJI},
+    {label: ATTACHMENTS, type: FORM_TYPES.ATTACHMENTS},
+    {label: DATE_PICKER, type: FORM_TYPES.DATE_PICKER}
   ];
   const DEFAULT_FORM_TYPE = formTypes[0].label;
 
-  const [selectedFormType, setSelectedFormType] =
-    useState<string>(DEFAULT_FORM_TYPE);
+  const [selectedFormType, setSelectedFormType] = useState<string>(DEFAULT_FORM_TYPE);
 
   const [numbered, setNumbered] = useState(false);
 
@@ -175,7 +172,7 @@ const InputModalComponent = ({
     setNumbered,
     closeAction,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   };
 
   const getForm = (type: string) => {
@@ -251,22 +248,20 @@ const InputModalComponent = ({
         {!isEditingMode && (
           <>
             <label
-              htmlFor={""}
-              className="block text-xs font-semibold leading-5 text-gray-700"
-            >
+              htmlFor={''}
+              className="block text-xs font-semibold leading-5 text-dark  ">
               Select form type
             </label>
             <div className="w-auto flex item-center justify-start mb-4 mt-1">
-              {map(formTypes, ({ label }) => (
+              {map(formTypes, ({label}) => (
                 <button
                   key={label}
                   onClick={() => setSelectedFormType(label)}
                   className={`${
                     label === selectedFormType
-                      ? "border-indigo-500 text-white bg-indigo-400"
-                      : "border-gray-300 text-dark"
-                  } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-100 mr-4`}
-                >
+                      ? 'border-indigo-500 text-white bg-indigo-400'
+                      : 'border-lightest  text-dark'
+                  } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-medium  rounded-md  transition-all duration-100 mr-4`}>
                   {label}
                 </button>
               ))}

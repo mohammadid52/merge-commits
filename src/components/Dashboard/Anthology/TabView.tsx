@@ -238,9 +238,9 @@ const TabView = ({
       {subSection !== 'none' && (
         <div className="w-auto" id="anthology_tabs">
           <div
-            className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
+            className={`w-full h-14 leading-6 text-darkest   flex flex-row justify-between items-center`}>
             <div
-              className={`relative border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+              className={`relative border-b-0 border-lightest shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
               <IoIosJournal
                 style={{color: stringToHslColor(sectionRoomID)}}
                 className=" my-auto mr-2 w-auto h-auto fill-current"
@@ -248,7 +248,7 @@ const TabView = ({
               />
 
               <h2
-                className={`text-sm mb-0 md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
+                className={`text-sm mb-0 md:text-lg 2xl:text-xl font-semibold leading-6 text-darkest`}>
                 {getTitle()}
               </h2>
             </div>

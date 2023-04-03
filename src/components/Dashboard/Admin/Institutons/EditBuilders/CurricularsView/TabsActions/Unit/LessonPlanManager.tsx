@@ -376,7 +376,7 @@ const LessonPlanManager = ({
         title={'Lesson Plan Manager'}
         fontSize="xl"
         fontStyle="semibold"
-        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
+        extraClass="leading-6 text-darkest    mb-2 lg:mb-0"
         extraContainerClass="flex-col lg:flex-row "
         borderBottom
         withButton={

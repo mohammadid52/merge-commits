@@ -183,7 +183,7 @@ const EditTopic = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {EditTopicDict[userLanguage]['heading']}
           </h3>
         </div>
@@ -204,7 +204,7 @@ const EditTopic = () => {
                 </div>
 
                 {/* <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                   {EditTopicDict[userLanguage]['selectlearning']} <span className="text-red-500">*</span>
                 </label>
                 <Selector selectedItem={topic.learning.value} placeholder={EditTopicDict[userLanguage]['learningobjective']} list={learnings} onChange={selectLearning} />
@@ -214,7 +214,7 @@ const EditTopic = () => {
               </div> */}
 
                 {/* <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                 Select Sequence
               </label>
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />

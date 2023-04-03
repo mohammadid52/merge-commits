@@ -55,11 +55,11 @@ const Comment = ({
         title={
           <div className="flex">
             <strong>{chat?.person?.firstName || '[deleted]'}</strong>{' '}
-            <span className="text-xs ml-2 text-gray-600">
+            <span className="text-xs ml-2 text-medium ">
               {moment(chat?.createdAt).format('LT')}
             </span>
             {chat?.isEditedChat && (
-              <span className="text-xs text-gray-500 ml-2">(edited)</span>
+              <span className="text-xs text-medium  ml-2">(edited)</span>
             )}
             {/* <span className="text-blue-700 w-auto font-base text-xs ml-2 cursor-pointer">
               {chat?.person?.role}

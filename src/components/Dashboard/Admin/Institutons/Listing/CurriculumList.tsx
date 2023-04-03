@@ -396,7 +396,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
           title={InstitueCurriculum[userLanguage]['TITLE']}
           fontSize="xl"
           fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-darkest"
           borderBottom
           shadowOff
           withButton={

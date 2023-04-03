@@ -527,7 +527,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               title: 'Confirm File',
               element: (
                 <div>
-                  <p className="p-4 text-sm text-gray-700">
+                  <p className="p-4 text-sm text-dark  ">
                     please check your input file, You are trying to import unapproved
                     response types
                   </p>
@@ -559,7 +559,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               title: 'Confirm File',
               element: (
                 <div>
-                  <p className="p-4 text-sm text-gray-700">
+                  <p className="p-4 text-sm text-dark  ">
                     Selected file does not match target survey
                   </p>
                 </div>
@@ -657,7 +657,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         element: (
           <div className="flex flex-col justify-center items-center gap-y-4">
             <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
-            <p className="text-gray-600 pt-0 p-4 text-center">
+            <p className="text-medium  pt-0 p-4 text-center">
               xlsx file is not supported. Please convert it to csv file and then try
               again.
             </p>
@@ -914,7 +914,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       title: 'Confirmation',
       element: (
         <div>
-          <p className="text-gray-700 text-sm p-4">
+          <p className="text-dark   text-sm p-4">
             Please confirm column headers and tab names have not been modified
           </p>
         </div>
@@ -1452,7 +1452,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         </div>
         <AnimatedContainer show={checkingCsvFile} animationType="translateY">
           {checkingCsvFile && (
-            <p className={`mt-1 text-gray-500 text-xs`}>Checking file information...</p>
+            <p className={`mt-1 text-medium  text-xs`}>Checking file information...</p>
           )}
         </AnimatedContainer>
 

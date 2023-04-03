@@ -55,7 +55,7 @@ const TitleBar = ({
     title={'Community'}
     fontSize="xl"
     fontStyle="semibold"
-    extraClass="leading-6 text-gray-900"
+    extraClass="leading-6 text-darkest"
     borderBottom
     shadowOff
     withButton={

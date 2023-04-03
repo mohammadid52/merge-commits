@@ -162,7 +162,7 @@ const DemographicsEdit = ({
             <Fragment key={checkpoint.id}>
               <div className="">
                 <div className="h-full px-4 py-5 sm:px-6">
-                  <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
+                  <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-darkest">
                     {checkpoint.questions?.items.map((item: any) => (
                       <Fragment key={item.question.id}>
                         <div className="sm:col-span-3 p-2 flex items-end">
@@ -202,10 +202,10 @@ const DemographicsEdit = ({
                               <div className="sm:col-span-3">
                                 <label
                                   htmlFor="date picker"
-                                  className="block text-m font-medium leading-5 text-gray-700">
+                                  className="block text-m font-medium leading-5 text-dark  ">
                                   {item?.question?.question}
                                 </label>
-                                <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                                <div className="mt-1  border-0 border-lightest  py-2 px-3 rounded-md shadow-sm">
                                   <input
                                     id={item.question.id}
                                     type="url"
@@ -222,7 +222,7 @@ const DemographicsEdit = ({
                                     onChange={(e) =>
                                       onInputChange(e, checkpoint.id, item.question.id)
                                     }
-                                    className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
+                                    className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-darkest"
                                   />
                                 </div>
                               </div>

@@ -212,12 +212,12 @@ const UnitBuilder = ({instId, curricular}: any) => {
       {/* Section Header */}
 
       <div className="px-8 pb-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
           {!fetchingDetails &&
             (syllabusData?.name || SyllabusDict[userLanguage].ADD_UNIT)}
         </h3>
         <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
           onClick={() =>
             history.push(
               isSuperAdmin
@@ -238,7 +238,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 mb-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-light  mb-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">

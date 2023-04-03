@@ -356,7 +356,7 @@ const CurricularBuilder = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-9/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {CurricularBuilderdict[userLanguage]['HEADING']}
           </h3>
           <div className="h-9/10 flex flex-col md:flex-row">
@@ -373,20 +373,20 @@ const CurricularBuilder = () => {
                     {imageUrl ? (
                       <img
                         onClick={handleImage}
-                        className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                        className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-light `}
                         src={imageUrl}
                       />
                     ) : (
                       <div
                         onClick={handleImage}
-                        className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                        className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-lightest  border flex-shrink-0 flex border-light `}>
                         <IoImage className="fill-current text-gray-80" size={32} />
                       </div>
                     )}
                   </DroppableMedia>
                 </label>
               </button>
-              <p className="text-gray-600 my-4">Click to add curricular image</p>
+              <p className="text-medium  my-4">Click to add curricular image</p>
             </div>
             <div className="h-9/10 md:flex-row">
               <div className="px-3 py-4">
@@ -420,7 +420,7 @@ const CurricularBuilder = () => {
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                   {CurricularBuilderdict[userLanguage]['TYPE']}
                 </label>
                 <Selector

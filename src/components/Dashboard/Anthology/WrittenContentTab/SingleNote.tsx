@@ -124,7 +124,7 @@ const SingleNote = (props: any) => {
     <Suspense
       fallback={
         <div className="min-h-56 w-full flex flex-col justify-center items-center">
-          <Loader withText={'Loading note...'} className="w-auto text-gray-400" />
+          <Loader withText={'Loading note...'} className="w-auto text-light " />
         </div>
       }>
       <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
@@ -132,7 +132,7 @@ const SingleNote = (props: any) => {
           id={`anthology_${subSection}${idx}`}
           className={`flex flex-col ${
             idx !== contentLen - 1 && 'border-b-2'
-          } border-gray-300 px-6 py-6 p-2`}>
+          } border-lightest  px-6 py-6 p-2`}>
           {viewEditMode &&
           viewEditMode.mode === 'edit' &&
           viewEditMode.dataID === contentObj.id
@@ -234,7 +234,7 @@ const SingleNote = (props: any) => {
             )}
 
             {!isLoading && isFetched && showComments && (
-              <div className="border-t-0 border-gray-200 mt-4">
+              <div className="border-t-0 border-lightest mt-4">
                 <Feedbacks
                   key={contentObj.id}
                   item={contentObj}
