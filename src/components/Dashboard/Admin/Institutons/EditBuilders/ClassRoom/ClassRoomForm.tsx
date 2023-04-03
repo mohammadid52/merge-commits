@@ -28,6 +28,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
+import PageLayout from 'layout/PageLayout';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -918,20 +919,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   return (
     <div className="">
       {/* Body section */}
-      <PageWrapper defaultClass="px-4">
+      <PageLayout
+        type="inner"
+        title={
+          <div className="flex py-2 flex-col">
+            <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
+            <span className="text-medium  w-auto font-normal text-sm">
+              {moment(roomData.createdAt).format('ll')}
+            </span>
+          </div>
+        }>
         <div className="w-full m-auto">
           <div className="">
-            <SectionTitleV3
-              title={
-                <div className="flex flex-col">
-                  <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
-                  <span className="text-medium  w-auto font-normal mt-2 text-sm">
-                    {moment(roomData.createdAt).format('ll')}
-                  </span>
-                </div>
-              }
-            />
-
             <div className="grid grid-cols-3">
               <div className="px-3 py-4">
                 <Selector
@@ -1137,7 +1136,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           saveLabel="Yes"
           message={warnModal.message}
         />
-      </PageWrapper>
+      </PageLayout>
     </div>
   );
 };

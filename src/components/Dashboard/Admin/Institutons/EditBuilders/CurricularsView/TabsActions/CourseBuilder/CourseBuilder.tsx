@@ -5,6 +5,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
+import PageLayout from 'layout/PageLayout';
 import {useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
@@ -207,34 +208,14 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
-          {courseData?.name}
-        </h3>
-        <div
-          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
-          onClick={() =>
-            history.push(
-              isSuperAdmin
-                ? `/dashboard/manage-institutions/courses`
-                : `/dashboard/manage-institutions/institution/${instId}/courses`
-            )
-          }>
-          <span className="w-auto mr-2">
-            <BsArrowLeft />
-          </span>
-          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
-        </div>
-      </div>
-
+    <PageLayout title={courseData?.name}>
       <div className="w-full m-auto">
         <StepComponent
           steps={steps}
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-light  px-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-light mt-4">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
@@ -250,7 +231,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

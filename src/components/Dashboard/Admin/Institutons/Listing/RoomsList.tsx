@@ -22,6 +22,7 @@ import * as queries from 'graphql/queries';
 import {map, orderBy} from 'lodash';
 import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
+import PageLayout from 'layout/PageLayout';
 
 // as of 9:15 am 30th march 2023. load time of this page is 5.67 seconds
 // my goal is to bring it down to 3-4 seconds by 31st march 2023
@@ -342,46 +343,36 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   return (
-    <div className="flex m-auto justify-center p-4 pt-0">
-      <div className="w-full">
-        <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
-          <SectionTitleV3
-            title={InstitueRomms[userLanguage]['TITLE']}
-            fontSize="xl"
-            fontStyle="semibold"
-            extraClass="leading-6 text-darkest"
-            borderBottom
-            shadowOff
-            withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center`}>
-                {(isSuperAdmin || isAdmin || isBuilder) && (
-                  <InsitutionSelector
-                    selectedInstitution={selectedInstitution?.label}
-                    onChange={instituteChange}
-                  />
-                )}
-                <SearchInput
-                  dataCy="classroom-search-input"
-                  value={searchInput.value}
-                  onChange={setSearch}
-                  disabled={loading}
-                  onKeyDown={searchRoom}
-                  closeAction={() => {
-                    removeSearchAction();
-                  }}
-                />
-
-                {(!isSuperAdmin || !isAdmin || !isBuilder) && (
-                  <AddButton
-                    label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
-                    onClick={createNewRoom}
-                  />
-                )}
-              </div>
-            }
+    <PageLayout
+      extra={
+        <div className={`w-auto flex gap-x-4 justify-end items-center`}>
+          {(isSuperAdmin || isAdmin || isBuilder) && (
+            <InsitutionSelector
+              selectedInstitution={selectedInstitution?.label}
+              onChange={instituteChange}
+            />
+          )}
+          <SearchInput
+            dataCy="classroom-search-input"
+            value={searchInput.value}
+            onChange={setSearch}
+            disabled={loading}
+            onKeyDown={searchRoom}
+            closeAction={() => {
+              removeSearchAction();
+            }}
           />
-        </div>
 
+          {(!isSuperAdmin || !isAdmin || !isBuilder) && (
+            <AddButton
+              label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
+              onClick={createNewRoom}
+            />
+          )}
+        </div>
+      }
+      title={InstitueRomms[userLanguage]['TITLE']}>
+      <div className="w-full">
         <Filters
           loading={loading}
           resetPagination={resetPagination}
@@ -404,7 +395,7 @@ const RoomsList = (props: RoomListProps) => {
           </p>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,10 +1,7 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {useHistory} from 'react-router-dom';
 
-import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
@@ -14,7 +11,6 @@ import useDictionary from 'customHooks/dictionary';
 import {createUserUrl} from 'utilities/urls';
 
 import {Error} from '@components/Atoms/Alerts/Info';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {withZoiqFilter} from '@utilities/functions';
 import {statusList} from '@utilities/staticData';
@@ -31,6 +27,7 @@ import {
 } from 'API';
 import * as customQueries from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
+import PageLayout from 'layout/PageLayout';
 import {UserRegisterSchema} from 'Schema';
 import SuccessMessage from './SuccessMessage';
 
@@ -51,13 +48,12 @@ const initialValues = {
 
 const Registration = ({
   classData,
-  isInInstitute,
+
   instId,
   isInModalPopup = false,
   postMutation
 }: any) => {
   const {classId} = classData || {};
-  const history = useHistory();
 
   const [instClasses, setInstClasses] = useState<any[]>([]);
 
@@ -74,7 +70,7 @@ const Registration = ({
   });
 
   const {state, userLanguage, zoiqFilter, checkIfAdmin} = useGlobalContext();
-  const {RegistrationDict, BreadcrumsTitles} = useDictionary();
+  const {RegistrationDict} = useDictionary();
 
   const messageDict = RegistrationDict[userLanguage]['messages'];
   const rolesDict = RegistrationDict[userLanguage]['roles'];
@@ -100,24 +96,6 @@ const Registration = ({
         value: rolesDict['st']
       }
   ].filter(Boolean);
-
-  const breadCrumsList = [
-    {
-      title: BreadcrumsTitles[userLanguage]['HOME'],
-      href: '/dashboard',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['PeopleManagment'],
-      href: '/dashboard/manage-users',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['AddNewUser'],
-      href: `/dashboard/registration`,
-      last: true
-    }
-  ];
 
   useEffect(() => {
     if (classId) {
@@ -294,178 +272,132 @@ const Registration = ({
   });
 
   return (
-    <div className={`px-4`}>
-      {isInInstitute ? (
-        !isInModalPopup && (
-          <SectionTitleV3 title={RegistrationDict[userLanguage]['title']} />
-        )
-      ) : (
-        <>
-          <BreadCrums items={breadCrumsList} />
-          <div className="flex justify-between">
-            <SectionTitleV3
-              title={RegistrationDict[userLanguage]['title']}
-              withButton={
-                <div className="flex justify-end items-center">
-                  <Buttons
-                    label="Go Back"
-                    onClick={history.goBack}
-                    Icon={IoArrowUndoCircleOutline}
-                  />
-                </div>
-              }
-              subtitle={RegistrationDict[userLanguage]['subtitle']}
-            />
-          </div>
-        </>
-      )}
+    <PageLayout title={isInModalPopup ? null : RegistrationDict[userLanguage]['title']}>
+      <form onSubmit={handleSubmit} className={` w-full flex flex-col`}>
+        <div className="w-full md:flex flex-col mb-0">
+          <div className="h-full grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+            <div className="sm:col-span-3 p-2">
+              <FormInput
+                label={RegistrationDict[userLanguage]['firstname']}
+                isRequired
+                id="firstName"
+                name="firstName"
+                value={values.firstName}
+                error={errors.firstName}
+                onChange={handleChange}
+                placeHolder={RegistrationDict[userLanguage]['firstplaceholder']}
+              />
+            </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className={`${
-          !isInInstitute
-            ? 'test border-2 border-lightest  rounded bg-lightest shadow-elem-light px-12 py-8'
-            : ''
-        } w-full flex flex-col`}>
-        <div className="">
-          <div className="w-full md:flex flex-col mb-0">
-            <div
-              className={`h-full w-full ${
-                !isInInstitute ? 'bg-white shadow-5' : ''
-              } mt-4 sm:rounded-lg`}>
-              <div>
-                <div className={`h-full ${isInInstitute ? '' : 'px-4 sm:px-6'} pt-2`}>
-                  <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        label={RegistrationDict[userLanguage]['firstname']}
-                        isRequired
-                        id="firstName"
-                        name="firstName"
-                        value={values.firstName}
-                        error={errors.firstName}
-                        onChange={handleChange}
-                        placeHolder={RegistrationDict[userLanguage]['firstplaceholder']}
-                      />
-                    </div>
+            <div className="sm:col-span-3 p-2">
+              <FormInput
+                id="lastName"
+                isRequired
+                error={errors.lastName}
+                label={RegistrationDict[userLanguage]['lastname']}
+                name="lastName"
+                onChange={handleChange}
+                value={values.lastName}
+                placeHolder={RegistrationDict[userLanguage]['lastplaceholder']}
+              />
+            </div>
 
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        id="lastName"
-                        isRequired
-                        error={errors.lastName}
-                        label={RegistrationDict[userLanguage]['lastname']}
-                        name="lastName"
-                        onChange={handleChange}
-                        value={values.lastName}
-                        placeHolder={RegistrationDict[userLanguage]['lastplaceholder']}
-                      />
-                    </div>
+            <div className="sm:col-span-3 p-2">
+              <FormInput
+                label={RegistrationDict[userLanguage]['email']}
+                isRequired
+                type="email"
+                id="email"
+                name="email"
+                value={values.email}
+                error={errors.email}
+                onChange={handleChange}
+                placeHolder={RegistrationDict[userLanguage]['emailplaceholder']}
+              />
+            </div>
 
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        label={RegistrationDict[userLanguage]['email']}
-                        isRequired
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={values.email}
-                        error={errors.email}
-                        onChange={handleChange}
-                        placeHolder={RegistrationDict[userLanguage]['emailplaceholder']}
-                      />
-                    </div>
+            {!classId && (
+              <div className="sm:col-span-3 p-2">
+                <Selector
+                  placeholder="Select role"
+                  onChange={(name: any) =>
+                    setFieldValue('role', getReverseUserRoleString(name))
+                  }
+                  label={RegistrationDict[userLanguage]['role']}
+                  error={errors.role}
+                  list={Roles}
+                  selectedItem={getUserRoleString(values.role)}
+                />
+              </div>
+            )}
 
-                    {!classId && (
-                      <div className="sm:col-span-3 p-2">
-                        <Selector
-                          placeholder="Select role"
-                          onChange={(name: any) =>
-                            setFieldValue('role', getReverseUserRoleString(name))
-                          }
-                          label={RegistrationDict[userLanguage]['role']}
-                          error={errors.role}
-                          list={Roles}
-                          selectedItem={getUserRoleString(values.role)}
-                        />
-                      </div>
-                    )}
+            {checkIfAdmin() && (
+              <div className="sm:col-span-6">
+                <Checkbox
+                  checked={values.isZoiq}
+                  onChange={(e) => setFieldValue('isZoiq', e.target.checked)}>
+                  ZOIQ
+                </Checkbox>
+              </div>
+            )}
 
-                    {checkIfAdmin() && (
-                      <div className="sm:col-span-6">
-                        <Checkbox
-                          checked={values.isZoiq}
-                          onChange={(e) => setFieldValue('isZoiq', e.target.checked)}>
-                          ZOIQ
-                        </Checkbox>
-                      </div>
-                    )}
+            {values.role && values.role === Role.ST && instId && (
+              <>
+                {!classId && (
+                  <div className="sm:col-span-3 p-2">
+                    <Selector
+                      label={RegistrationDict[userLanguage]['class']}
+                      selectedItem={values.class.name}
+                      list={instClasses}
+                      placeholder={'Select a class'}
+                      onChange={(value: any, option: any) =>
+                        setFieldValue('class', {
+                          id: value,
+                          name: value,
+                          roomId: option.id
+                        })
+                      }
+                    />
+                  </div>
+                )}
 
-                    {values.role && values.role === Role.ST && instId && (
-                      <>
-                        {!classId && (
-                          <div className="sm:col-span-3 p-2">
-                            <Selector
-                              label={RegistrationDict[userLanguage]['class']}
-                              selectedItem={values.class.name}
-                              list={instClasses}
-                              placeholder={'Select a class'}
-                              onChange={(value: any, option: any) =>
-                                setFieldValue('class', {
-                                  id: value,
-                                  name: value,
-                                  roomId: option.id
-                                })
-                              }
-                            />
-                          </div>
-                        )}
-
-                        <div className="sm:col-span-3 p-2">
-                          <div>
-                            <Selector
-                              label={RegistrationDict[userLanguage]['status']}
-                              selectedItem={values.status}
-                              list={statusList}
-                              placeholder={
-                                RegistrationDict[userLanguage]['statusPlaceholder']
-                              }
-                              onChange={(name: any) => setFieldValue('status', name)}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="sm:col-span-3 p-2">
-                          <Checkbox
-                            checked={values.isSelfPaced}
-                            onChange={(e) =>
-                              setFieldValue('isSelfPaced', e.target.checked)
-                            }>
-                            Self Paced
-                          </Checkbox>
-                        </div>
-                      </>
-                    )}
+                <div className="sm:col-span-3 p-2">
+                  <div>
+                    <Selector
+                      label={RegistrationDict[userLanguage]['status']}
+                      selectedItem={values.status}
+                      list={statusList}
+                      placeholder={RegistrationDict[userLanguage]['statusPlaceholder']}
+                      onChange={(name: any) => setFieldValue('status', name)}
+                    />
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="w-full md:h-full flex justify-center items-center">
-              {message.show ? (
-                <div>
-                  {message.type === 'error' ? (
-                    <Error message={message.message} />
-                  ) : message.type === 'success' ? (
-                    <SuccessMessage note={message.message} />
-                  ) : message.type === 'loading' ? (
-                    <div className="my-2 text-sm leading-5 text-darkest">
-                      {messageDict['loading']}
-                    </div>
-                  ) : null}
+                <div className="sm:col-span-3 p-2">
+                  <Checkbox
+                    checked={values.isSelfPaced}
+                    onChange={(e) => setFieldValue('isSelfPaced', e.target.checked)}>
+                    Self Paced
+                  </Checkbox>
                 </div>
-              ) : null}
-            </div>
+              </>
+            )}
+          </div>
+
+          <div className="w-full md:h-full flex justify-center items-center">
+            {message.show ? (
+              <div>
+                {message.type === 'error' ? (
+                  <Error message={message.message} />
+                ) : message.type === 'success' ? (
+                  <SuccessMessage note={message.message} />
+                ) : message.type === 'loading' ? (
+                  <div className="my-2 text-sm leading-5 text-darkest">
+                    {messageDict['loading']}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -478,7 +410,7 @@ const Registration = ({
           />
         </div>
       </form>
-    </div>
+    </PageLayout>
   );
 };
 

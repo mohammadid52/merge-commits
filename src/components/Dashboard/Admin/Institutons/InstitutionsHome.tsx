@@ -1,4 +1,3 @@
-import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
@@ -241,14 +240,12 @@ const InstitutionsHome: React.FC = () => {
           <ErrorBoundary componentName="InstitutionProfile">
             <div className="">
               <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
-              <div className="">
-                {/* <PageWrapper> */}
-                <PageWrapper>
-                  <NavBarRouter institute={institute} />
-                  {/* </PageWrapper> */}
-                  <InstitutionProfile institute={institute} />
-                </PageWrapper>
-              </div>
+
+              {/* <PageWrapper> */}
+
+              <NavBarRouter institute={institute} />
+              {/* </PageWrapper> */}
+              <InstitutionProfile institute={institute} />
             </div>
           </ErrorBoundary>
         )}

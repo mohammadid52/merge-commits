@@ -176,25 +176,25 @@ const Institution = (props: InstitutionProps) => {
         forInstitution
       />
       <div className="">
-        <PageWrapper>
-          <Switch>
-            <Route
-              path={`${match.url}/`}
-              render={() => (
-                <ErrorBoundary componentName="InstitutionInfo">
-                  <InstitutionInfoComponent
-                    institute={institutionData}
-                    loading={fetchingDetails}
-                    postInfoUpdate={postInfoUpdate}
-                    tabProps={props.tabProps}
-                    toggleUpdateState={toggleUpdateState}
-                    updateServiceProviders={updateServiceProviders}
-                  />
-                </ErrorBoundary>
-              )}
-            />
-          </Switch>
-        </PageWrapper>
+        {/* <PageWrapper> */}
+        <Switch>
+          <Route
+            path={`${match.url}/`}
+            render={() => (
+              <ErrorBoundary componentName="InstitutionInfo">
+                <InstitutionInfoComponent
+                  institute={institutionData}
+                  loading={fetchingDetails}
+                  postInfoUpdate={postInfoUpdate}
+                  tabProps={props.tabProps}
+                  toggleUpdateState={toggleUpdateState}
+                  updateServiceProviders={updateServiceProviders}
+                />
+              </ErrorBoundary>
+            )}
+          />
+        </Switch>
+        {/* </PageWrapper> */}
       </div>
     </div>
   );

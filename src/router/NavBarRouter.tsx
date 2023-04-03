@@ -2,9 +2,9 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
 import {UniversalLessonBuilderProvider} from 'contexts/UniversalLessonBuilderContext';
 
+import Loader from '@components/Atoms/Loader';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import {lazy, Suspense} from 'react';
-import Loader from '@components/Atoms/Loader';
 const InstitutionBuilder = lazy(
   () =>
     import('dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder')
@@ -48,7 +48,7 @@ const UnitList = lazy(
       'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList'
     )
 );
-const ClassList = lazy(() => import('dashboard/Admin/Institutons/Listing/ClassList'));
+
 const CurriculumList = lazy(
   () => import('dashboard/Admin/Institutons/Listing/CurriculumList')
 );
@@ -63,7 +63,7 @@ const LessonsBuilderHome = lazy(
 const Registration = lazy(() => import('dashboard/Admin/UserManagement/Registration'));
 const User = lazy(() => import('dashboard/Admin/UserManagement/User'));
 const UserLookup = lazy(() => import('dashboard/Admin/UserManagement/UserLookup'));
-const AnalyticsDashboard = lazy(() => import('dashboard/Csv/AnalyticsDashboard'));
+
 const Csv = lazy(() => import('dashboard/Csv/Csv'));
 const UploadCsv = lazy(() => import('dashboard/Csv/UploadCSV'));
 
@@ -74,19 +74,6 @@ const NavBarRouter = (instProps: any) => {
   return (
     <Suspense fallback={<Loader />}>
       <Switch>
-        <Route
-          path={`${match.url}/class`}
-          exact
-          render={() => (
-            <ErrorBoundary componentName="ClassList">
-              <ClassList
-                classes={institute?.classes}
-                instId={institute?.id}
-                instName={institute?.name}
-              />
-            </ErrorBoundary>
-          )}
-        />
         <Route
           path={`${match.url}/class-rooms`}
           exact
@@ -137,7 +124,7 @@ const NavBarRouter = (instProps: any) => {
             <ErrorBoundary componentName="CurriculumList">
               <CurriculumList
                 updateCurricularList={updateCurricularList}
-                curricular={curricular && curricular}
+                curricular={curricular}
                 instId={institute?.id}
                 instName={institute?.name}
               />
@@ -193,15 +180,7 @@ const NavBarRouter = (instProps: any) => {
             </ErrorBoundary>
           )}
         />
-        <Route
-          path={`${match.url}/research-and-analytics/analytics-dashboard`}
-          exact
-          render={() => (
-            <ErrorBoundary componentName="AnalyticsDashboard">
-              <AnalyticsDashboard />
-            </ErrorBoundary>
-          )}
-        />
+
         <Route
           path={`${match.url}/staff`}
           exact

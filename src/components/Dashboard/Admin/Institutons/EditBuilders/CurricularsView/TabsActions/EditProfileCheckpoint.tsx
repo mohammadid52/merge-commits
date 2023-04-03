@@ -19,6 +19,7 @@ import useDictionary from 'customHooks/dictionary';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 import {languageList, scopeList} from '@utilities/staticData';
+import PageLayout from 'layout/PageLayout';
 
 const EditProfileCheckpoint = () => {
   const history = useHistory();
@@ -358,24 +359,8 @@ const EditProfileCheckpoint = () => {
   const {title, language, label} = checkpointData;
   return (
     <div className="w-full h-full">
-      {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitleV3
-          title={EditProfileCheckpointDict[userLanguage]['title']}
-          subtitle={EditProfileCheckpointDict[userLanguage]['subtitle']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go Back"
-            onClick={history.goBack}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div>
-
       {/* Body section */}
-      <PageWrapper>
+      <PageLayout title={EditProfileCheckpointDict[userLanguage]['title']}>
         {currentState !== 'checkpoint' ? (
           <Fragment>
             {currentState === 'addQuestion' && (
@@ -394,14 +379,9 @@ const EditProfileCheckpoint = () => {
           </Fragment>
         ) : (
           <Fragment>
-            <div className="md:w-full lg:w-8/10 m-auto">
-              <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
-                {EditProfileCheckpointDict[userLanguage]['heading']}
-              </h3>
-            </div>
-            <div className="md:w-full lg:w-8/10 m-auto">
-              <div className="px-3">
-                <div className="py-4 grid gap-x-6 grid-cols-2">
+            <div className="">
+              <div className="">
+                <div className="py-4 grid gap-4 grid-cols-2">
                   <div>
                     <FormInput
                       value={title}
@@ -428,9 +408,6 @@ const EditProfileCheckpoint = () => {
                       <p className="text-red-600 text-sm">{validation.label}</p>
                     )}
                   </div>
-                </div>
-
-                <div className="py-4 grid gap-x-6 grid-cols-3">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {EditProfileCheckpointDict[userLanguage]['designer']}
@@ -576,7 +553,7 @@ const EditProfileCheckpoint = () => {
                           )}
                         </div>
                       </div>
-                      <div className="flex w-full mx-auto p-8 justify-center ">
+                      <div className="flex w-full mx-auto gap-4 justify-center ">
                         <Buttons
                           onClick={() => setCurrentState('questionsList')}
                           label={EditProfileCheckpointDict[userLanguage]['addexist']}
@@ -599,7 +576,7 @@ const EditProfileCheckpoint = () => {
                 </p>
               </div>
             )}
-            <div className="flex my-8 justify-center">
+            <div className="flex my-8 gap-4 justify-center">
               <Buttons label="Cancel" onClick={history.goBack} transparent />
               <Buttons
                 label={
@@ -613,7 +590,7 @@ const EditProfileCheckpoint = () => {
             </div>
           </Fragment>
         )}
-      </PageWrapper>
+      </PageLayout>
     </div>
   );
 };

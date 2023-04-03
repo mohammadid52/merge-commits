@@ -14,7 +14,7 @@ import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import {RoomStatus} from 'API';
-import {BsArrowLeft} from 'react-icons/bs';
+import PageLayout from 'layout/PageLayout';
 import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
 
@@ -49,7 +49,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
   const {unitId}: any = useParams();
 
   const {userLanguage} = useGlobalContext();
-  const {CommonlyUsedDict, SyllabusDict} = useDictionary();
+  const {SyllabusDict} = useDictionary();
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedLessonsList, setSavedLessonsList] = useState<any[]>([]);
@@ -208,30 +208,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
   };
 
   return (
-    <div className="">
-      {/* Section Header */}
-
-      <div className="px-8 pb-4">
-        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
-          {!fetchingDetails &&
-            (syllabusData?.name || SyllabusDict[userLanguage].ADD_UNIT)}
-        </h3>
-        <div
-          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
-          onClick={() =>
-            history.push(
-              isSuperAdmin
-                ? `/dashboard/manage-institutions/units`
-                : `/dashboard/manage-institutions/institution/${instId}/units`
-            )
-          }>
-          <span className="w-auto mr-2">
-            <BsArrowLeft />
-          </span>
-          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
-        </div>
-      </div>
-      {/* Body */}
+    <PageLayout title={syllabusData?.name || SyllabusDict[userLanguage].ADD_UNIT}>
       <div className="w-full m-auto">
         <StepComponent
           steps={steps}
@@ -250,7 +227,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

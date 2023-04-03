@@ -73,7 +73,7 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
         data?.onClick?.();
       }
     }),
-    className: 'universal-table mt-2',
+    className: 'universal-table mt-2 overflow-x-auto',
     loading: config.dataList?.loading,
 
     pagination: showPagination

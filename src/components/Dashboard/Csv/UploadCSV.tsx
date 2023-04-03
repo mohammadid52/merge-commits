@@ -5,7 +5,6 @@ import {API, graphqlOperation} from 'aws-amplify';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
@@ -30,6 +29,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useEffect, useRef, useState} from 'react';
@@ -1375,111 +1375,101 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         {showModal.element}
       </Modal>
 
-      <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
-        <div className="mx-auto w-full">
-          <div className="flex flex-row my-0 w-full py-0 justify-start">
-            <div className="w-full">
-              <SectionTitleV3
-                textWidth="lg:w-1/3 2xl:w-1/4"
-                withButton={
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div className="w-auto relative">
-                      <Selector
-                        dataCy="upload-analytics-classroom"
-                        loading={classRoomLoading}
-                        selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
-                        placeholder="Select Classroom"
-                        width={250}
-                        list={instClassRooms}
-                        onChange={(value, option: any) => {
-                          setHoveringItem({});
-                          onClassRoomSelect(option.id, value, value);
-                          focusOn('upload-analytics-unit');
-                        }}
-                      />
-                    </div>
-                    <Selector
-                      dataCy="upload-analytics-unit"
-                      loading={unitsLoading}
-                      selectedItem={selectedUnit ? selectedUnit.name : ''}
-                      placeholder="Select Unit"
-                      list={units}
-                      width={250}
-                      disabled={!selectedCurriculum}
-                      onChange={(value, option: any) => {
-                        onUnitSelect(option.id, value, value);
-                        focusOn('analytics-survey');
-                      }}
-                    />
-
-                    <Selector
-                      dataCy="analytics-survey"
-                      loading={surveysLoading}
-                      disabled={!selectedUnit}
-                      selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-                      placeholder="Select Survey"
-                      list={surveys}
-                      onChange={(value, option: any) =>
-                        onChangeSurvey(option.id, value, value)
-                      }
-                    />
-                  </div>
-                }
-                title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}
+      <PageLayout
+        extra={
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="w-auto relative">
+              <Selector
+                dataCy="upload-analytics-classroom"
+                loading={classRoomLoading}
+                selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
+                placeholder="Select Classroom"
+                width={250}
+                list={instClassRooms}
+                onChange={(value, option: any) => {
+                  setHoveringItem({});
+                  onClassRoomSelect(option.id, value, value);
+                  focusOn('upload-analytics-unit');
+                }}
               />
             </div>
+            <Selector
+              dataCy="upload-analytics-unit"
+              loading={unitsLoading}
+              selectedItem={selectedUnit ? selectedUnit.name : ''}
+              placeholder="Select Unit"
+              list={units}
+              width={250}
+              disabled={!selectedCurriculum}
+              onChange={(value, option: any) => {
+                onUnitSelect(option.id, value, value);
+                focusOn('analytics-survey');
+              }}
+            />
+
+            <Selector
+              dataCy="analytics-survey"
+              loading={surveysLoading}
+              disabled={!selectedUnit}
+              selectedItem={selectedSurvey ? selectedSurvey.name : ''}
+              placeholder="Select Survey"
+              list={surveys}
+              onChange={(value, option: any) => onChangeSurvey(option.id, value, value)}
+            />
+          </div>
+        }
+        title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}>
+        <div className="flex flex-col overflow-h-scroll w-full h-full">
+          <div className="flex items-center justify-start  gap-x-4 mb-4">
+            <UploadButton
+              disabled={isMapping || !Boolean(selectedSurvey)}
+              label={file ? 'Change file' : 'Choose file'}
+              acceptedFilesFormat=".csv, .xlsx"
+              ref={csvInputRef}
+              id="upload-csv-button"
+              onUpload={handleUpload}
+            />
+
+            <Selector
+              disabled={!file}
+              selectedItem={selectedReason ? selectedReason.name : ''}
+              placeholder={CsvDict[userLanguage]['SELECT_REASON']}
+              list={reasonDropdown}
+              width={250}
+              onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
+            />
+          </div>
+          <AnimatedContainer show={checkingCsvFile} animationType="translateY">
+            {checkingCsvFile && (
+              <p className={`mt-1 text-medium  text-xs`}>Checking file information...</p>
+            )}
+          </AnimatedContainer>
+
+          <AnimatedContainer show={success} animationType="translateY">
+            {success && (
+              <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
+            )}
+          </AnimatedContainer>
+
+          <AnimatedContainer show={error} animationType="translateY">
+            {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
+          </AnimatedContainer>
+
+          {!isEmpty(parsedObj) && (
+            <>
+              <Table {...tableConfig} />
+            </>
+          )}
+
+          <div className="flex items-center justify-end mt-3">
+            <Buttons
+              label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
+              disabled={uploadingCSV || isEmpty(parsedObj)}
+              onClick={(e) => showModalWhenUploadCsv(e)}
+            />
           </div>
         </div>
-
-        <div className="flex items-center justify-start  gap-x-4  py-4 mb-4">
-          <UploadButton
-            disabled={isMapping || !Boolean(selectedSurvey)}
-            label={file ? 'Change file' : 'Choose file'}
-            acceptedFilesFormat=".csv, .xlsx"
-            ref={csvInputRef}
-            id="upload-csv-button"
-            onUpload={handleUpload}
-          />
-
-          <Selector
-            disabled={!file}
-            selectedItem={selectedReason ? selectedReason.name : ''}
-            placeholder={CsvDict[userLanguage]['SELECT_REASON']}
-            list={reasonDropdown}
-            width={250}
-            onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
-          />
-        </div>
-        <AnimatedContainer show={checkingCsvFile} animationType="translateY">
-          {checkingCsvFile && (
-            <p className={`mt-1 text-medium  text-xs`}>Checking file information...</p>
-          )}
-        </AnimatedContainer>
-
-        <AnimatedContainer show={success} animationType="translateY">
-          {success && (
-            <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
-          )}
-        </AnimatedContainer>
-
-        <AnimatedContainer show={error} animationType="translateY">
-          {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
-        </AnimatedContainer>
-
-        {!isEmpty(parsedObj) && (
-          <>
-            <Table {...tableConfig} />
-          </>
-        )}
-
-        <div className="flex items-center justify-end mt-3">
-          <Buttons
-            label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
-            disabled={uploadingCSV || isEmpty(parsedObj)}
-            onClick={(e) => showModalWhenUploadCsv(e)}
-          />
-        </div>
-      </div>
+      </PageLayout>
     </>
   );
 };

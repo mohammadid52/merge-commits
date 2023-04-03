@@ -12,7 +12,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import {BsArrowLeft} from 'react-icons/bs';
+import PageLayout from 'layout/PageLayout';
 import {getLanguageString} from 'utilities/strings';
 import {v4 as uuidv4} from 'uuid';
 import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
@@ -134,65 +134,24 @@ const ProfileCheckpointlookup = () => {
   }, []);
 
   return (
-    <div>
-      {/* Section Header */}
-      {/* <BreadCrums items={breadCrumsList} /> */}
-      {/* <div className="flex justify-between">
-        <SectionTitle
-          title={ProfileCheckpointlookupDict[userLanguage]['title']}
-          subtitle={ProfileCheckpointlookupDict[userLanguage]['subtitle']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go Back"
-            
-            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div> */}
-      <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-darkest   w-auto capitalize">
-          {ProfileCheckpointlookupDict[userLanguage]['subtitle']}
-        </h3>
-        <div
-          className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
-          // onClick={() =>
-          //   history.push(
-          //     isSuperAdmin
-          //       ? `/dashboard/manage-institutions/courses`
-          //       : `/dashboard/manage-institutions/institution/${instId}/courses`
-          //   )
-          // }
-        >
-          <span className="w-auto mr-2">
-            <BsArrowLeft />
-          </span>
-          <div className="text-sm">{'Back to Course'}</div>
-        </div>
-      </div>
-
-      {/* Body section */}
-      {/* <PageWrapper> */}
-      {/* <div className="w-8/10 m-auto">
-        <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
-          {ProfileCheckpointlookupDict[userLanguage]['heading']}
-        </h3>
-      </div> */}
-      <div className="flex justify-between my-4 px-8">
-        <p className="text-sm font-medium text-medium  flex items-center w-2/4">
-          {' '}
-          {selectedCheckpointIds?.length}{' '}
-          {ProfileCheckpointlookupDict[userLanguage]['selectcheckpoint']}
-        </p>
+    <PageLayout
+      extra={
         <SearchInput
           value={searchInput}
           onChange={(val: string) => setSearchInput(val)}
           onKeyDown={searchFromList}
           closeAction={removeSearchAction}
         />
+      }
+      title={ProfileCheckpointlookupDict[userLanguage]['subtitle']}>
+      <div className="flex justify-between my-4">
+        <p className="text-sm font-medium text-medium  flex items-center w-2/4">
+          {' '}
+          {selectedCheckpointIds?.length}{' '}
+          {ProfileCheckpointlookupDict[userLanguage]['selectcheckpoint']}
+        </p>
       </div>
-      <div className="px-8">
+      <div className="">
         <Fragment>
           <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-light">
             <div className="w-1.5/10 px-6 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
@@ -298,28 +257,25 @@ const ProfileCheckpointlookup = () => {
           </div>
         </Fragment>
       </div>
-      <div className="flex mt-8 justify-center px-8 pb-4">
-        <div className="flex justify-center my-6">
+      <div className="flex mt-8 justify-end gap-4 ">
+        <Buttons
+          label={ProfileCheckpointlookupDict[userLanguage]['button']['cancel']}
+          onClick={history.goBack}
+          transparent
+        />
+        {allCheckpointList.length > 0 && (
           <Buttons
-            label={ProfileCheckpointlookupDict[userLanguage]['button']['cancel']}
-            onClick={history.goBack}
-            transparent
+            label={
+              loading
+                ? ProfileCheckpointlookupDict[userLanguage]['button']['saving']
+                : ProfileCheckpointlookupDict[userLanguage]['button']['save']
+            }
+            onClick={saveCurricularCheckpoints}
+            disabled={loading || selectedCheckpointIds.length === 0 ? true : false}
           />
-          {allCheckpointList.length > 0 && (
-            <Buttons
-              label={
-                loading
-                  ? ProfileCheckpointlookupDict[userLanguage]['button']['saving']
-                  : ProfileCheckpointlookupDict[userLanguage]['button']['save']
-              }
-              onClick={saveCurricularCheckpoints}
-              disabled={loading || selectedCheckpointIds.length === 0 ? true : false}
-            />
-          )}
-        </div>
+        )}
       </div>
-      {/* </PageWrapper> */}
-    </div>
+    </PageLayout>
   );
 };
 

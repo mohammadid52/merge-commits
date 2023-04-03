@@ -29,6 +29,7 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
+import PageLayout from 'layout/PageLayout';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -523,75 +524,66 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   };
 
   return (
-    <div className="mb-2">
-      {/* Header Section */}
-      {!isInInstitute && <BreadCrums items={breadCrumsList} />}
-      <div className="">
-        <SectionTitleV3
-          fontSize="xl"
-          fontStyle="semibold"
-          extraContainerClass="px-4"
-          extraClass="leading-6 text-darkest   uppercase"
-          borderBottom
-          shadowOff
-          title={
-            !isInInstitute
-              ? UserLookupDict[userLanguage]['title']
-              : isStudentRoster
-              ? `Your Students (${headerForStudentRoster()})`
-              : 'User List'
-          }
-          subtitle={isInInstitute ? null : UserLookupDict[userLanguage]['subtitle']}
-          withButton={
-            <div
-              className={
-                isStudentRoster
-                  ? 'flex justify-end mb-4 gap-4 items-center w-auto'
-                  : 'flex justify-end mb-4 gap-4 w-auto'
-              }>
-              {isStudentRoster && (
-                <div className="w-auto relative flex mr-2 min-w-64">
-                  <Selector
-                    placeholder={'Select a class'}
-                    list={getClassListForSelector()}
-                    selectedItem={selectedClass?.name}
-                    onChange={setSelectedClassValue}
-                    disabled={loading}
-                  />
-
-                  {selectedClass !== null && (
-                    <span
-                      onClick={goToClassroom}
-                      style={{bottom: '-1.5rem'}}
-                      className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
-                      Go to classroom
-                    </span>
-                  )}
-                </div>
-              )}
-
-              <SearchInput
-                value={searchInput.value}
-                onChange={setSearch}
+    <PageLayout
+      title={
+        !isInInstitute
+          ? UserLookupDict[userLanguage]['title']
+          : isStudentRoster
+          ? `Your Students (${headerForStudentRoster()})`
+          : 'User List'
+      }
+      extra={
+        <div
+          className={`flex justify-end gap-4 w-auto ${
+            isStudentRoster ? 'items-center' : ''
+          }`}>
+          {isStudentRoster && (
+            <div className="w-auto relative flex ">
+              <Selector
+                placeholder={'Select a class'}
+                list={getClassListForSelector()}
+                selectedItem={selectedClass?.name}
+                onChange={setSelectedClassValue}
                 disabled={loading}
-                onKeyDown={searchUserFromList}
-                closeAction={_removeSearchAction}
+                width={250}
+                size="middle"
+                showSearch
+                optionFilterProp="label"
               />
 
-              {state.user.role !== 'SUP' && (
-                <Buttons
-                  label={UserLookupDict[userLanguage]['button']['add']}
-                  onClick={handleLink}
-                  Icon={AiOutlineUsergroupAdd}
-                />
+              {selectedClass !== null && (
+                <span
+                  onClick={goToClassroom}
+                  style={{bottom: '-1.5rem'}}
+                  className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
+                  Go to classroom
+                </span>
               )}
             </div>
-          }
-        />
-      </div>
+          )}
+
+          <SearchInput
+            value={searchInput.value}
+            onChange={setSearch}
+            disabled={loading}
+            onKeyDown={searchUserFromList}
+            closeAction={_removeSearchAction}
+          />
+
+          {state.user.role !== 'SUP' && (
+            <Buttons
+              label={UserLookupDict[userLanguage]['button']['add']}
+              onClick={handleLink}
+              Icon={AiOutlineUsergroupAdd}
+            />
+          )}
+        </div>
+      }>
+      {/* Header Section */}
+      {!isInInstitute && <BreadCrums items={breadCrumsList} />}
 
       {/* List / Table */}
-      <div className="flex flex-col px-4 bg-white">
+      <div className="flex flex-col ">
         <Filters
           loading={loading}
           list={currentList}
@@ -607,16 +599,9 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           }}
         />
 
-        <div className="">
-          <div
-            className={`${
-              isInInstitute ? '' : 'white_back border-b-0 border-lightest py-4 mt-2'
-            }`}>
-            <Table {...tableConfig} />
-          </div>
-        </div>
+        <Table {...tableConfig} />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

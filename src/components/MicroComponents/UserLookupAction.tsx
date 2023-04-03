@@ -2,7 +2,7 @@ import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {requestResetPassword} from '@utilities/urls';
-import {Result} from 'antd';
+import {Popconfirm, Result} from 'antd';
 import axios from 'axios';
 import {useState} from 'react';
 
@@ -53,7 +53,6 @@ const UserLookupAction = ({item}: {item: any}) => {
           transparent
           label={loading ? 'Resetting' : 'Reset Password'}
           disabled={loading}
-          onClick={() => resetPassword(item)}
         />
       );
     }
@@ -69,19 +68,34 @@ const UserLookupAction = ({item}: {item: any}) => {
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-start">
-        {showResetPasswordOption(state.user.role, item.role)}
+    <>
+      <div>
+        <Popconfirm
+          onConfirm={(e) => {
+            e?.stopPropagation();
+            resetPassword(item);
+          }}
+          okText="Yes"
+          onCancel={(e) => e?.stopPropagation()}
+          title="Are you sure you want to reset password?">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-start">
+            {showResetPasswordOption(state.user.role, item.role)}
+          </div>
+        </Popconfirm>
       </div>
 
-      <Modal
-        open={resetPasswordServerResponse.show}
-        showHeader={false}
-        showFooter={false}
-        closeAction={onAlertClose}>
-        <Result title={resetPasswordServerResponse.message} />
-      </Modal>
-    </div>
+      <div onClick={(e) => e.stopPropagation()}>
+        <Modal
+          open={resetPasswordServerResponse.show}
+          showHeader={false}
+          showFooter={false}
+          closeAction={onAlertClose}>
+          <Result title={resetPasswordServerResponse.message} />
+        </Modal>
+      </div>
+    </>
   );
 };
 

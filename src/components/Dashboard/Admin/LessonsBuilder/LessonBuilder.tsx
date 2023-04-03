@@ -12,6 +12,7 @@ import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
 import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
+import PageLayout from 'layout/PageLayout';
 import {uniqBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useState} from 'react';
@@ -678,33 +679,32 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   return (
-    <div className="w-full h-full">
-      <h3 className="text-lg leading-6 uppercase text-medium  w-auto px-8 pb-8">
-        {LessonBuilderDict[userLanguage]['TITLE']}
-      </h3>
-      <div className="w-full m-auto">
-        <StepComponent
-          steps={steps}
-          activeStep={activeStep}
-          handleTabSwitch={handleTabSwitch}
-        />
+    <div className="">
+      <PageLayout title={LessonBuilderDict[userLanguage]['TITLE']}>
+        <div className="">
+          <StepComponent
+            steps={steps}
+            activeStep={activeStep}
+            handleTabSwitch={handleTabSwitch}
+          />
 
-        <div className="grid mt-4 grid-cols-1 divide-x-0 divide-light  px-2 xl:px-8">
-          {loading ? (
-            <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader
-                  className="text-medium "
-                  animation
-                  withText="Fetching lesson details please wait..."
-                />
+          <div className="grid mt-4 grid-cols-1 divide-x-0 divide-light  px-2 xl:px-8">
+            {loading ? (
+              <div className="h-100 flex justify-center items-center">
+                <div className="w-5/10">
+                  <Loader
+                    className="text-medium "
+                    animation
+                    withText="Fetching lesson details please wait..."
+                  />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="">{currentStepComp(activeStep)}</div>
-          )}
+            ) : (
+              <div className="">{currentStepComp(activeStep)}</div>
+            )}
+          </div>
         </div>
-      </div>
+      </PageLayout>
 
       <ModalPopUp
         open={warnModal.show}

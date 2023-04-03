@@ -8,7 +8,8 @@ import {PlusCircleOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Selector from '@components/Atoms/Form/Selector';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Placeholder from '@components/Atoms/Placeholder';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import StudentName from '@components/MicroComponents/StudentName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import Table, {ITableProps} from '@components/Molecules/Table';
@@ -26,13 +27,12 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
-import Placeholder from '@components/Atoms/Placeholder';
-import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface EditClassProps {
   instId: string;
@@ -574,14 +574,10 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         </div>
       </Modal>
 
-      <SectionTitleV3
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-darkest"
-        borderBottom
-        shadowOff
+      <PageLayout
+        type="inner"
         title={roomData.name}
-        withButton={
+        extra={
           <div className={`w-auto flex gap-x-4 justify-end items-center`}>
             <Selector
               width={400}
@@ -593,6 +589,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               list={addDisablePropertyToAlreadySelectedStudents()}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
               onChange={onStudentSelect}
+              size="middle"
               dropdownRender={(menu) => {
                 return (
                   <>
@@ -611,17 +608,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               }}
             />
           </div>
-        }
-      />
+        }>
+        <Filters
+          loading={loading}
+          list={classStudents}
+          updateFilter={updateFilter}
+          filters={filters}
+        />
 
-      <Filters
-        loading={loading}
-        list={classStudents}
-        updateFilter={updateFilter}
-        filters={filters}
-      />
-
-      {
         <div className="">
           {addMessage?.message && (
             <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
@@ -702,7 +696,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             </Fragment>
           ) : null}
         </div>
-      }
+      </PageLayout>
     </div>
   );
 };

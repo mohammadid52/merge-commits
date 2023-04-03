@@ -9,7 +9,7 @@
 
 2. Update tags colors (Show tags for only [Classroom, Demand, User status])
 
-3. Reset password shows popover confirm before resetting password
+3. Reset password shows popover confirm before resetting password ✅
 
 4. Create two buttons component consists of cancel and submit buttons
 

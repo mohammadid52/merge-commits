@@ -12,6 +12,7 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import * as queries from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import React, {lazy, useEffect, useRef, useState} from 'react';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
@@ -383,89 +384,91 @@ const Csv = () => {
         </div>
       </Modal>
 
-      <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
-        <DownloadCsvTitleComponent
-          setSCQAnswers={setSCQAnswers}
-          listQuestions={listQuestions}
-          selectedClassRoom={selectedClassRoom}
-          selectedUnit={selectedUnit}
-          selectedSurvey={selectedSurvey}
-          selectedInst={selectedInst}
-          surveys={surveys}
-          setSelectedCurriculum={setSelectedCurriculum}
-          setSelectedClassRoom={setSelectedClassRoom}
-          getStudentsDemographicsQuestionsResponse={
-            getStudentsDemographicsQuestionsResponse
-          }
-          instituteDropdownRef={instituteDropdownRef}
-          classroomDropdownRef={classroomDropdownRef}
-          unitDropdownRef={unitDropdownRef}
-          surveyDropdownRef={surveyDropdownRef}
-          setSurveys={setSurveys}
-          setSelectedsurvey={setSelectedsurvey}
-          setDemographicsQuestions={setDemographicsQuestions}
-          setClassStudents={setClassStudents}
-          setSelectedInst={setSelectedInst}
-          resetInstitution={resetInstitution}
-          setSelectedUnit={setSelectedUnit}
-          clearCSVData={clearCSVData}
-        />
+      <PageLayout>
+        <div className="">
+          <DownloadCsvTitleComponent
+            setSCQAnswers={setSCQAnswers}
+            listQuestions={listQuestions}
+            selectedClassRoom={selectedClassRoom}
+            selectedUnit={selectedUnit}
+            selectedSurvey={selectedSurvey}
+            selectedInst={selectedInst}
+            surveys={surveys}
+            setSelectedCurriculum={setSelectedCurriculum}
+            setSelectedClassRoom={setSelectedClassRoom}
+            getStudentsDemographicsQuestionsResponse={
+              getStudentsDemographicsQuestionsResponse
+            }
+            instituteDropdownRef={instituteDropdownRef}
+            classroomDropdownRef={classroomDropdownRef}
+            unitDropdownRef={unitDropdownRef}
+            surveyDropdownRef={surveyDropdownRef}
+            setSurveys={setSurveys}
+            setSelectedsurvey={setSelectedsurvey}
+            setDemographicsQuestions={setDemographicsQuestions}
+            setClassStudents={setClassStudents}
+            setSelectedInst={setSelectedInst}
+            resetInstitution={resetInstitution}
+            setSelectedUnit={setSelectedUnit}
+            clearCSVData={clearCSVData}
+          />
 
-        <Divider />
+          <Divider />
 
-        <DownloadCsvButtons
-          isCSVDownloadReady={isCSVDownloadReady}
-          selectedSurvey={selectedSurvey}
-          selectedClassRoom={selectedClassRoom}
-          CSVData={CSVData}
-          mappedHeaders={mappedHeaders}
-          lessonPDFData={lessonPDFData}
-          setShowTestData={setShowTestData}
-          setResponseValue={setResponseValue}
-          showTestData={showTestData}
-          responseValue={responseValue}
-        />
-        <Divider />
-        <div className="w-full">
-          <div className="w-auto my-4">
-            <SectionTitleV3 title={'Survey Results'} />
+          <DownloadCsvButtons
+            isCSVDownloadReady={isCSVDownloadReady}
+            selectedSurvey={selectedSurvey}
+            selectedClassRoom={selectedClassRoom}
+            CSVData={CSVData}
+            mappedHeaders={mappedHeaders}
+            lessonPDFData={lessonPDFData}
+            setShowTestData={setShowTestData}
+            setResponseValue={setResponseValue}
+            showTestData={showTestData}
+            responseValue={responseValue}
+          />
+          <Divider />
+          <div className="w-full">
+            <div className="w-auto my-4">
+              <SectionTitleV3 title={'Survey Results'} />
+            </div>
+            {Boolean(selectedSurvey) ? (
+              <Table {...tableConfig} />
+            ) : (
+              <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
+                <p>Select filters options to populate data</p>
+              </Card>
+            )}
           </div>
-          {Boolean(selectedSurvey) ? (
-            <Table {...tableConfig} />
-          ) : (
-            <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
-              <p>Select filters options to populate data</p>
+
+          <AnimatedContainer show={isCSVDownloadReady}>
+            <SectionTitleV3 title={'Statistics'} />
+
+            <Card>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Statistic
+                    title="Survey First"
+                    value={getFormatedDate(statistics.surveyFirst)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="Survey Last"
+                    value={getFormatedDate(statistics.surveyLast)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic title="Taken Survey" value={statistics.takenSurvey} />
+                </Col>
+                <Col span={6}>
+                  <Statistic title="Not Taken Survey" value={statistics.notTakenSurvey} />
+                </Col>
+              </Row>
             </Card>
-          )}
+          </AnimatedContainer>
         </div>
-
-        <AnimatedContainer show={isCSVDownloadReady}>
-          <SectionTitleV3 title={'Statistics'} />
-
-          <Card>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Statistic
-                  title="Survey First"
-                  value={getFormatedDate(statistics.surveyFirst)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="Survey Last"
-                  value={getFormatedDate(statistics.surveyLast)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic title="Taken Survey" value={statistics.takenSurvey} />
-              </Col>
-              <Col span={6}>
-                <Statistic title="Not Taken Survey" value={statistics.notTakenSurvey} />
-              </Col>
-            </Row>
-          </Card>
-        </AnimatedContainer>
-      </div>
+      </PageLayout>
     </>
   );
 };

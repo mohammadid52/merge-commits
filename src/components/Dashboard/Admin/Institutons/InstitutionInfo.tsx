@@ -31,18 +31,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     <div>
       <div className="">
         {/* Profile section */}
-        <div className="flex-col flex justify-center lg:justify-start w-full">
-          <div className="flex flex-1 overflow-x-hidden mb-8">
-            <div className="w-full">
-              <NavBarRouter
-                {...instProps}
-                updateCurricularList={updateCurricularList}
-                curricular={curricular}
-              />
-            </div>
+
+        <div className="flex flex-1 overflow-x-hidden mb-8">
+          <div className="w-full">
+            <NavBarRouter
+              {...instProps}
+              updateCurricularList={updateCurricularList}
+              curricular={curricular}
+            />
           </div>
 
-          <InstitutionProfile institute={institute} />
+          {/* <InstitutionProfile institute={institute} /> */}
         </div>
       </div>
     </div>

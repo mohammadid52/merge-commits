@@ -1,7 +1,6 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import UserProfileImage from '@components/Molecules/UserProfileImage';
@@ -12,6 +11,7 @@ import Anthology from 'components/Dashboard/Anthology/Anthology';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import sortBy from 'lodash/sortBy';
 import React, {useEffect, useState} from 'react';
@@ -204,7 +204,6 @@ const User = (props: IUserProps) => {
   const {t: tab} = urlState;
 
   const mediaRef = React.useRef<any>(null);
-  const handleImage = () => mediaRef?.current?.click();
 
   // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
 
@@ -384,14 +383,6 @@ const User = (props: IUserProps) => {
       console.error(error);
     }
   }
-
-  let tabs = [
-    {name: 'User Information', current: true},
-    {name: 'Coursework & Attendance', current: false},
-    user.role === 'ST' && {name: 'Notebook', current: false},
-    user.role === 'ST' && {name: 'Completed Surveys', current: false}
-  ];
-  tabs = tabs.filter(Boolean);
 
   // ##################################################################### //
   // ########################### PROFILE IMAGE ########################### //
@@ -632,20 +623,9 @@ const User = (props: IUserProps) => {
 
   return (
     <>
-      <>
-        <div
-          className={`px-4 `}
-          style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
+      <PageLayout>
+        <div style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
-
-          <SectionTitleV3
-            title={''}
-            fontSize="xl"
-            backButton
-            fontStyle="semibold"
-            extraClass="leading-6 text-darkest"
-            shadowOff
-          />
 
           <Tabs
             items={getTabsData()}
@@ -668,7 +648,7 @@ const User = (props: IUserProps) => {
             }}
           />
         </div>
-      </>
+      </PageLayout>
 
       <ProfileCropModal
         open={showCropper}

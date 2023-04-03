@@ -4,7 +4,7 @@ import {useHistory} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {getUserRoleString, createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
+import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities/strings';
 
 import {getImageFromS3} from 'utilities/services';
 
@@ -16,13 +16,13 @@ import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
@@ -31,11 +31,11 @@ import {logError} from '@graphql/functions';
 import {withZoiqFilter} from '@utilities/functions';
 import {Tag} from 'antd';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import moment from 'moment';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
-import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -471,74 +471,64 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   return (
-    <div className="mb-2">
-      <div className="px-4">
-        <SectionTitleV3
-          title={dictionary['TITLE']}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-darkest"
-          borderBottom
-          shadowOff
-          withButton={
-            <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
-              {!showAddSection ? (
-                <div className="w-auto flex items-center gap-x-4">
-                  <SearchInput
-                    dataCy="staff-loookup-search"
-                    value={searchInput.value}
-                    onChange={setSearch}
-                    disabled={dataLoading}
-                    onKeyDown={searchStaff}
-                    closeAction={removeSearchAction}
-                  />
-                  <AddButton
-                    label={'Staff member'}
-                    onClick={() => showAddStaffSection(!isSuperAdmin ? 'SUP' : '')}
-                  />
-                </div>
-              ) : (
-                <Buttons
-                  label={BUTTONS[userLanguage]['CANCEL']}
-                  onClick={() => setShowAddSection(false)}
-                />
-              )}
-
-              {showAddSection ? (
-                <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
-                  <SelectorWithAvatar
-                    imageFromS3={false}
-                    selectedItem={newMember}
-                    list={availableUsers}
-                    placeholder={
-                      showSuperAdmin
-                        ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER
-                        : dictionary['ADD_PLACEHOLDER']
-                    }
-                    onChange={onChange}
-                  />
-                  <Buttons label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
-                </div>
-              ) : null}
+    <PageLayout
+      title={dictionary['TITLE']}
+      extra={
+        <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
+          {!showAddSection ? (
+            <div className="w-auto flex items-center gap-x-4">
+              <SearchInput
+                dataCy="staff-loookup-search"
+                value={searchInput.value}
+                onChange={setSearch}
+                disabled={dataLoading}
+                onKeyDown={searchStaff}
+                closeAction={removeSearchAction}
+              />
+              <AddButton
+                label={'Staff member'}
+                onClick={() => showAddStaffSection(!isSuperAdmin ? 'SUP' : '')}
+              />
             </div>
-          }
-        />
+          ) : (
+            <Buttons
+              label={BUTTONS[userLanguage]['CANCEL']}
+              onClick={() => setShowAddSection(false)}
+            />
+          )}
 
-        <div className="">
-          <Filters
-            loading={dataLoading}
-            list={finalList}
-            resetPagination={resetPagination}
-            updateFilter={updateFilter}
-            filters={filters}
-            showingCount={{
-              currentPage: allAsProps.currentPage,
-              lastPage: allAsProps.lastPage,
-              totalResults: allAsProps.totalResults,
-              pageCount: allAsProps.pageCount
-            }}
-          />
+          {showAddSection ? (
+            <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
+              <SelectorWithAvatar
+                imageFromS3={false}
+                selectedItem={newMember}
+                list={availableUsers}
+                placeholder={
+                  showSuperAdmin
+                    ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER
+                    : dictionary['ADD_PLACEHOLDER']
+                }
+                onChange={onChange}
+              />
+              <Buttons label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
+            </div>
+          ) : null}
         </div>
+      }>
+      <div className="">
+        <Filters
+          loading={dataLoading}
+          list={finalList}
+          resetPagination={resetPagination}
+          updateFilter={updateFilter}
+          filters={filters}
+          showingCount={{
+            currentPage: allAsProps.currentPage,
+            lastPage: allAsProps.lastPage,
+            totalResults: allAsProps.totalResults,
+            pageCount: allAsProps.pageCount
+          }}
+        />
 
         <Table {...tableConfig} />
 
@@ -557,7 +547,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           />
         </Modal>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

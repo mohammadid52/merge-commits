@@ -18,7 +18,7 @@ const AddButton = ({
   disabled = false,
   onClick,
   label,
-  size = 'large',
+  size = 'middle',
 
   transparent,
   loading

@@ -8,7 +8,6 @@ import SearchInput from 'atoms/Form/SearchInput';
 import {API, graphqlOperation} from 'aws-amplify';
 import Filters, {SortType} from 'components/Atoms/Filters';
 import Highlighted from 'components/Atoms/Highlighted';
-import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
 
 import CourseUnits from 'components/MicroComponents/CourseUnits';
 import ModalPopUp from 'components/Molecules/ModalPopUp';
@@ -22,6 +21,7 @@ import useSearch from 'customHooks/useSearch';
 import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
 import {logError} from 'graphql/functions';
 import * as mutations from 'graphql/mutations';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty, map, orderBy} from 'lodash';
 import moment from 'moment';
 import {useEffect, useState} from 'react';
@@ -99,7 +99,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const [totalNum, setTotalNum] = useState(0);
 
-  const {} = useQuery({
+  useQuery({
     queryKey: ['curriculumList'],
     queryFn: () => fetchCurriculums(),
     onSuccess: (data) => {
@@ -390,42 +390,34 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
-    <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col w-full">
-        <SectionTitleV3
-          title={InstitueCurriculum[userLanguage]['TITLE']}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-darkest"
-          borderBottom
-          shadowOff
-          withButton={
-            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
-              {isSuperAdmin && (
-                <InsitutionSelector
-                  selectedInstitution={selectedInstitution?.label}
-                  onChange={instituteChange}
-                />
-              )}
-              <SearchInput
-                dataCy="curriculum-search-input"
-                value={searchInput.value}
-                onChange={setSearch}
-                disabled={loading}
-                onKeyDown={searchRoom}
-                closeAction={removeSearchAction}
+    <>
+      <PageLayout
+        extra={
+          <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+            {isSuperAdmin && (
+              <InsitutionSelector
+                selectedInstitution={selectedInstitution?.label}
+                onChange={instituteChange}
               />
+            )}
+            <SearchInput
+              dataCy="curriculum-search-input"
+              value={searchInput.value}
+              onChange={setSearch}
+              disabled={loading}
+              onKeyDown={searchRoom}
+              closeAction={removeSearchAction}
+            />
 
-              {!isSuperAdmin && (
-                <AddButton
-                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                  onClick={createNewCurricular}
-                />
-              )}
-            </div>
-          }
-        />
-
+            {!isSuperAdmin && (
+              <AddButton
+                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
+                onClick={createNewCurricular}
+              />
+            )}
+          </div>
+        }
+        title={InstitueCurriculum[userLanguage]['TITLE']}>
         <Filters
           loading={loading}
           list={courseList}
@@ -441,17 +433,17 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         />
 
         <Table {...tableConfig} />
+      </PageLayout>
 
-        <ModalPopUp
-          open={deleteModal.show}
-          closeAction={handleToggleDelete}
-          saveAction={deleting ? () => {} : deleteModal.action}
-          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-          cancelLabel="CANCEL"
-          message={deleteModal.message}
-        />
-      </div>
-    </div>
+      <ModalPopUp
+        open={deleteModal.show}
+        closeAction={handleToggleDelete}
+        saveAction={deleting ? () => {} : deleteModal.action}
+        saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+        cancelLabel="CANCEL"
+        message={deleteModal.message}
+      />
+    </>
   );
 };
 

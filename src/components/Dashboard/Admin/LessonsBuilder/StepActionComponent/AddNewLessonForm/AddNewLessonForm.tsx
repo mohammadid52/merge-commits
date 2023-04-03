@@ -351,17 +351,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   };
 
   return (
-    <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-light">
+    <div className="">
       {/* <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-darkest">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
         </h3>
       </div> */}
 
-      <div className="">
-        <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
+      <div className="mt-4">
+        <div className=" lg:grid lg:grid-cols-2 gap-6 ">
           <Card
             title={'Lesson Details'}
+            type="inner"
             extra={
               <Buttons
                 label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
@@ -394,7 +395,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               validation={validation}
             />
           </Card>
-          <Card title="Lesson Objectives">
+          <Card type="inner" title="Lesson Objectives">
             <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 maxHeight={'max-h-96'}
@@ -406,14 +407,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card title="Materials">
+          <Card type="inner" title="Materials">
             <MaterialsCard
               purposeHtml={purposeHtml}
               studentMaterials={formData.studentMaterials}
               setEditorContent={setEditorContent}
             />
           </Card>
-          <Card title="Reminder & Notes">
+          <Card type="inner" title="Reminder & Notes">
             <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 initialValue={notesHtml || ''}
@@ -424,7 +425,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card title="Lesson Card" className="col-span-2">
+          <Card type="inner" title="Lesson Card" className="col-span-2">
             <LessonCard
               cardCaption={formData?.imageCaption || ''}
               studentSummary={studentSummary}
