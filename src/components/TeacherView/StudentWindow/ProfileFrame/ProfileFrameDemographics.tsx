@@ -1,8 +1,8 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {graphqlOperation} from 'aws-amplify';
+import {graphqlOperation, API} from 'aws-amplify';
 import * as customQueries from 'customGraphql/customQueries';
 import {getUniqItems} from 'utilities/strings';
-import {API} from 'aws-amplify';
+
 import {sortBy} from 'lodash';
 import Loader from 'atoms/Loader';
 
@@ -237,9 +237,9 @@ const ProfileFrameDemographics = ({
   // ##################################################################### //
 
   const checkpoints =
-    currentTab === 'Demographics'
+    currentTab === '1'
       ? demographicCheckpoints
-      : currentTab === 'Private'
+      : currentTab === '2'
       ? privateCheckpoints
       : [];
 

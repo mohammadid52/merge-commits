@@ -4,7 +4,8 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import axios from 'axios';
-import UserTabs from 'components/Dashboard/Admin/UserManagement/User/UserTabs';
+
+import {Tabs, TabsProps} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
@@ -36,8 +37,7 @@ const ProfileFrame = ({
 }: IProfileFrame) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useGlobalContext();
-  const {state, theme, userLanguage} = gContext;
-  const stateUser = state.user;
+  const {userLanguage} = gContext;
 
   const {UserInformationDict} = useDictionary();
 
@@ -157,37 +157,6 @@ const ProfileFrame = ({
   // ############################## OTHER UI ############################# //
   // ##################################################################### //
 
-  const [tabs, setTabs] = useState([
-    {name: 'Personal Information', current: true},
-    {name: 'Demographics', current: false},
-    {name: 'Private', current: false}
-  ]);
-
-  const openTab = tabs.find((tabObj: any) => tabObj.current);
-
-  const handleSetCurrentTab = (tabName: string) => {
-    let updatedTabs = tabs.map((tabObj: any) => {
-      if (tabObj.name === tabName) {
-        return {
-          ...tabObj,
-          current: true
-        };
-      } else {
-        return {
-          ...tabObj,
-          current: false
-        };
-      }
-    });
-    setTabs(updatedTabs);
-  };
-
-  const isTeacher =
-    stateUser.role === 'TR' ||
-    stateUser.role === 'FLW' ||
-    stateUser.role === 'ADM' ||
-    stateUser.role === 'SUP';
-
   const getTitle = (preferredName: string, editing: boolean) => {
     let part1 = preferredName ? `Profile for ${user.preferredName}` : 'Profile';
     let part2 = !editing ? (
@@ -211,6 +180,57 @@ const ProfileFrame = ({
   // ##################################################################### //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const [activeKey, setActiveKey] = useState('1');
+
+  const items: TabsProps['items'] = [
+    {
+      label: 'Personal Information',
+      key: '1',
+      children: !isEditing ? (
+        <ProfileFrameInfo
+          user={user}
+          created={created}
+          loading={loading}
+          resetPasswordServerResponse={resetPasswordServerResponse}
+          resetPassword={resetPassword}
+          onAlertClose={onAlertClose}
+          setIsEditing={setIsEditing}
+        />
+      ) : (
+        <ProfileFrameEdit
+          user={user}
+          loading={loading}
+          onChange={onChange}
+          handleChangeLanguage={handleChangeLanguage}
+          gobackToPreviousStep={() => setIsEditing(false)}
+          saveProfileInformation={saveProfileInformation}
+        />
+      )
+    },
+    {
+      label: 'Demographics',
+      key: '2',
+      children: <ProfileFrameDemographics studentID={user.id} currentTab={activeKey} />
+    },
+    {
+      label: 'Private',
+      key: '3',
+      children: <ProfileFrameDemographics studentID={user.id} currentTab={activeKey} />
+    }
+  ];
+
+  const getTabsData = () => {
+    if (items && Boolean(user?.role)) {
+      if (user?.role === 'TR' || user?.role === 'FLW') {
+        return items.filter((tabObj: any) => tabObj.label !== 'Notebook');
+      } else if (user?.role === 'ADM' || user?.role === 'SUP') {
+        return items.filter((tabObj: any) => tabObj.label === 'User Information');
+      } else {
+        return items;
+      }
+    }
+  };
+
   return (
     <div
       ref={frameRef}
@@ -229,39 +249,14 @@ const ProfileFrame = ({
             scrollHidden={true}
             closeAction={() => setRightView({view: 'lesson', option: ''})}>
             <div>
-              <UserTabs
-                tabs={tabs}
-                currentTab={openTab?.name}
-                viewedUser={user}
-                setCurrentTab={handleSetCurrentTab}
-                isTeacher={isTeacher}
-                theme={theme}
+              <Tabs
+                items={getTabsData()}
+                animated
+                onChange={(key: string) => {
+                  setActiveKey(key);
+                }}
+                defaultActiveKey={activeKey}
               />
-              {openTab?.name === 'Personal Information' ? (
-                !isEditing ? (
-                  <ProfileFrameInfo
-                    user={user}
-                    created={created}
-                    loading={loading}
-                    resetPasswordServerResponse={resetPasswordServerResponse}
-                    resetPassword={resetPassword}
-                    onAlertClose={onAlertClose}
-                    setIsEditing={setIsEditing}
-                  />
-                ) : (
-                  <ProfileFrameEdit
-                    user={user}
-                    loading={loading}
-                    onChange={onChange}
-                    handleChangeLanguage={handleChangeLanguage}
-                    gobackToPreviousStep={() => setIsEditing(false)}
-                    saveProfileInformation={saveProfileInformation}
-                  />
-                )
-              ) : null}
-              {openTab?.name === 'Demographics' || openTab?.name === 'Private' ? (
-                <ProfileFrameDemographics studentID={user.id} currentTab={openTab.name} />
-              ) : null}
             </div>
           </Modal>
         </>
