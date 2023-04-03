@@ -1,6 +1,7 @@
 import Loader from '@components/Atoms/Loader';
 import LogoutAfterInactivity from '@components/Auth/LogoutAfterInactivity';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import useAuth from '@customHooks/useAuth';
 import PrivateRoute from 'components/Auth/PrivateRoute';
 import {lazy, Suspense} from 'react';
@@ -17,7 +18,7 @@ const AuthRoutes = () => {
     <Suspense
       fallback={
         <div className="min-h-screen w-full flex flex-col justify-center items-center">
-          <Loader />
+          <ComponentLoading />
         </div>
       }>
       <LogoutAfterInactivity

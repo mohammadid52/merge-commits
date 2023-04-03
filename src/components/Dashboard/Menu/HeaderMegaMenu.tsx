@@ -6,6 +6,9 @@ import useDictionary from 'customHooks/dictionary';
 
 import {Menu, MenuProps} from 'antd';
 import {HiOutlineOfficeBuilding} from 'react-icons/hi';
+import {MdOutlineAnalytics, MdOutlineLibraryBooks} from 'react-icons/md';
+import {SiGoogleclassroom} from 'react-icons/si';
+import {TbBuildingCommunity} from 'react-icons/tb';
 
 const HeaderMegaMenu = () => {
   const {
@@ -56,6 +59,7 @@ const HeaderMegaMenu = () => {
     {
       label: TABS['COURSE_MANAGER'],
       key: 'course',
+      icon: <MdOutlineLibraryBooks />,
       children: [
         {
           label: TABS['COURSES'],
@@ -82,6 +86,7 @@ const HeaderMegaMenu = () => {
     user.role !== 'BLD' && {
       label: TABS['CLASS_MANAGER'],
       key: 'class',
+      icon: <SiGoogleclassroom />,
       type: 'dropdown',
       children: [
         {
@@ -104,6 +109,7 @@ const HeaderMegaMenu = () => {
     user.role !== 'BLD' && {
       label: TABS['COMMUNITY_MANAGER'],
       key: 'community',
+      icon: <TbBuildingCommunity />,
       type: 'dropdown',
       children: [
         {
@@ -125,6 +131,7 @@ const HeaderMegaMenu = () => {
       label: TABS['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
       type: 'dropdown',
+      icon: <MdOutlineAnalytics />,
       children: [
         {
           key: 'download_csv',
