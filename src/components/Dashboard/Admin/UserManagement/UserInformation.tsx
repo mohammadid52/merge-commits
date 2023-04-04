@@ -1,5 +1,6 @@
 import DemographicsInfo from '@components/Dashboard/Demographics/DemographicsInfo';
 import useAuth from '@customHooks/useAuth';
+import {fallbackValue, getUserRoleString} from '@utilities/strings';
 import {Card, Descriptions, Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
@@ -201,21 +202,21 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
             }
             title={'User Information'}>
             <Descriptions.Item label={dict['fullname']}>
-              {user.firstName} {user.lastName}
+              {fallbackValue(`${user?.firstName} ${user?.lastName}`)}
             </Descriptions.Item>
 
             <Descriptions.Item label={dict['nickname']}>
-              {user?.preferredName || ''}
+              {fallbackValue(user?.preferredName)}
             </Descriptions.Item>
             <Descriptions.Item label={dict['role']}>
-              <UserRole role={user.role} />
+              {fallbackValue(getUserRoleString(user?.role))}
             </Descriptions.Item>
 
             <Descriptions.Item span={2} label={dict['email']}>
-              {user.email}
+              {fallbackValue(user.email)}
             </Descriptions.Item>
             <Descriptions.Item label={dict['ondemand']}>
-              <Status status={user?.onDemand ? 'YES' : 'NO'} />
+              {user?.onDemand ? 'Yes' : 'No'}
             </Descriptions.Item>
             <Descriptions.Item label={dict['account']}>{created()}</Descriptions.Item>
             <Descriptions.Item label={dict['status']}>
@@ -237,6 +238,7 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
 
     {
       disabled: !isStudent,
+
       key: '2',
       label: dict['demographics'],
       children: <DemographicsInfo checkpoints={checkpoints} questionData={questionData} />
@@ -247,11 +249,8 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
     return <LessonLoading />;
   } else {
     return (
-      <div className="w-3/4 md:px-2 pt-2">
-        <Tabs animated defaultActiveKey="1" items={items} />
-
-        {/* CHECKPOINTS AND DEMOGRAPHIC QUESTIONS */}
-
+      <div className="w-full">
+        <Tabs animated tabPosition="right" defaultActiveKey="1" items={items} />
         <Modal
           open={resetPasswordServerResponse.show}
           showHeader={false}

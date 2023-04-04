@@ -23,6 +23,8 @@ import Attendance from './Attendance';
 import SurveyList from './SurveyList';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
+import Buttons from '@components/Atoms/Buttons';
+import {FaEdit} from 'react-icons/fa';
 
 export interface UserInfo {
   authId: string;
@@ -473,74 +475,76 @@ const User = (props: IUserProps) => {
 
   const [isEditMode, setIsEditMode] = useState(false);
 
+  const userProfile = (
+    <div className={``}>
+      <div className="flex flex-col md:flex-row">
+        <UserProfileImage
+          imageUrl={imageUrl}
+          image={user.image}
+          mediaRef={mediaRef}
+          setImage={(img: any, file: any) => {
+            setUpImage(img);
+            setFileObj(file);
+          }}
+          toggleCropper={toggleCropper}
+          imageLoading={imageLoading}
+          name={`${user.preferredName ? user.preferredName : user.firstName} ${
+            user.lastName
+          }`}
+        />
+
+        {isEditMode ? (
+          <ErrorBoundary componentName="UserEdit">
+            <UserEdit
+              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+              instituteId={props.instituteId}
+              tab={tab}
+              setTab={setTab}
+              onSuccessCallback={onSuccessCallback}
+              user={user}
+              shouldNavigate={shouldNavigate}
+              status={status}
+              setStatus={setStatus}
+              setIsEditMode={setIsEditMode}
+              getUserById={getUserProfile}
+              questionData={questionData}
+              checkpoints={
+                tab === 'demographics'
+                  ? demographicCheckpoints
+                  : tab === 'private'
+                  ? privateCheckpoints
+                  : []
+              }
+            />
+          </ErrorBoundary>
+        ) : (
+          <ErrorBoundary componentName="UserInformation">
+            <UserInformation
+              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+              tab={tab}
+              setTab={setTab}
+              questionData={questionData}
+              checkpoints={
+                tab === 'demographics'
+                  ? demographicCheckpoints
+                  : tab === 'private'
+                  ? privateCheckpoints
+                  : []
+              }
+              user={user}
+              status={status}
+            />
+          </ErrorBoundary>
+        )}
+      </div>
+    </div>
+  );
+
   const items: TabsProps['items'] = [
     {
       label: 'User Information',
       key: '1',
-      children: (
-        <div className={`border-0 border-lightest  rounded-xl p-4 mb-8`}>
-          <div className="h-1/2 flex flex-col md:flex-row">
-            <UserProfileImage
-              imageUrl={imageUrl}
-              image={user.image}
-              mediaRef={mediaRef}
-              setImage={(img: any, file: any) => {
-                setUpImage(img);
-                setFileObj(file);
-              }}
-              toggleCropper={toggleCropper}
-              imageLoading={imageLoading}
-              name={`${user.preferredName ? user.preferredName : user.firstName} ${
-                user.lastName
-              }`}
-            />
-
-            {isEditMode ? (
-              <ErrorBoundary componentName="UserEdit">
-                <UserEdit
-                  // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                  instituteId={props.instituteId}
-                  tab={tab}
-                  setTab={setTab}
-                  onSuccessCallback={onSuccessCallback}
-                  user={user}
-                  shouldNavigate={shouldNavigate}
-                  status={status}
-                  setStatus={setStatus}
-                  setIsEditMode={setIsEditMode}
-                  getUserById={getUserProfile}
-                  questionData={questionData}
-                  checkpoints={
-                    tab === 'demographics'
-                      ? demographicCheckpoints
-                      : tab === 'private'
-                      ? privateCheckpoints
-                      : []
-                  }
-                />
-              </ErrorBoundary>
-            ) : (
-              <ErrorBoundary componentName="UserInformation">
-                <UserInformation
-                  // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                  tab={tab}
-                  setTab={setTab}
-                  questionData={questionData}
-                  checkpoints={
-                    tab === 'demographics'
-                      ? demographicCheckpoints
-                      : tab === 'private'
-                      ? privateCheckpoints
-                      : []
-                  }
-                  user={user}
-                  status={status}
-                />
-              </ErrorBoundary>
-            )}
-          </div>
-        </div>
-      )
+      children: userProfile
     },
     {
       label: 'Coursework & Attendance',
@@ -623,30 +627,33 @@ const User = (props: IUserProps) => {
 
   return (
     <>
-      <PageLayout>
+      <PageLayout
+        hideInstProfile
+        title={'User Profile'}
+        extra={
+          <Buttons
+            label={'Edit User'}
+            Icon={FaEdit}
+            disabled={isEditMode || activeKey !== '1'}
+            onClick={() => {
+              setIsEditMode(true);
+            }}
+          />
+        }>
         <div style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
 
           <Tabs
             items={getTabsData()}
             animated
+            hidden={getTabsData()?.length === 1}
             onChange={(key: string) => {
               setActiveKey(key);
             }}
             defaultActiveKey={activeKey}
-            tabBarExtraContent={{
-              right: (
-                <AddButton
-                  size="middle"
-                  label={'Edit User'}
-                  disabled={isEditMode || activeKey !== '1'}
-                  onClick={() => {
-                    setIsEditMode(true);
-                  }}
-                />
-              )
-            }}
           />
+
+          {getTabsData()?.length === 1 && userProfile}
         </div>
       </PageLayout>
 

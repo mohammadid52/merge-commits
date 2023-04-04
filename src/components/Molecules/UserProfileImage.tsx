@@ -24,10 +24,10 @@ const UserProfileImage = ({
   imageUrl
 }: UserProfileProps) => {
   return (
-    <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
+    <div className="w-auto  flex flex-col text-center items-center justify-center">
       <div className="relative">
         {image ? (
-          <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+          <div className="group hover:opacity-60 transition-all focus:outline-none focus:opacity-95">
             {!imageLoading ? (
               <Fragment>
                 <DroppableMedia

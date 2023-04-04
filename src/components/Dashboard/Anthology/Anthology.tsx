@@ -4,7 +4,6 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {updatePageState} from 'graphql-functions/functions';
 import {
   UniversalLessonWritingExcercises,
   UpdateUniversalLessonWritingExcercisesInput,
@@ -14,12 +13,12 @@ import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Modal from 'atoms/Modal';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import usePrevious from 'customHooks/previousProps';
+import {updatePageState} from 'graphql-functions/functions';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -27,6 +26,7 @@ import {
   UniversalJournalData,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
@@ -823,7 +823,7 @@ const Anthology = ({
           <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
         </div>
       )}
-      <div className="px-10">
+      <div className="">
         {!isTeacher && <HeaderTextBar>All your work in place</HeaderTextBar>}
 
         <div className={'z-100 flex justify-center items-center'}>
@@ -899,33 +899,28 @@ const Anthology = ({
           </Modal>
         </div>
 
-        <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256">
-          <div className="my-8">
-            <SectionTitleV3
-              title={
-                !isTeacher
-                  ? 'Your ' + anthologyDict[userLanguage]['TITLE']
-                  : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
-              }
-              fontSize="xl"
-              withButton={
-                roomId ? (
-                  <div className="w-auto flex items-end justify-end">
-                    <a
-                      className="w-auto hover:underline iconoclast:text-main curate:text-main"
-                      href={`/dashboard/classroom/${roomId}`}>
-                      Go back to classroom
-                    </a>
-                  </div>
-                ) : (
-                  false
-                )
-              }
-              fontStyle="semibold"
-              extraContainerClass="px-6"
-              borderBottom
-              extraClass="leading-6 text-darkest"
-            />
+        <PageLayout
+          type="inner"
+          hideInstProfile
+          title={
+            !isTeacher
+              ? 'Your ' + anthologyDict[userLanguage]['TITLE']
+              : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
+          }
+          extra={
+            roomId ? (
+              <div className="w-auto flex items-end justify-end">
+                <a
+                  className="w-auto hover:underline iconoclast:text-main curate:text-main"
+                  href={`/dashboard/classroom/${roomId}`}>
+                  Go back to classroom
+                </a>
+              </div>
+            ) : (
+              false
+            )
+          }>
+          <div className="">
             <EmptyViewWrapper
               wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
               revealContents={true}>
@@ -975,7 +970,7 @@ const Anthology = ({
               setAllUniversalJournalData={setAllUniversalJournalData}
             />
           </EmptyViewWrapper>
-        </div>
+        </PageLayout>
       </div>
     </ErrorBoundary>
   );

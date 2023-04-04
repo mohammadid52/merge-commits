@@ -19,6 +19,7 @@ import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import PageLayout from 'layout/PageLayout';
 
 const AboutMe = lazy(() => import('dashboard/Profile/AboutMe'));
 const ChangePasscode = lazy(() => import('dashboard/Profile/ChangePasscode'));
@@ -305,107 +306,103 @@ const Profile = () => {
             bannerImage={profileBanner1}
             title={'Profile'}
           />
-          <PageWrapper>
-            <div className={`p-4 pt-0`}>
-              {/* <BreadCrums items={breadCrumsList} /> */}
-
-              <SectionTitleV3
-                withButton={
-                  currentPath !== 'edit' &&
-                  currentPath !== 'password' && (
-                    <div className="w-auto">
-                      <Buttons
-                        dataCy="edit-profile-button"
-                        label="Edit"
-                        onClick={() => history.push(`${match.url}/edit`)}
-                        Icon={FaEdit}
-                      />
-                    </div>
-                  )
-                }
-                title={dashboardProfileDict[userLanguage]['TITLE']}
-                subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
-              />
-
-              <div className={``}>
-                <div className="h-9/10 flex flex-col lg:flex-row">
-                  <UserProfileImage
-                    imageUrl={imageUrl}
-                    image={person.image}
-                    mediaRef={mediaRef}
-                    setImage={(img: any, file: any) => {
-                      setUpImage(img);
-                      setFileObj(file);
-                    }}
-                    toggleCropper={toggleCropper}
-                    imageLoading={imageLoading}
-                    name={`${
-                      person.preferredName ? person.preferredName : person.firstName
-                    } ${person.lastName}`}
+          <PageLayout
+            hideInstProfile
+            extra={
+              currentPath !== 'edit' &&
+              currentPath !== 'password' && (
+                <div className="w-auto">
+                  <Buttons
+                    dataCy="edit-profile-button"
+                    label="Edit"
+                    url={`${match.url}/edit`}
+                    Icon={FaEdit}
+                    tooltip="Edit Profile"
                   />
+                </div>
+              )
+            }
+            title={dashboardProfileDict[userLanguage]['TITLE']}>
+            {/* <BreadCrums items={breadCrumsList} /> */}
 
-                  <div className="relative w-full">
-                    <Switch>
-                      <Route
-                        exact
-                        path={`${match.url}/`}
-                        render={() => (
-                          <ErrorBoundary componentName="ProfileInfo">
-                            <ProfileInfo
-                              user={person}
-                              status={status}
-                              stdCheckpoints={stdCheckpoints}
-                              questionData={questionData}
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-                      <Route path={`${match.url}/about`} render={() => <AboutMe />} />
-                      <Route
-                        path={`${match.url}/edit`}
-                        render={() => (
-                          <ErrorBoundary componentName="ProfileEdit">
-                            <ProfileEdit
-                              user={person}
-                              status={status}
-                              setStatus={setStatus}
-                              getUser={getUser}
-                              stdCheckpoints={stdCheckpoints}
-                              questionData={questionData}
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
+            <div className={``}>
+              <div className=" flex flex-col lg:flex-row">
+                <UserProfileImage
+                  imageUrl={imageUrl}
+                  image={person.image}
+                  mediaRef={mediaRef}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
+                  toggleCropper={toggleCropper}
+                  imageLoading={imageLoading}
+                  name={`${
+                    person.preferredName ? person.preferredName : person.firstName
+                  } ${person.lastName}`}
+                />
 
-                      <Route
-                        path={`${match.url}/password`}
-                        render={() => (
-                          <ErrorBoundary componentName="ChangePassword">
-                            <ChangePassword />
-                          </ErrorBoundary>
-                        )}
-                      />
-                      <Route
-                        path={`${match.url}/passcode`}
-                        render={() => (
-                          <ErrorBoundary componentName="ChangePassword">
-                            <ChangePasscode />
-                          </ErrorBoundary>
-                        )}
-                      />
-                    </Switch>
-
-                    <ProfileCropModal
-                      open={showCropper}
-                      upImg={upImage || ''}
-                      saveCroppedImage={(img: string) => saveCroppedImage(img)}
-                      closeAction={toggleCropper}
+                <div className="relative w-full">
+                  <Switch>
+                    <Route
+                      exact
+                      path={`${match.url}/`}
+                      render={() => (
+                        <ErrorBoundary componentName="ProfileInfo">
+                          <ProfileInfo
+                            user={person}
+                            status={status}
+                            stdCheckpoints={stdCheckpoints}
+                            questionData={questionData}
+                          />
+                        </ErrorBoundary>
+                      )}
                     />
-                  </div>
+                    <Route path={`${match.url}/about`} render={() => <AboutMe />} />
+                    <Route
+                      path={`${match.url}/edit`}
+                      render={() => (
+                        <ErrorBoundary componentName="ProfileEdit">
+                          <ProfileEdit
+                            user={person}
+                            status={status}
+                            setStatus={setStatus}
+                            getUser={getUser}
+                            stdCheckpoints={stdCheckpoints}
+                            questionData={questionData}
+                          />
+                        </ErrorBoundary>
+                      )}
+                    />
+
+                    <Route
+                      path={`${match.url}/password`}
+                      render={() => (
+                        <ErrorBoundary componentName="ChangePassword">
+                          <ChangePassword />
+                        </ErrorBoundary>
+                      )}
+                    />
+                    <Route
+                      path={`${match.url}/passcode`}
+                      render={() => (
+                        <ErrorBoundary componentName="ChangePassword">
+                          <ChangePasscode />
+                        </ErrorBoundary>
+                      )}
+                    />
+                  </Switch>
+
+                  <ProfileCropModal
+                    open={showCropper}
+                    upImg={upImage || ''}
+                    saveCroppedImage={(img: string) => saveCroppedImage(img)}
+                    closeAction={toggleCropper}
+                  />
                 </div>
               </div>
             </div>
-          </PageWrapper>
+          </PageLayout>
         </div>
       </ErrorBoundary>
     );

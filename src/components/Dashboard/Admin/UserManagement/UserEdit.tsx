@@ -41,8 +41,7 @@ const UserEdit = (props: UserInfoProps) => {
     user,
     status,
     getUserById,
-    tab,
-    setTab,
+
     shouldNavigate = true,
     checkpoints,
     questionData,
@@ -514,6 +513,7 @@ const UserEdit = (props: UserInfoProps) => {
             <div className="sm:col-span-3 p-2">
               <Selector
                 placeholder="Select on demand"
+                label="On Demand"
                 selectedItem={editUser?.onDemand ? 'Yes' : 'No'}
                 onChange={(_: string, option: any) => handleChangeOnDemand(option)}
                 isRequired
@@ -573,8 +573,8 @@ const UserEdit = (props: UserInfoProps) => {
 
   return (
     <>
-      <div className="h-full w-3/4 md:px-2 pt-2">
-        <Tabs items={items} />
+      <div className="h-full w-full">
+        <Tabs items={items} tabPosition="right" animated defaultActiveKey="1" />
 
         <div className="px-4 pt-4 w-full gap-4 flex justify-end">
           <Buttons

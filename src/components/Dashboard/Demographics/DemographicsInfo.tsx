@@ -1,6 +1,5 @@
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Card, Descriptions, Empty} from 'antd';
-import React, {Fragment} from 'react';
+import {Fragment} from 'react';
 
 // create interface for props
 interface DemographicsInfoProps {
@@ -59,7 +58,7 @@ const DemographicsInfo = ({checkpoints, questionData}: DemographicsInfoProps) =>
           ))}
         </Fragment>
       ) : (
-        <Empty description={'No demographics data'} />
+        <Empty className="min-h-56" description={'No demographics data'} />
       )}
     </div>
   );

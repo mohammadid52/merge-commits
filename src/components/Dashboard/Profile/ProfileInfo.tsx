@@ -1,16 +1,15 @@
-import {Fragment} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {LockOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
+import useAuth from '@customHooks/useAuth';
 import {Card, Descriptions, Tabs, TabsProps} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {getUserRoleString} from 'utilities/strings';
+import {fallbackValue, getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import {UserInfo} from './Profile';
-import useAuth from '@customHooks/useAuth';
 import DemographicsInfo from '../Demographics/DemographicsInfo';
+import {UserInfo} from './Profile';
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -32,28 +31,6 @@ const ProfileInfo = (props: UserInfoProps) => {
       return 'Spanish';
     }
     return 'English';
-  };
-
-  const getQuestionResponse = (checkpointID: string, questionID: string) => {
-    const selectedCheckp: any = questionData.find(
-      (item) => item.checkpointID === checkpointID
-    );
-    if (selectedCheckp) {
-      const questionResponce: any = selectedCheckp.responseObject?.find(
-        (item: any) => item.qid === questionID
-      )?.response;
-
-      const stringedResponse = questionResponce ? questionResponce.toString() : '';
-
-      if (stringedResponse.includes('Other')) {
-        const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
-        const answer = splitAnswer[1];
-        if (answer) return answer;
-        else return 'Other';
-      } else {
-        return questionResponce ? questionResponce.join(',') : '--';
-      }
-    }
   };
 
   const history = useHistory();
@@ -103,22 +80,22 @@ const ProfileInfo = (props: UserInfoProps) => {
             }
             title={PersonalInfoDict['TITLE']}>
             <Descriptions.Item label={PersonalInfoDict['FIRST_NAME']}>
-              {user.firstName}
+              {fallbackValue(user.firstName)}
             </Descriptions.Item>
             <Descriptions.Item label={PersonalInfoDict['LAST_NAME']}>
-              {user.lastName}
+              {fallbackValue(user.lastName)}
             </Descriptions.Item>
             <Descriptions.Item label={PersonalInfoDict['NICKNAME']}>
-              {user?.preferredName || ''}
+              {fallbackValue(user?.preferredName)}
             </Descriptions.Item>
             <Descriptions.Item label={PersonalInfoDict['LANGUAGE']}>
-              {language()}
+              {fallbackValue(language())}
             </Descriptions.Item>
             <Descriptions.Item label={PersonalInfoDict['ROLE']}>
-              {getUserRoleString(user.role)}
+              {fallbackValue(getUserRoleString(user.role))}
             </Descriptions.Item>
             <Descriptions.Item span={2} label={PersonalInfoDict['EMAIL']}>
-              {user.email}
+              {fallbackValue(user.email)}
             </Descriptions.Item>
           </Descriptions>
         </Card>
