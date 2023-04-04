@@ -4,6 +4,8 @@ import Buttons from '@components/Atoms/Buttons';
 import React from 'react';
 import {MdOutlineKeyboardBackspace} from 'react-icons/md';
 import {useHistory} from 'react-router-dom';
+import InstitutionProfile from '@components/Dashboard/Admin/Institutons/InstitutionProfile';
+import useAuth from '@customHooks/useAuth';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -37,6 +39,9 @@ const PageLayout = ({
   onBackUrl
 }: PageLayoutProps) => {
   const history = useHistory();
+  const {user} = useAuth();
+  const institute =
+    user && user.associateInstitute && user?.associateInstitute[0]?.institution;
 
   return (
     <div className="px-2 flex flex-col items-start  gap-2 py-8 md:px-4 lg:p-8">
@@ -61,6 +66,7 @@ const PageLayout = ({
         title={title}
         extra={extra}>
         {children}
+        <InstitutionProfile institute={institute} />
       </Card>
       {footer}
     </div>

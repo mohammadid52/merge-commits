@@ -1,16 +1,16 @@
-import {API, graphqlOperation} from 'aws-amplify';
 import Loader from '@components/Atoms/Loader';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
 import DroppableMedia from '@components/Molecules/DroppableMedia';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
-import {uploadImageToS3} from 'graphql-functions/functions';
 import {getImageFromS3} from '@utilities/services';
 import {formatPhoneNumber} from '@utilities/strings';
+import {API, graphqlOperation} from 'aws-amplify';
 import * as customMutations from 'customGraphql/customMutations';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {isEmpty} from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
@@ -92,9 +92,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
 
       <div
         className={`${
-          isPageBuilder
-            ? 'hidden'
-            : 'hidden xl:flex justify-between absolute bottom-0.5 right-0 left-0 mx-8 w-auto '
+          isPageBuilder ? 'hidden' : 'hidden xl:flex justify-between w-auto '
         }`}
         onClick={() => {}}>
         {isEmpty(institute.name) && (
@@ -106,7 +104,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
 
         {!isEmpty(institute.name) && (
           <>
-            <div className="my-5 text-medium  w-auto px-4 mr-2 flex lg:items-center items-start justify-center 2xl:mr-4">
+            <div className=" text-medium  w-auto mr-2 flex lg:items-center items-start justify-center 2xl:mr-4">
               <div className="flex w-auto ">
                 <span className="w-auto mr-2 mt-0.5">
                   <BsEnvelope className="w-4 h-4" />
@@ -182,9 +180,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
                 </div>
               )}
 
-              <div className="text-base cursor-pointer hover:underline hover:theme-text  flex text-medium ">
-                <p className="w-auto">{institute?.name || '--'}</p>
-              </div>
+              <p className="w-auto text-medium">{institute?.name || '--'}</p>
             </div>
           </>
         )}
