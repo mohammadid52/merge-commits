@@ -5,7 +5,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import InstituteName from '@components/MicroComponents/InstituteName';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 
 import {withZoiqFilter} from '@utilities/functions';
 import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';

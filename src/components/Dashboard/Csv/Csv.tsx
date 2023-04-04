@@ -4,7 +4,7 @@ import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {getFormatedDate} from '@utilities/time';
 import {Card, Col, Divider, Row, Statistic} from 'antd';
 import {UniversalLessonPlan} from 'API';

@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {RoomStatus, UpdateUniversalLessonInput} from 'API';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';

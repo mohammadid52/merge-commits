@@ -2,7 +2,7 @@ import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
-import {listInstitutions} from '@graphql/functions';
+import {listInstitutions} from 'graphql-functions/functions';
 
 import {insertExtraDataForClassroom, removeDuplicates} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';

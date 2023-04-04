@@ -12,7 +12,7 @@ import * as mutations from 'graphql/mutations';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';

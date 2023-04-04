@@ -16,7 +16,7 @@ import {getImageFromS3Static} from 'utilities/services';
 
 import Placeholder from '@components/Atoms/Placeholder';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {Button, Card as AntdCard, Divider} from 'antd';
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';

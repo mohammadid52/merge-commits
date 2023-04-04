@@ -2,7 +2,7 @@ import Loader from '@components/Atoms/Loader';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from 'graphql-functions/functions';
 import {useQuery} from '@tanstack/react-query';
 import {reorderSyllabus, withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';

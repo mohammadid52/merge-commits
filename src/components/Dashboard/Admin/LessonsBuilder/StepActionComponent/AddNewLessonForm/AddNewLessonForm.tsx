@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {Card} from 'antd';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';

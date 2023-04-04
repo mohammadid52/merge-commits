@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';

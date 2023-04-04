@@ -19,7 +19,7 @@ import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
 import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
-import {logError} from 'graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import * as mutations from 'graphql/mutations';
 import PageLayout from 'layout/PageLayout';
 import {isEmpty, map, orderBy} from 'lodash';

@@ -7,7 +7,7 @@ import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
 import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import EmojiPicker from 'emoji-picker-react';
-import {deleteImageFromS3, uploadImageToS3} from 'graphql/functions';
+import {deleteImageFromS3, uploadImageToS3} from 'graphql-functions/functions';
 import * as mutations from 'graphql/mutations';
 import {find, findIndex} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';

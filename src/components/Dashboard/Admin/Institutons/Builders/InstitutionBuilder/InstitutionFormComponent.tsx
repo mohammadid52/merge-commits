@@ -8,7 +8,7 @@ import useDictionary from 'customHooks/dictionary';
 import {statesList} from 'utilities/staticData';
 
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';

@@ -2,7 +2,7 @@ import Buttons from '@components/Atoms/Buttons';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {addNewDictionary, logError} from '@graphql/functions';
+import {addNewDictionary, logError} from 'graphql-functions/functions';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {AiOutlineBook} from 'react-icons/ai';

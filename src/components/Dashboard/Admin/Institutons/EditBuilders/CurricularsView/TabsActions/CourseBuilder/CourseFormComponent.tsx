@@ -2,7 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
 import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
-import {checkUniqCurricularName, uploadImageToS3} from '@graphql/functions';
+import {checkUniqCurricularName, uploadImageToS3} from 'graphql-functions/functions';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';

@@ -22,7 +22,7 @@ import {useNotifications} from '@contexts/NotificationContext';
 import useAuth from '@customHooks/useAuth';
 
 import {useQuery} from '@customHooks/urlParam';
-import {checkUniqRoomName, listInstitutions, logError} from '@graphql/functions';
+import {checkUniqRoomName, listInstitutions, logError} from 'graphql-functions/functions';
 import {methods, statusList, typeList} from '@utilities/staticData';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';

@@ -4,8 +4,14 @@ import {AiOutlineUsergroupAdd} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
+
+import {
+  getDashboardDataForCoTeachers,
+  getDashboardDataForTeachers,
+  listClassUserLookup,
+  listStaffWithBasicInfo
+} from 'customGraphql/customQueries';
+import {listPeople} from 'graphql/queries';
 
 import Filters from '@components/Atoms/Filters';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
@@ -189,9 +195,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const fetchAllPerson = async (filter?: any) => {
     let resp: any = await API.graphql(
-      graphqlOperation(queries.listPeople, {
+      graphqlOperation(listPeople, {
         limit: SEARCH_LIMIT,
-
         filter: withZoiqFilter(filter, zoiqFilter)
       })
     );
@@ -212,7 +217,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       if (isTeacher || isBuilder || isAdmin) {
         let promises = [
           API.graphql(
-            graphqlOperation(customQueries.listStaffWithBasicInfo, {
+            graphqlOperation(listStaffWithBasicInfo, {
               filter: {
                 ...createFilterToFetchSpecificItemsOnly(
                   state.user.associateInstitute.map((item: any) => item.institution.id),
@@ -226,7 +231,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         if (isTeacher) {
           promises.push(
             API.graphql(
-              graphqlOperation(customQueries.getTeacherLookUp, {
+              graphqlOperation(listStaffWithBasicInfo, {
                 filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
               })
             )
@@ -302,12 +307,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       const [response, assignedRoomsAsCoTeacher] = await Promise.all<any>([
         API.graphql(
-          graphqlOperation(customQueries.getDashboardDataForTeachers, {
+          graphqlOperation(getDashboardDataForTeachers, {
             filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
           })
         ),
         API.graphql(
-          graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          graphqlOperation(getDashboardDataForCoTeachers, {
             filter: {teacherAuthID: {eq: state.user.authId}}
           })
         )
@@ -392,7 +397,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       setLoading(true);
       const classStudents: any = await API.graphql(
-        graphqlOperation(customQueries.listClassUserLookup, {
+        graphqlOperation(listClassUserLookup, {
           limit: SEARCH_LIMIT,
           filter: {classID: {eq: classId}}
         })

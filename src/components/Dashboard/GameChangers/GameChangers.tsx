@@ -7,7 +7,7 @@ import Flickity from 'react-flickity-component';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {updatePageState} from '@graphql/functions';
+import {updatePageState} from 'graphql-functions/functions';
 import {UserPageState} from 'API';
 import BottomSection from 'components/Dashboard/GameChangers/components/BottomSection';
 import Card from 'components/Dashboard/GameChangers/components/Card';

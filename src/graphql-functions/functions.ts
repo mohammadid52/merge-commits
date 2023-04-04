@@ -1,10 +1,9 @@
-// import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {formatPageName} from 'utilities/functions';
-import {API, graphqlOperation} from 'aws-amplify';
+import {API, graphqlOperation, Auth, Storage} from 'aws-amplify';
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
-import {Auth, Storage} from 'aws-amplify';
+
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
@@ -122,7 +121,6 @@ export const logError = async (
   componentName: string,
   additionalInfo?: any
 ) => {
-  // if (!location.origin.includes('localhost')) {
   try {
     const input: CreateErrorLogInput = {
       authID: auth.authId,
@@ -166,7 +164,6 @@ export const addNewDictionary = async (formData: CreateDicitionaryInput) => {
       {authId: formData.authID, email: formData.email},
       'functions @addNewDictionary'
     );
-  } finally {
   }
 };
 
@@ -184,7 +181,6 @@ export const getDictionaries = async () => {
   } catch (error) {
     console.error(error);
     return [];
-  } finally {
   }
 };
 
@@ -214,7 +210,6 @@ export const checkUniqRoomName = async (
 
 export const listInstitutions = async (authId: string, email: string) => {
   try {
-    // setInstitutionsLoading(true);
     let institutions: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionsList, {
         filter: withZoiqFilter({}, zoiqFilter(authId))
@@ -232,8 +227,6 @@ export const listInstitutions = async (authId: string, email: string) => {
   } catch (error) {
     logError(error, {authId, email}, 'functions @listInstitutions');
     console.error('🚀 ~ file: Csv.tsx ~ line 122 ~ listInstitutions ~ error', error);
-  } finally {
-    // setInstitutionsLoading(false);
   }
 };
 

@@ -1,5 +1,5 @@
 import useAuth from '@customHooks/useAuth';
-import {logError, uploadImageToS3} from '@graphql/functions';
+import {logError, uploadImageToS3} from 'graphql-functions/functions';
 import {Transition} from '@headlessui/react';
 import {getAsset} from 'assets';
 import FormInput from 'atoms/Form/FormInput';

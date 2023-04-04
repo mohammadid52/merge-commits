@@ -13,7 +13,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {logError, updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from 'graphql-functions/functions';
 import {ListCommunitiesQueryVariables, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';

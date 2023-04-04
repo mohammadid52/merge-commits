@@ -2,7 +2,7 @@ import FormInput from '@components/Atoms/Form/FormInput';
 import Modal from '@components/Atoms/Modal';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {addNewDictionary, logError} from '@graphql/functions';
+import {addNewDictionary, logError} from 'graphql-functions/functions';
 import {
   CreateDicitionaryInput,
   Dicitionary,

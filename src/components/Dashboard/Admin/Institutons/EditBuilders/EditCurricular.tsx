@@ -9,7 +9,7 @@ import * as mutation from 'graphql/mutations';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {checkUniqCurricularName} from '@graphql/functions';
+import {checkUniqCurricularName} from 'graphql-functions/functions';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';

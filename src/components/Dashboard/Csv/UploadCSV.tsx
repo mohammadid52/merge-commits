@@ -1,5 +1,5 @@
 import Buttons from '@components/Atoms/Buttons';
-import {logError, uploadImageToS3} from '@graphql/functions';
+import {logError, uploadImageToS3} from 'graphql-functions/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 

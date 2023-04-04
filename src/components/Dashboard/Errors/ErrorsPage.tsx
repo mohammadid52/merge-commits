@@ -6,7 +6,7 @@ import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {Card, Divider, Popconfirm, Radio, Tooltip} from 'antd';
 import {
   ErrorLog,

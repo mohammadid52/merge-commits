@@ -12,7 +12,7 @@ import Buttons from 'atoms/Buttons';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import {updatePageState, uploadImageToS3} from 'graphql/functions';
+import {updatePageState, uploadImageToS3} from 'graphql-functions/functions';
 import React, {lazy, useEffect, useState} from 'react';
 import {FaEdit} from 'react-icons/fa';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';

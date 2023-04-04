@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Warning} from '@components/Atoms/Alerts/Info';
-import {logError, updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from 'graphql-functions/functions';
 import {setPageTitle} from '@utilities/functions';
 import {
   getLocalStorageData,

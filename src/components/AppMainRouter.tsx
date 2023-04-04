@@ -1,6 +1,6 @@
 import useAuth from '@customHooks/useAuth';
 import useTheme from '@customHooks/useTheme';
-import {getInstInfo, getPerson} from '@graphql/functions';
+import {getInstInfo, getPerson} from 'graphql-functions/functions';
 import {getUserInfo} from '@utilities/functions';
 import {ConfigProvider} from 'antd';
 import {getAsset} from 'assets';

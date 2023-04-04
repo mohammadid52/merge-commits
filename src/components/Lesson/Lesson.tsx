@@ -1,5 +1,5 @@
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from 'graphql-functions/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';

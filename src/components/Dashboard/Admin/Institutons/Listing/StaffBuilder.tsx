@@ -27,7 +27,7 @@ import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {withZoiqFilter} from '@utilities/functions';
 import {Tag} from 'antd';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';

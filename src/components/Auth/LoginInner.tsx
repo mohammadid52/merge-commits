@@ -2,7 +2,12 @@ import Buttons from '@components/Atoms/Buttons';
 import FormInput from '@components/Atoms/Form/FormInput';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
-import {getInstInfo, getPerson, signIn, updateLoginTime} from '@graphql/functions';
+import {
+  getInstInfo,
+  getPerson,
+  signIn,
+  updateLoginTime
+} from 'graphql-functions/functions';
 import {getSignInError, getUserInfo, setCredCookies} from '@utilities/functions';
 import {createUserUrl} from '@utilities/urls';
 import {Checkbox} from 'antd';

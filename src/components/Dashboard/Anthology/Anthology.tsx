@@ -4,7 +4,7 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {updatePageState} from '@graphql/functions';
+import {updatePageState} from 'graphql-functions/functions';
 import {
   UniversalLessonWritingExcercises,
   UpdateUniversalLessonWritingExcercisesInput,

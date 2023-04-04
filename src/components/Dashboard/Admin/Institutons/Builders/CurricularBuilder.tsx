@@ -5,7 +5,7 @@ import {
   checkUniqCurricularName,
   getInstitutionList,
   uploadImageToS3
-} from '@graphql/functions';
+} from 'graphql-functions/functions';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';

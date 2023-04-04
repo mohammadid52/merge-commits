@@ -5,7 +5,7 @@ import DroppableMedia from '@components/Molecules/DroppableMedia';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {getImageFromS3} from '@utilities/services';
 import {formatPhoneNumber} from '@utilities/strings';
 import * as customMutations from 'customGraphql/customMutations';

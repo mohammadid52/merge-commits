@@ -4,7 +4,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import UserProfileImage from '@components/Molecules/UserProfileImage';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {Tabs, TabsProps} from 'antd';
 import {PersonStatus, Role} from 'API';
 import Anthology from 'components/Dashboard/Anthology/Anthology';

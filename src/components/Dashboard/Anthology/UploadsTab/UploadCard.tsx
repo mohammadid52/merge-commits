@@ -6,7 +6,7 @@ import FileListItem from 'components/Dashboard/Anthology/UploadsTab/FileListItem
 import UploadAttachment from 'components/Dashboard/Anthology/UploadsTab/UploadAttachment';
 import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import {anthologyDict} from 'dictionary/dictionary.iconoclast';
-import {deleteImageFromS3} from 'graphql/functions';
+import {deleteImageFromS3} from 'graphql-functions/functions';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {sortBy} from 'lodash';

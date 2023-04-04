@@ -7,7 +7,7 @@ import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
 import {orderBy, truncate} from 'lodash';
