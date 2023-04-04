@@ -10,12 +10,10 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {createUserUrl} from 'utilities/urls';
 
-import {Error} from '@components/Atoms/Alerts/Info';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {withZoiqFilter} from '@utilities/functions';
 import {statusList} from '@utilities/staticData';
 import {getReverseUserRoleString, getUserRoleString} from '@utilities/strings';
-import {Checkbox} from 'antd';
 import {
   CreateClassStudentInput,
   CreatePersonInput,
@@ -25,11 +23,12 @@ import {
   PersonStatus,
   Role
 } from 'API';
-import * as customQueries from 'customGraphql/customQueries';
+import {UserRegisterSchema} from 'Schema';
+import {Checkbox, Divider, message} from 'antd';
+import {NoticeType} from 'antd/es/message/interface';
+import {listRooms} from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
 import PageLayout from 'layout/PageLayout';
-import {UserRegisterSchema} from 'Schema';
-import SuccessMessage from './SuccessMessage';
 
 const initialValues = {
   firstName: '',
@@ -46,6 +45,33 @@ const initialValues = {
   }
 };
 
+interface DynamicWrapperProps {
+  children: React.ReactNode;
+  isInModalPopup: boolean;
+  title?: string;
+}
+
+const DynamicWrapper = ({children, isInModalPopup, title}: DynamicWrapperProps) => {
+  if (!isInModalPopup) {
+    return (
+      <PageLayout
+        type={isInModalPopup ? 'inner' : undefined}
+        hideInstProfile={isInModalPopup}
+        hideGoBack={isInModalPopup}
+        title={isInModalPopup ? null : title}>
+        {children}
+      </PageLayout>
+    );
+  } else {
+    return (
+      <div>
+        <Divider />
+        {children}
+      </div>
+    );
+  }
+};
+
 const Registration = ({
   classData,
 
@@ -59,15 +85,7 @@ const Registration = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [message, setMessage] = useState<{
-    show: boolean;
-    type: string;
-    message: string;
-  }>({
-    show: false,
-    type: '',
-    message: ''
-  });
+  const [messageApi, contextHolder] = message.useMessage();
 
   const {state, userLanguage, zoiqFilter, checkIfAdmin} = useGlobalContext();
   const {RegistrationDict} = useDictionary();
@@ -107,10 +125,9 @@ const Registration = ({
     }
   }, [classId]);
 
-  const handleMessage = (type: string, text: string) => {
-    setMessage({
-      show: true,
-      message: text,
+  const handleMessage = (type: NoticeType, text: string) => {
+    messageApi.open({
+      content: text,
       type: type
     });
   };
@@ -208,23 +225,18 @@ const Registration = ({
       if (er.code === 'UsernameExistsException') {
         setFieldError('email', messageDict['existemail']);
       } else {
-        setMessage({show: true, type: 'error', message: er.message});
-        handleMessage('error', error.message);
+        handleMessage('error', er.message);
       }
     } finally {
       setIsLoading(false);
     }
   }
 
-  useEffect(() => {
-    listAllRooms([]);
-  }, []);
-
   const listAllRooms = async (outArray: any[], nextToken = null): Promise<any> => {
     let combined;
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listRooms, {
+        graphqlOperation(listRooms, {
           filter: withZoiqFilter({}, zoiqFilter),
           nextToken: nextToken
         })
@@ -271,120 +283,112 @@ const Registration = ({
     }
   });
 
+  useEffect(() => {
+    values.role === 'ST' && listAllRooms([]);
+  }, [values.role]);
+
   return (
-    <PageLayout title={isInModalPopup ? null : RegistrationDict[userLanguage]['title']}>
+    <DynamicWrapper
+      isInModalPopup={isInModalPopup}
+      title={RegistrationDict[userLanguage]['title']}>
+      {contextHolder}
       <form onSubmit={handleSubmit} className={` w-full flex flex-col`}>
         <div className="w-full md:flex flex-col mb-0">
-          <div className="h-full grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-3 p-2">
-              <FormInput
-                label={RegistrationDict[userLanguage]['firstname']}
-                isRequired
-                id="firstName"
-                name="firstName"
-                value={values.firstName}
-                error={errors.firstName}
-                onChange={handleChange}
-                placeHolder={RegistrationDict[userLanguage]['firstplaceholder']}
-              />
-            </div>
+          <div
+            className={`h-full grid grid-cols-1 gap-4 ${
+              isInModalPopup ? ' sm:grid-cols-2' : ' sm:grid-cols-3'
+            }`}>
+            <FormInput
+              label={RegistrationDict[userLanguage]['firstname']}
+              isRequired
+              id="firstName"
+              name="firstName"
+              value={values.firstName}
+              error={errors.firstName}
+              onChange={handleChange}
+              placeHolder={RegistrationDict[userLanguage]['firstplaceholder']}
+            />
 
-            <div className="sm:col-span-3 p-2">
-              <FormInput
-                id="lastName"
-                isRequired
-                error={errors.lastName}
-                label={RegistrationDict[userLanguage]['lastname']}
-                name="lastName"
-                onChange={handleChange}
-                value={values.lastName}
-                placeHolder={RegistrationDict[userLanguage]['lastplaceholder']}
-              />
-            </div>
+            <FormInput
+              id="lastName"
+              isRequired
+              error={errors.lastName}
+              label={RegistrationDict[userLanguage]['lastname']}
+              name="lastName"
+              onChange={handleChange}
+              value={values.lastName}
+              placeHolder={RegistrationDict[userLanguage]['lastplaceholder']}
+            />
 
-            <div className="sm:col-span-3 p-2">
-              <FormInput
-                label={RegistrationDict[userLanguage]['email']}
-                isRequired
-                type="email"
-                id="email"
-                name="email"
-                value={values.email}
-                error={errors.email}
-                onChange={handleChange}
-                placeHolder={RegistrationDict[userLanguage]['emailplaceholder']}
-              />
-            </div>
+            <FormInput
+              label={RegistrationDict[userLanguage]['email']}
+              isRequired
+              type="email"
+              id="email"
+              name="email"
+              value={values.email}
+              error={errors.email}
+              onChange={handleChange}
+              placeHolder={RegistrationDict[userLanguage]['emailplaceholder']}
+            />
 
             {!classId && (
-              <div className="sm:col-span-3 p-2">
-                <Selector
-                  placeholder="Select role"
-                  onChange={(name: any) =>
-                    setFieldValue('role', getReverseUserRoleString(name))
-                  }
-                  label={RegistrationDict[userLanguage]['role']}
-                  error={errors.role}
-                  list={Roles}
-                  selectedItem={getUserRoleString(values.role)}
-                />
-              </div>
-            )}
-
-            {checkIfAdmin() && (
-              <div className="sm:col-span-6">
-                <Checkbox
-                  checked={values.isZoiq}
-                  onChange={(e) => setFieldValue('isZoiq', e.target.checked)}>
-                  ZOIQ
-                </Checkbox>
-              </div>
+              <Selector
+                placeholder="Select role"
+                onChange={(name: any) =>
+                  setFieldValue('role', getReverseUserRoleString(name))
+                }
+                label={RegistrationDict[userLanguage]['role']}
+                error={errors.role}
+                list={Roles}
+                selectedItem={getUserRoleString(values.role)}
+              />
             )}
 
             {values.role && values.role === Role.ST && instId && (
               <>
                 {!classId && (
-                  <div className="sm:col-span-3 p-2">
-                    <Selector
-                      label={RegistrationDict[userLanguage]['class']}
-                      selectedItem={values.class.name}
-                      list={instClasses}
-                      placeholder={'Select a class'}
-                      onChange={(value: any, option: any) =>
-                        setFieldValue('class', {
-                          id: value,
-                          name: value,
-                          roomId: option.id
-                        })
-                      }
-                    />
-                  </div>
+                  <Selector
+                    label={RegistrationDict[userLanguage]['class']}
+                    selectedItem={values.class.name}
+                    list={instClasses}
+                    placeholder={'Select a class'}
+                    onChange={(value: any, option: any) =>
+                      setFieldValue('class', {
+                        id: value,
+                        name: value,
+                        roomId: option.id
+                      })
+                    }
+                  />
                 )}
 
-                <div className="sm:col-span-3 p-2">
-                  <div>
-                    <Selector
-                      label={RegistrationDict[userLanguage]['status']}
-                      selectedItem={values.status}
-                      list={statusList}
-                      placeholder={RegistrationDict[userLanguage]['statusPlaceholder']}
-                      onChange={(name: any) => setFieldValue('status', name)}
-                    />
-                  </div>
-                </div>
+                <Selector
+                  label={RegistrationDict[userLanguage]['status']}
+                  selectedItem={values.status}
+                  list={statusList}
+                  placeholder={RegistrationDict[userLanguage]['statusPlaceholder']}
+                  onChange={(name: any) => setFieldValue('status', name)}
+                />
 
-                <div className="sm:col-span-3 p-2">
+                <Checkbox
+                  checked={values.isSelfPaced}
+                  onChange={(e) => setFieldValue('isSelfPaced', e.target.checked)}>
+                  Self Paced
+                </Checkbox>
+
+                {checkIfAdmin() && (
                   <Checkbox
-                    checked={values.isSelfPaced}
-                    onChange={(e) => setFieldValue('isSelfPaced', e.target.checked)}>
-                    Self Paced
+                    checked={values.isZoiq}
+                    onChange={(e) => setFieldValue('isZoiq', e.target.checked)}>
+                    ZOIQ
                   </Checkbox>
-                </div>
+                )}
               </>
             )}
           </div>
 
-          <div className="w-full md:h-full flex justify-center items-center">
+          {/* <div className="w-full md:h-full flex justify-center items-center">
             {message.show ? (
               <div>
                 {message.type === 'error' ? (
@@ -398,10 +402,10 @@ const Registration = ({
                 ) : null}
               </div>
             ) : null}
-          </div>
+          </div> */}
         </div>
 
-        <div className={`${isInModalPopup ? '' : ' w-1.5/10'} ml-auto`}>
+        <div className={`ml-auto my-4`}>
           <Buttons
             loading={isLoading}
             disabled={isLoading}
@@ -410,7 +414,7 @@ const Registration = ({
           />
         </div>
       </form>
-    </PageLayout>
+    </DynamicWrapper>
   );
 };
 

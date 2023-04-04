@@ -71,7 +71,7 @@ const FormInput: React.FC<FormInputProps> = ({
     className: inputClassName,
     placeholder: placeHolder,
     status: error ? 'error' : '',
-    prefix: error ? <BiErrorCircle /> : Icon ? <Icon /> : undefined,
+    prefix: Icon ? <Icon /> : undefined,
     suffix,
     showCount: showCharacterUsage,
     onKeyDown

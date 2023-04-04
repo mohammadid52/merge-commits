@@ -1,20 +1,19 @@
-import {API, graphqlOperation} from 'aws-amplify';
 import Loader from '@components/Atoms/Loader';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {RoomStatus} from 'API';
+import {message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import PageWrapper from 'atoms/PageWrapper';
+import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {Fragment, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {HiOutlineTrash, HiPencil} from 'react-icons/hi';
 import {IoIosAdd} from 'react-icons/io';
 import AddLearningObjective from '../AddLearningObjective';
@@ -445,7 +444,12 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       );
       setDeleting(false);
       onCancel();
-    } catch (error) {}
+
+      messageApi.success('Learning Objective deleted successfully');
+    } catch (error) {
+      console.error(error);
+      messageApi.error('Something went wrong');
+    }
   };
 
   const deleteTopic = async () => {
@@ -466,7 +470,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setLearnings(temp);
       setDeleting(false);
       onCancel();
-    } catch (error) {}
+      messageApi.success('Topic deleted successfully');
+    } catch (error) {
+      console.error(error);
+      messageApi.error('Something went wrong');
+    }
   };
 
   const deleteRubric = async () => {
@@ -498,29 +506,39 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setLearnings(temp);
       setDeleting(false);
       onCancel();
-    } catch (error) {}
+      messageApi.success('Measurement deleted successfully');
+    } catch (error) {
+      console.error(error);
+      messageApi.error('Something went wrong');
+    }
   };
 
   const isInactive = status === RoomStatus.INACTIVE;
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   return (
-    <div className="py-2 px-0 2xl:p-8 flex m-auto justify-center">
+    <div className="">
+      {contextHolder}
       <div className="">
-        <PageWrapper defaultClass="px-4 lg:px-6 ">
-          <SectionTitleV3
-            withButton={
-              Boolean(learnings?.length) && (
-                <Buttons
-                  disabled={loading || isInactive}
-                  label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
-                  Icon={IoIosAdd}
-                  onClick={createLearningObjective}
-                />
-              )
-            }
-            subtitle={!loading ? 'hover on items for action' : ''}
-            title={LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
-          />
+        <PageLayout
+          type="inner"
+          warning={
+            isInactive
+              ? 'This course is inactive. Adding learning objective to this course has been disabled'
+              : ''
+          }
+          title={LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
+          extra={
+            Boolean(learnings?.length) && (
+              <Buttons
+                disabled={loading || isInactive}
+                label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                Icon={IoIosAdd}
+                onClick={createLearningObjective}
+              />
+            )
+          }>
           {!loading ? (
             <Fragment>
               <div className="py-4">
@@ -601,14 +619,10 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             </Fragment>
           ) : (
             <div className="py-12 my-12 m-auto text-center">
-              <Loader
-                withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
-                animation
-                className="text-medium "
-              />
+              <Loader withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']} animation />
             </div>
           )}
-        </PageWrapper>
+        </PageLayout>
 
         <ModalPopUp
           open={warnModal.show}
@@ -655,20 +669,13 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           />
         </Modal>
 
-        <AnimatedContainer show={isInactive}>
-          {isInactive && (
-            <p className="text-medium  text-sm text-center">
-              This course is inactive. Adding units to this course has been disabled
-            </p>
-          )}
-        </AnimatedContainer>
-
         <Modal
           open={openTopicModal}
           showHeader={true}
           title={AddTopicDict[userLanguage]['heading']}
           showHeaderBorder={true}
           showFooter={false}
+          width={800}
           closeAction={onTopicModalClose}>
           <AddTopic
             curricularId={curricularId}

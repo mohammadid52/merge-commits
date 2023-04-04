@@ -184,12 +184,7 @@ const InstitutionBuilder = ({
           <div className={`grid grid-cols-1 divide-x-0 divide-light mt-4 lg:mt-0`}>
             {loading ? (
               <div className="h-100 flex justify-center items-center">
-                <div className="w-5/10">
-                  <Loader />
-                  <p className="mt-2 text-center">
-                    Fetching institution details please wait...
-                  </p>
-                </div>
+                <Loader withText="Fetching institution details please wait..." />
               </div>
             ) : (
               <div className="border-0 lg:border-t-none border-light">

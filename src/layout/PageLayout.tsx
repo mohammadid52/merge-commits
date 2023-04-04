@@ -1,4 +1,4 @@
-import {Card, CardProps} from 'antd';
+import {Alert, Card, CardProps} from 'antd';
 
 import Buttons from '@components/Atoms/Buttons';
 import React from 'react';
@@ -15,6 +15,10 @@ interface PageLayoutProps {
   extra?: React.ReactNode;
   type?: CardProps['type'];
   onBackUrl?: string;
+  hideInstProfile?: boolean;
+  hideGoBack?: boolean;
+  warning?: string;
+  info?: string;
 }
 
 // add jsDocs for this component
@@ -34,9 +38,12 @@ const PageLayout = ({
   footer = null,
   extra,
   title,
-
+  hideInstProfile,
+  hideGoBack,
   type,
-  onBackUrl
+  onBackUrl,
+  info,
+  warning
 }: PageLayoutProps) => {
   const history = useHistory();
   const {user} = useAuth();
@@ -45,20 +52,24 @@ const PageLayout = ({
 
   return (
     <div className="px-2 flex flex-col items-start  gap-2 py-8 md:px-4 lg:p-8">
-      <Buttons
-        Icon={MdOutlineKeyboardBackspace}
-        label={'Go back'}
-        // variant="text"
+      {!hideGoBack && type !== 'inner' && (
+        <Buttons
+          Icon={MdOutlineKeyboardBackspace}
+          label={'Go back'}
+          // variant="text"
 
-        onClick={() => {
-          if (onBackUrl) {
-            history.push(onBackUrl);
-          } else {
-            history.goBack();
-          }
-        }}
-        variant="link"
-      />
+          onClick={() => {
+            if (onBackUrl) {
+              history.push(onBackUrl);
+            } else {
+              history.goBack();
+            }
+          }}
+          variant="link"
+        />
+      )}
+      {info && <Alert type="info" className="w-full" message={info} />}
+      {warning && <Alert type={'warning'} className="w-full" message={warning} />}
       <Card
         className="w-full"
         bordered={type === 'inner' ? true : false}
@@ -66,7 +77,9 @@ const PageLayout = ({
         title={title}
         extra={extra}>
         {children}
-        <InstitutionProfile institute={institute} />
+        {!hideInstProfile && type !== 'inner' && (
+          <InstitutionProfile institute={institute} />
+        )}
       </Card>
       {footer}
     </div>

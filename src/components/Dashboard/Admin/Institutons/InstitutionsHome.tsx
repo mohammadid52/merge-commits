@@ -1,11 +1,11 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
-import {logError} from 'graphql-functions/functions';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
+import {logError} from 'graphql-functions/functions';
 import React, {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 import NavBarRouter from 'router/NavBarRouter';
@@ -65,9 +65,6 @@ const Institution = lazy(() => import('dashboard/Admin/Institutons/Institution')
 // Instituttion
 const InstitutionLookup = lazy(
   () => import('dashboard/Admin/Institutons/InstitutionLookup')
-);
-const InstitutionProfile = lazy(
-  () => import('dashboard/Admin/Institutons/InstitutionProfile')
 );
 
 const InstitutionsHome: React.FC = () => {
@@ -245,7 +242,7 @@ const InstitutionsHome: React.FC = () => {
 
               <NavBarRouter institute={institute} />
               {/* </PageWrapper> */}
-              <InstitutionProfile institute={institute} />
+              {/* <InstitutionProfile institute={institute} /> */}
             </div>
           </ErrorBoundary>
         )}

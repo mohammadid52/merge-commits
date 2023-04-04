@@ -218,13 +218,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         <div className="grid grid-cols-1 divide-x-0 divide-light mt-4">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader
-                  animation
-                  withText="Fetching course details please wait..."
-                  className="text-medium "
-                />
-              </div>
+              <Loader animation withText="Fetching course details please wait..." />
             </div>
           ) : (
             <div className="">{currentStepComp(activeStep)}</div>

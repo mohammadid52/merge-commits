@@ -17,15 +17,24 @@
 
     1. Institution Manager
         -> Add 
+            * Add yup
+            * notifier
         -> Edit 
+            * Add yup
+            * notifier
         -> Service Vendors
+            * Add yup
+            * notifier
 
     2. Staff Manager
         -> Add ~ Make sure creation of all roles works (Add cancel button too)
         -> Edit ~ Make sure edit of all roles works (Add cancel button too)
 
+        Added notifiers ✅
+
     3. User Registry
         -> Component is same as Staff Manager
+        Added notifiers ✅
 
     4. Course Manager
         -> New course ~ Assigning units ~ Learning Objectives ~ Demographics and Information
@@ -33,6 +42,8 @@
 
         -> Edit course (Add cancel button too) ~ Unit Manager  ~
            (information about inactive isn't pretty clear, use warning alert instead)
+
+        Added notifiers ✅
 
     5. Unit Manager
         -> New Unit ~ General Information ~ Lesson Plan Manager (UI doesn't look nice) 
