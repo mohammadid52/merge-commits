@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -197,9 +197,33 @@ const HeaderMegaMenu = () => {
     setCurrent(e.key);
   };
 
+  useEffect(() => {
+    // find the object with the current path from the tabs
+    // set the current tab to the key of that object
+
+    let childKey = '';
+
+    if (mappedTabs.length === 0) return;
+    const currentTab = mappedTabs.find((tab) => {
+      if (tab?.children?.length > 0) {
+        return tab.children.find((child: {key: string; redirectionUrl: string}) => {
+          if (child?.redirectionUrl === location.pathname) {
+            childKey = child.key;
+          }
+          return child?.redirectionUrl === location.pathname;
+        });
+      }
+      return tab?.redirectionUrl === location.pathname;
+    });
+
+    if (currentTab) {
+      setCurrent(childKey || currentTab.key);
+    }
+  }, [mappedTabs]);
+
   return (
     <Menu
-      className="w-full justify-start"
+      className="w-full justify-center"
       onClick={onClick}
       selectedKeys={[current]}
       mode="horizontal"
