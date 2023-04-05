@@ -9,6 +9,8 @@ import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
 import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceVendors from './ServiceVendors';
+import StaffBuilder from '../../Listing/StaffBuilder';
+import {Empty} from 'antd';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -103,6 +105,12 @@ const InstitutionBuilder = ({
       description: '',
       stepValue: 'service_vendors',
       disabled: !Boolean(institutionInfo.id)
+    },
+    {
+      title: 'Staff',
+      description: '',
+      stepValue: 'staff',
+      disabled: !Boolean(institutionInfo.id)
     }
   ];
 
@@ -116,13 +124,6 @@ const InstitutionBuilder = ({
       setActiveStep(step);
     }
   }, [step]);
-
-  useEffect(() => {
-    // For checking Authorized user is trying to access add institution or not
-    if (user.role !== 'SUP' && !institutionId) {
-      history.push('/dashboard');
-    }
-  }, [institutionId]);
 
   useEffect(() => {
     if (institute?.id) {
@@ -166,6 +167,12 @@ const InstitutionBuilder = ({
             instName={'name'}
           />
         );
+      case 'staff':
+        return institutionId ? (
+          <StaffBuilder inner instituteId={institutionId} />
+        ) : (
+          <Empty description="Instution Id is not available" />
+        );
 
       default:
         return null;
@@ -173,7 +180,10 @@ const InstitutionBuilder = ({
   };
 
   return (
-    <PageLayout title={InstitutionBuilderDict[userLanguage]['TITLE']}>
+    <PageLayout
+      title={
+        institute?.id ? 'Edit Institution' : InstitutionBuilderDict[userLanguage]['TITLE']
+      }>
       <div className={`w-full h-full `}>
         <div className="w-full m-auto">
           <StepComponent

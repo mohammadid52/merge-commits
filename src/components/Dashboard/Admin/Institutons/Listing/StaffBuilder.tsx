@@ -41,13 +41,12 @@ import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface StaffBuilderProps {
-  instituteId: String;
-  serviceProviders: {items: {id: string; providerID: string}[]};
-  instName: string;
+  instituteId: string;
+  inner?: boolean;
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const {instituteId} = props;
+  const {instituteId, inner} = props;
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
@@ -471,6 +470,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   return (
     <PageLayout
+      type={inner ? 'inner' : undefined}
       title={dictionary['TITLE']}
       extra={
         <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
