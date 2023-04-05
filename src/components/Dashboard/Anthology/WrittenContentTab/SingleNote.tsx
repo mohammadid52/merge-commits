@@ -1,4 +1,4 @@
-import Loader from '@components/Atoms/Loader';
+import {listAnthologyComments} from '@graphql/queries';
 import {AnthologyComment, ListAnthologyCommentsQueryVariables} from 'API';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
@@ -9,7 +9,6 @@ import {sortBy} from 'lodash';
 import {Suspense, useEffect, useState} from 'react';
 import Toggle from './../AnthologyContentNote/Toggle';
 import Feedbacks from './Feedbacks';
-import {listAnthologyComments} from '@graphql/queries';
 
 const SingleNote = (props: any) => {
   const {
@@ -123,12 +122,7 @@ const SingleNote = (props: any) => {
   }, [shareToggleQueue]);
 
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-56 w-full flex flex-col justify-center items-center">
-          <Loader withText={'Loading note...'} className="w-auto text-light " />
-        </div>
-      }>
+    <Suspense>
       <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
         <div
           id={`anthology_${subSection}${idx}`}

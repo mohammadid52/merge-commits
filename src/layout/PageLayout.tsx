@@ -73,7 +73,7 @@ const PageLayout = ({
         title={title}
         extra={extra}>
         {children}
-        {!hideInstProfile && type !== 'inner' && (
+        {!hideInstProfile && type !== 'inner' && institute && (
           <InstitutionProfile institute={institute} />
         )}
       </Card>

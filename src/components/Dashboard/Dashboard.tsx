@@ -1,8 +1,6 @@
 import Loader from '@components/Atoms/Loader';
-import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
-import {useQuery} from '@tanstack/react-query';
 import {reorderSyllabus, withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -17,14 +15,13 @@ import ErrorBoundary from 'components/Error/ErrorBoundary';
 import EmojiFeedback from 'components/General/EmojiFeedback';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
-  getDashboardData,
-  getDashboardDataForTeachers,
-  getDashboardDataForCoTeachers,
-  listRooms,
   getCurriculumForClasses,
-  getUniversalSyllabus
+  getDashboardData,
+  getDashboardDataForCoTeachers,
+  getDashboardDataForTeachers,
+  getUniversalSyllabus,
+  listRooms
 } from 'customGraphql/customQueries';
-import {getPerson} from 'graphql/queries';
 
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
@@ -124,7 +121,12 @@ const Dashboard = () => {
   const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
 
   useEffect(() => {
-    if (!isPageUpdatedOnPersonTable && stateUser.role === 'ST') {
+    if (
+      stateUser &&
+      stateUser.authId !== '' &&
+      !isPageUpdatedOnPersonTable &&
+      stateUser.role === 'ST'
+    ) {
       updatePageState(
         UserPageState.DASHBOARD,
         {
@@ -145,7 +147,7 @@ const Dashboard = () => {
 
       setIsPageUpdatedOnPersonTable(true);
     }
-  }, [isPageUpdatedOnPersonTable, stateUser.role]);
+  }, [isPageUpdatedOnPersonTable, stateUser]);
 
   useEffect(() => {
     if (currentPage === 'homepage') {
@@ -186,53 +188,57 @@ const Dashboard = () => {
     );
   };
 
-  useQuery({
-    queryKey: ['user'],
-    enabled: Boolean(stateUser && stateUser.email.length && stateUser.authId.length),
-    queryFn: getUser,
-    onSuccess(data) {
-      setUser(data);
-    }
-  });
+  // useQuery({
+  //   queryKey: ['user'],
+  //   enabled: Boolean(stateUser && stateUser.email.length && stateUser.authId.length),
+  //   queryFn: getUser,
+  //   onSuccess(data) {
+  //     setUser(data);
+  //   }
+  // });
 
-  async function getUser() {
-    const userEmail = stateUser?.email ? stateUser?.email : cookies.auth?.email;
-    const userAuthId = stateUser?.authId ? stateUser?.authId : cookies.auth?.authId;
-    try {
-      const queryObj = {
-        name: 'queries.getPerson',
-        valueObj: {email: userEmail, authId: userAuthId}
-      };
+  // async function getUser() {
+  //   const userEmail = stateUser?.email ? stateUser?.email : cookies.auth?.email;
+  //   const userAuthId = stateUser?.authId ? stateUser?.authId : cookies.auth?.authId;
+  //   try {
+  //     const queryObj = {
+  //       name: 'queries.getPerson',
+  //       valueObj: {email: userEmail, authId: userAuthId}
+  //     };
 
-      if (userEmail && userAuthId) {
-        const user: any = await API.graphql(
-          graphqlOperation(getPerson, queryObj.valueObj)
-        );
-        return user.data.getPerson;
-      }
-    } catch (error) {
-      console.log('Removing cookies - Something went wrong');
-      if (!userEmail && !userAuthId) {
-        removeCookie('auth', {path: '/'});
-        dispatch({type: 'CLEANUP'});
-        sessionStorage.removeItem('accessToken');
-        updateAuthState(false);
-      }
-      logError(error, {authId: userAuthId, email: userEmail}, 'Dashboard @getUser');
-      console.error('Dashboard - getUser(): ', error);
-    }
-  }
+  //     if (userEmail && userAuthId) {
+  //       const user: any = await API.graphql(
+  //         graphqlOperation(getPerson, queryObj.valueObj)
+  //       );
+  //       return user.data.getPerson;
+  //     }
+  //   } catch (error) {
+  //     console.log('Removing cookies - Something went wrong');
+  //     if (!userEmail && !userAuthId) {
+  //       removeCookie('auth', {path: '/'});
+  //       dispatch({type: 'CLEANUP'});
+  //       sessionStorage.removeItem('accessToken');
+  //       updateAuthState(false);
+  //     }
+  //     logError(error, {authId: userAuthId, email: userEmail}, 'Dashboard @getUser');
+  //     console.error('Dashboard - getUser(): ', error);
+  //   }
+  // }
 
   useEffect(() => {
-    if (!stateUser?.firstName) {
-      // do nothing
-    } else {
-      setUserData({
-        role: stateUser?.role,
-        image: stateUser?.image
-      });
+    if (stateUser.authId !== '') {
+      if (!stateUser?.firstName) {
+        // do nothing
+      } else {
+        if (stateUser?.role) {
+          setUserData({
+            role: stateUser?.role,
+            image: stateUser?.image
+          });
+        }
+      }
     }
-  }, [stateUser?.role]);
+  }, [stateUser?.role, stateUser.authId]);
 
   // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
 
@@ -350,17 +356,22 @@ const Dashboard = () => {
     const authId = stateUser?.authId;
     const email = stateUser?.email;
 
+    if (stateUser.authId === '') return;
+
     if (stateUser?.role === 'ST') {
       if (!authId || !email) return;
       getDashboardDataFn(authId, email);
     } else {
+      if (!authId) return;
       getDashboardDataForTeachersFn(authId);
     }
   };
 
   useEffect(() => {
-    refetchHomeData();
-  }, [stateUser?.role]);
+    if (stateUser.authId !== '') {
+      refetchHomeData();
+    }
+  }, [stateUser?.role, stateUser.authId]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -397,6 +408,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    if (stateUser.authId === '') return;
     const studentRoomsList = getRoomsFromClassList();
     // console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
@@ -716,18 +728,13 @@ const Dashboard = () => {
           {/*<FloatingSideMenu />*/}
           {/* {!isGameChangers && <Noticebar notifications={notifications} />} */}
 
-          <Suspense
-            fallback={
-              <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading />
-              </div>
-            }>
+          <Suspense>
             <Switch>
               <Route
                 path={`${match.url}`}
                 exact
                 render={() => {
-                  if (userData && userData.role !== '') {
+                  if (userData && userData.role !== null) {
                     if (userData.role === 'FLW' || userData.role === 'TR') {
                       return <Redirect to={`${match.url}/home`} />;
                     } else if (userData.role === 'ST') {

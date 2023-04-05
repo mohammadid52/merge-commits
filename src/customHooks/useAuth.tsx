@@ -10,7 +10,7 @@ export type User = {
   authId: string;
   id: string;
 
-  role: Role;
+  role: Role | null;
   email: string;
   preferredName?: string;
   firstName: string;
@@ -30,7 +30,7 @@ export type User = {
 };
 
 const useAuth = (): {
-  role: Role;
+  role: Role | null;
   isStudent: boolean;
   isTeacher: boolean;
   isBuilder: boolean;

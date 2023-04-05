@@ -175,19 +175,21 @@ const HeaderMegaMenu = () => {
   const getMenuByRole = (role: string) =>
     role === 'ST' ? headerMenusForStudent : headerMenusForInstitution;
 
-  const mappedTabs = getMenuByRole(user?.role).map((tab: any) => {
-    if (tab?.children?.length > 0) {
-      tab.children = tab.children.map((child: any) => {
-        if (child?.redirectionUrl) {
-          child.label = <Link to={child.redirectionUrl}>{child.label}</Link>;
+  const mappedTabs = !user?.role
+    ? []
+    : getMenuByRole(user?.role).map((tab: any) => {
+        if (tab?.children?.length > 0) {
+          tab.children = tab.children.map((child: any) => {
+            if (child?.redirectionUrl) {
+              child.label = <Link to={child.redirectionUrl}>{child.label}</Link>;
+            }
+            return child;
+          });
+        } else if (tab?.redirectionUrl) {
+          tab.label = <Link to={tab.redirectionUrl}>{tab.label}</Link>;
         }
-        return child;
+        return tab;
       });
-    } else if (tab?.redirectionUrl) {
-      tab.label = <Link to={tab.redirectionUrl}>{tab.label}</Link>;
-    }
-    return tab;
-  });
 
   const [current, setCurrent] = useState('staff');
 

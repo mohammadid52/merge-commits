@@ -160,12 +160,6 @@ const Institution = (props: InstitutionProps) => {
     setInstitutionData(instData);
   };
 
-  useEffect(() => {
-    if (isNewUpdate) {
-      getInstitutionData();
-    }
-  }, [isNewUpdate]);
-
   return (
     <div className={`w-full h-full`}>
       <BreadcrumbsWithBanner

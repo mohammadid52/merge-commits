@@ -49,14 +49,33 @@ const setupAppHeaders = async (clientKey: string) => {
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
 
-  const {authState, setAuthState, clientKey} = useGlobalContext();
+  const {authState, setAuthState, clientKey, state} = useGlobalContext();
 
   useEffect(() => {
     setupAppHeaders(clientKey);
-    checkUserAuthenticated();
   }, [clientKey]);
 
+  useEffect(() => {
+    if (state?.user?.authId === '') {
+      checkUserAuthenticated();
+    }
+  }, [state?.user?.authId]);
+
   const {setUser, removeAuthToken} = useAuth();
+
+  const setUserProfile = async (email: string, sub: string) => {
+    const userInfo = await getPerson(email, sub);
+    let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(sub) : {};
+    // // SETUP USER
+    setUser({
+      email,
+      authId: sub,
+
+      associateInstitute:
+        instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || [],
+      ...getUserInfo(userInfo)
+    });
+  };
 
   const checkUserAuthenticated = async () => {
     try {
@@ -65,21 +84,14 @@ const MainRouter: React.FC = () => {
       if (user) {
         const {email, sub} = user.attributes;
 
-        const userInfo = await getPerson(email, sub);
-
-        let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(sub) : {};
-
-        // SETUP USER
+        // // SETUP USER
         setUser({
           email,
-          authId: sub,
-
-          associateInstitute:
-            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
-            [],
-          ...getUserInfo(userInfo)
+          authId: sub
         });
+
         setAuthState('loggedIn');
+        setUserProfile(email, sub);
       } else {
         setAuthState('notLoggedIn');
         removeAuthToken();
@@ -119,12 +131,7 @@ const MainRouter: React.FC = () => {
         {deviceDetected.mobile ? (
           <MobileOops userAgent={deviceDetected.device} />
         ) : (
-          <Suspense
-            fallback={
-              <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
-                <ComponentLoading from="AppMainRouter Suspense" />
-              </div>
-            }>
+          <Suspense>
             {authState === 'loading' && (
               <ComponentLoading from="AppMainRouter loading state" />
             )}

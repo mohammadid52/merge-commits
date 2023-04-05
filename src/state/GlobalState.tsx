@@ -1,6 +1,6 @@
 import {User} from '@customHooks/useAuth';
 import {Widget} from '@interfaces/ClassroomComponentsInterfaces';
-import {Dicitionary, PersonStatus, Role, TeachingStyle, UserPageState} from 'API';
+import {Dicitionary, PersonStatus, TeachingStyle, UserPageState} from 'API';
 
 export interface GlobalStateType {
   sidebar: {
@@ -84,7 +84,7 @@ export const globalState: GlobalStateType = {
     firstName: '',
     lastName: '',
     language: 'EN',
-    role: Role.ST,
+    role: null,
     image: '',
     preferredName: '',
     location: [],

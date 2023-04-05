@@ -1,4 +1,3 @@
-import Loader from '@components/Atoms/Loader';
 import PublicRoute from 'components/Auth/PublicRoute';
 import {lazy, Suspense} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
@@ -9,12 +8,7 @@ const PrivacyPolicy = lazy(() => import('components/Auth/PrivacyPolicy'));
 
 const UnauthRoutes = () => {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen w-full flex flex-col justify-center items-center">
-          <Loader />
-        </div>
-      }>
+    <Suspense>
       <Switch>
         <PublicRoute path="/login" restricted={true}>
           <Login />

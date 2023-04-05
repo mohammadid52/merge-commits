@@ -1,6 +1,6 @@
 import Buttons from '@components/Atoms/Buttons';
-import {Modal, Result} from 'antd';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
+import {Modal, Result} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
@@ -18,7 +18,6 @@ import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
@@ -621,12 +620,7 @@ const LessonControl = () => {
                 className={`${
                   theme && theme.bg
                 } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
-                <Suspense
-                  fallback={
-                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                      <ComponentLoading from="LessonControl" />
-                    </div>
-                  }>
+                <Suspense>
                   <ErrorBoundary
                     authId={authId}
                     email={email}

@@ -2,7 +2,6 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
 import {UniversalLessonBuilderProvider} from 'contexts/UniversalLessonBuilderContext';
 
-import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import {lazy, Suspense} from 'react';
 const InstitutionBuilder = lazy(
@@ -72,7 +71,7 @@ const NavBarRouter = (instProps: any) => {
   const match = useRouteMatch();
 
   return (
-    <Suspense fallback={<ComponentLoading />}>
+    <Suspense>
       <Switch>
         <Route
           path={`${match.url}/class-rooms`}

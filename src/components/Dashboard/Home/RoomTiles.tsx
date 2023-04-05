@@ -125,6 +125,7 @@ const RoomTiles = (props: {
   };
 
   const {user, isTeacher} = useAuth();
+  const loading = user.authId === '' || roomsLoading;
 
   const isInactive = user?.status === 'INACTIVE';
 
@@ -162,16 +163,16 @@ const RoomTiles = (props: {
         borderBottom
       />
       <ContentCard hasBackground={false}>
-        {!isTeacher && isInactive ? (
+        {loading ? (
+          <div className="min-h-56 flex items-center justify-center ">
+            <Loader withText="Loading classrooms..." />
+          </div>
+        ) : !isTeacher && isInactive ? (
           <p className="text-medium  text-sm text-center py-8 px-4">
             Your account is inactive. If you think this status is incorrect contact our
             administration team. Acces to your writing exercises and journal are still
             available
           </p>
-        ) : roomsLoading ? (
-          <div className="min-h-56 flex items-center justify-center ">
-            <Loader withText="Loading classrooms..." />
-          </div>
         ) : finalList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto  px-6 mt-4">
