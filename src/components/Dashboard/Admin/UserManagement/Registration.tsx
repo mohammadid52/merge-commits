@@ -31,21 +31,6 @@ import {useFormik} from 'formik';
 import PageLayout from 'layout/PageLayout';
 import {createClassStudent, createPerson, createStaff} from '@graphql/mutations';
 
-const initialValues = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  role: Role.ST,
-  isZoiq: false,
-  isSelfPaced: true,
-  status: PersonStatus.ACTIVE,
-  class: {
-    id: '',
-    name: '',
-    roomId: ''
-  }
-};
-
 interface DynamicWrapperProps {
   children: React.ReactNode;
   isInModalPopup: boolean;
@@ -93,6 +78,21 @@ const Registration = ({
 
   const messageDict = RegistrationDict[userLanguage]['messages'];
   const rolesDict = RegistrationDict[userLanguage]['roles'];
+
+  const initialValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: isInModalPopup ? null : Role.ST,
+    isZoiq: false,
+    isSelfPaced: true,
+    status: PersonStatus.ACTIVE,
+    class: {
+      id: '',
+      name: '',
+      roomId: ''
+    }
+  };
 
   const Roles = [
     state.user.role === Role.SUP && {
@@ -156,7 +156,7 @@ const Registration = ({
     let userData: CreatePersonInput = {
       authId: authId,
       status: values.status.toLocaleUpperCase() as PersonStatus,
-      role: role,
+      role: role !== null ? role : Role.ST,
       email,
       firstName: values.firstName,
       lastName: values.lastName,
@@ -343,7 +343,7 @@ const Registration = ({
                 label={RegistrationDict[userLanguage]['role']}
                 error={errors.role}
                 list={Roles}
-                selectedItem={getUserRoleString(values.role)}
+                selectedItem={values.role ? getUserRoleString(values.role) : undefined}
               />
             )}
 
