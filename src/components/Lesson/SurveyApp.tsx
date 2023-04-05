@@ -202,6 +202,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
           exerciseData
         }
       });
+
       setStudentDataInitialized(true);
     }
   };
