@@ -138,7 +138,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
       open={open}
       onCancel={() => setOpen(false)}>
       <div className="bg-dark-blue">
-        <Tabs items={items} defaultActiveKey="1" />
+        <Tabs items={items} className="dark-tabs" defaultActiveKey="1" />
 
         <div className="min-h-56 py-4">
           <Label dark label="Lesson Plan" />

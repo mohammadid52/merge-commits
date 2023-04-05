@@ -377,7 +377,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
             user.authId,
             user.email
           );
-          if (createNewRecords) {
+          if (createNewRecords && createNewRecords?.length > 0) {
             const newRecords = await Promise.all(createNewRecords);
 
             if (newRecords?.length > 0) {

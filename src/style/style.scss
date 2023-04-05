@@ -1856,3 +1856,11 @@ $translation-fab-width: 50px;
 .ant-modal-title {
   font-weight: 500 !important;
 }
+
+.dark-tabs {
+  .ant-tabs-tab {
+    [aria-selected='false'] {
+      color: white;
+    }
+  }
+}

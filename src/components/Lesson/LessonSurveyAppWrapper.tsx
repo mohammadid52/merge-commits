@@ -28,7 +28,8 @@ const LessonSurveyAppWrapper = ({
   personLessonData,
   setPersonLessonData,
   updatePageInLocalStorage,
-  lessonDataLoaded
+  lessonDataLoaded,
+  getValidatedPages
 }: LessonSurveyAppWrapper) => {
   const {
     lessonState,
@@ -93,6 +94,7 @@ const LessonSurveyAppWrapper = ({
           isAtEnd={isAtEnd}
           setPersonLessonData={setPersonLessonData}
           setisAtEnd={setisAtEnd}
+          getValidatedPages={getValidatedPages}
           validateRequired={validateRequired}
           handleRequiredNotification={() => {
             invokeRequiredField?.();

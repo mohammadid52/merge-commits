@@ -199,7 +199,7 @@ const HeaderMegaMenu = () => {
 
   return (
     <Menu
-      className="w-full justify-around"
+      className="w-full justify-start"
       onClick={onClick}
       selectedKeys={[current]}
       mode="horizontal"

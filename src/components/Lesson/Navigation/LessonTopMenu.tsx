@@ -33,7 +33,8 @@ const LessonTopMenu = ({
   canContinue,
   handleForward,
   pageStateUpdated,
-  validateRequired
+  validateRequired,
+  getValidatedPages
 }: LessonHeaderBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -61,6 +62,7 @@ const LessonTopMenu = ({
 
             {pageStateUpdated && (
               <ProgressBar
+                getValidatedPages={getValidatedPages}
                 handleHome={() => handlePopup?.(false)}
                 handleRequiredNotification={handleRequiredNotification}
                 pages={pages}

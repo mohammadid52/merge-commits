@@ -20,6 +20,7 @@ import {
   getDashboardDataForCoTeachers,
   getDashboardDataForTeachers,
   getUniversalSyllabus,
+  listRoomCurriculums,
   listRooms
 } from 'customGraphql/customQueries';
 
@@ -489,7 +490,7 @@ const Dashboard = () => {
   /**********************************
    * 3. LIST CURRICULUMS BY ROOM ID *
    **********************************/
-  const listRoomCurriculums = async () => {
+  const listRoomCurriculumsFn = async () => {
     // removeLocalStorageData('curriculum_id');
     if (roomData.rooms.length > 0) {
       try {
@@ -525,7 +526,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (activeRoom && activeRoom !== '') {
-      listRoomCurriculums();
+      listRoomCurriculumsFn();
     }
   }, [activeRoom]);
 

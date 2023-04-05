@@ -90,8 +90,8 @@ const MainRouter: React.FC = () => {
           authId: sub
         });
 
-        setAuthState('loggedIn');
         setUserProfile(email, sub);
+        setAuthState('loggedIn');
       } else {
         setAuthState('notLoggedIn');
         removeAuthToken();

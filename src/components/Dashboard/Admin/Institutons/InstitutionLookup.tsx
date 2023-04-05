@@ -18,7 +18,8 @@ import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {Redirect, useHistory, useRouteMatch} from 'react-router-dom';
+import useAuth from '@customHooks/useAuth';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -255,6 +256,11 @@ const InstitutionLookup: React.FC = () => {
       }
     }
   };
+
+  const {isStudent} = useAuth();
+  if (isStudent) {
+    return <Redirect to="/dashboard/profile" />;
+  }
 
   return (
     <div className={`w-full h-full`}>

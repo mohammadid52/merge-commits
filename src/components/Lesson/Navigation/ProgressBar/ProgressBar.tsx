@@ -1,3 +1,4 @@
+import {ILessonSurveyApp} from '@components/Lesson/Lesson';
 import {useQuery} from '@customHooks/urlParam';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {scrollUp} from '@utilities/functions';
@@ -19,6 +20,7 @@ interface IProgressBarProps {
   studentData?: any[];
   requiredInputs?: any[];
   canContinue?: boolean;
+  getValidatedPages: ILessonSurveyApp['getValidatedPages'];
 }
 
 const ProgressBar = ({
@@ -28,7 +30,8 @@ const ProgressBar = ({
   currentPage,
   updatePageInLocalStorage,
   validateRequired,
-  canContinue
+  canContinue,
+  getValidatedPages
 }: IProgressBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -119,20 +122,45 @@ const ProgressBar = ({
   const history = useHistory();
   const match = useRouteMatch();
 
+  const moveToPage = (pageNr: number) => {
+    scrollUp(lessonType);
+    const sId = params.get('sId');
+    const sEmail = params.get('sId');
+
+    const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+    history.push(`${match.url}/${pageNr}${dynamicQuery}`);
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+
+    updatePageInLocalStorage?.(pageNr);
+  };
+
   const lessonProgress = lessonState.lessonProgress;
   const handleLink = (pageNr: number) => {
     const isNotMovingForward = pageNr < lessonProgress;
+
+    // check validated pages
+    const validatedPages = getValidatedPages?.();
+
+    const indexOfFirstInvalidPage = validatedPages?.findIndex(
+      (item: {isValid: boolean}) => item.isValid === false
+    );
+
+    // if the page number in validated pages is true then we can continue
+    const canContinue =
+      validatedPages?.[pageNr].isValid === true || indexOfFirstInvalidPage === pageNr;
+
+    // check the index of isValid false in validated pages and if the current page is that index then do nothing else
+
+    if (
+      indexOfFirstInvalidPage &&
+      indexOfFirstInvalidPage !== -1 &&
+      indexOfFirstInvalidPage !== lessonState.currentPage
+    ) {
+      moveToPage(indexOfFirstInvalidPage);
+    }
+
     if (canContinue || isNotMovingForward) {
-      scrollUp(lessonType);
-      const sId = params.get('sId');
-      const sEmail = params.get('sId');
-
-      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
-      history.push(`${match.url}/${pageNr}${dynamicQuery}`);
-
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
-
-      updatePageInLocalStorage?.(pageNr);
+      moveToPage(pageNr);
     } else {
       handleRequiredNotification && handleRequiredNotification();
     }

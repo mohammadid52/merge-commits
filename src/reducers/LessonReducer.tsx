@@ -40,7 +40,8 @@ const LESSON_REDUCER_TYPES = {
   SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE',
   SET_IS_VALID: 'SET_IS_VALID',
   UPDATE_TIMER_FOR_PAGE: 'UPDATE_TIMER_FOR_PAGE',
-  RESET_TIMER_FOR_PAGE: 'RESET_TIMER_FOR_PAGE'
+  RESET_TIMER_FOR_PAGE: 'RESET_TIMER_FOR_PAGE',
+  VALID_PAGE_INDEX: 'VALID_PAGE_INDEX'
 };
 
 export type LessonActions =
@@ -222,6 +223,12 @@ export type LessonActions =
       payload: {
         currentPage?: any;
         remainingTime?: number;
+      };
+    }
+  | {
+      type: 'VALID_PAGE_INDEX';
+      payload: {
+        pageIdx: number;
       };
     };
 

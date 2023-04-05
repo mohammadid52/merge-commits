@@ -1,5 +1,4 @@
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from 'graphql-functions/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
@@ -20,14 +19,15 @@ import {
 } from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useNotifications from 'customHooks/notifications';
+import {logError, updatePageState} from 'graphql-functions/functions';
 import {isEmpty, update} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
-import {SEARCH_LIMIT} from './constants';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
+import {SEARCH_LIMIT} from './constants';
 
 export interface ILessonSurveyApp {
   pageStateUpdated: boolean;
@@ -43,6 +43,10 @@ export interface ILessonSurveyApp {
   getLessonCurrentPage: () => Promise<number>;
   handleMutationOnPageChange: () => Promise<void>;
   resetViewAndShare?: () => void;
+  getValidatedPages?: () => {
+    page: number;
+    isValid: boolean;
+  }[];
 }
 
 const Lesson = () => {
@@ -193,6 +197,33 @@ const Lesson = () => {
       }
     } else {
       return false;
+    }
+  };
+
+  // create an object for all pages and setisvalid to false for each page if there are required fields
+
+  const getValidatedPages = () => {
+    if (PAGES) {
+      let allPageValidations: any = [];
+      PAGES.forEach((page: any, idx: number) => {
+        const isValid = validateRequired(idx);
+
+        // if previous index was invalid set current to invalid
+        if (idx > 0) {
+          const previousPageValidation = allPageValidations[idx - 1];
+          if (!previousPageValidation.isValid) {
+            allPageValidations.push({page: idx, isValid: false});
+          }
+        }
+        // don't push if page number already exists in allPageValidations
+        if (allPageValidations[idx]) {
+          return;
+        }
+
+        allPageValidations.push({page: idx, isValid: isValid});
+      });
+
+      return allPageValidations;
     }
   };
 
@@ -647,7 +678,7 @@ const Lesson = () => {
     updatePageInLocalStorage,
     leaveRoomLocation,
     getLessonCurrentPage,
-
+    getValidatedPages,
     handleMutationOnPageChange
   };
 
