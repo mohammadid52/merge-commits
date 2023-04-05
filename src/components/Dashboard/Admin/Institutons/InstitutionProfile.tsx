@@ -11,9 +11,11 @@ import {updateInstitution} from 'customGraphql/customMutations';
 import {uploadImageToS3} from 'graphql-functions/functions';
 import {isEmpty} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
+import {AiOutlineCheckCircle} from 'react-icons/ai';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
+import {MdRadioButtonUnchecked} from 'react-icons/md';
 
 const InstitutionProfile = ({institute}: {institute: any}) => {
   // Add image handler
@@ -126,12 +128,12 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
                 </div>
               )}
               <span className="mx-4 w-auto">|</span>
-              <div className="flex w-auto  items-center">
-                <span className="w-auto mr-2">
+              <div className="flex w-auto justify-center items-center">
+                <span className="flex w-auto justify-center items-center mr-2">
                   {isServiceProvider ? (
-                    <BiCheckboxChecked className="w-4 h-4" />
+                    <MdRadioButtonUnchecked className="w-4 h-4" />
                   ) : (
-                    <BiCheckbox className="w-4 h-4" />
+                    <AiOutlineCheckCircle className="w-4 h-4" />
                   )}
                 </span>
                 <span className="w-auto">
