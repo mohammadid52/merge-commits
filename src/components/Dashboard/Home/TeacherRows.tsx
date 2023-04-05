@@ -167,7 +167,7 @@ const TeacherRows = (props: {
                                     `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
                                   );
                                 }}
-                                className="text-medium   transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                                className="text-medium   transition-all hover:underline hover:theme-text:500 rounded-md ">
                                 {d.name}
                               </li>
                             ))}
