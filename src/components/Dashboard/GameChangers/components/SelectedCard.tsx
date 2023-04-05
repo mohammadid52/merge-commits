@@ -230,7 +230,7 @@ const SelectedCard = ({
         <div
           className={`h-full  transition-all rounded-xl  ${
             selected?.type === EMOTIONS ? '' : 'p-4 md:p-16 md:px-14 px-8'
-          } game-changer-card flex flex-col border-darkest   md:border-2 items-center justify-center overflow-hidden `}>
+          } game-changer-card flex flex-col bg-darkest   md:border-2 items-center justify-center overflow-hidden `}>
           <div>
             <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
               {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
@@ -322,7 +322,7 @@ const SelectedCard = ({
                   {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
 
                   {exerciseType === 'square' && isActive && (
-                    <ul className="mt-8 fse-text-helper-list">
+                    <ul className="mt-8 fse-text-helper-list  flex items-center justify-center">
                       {map(breathingHelpingTexts, (item, i) => (
                         <li
                           key={item}

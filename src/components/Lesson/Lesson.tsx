@@ -18,7 +18,6 @@ import {
   lessonsByType
 } from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import useNotifications from 'customHooks/notifications';
 import {logError, updatePageState} from 'graphql-functions/functions';
 import {isEmpty, update} from 'lodash';
 import React, {useEffect, useState} from 'react';
@@ -56,8 +55,8 @@ const Lesson = () => {
 
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
-  const {notifications} = useNotifications('lesson');
-  const {notifications: inputNotifications} = useNotifications('input');
+  // const {notifications} = useNotifications('lesson');
+  // const {notifications: inputNotifications} = useNotifications('input');
 
   const urlParams: any = useParams();
 
@@ -205,7 +204,7 @@ const Lesson = () => {
   const getValidatedPages = () => {
     if (PAGES) {
       let allPageValidations: any = [];
-      PAGES.forEach((page: any, idx: number) => {
+      PAGES.forEach((_: any, idx: number) => {
         const isValid = validateRequired(idx);
 
         // if previous index was invalid set current to invalid
@@ -450,7 +449,6 @@ const Lesson = () => {
       logError(error, {authId, email}, 'Lesson @createPersonLocation', error.toString());
 
       console.log('createPersonLocation failed', error, newLocation);
-      // console.error('createPersonLocation - ', e);
     } finally {
       setCreated(true);
     }
@@ -682,8 +680,6 @@ const Lesson = () => {
     handleMutationOnPageChange
   };
 
-  // const _inputNotifications = inputNotifications || [];
-  // const _notifications = notifications || [];
   return (
     <>
       {/* <Noticebar notifications={[..._inputNotifications, ..._notifications]} /> */}
