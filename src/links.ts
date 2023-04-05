@@ -13,3 +13,5 @@ const links = {
   units: (instId: string) => `${baseLinkForInstitution}/${instId}/units`,
   lessons: (instId: string) => `${baseLinkForInstitution}/${instId}/lessons`
 };
+
+export default links;

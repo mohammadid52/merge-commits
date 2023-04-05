@@ -368,7 +368,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      href: '/dashboard',
+      href: '/dashboard/home',
       last: false
     },
     {

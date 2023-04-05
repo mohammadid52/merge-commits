@@ -15,7 +15,7 @@ import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {logError} from 'graphql-functions/functions';
 import {AiOutlineHome} from 'react-icons/ai';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 
 export type BreadCrumb = {
@@ -227,7 +227,11 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
   const itemRender = (route: any, _: any, routes: string | any[]) => {
     const last = routes.indexOf(route.title as string) === routes.length - 1;
 
-    return last ? <span>{route.title}</span> : <Link to={route.href}>{route.title}</Link>;
+    return last ? (
+      <span>{route.title}</span>
+    ) : (
+      <NavLink to={route.href}>{route.title}</NavLink>
+    );
   };
 
   return (

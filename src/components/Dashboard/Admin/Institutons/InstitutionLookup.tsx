@@ -20,6 +20,7 @@ import {map, orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {Redirect, useHistory, useRouteMatch} from 'react-router-dom';
 import useAuth from '@customHooks/useAuth';
+import links from 'links';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -80,8 +81,6 @@ const InstitutionLookup: React.FC = () => {
   const addNewInstitution = () => {
     history.push(`${match.url}/add`);
   };
-
-  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
 
   async function fetchInstListForAdmin() {
     const fetchInstitutionData: any = await API.graphql(
@@ -257,9 +256,14 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
-  const {isStudent} = useAuth();
-  if (isStudent) {
+  const {isSuperAdmin, isTeacher, isStudent, instId} = useAuth();
+
+  if (isStudent || isTeacher) {
     return <Redirect to="/dashboard/home" />;
+  }
+
+  if (!isSuperAdmin && instId) {
+    return <Redirect to={links.staff(instId)} />;
   }
 
   return (
