@@ -270,7 +270,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
       const authIdFilter = createFilterToFetchSpecificItemsOnly(authIds, 'authId');
 
-      if ((authIdFilter.or.length && (isTeacher || isBuilder || isAdmin)) || !isTeacher) {
+      if (
+        (authIdFilter &&
+          authIdFilter.or &&
+          authIdFilter.or.length &&
+          (isTeacher || isBuilder || isAdmin)) ||
+        !isTeacher
+      ) {
         let users: any;
         let response: any;
 
@@ -472,7 +478,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     onClick: () => handleUserLink(item.id),
     name: <UserLookupName searchTerm={searchInput.value} item={item} />,
     flow: item?.onDemand ? 'Self Paced' : 'Classroom',
-    role: fallbackValue(item.role),
+    role: getUserRoleString(fallbackValue(item.role)),
     status: (
       <div className="">
         <UserStatus status={fallbackValue(item.status)} />
