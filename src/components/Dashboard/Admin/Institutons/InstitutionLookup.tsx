@@ -259,7 +259,7 @@ const InstitutionLookup: React.FC = () => {
 
   const {isStudent} = useAuth();
   if (isStudent) {
-    return <Redirect to="/dashboard/profile" />;
+    return <Redirect to="/dashboard/home" />;
   }
 
   return (
