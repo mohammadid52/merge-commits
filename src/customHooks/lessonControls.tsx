@@ -1,8 +1,9 @@
 import {logError} from 'graphql-functions/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
+import {} from 'graphql/mutations';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {updateRoom} from '@customGraphql/customMutations';
 
 const useLessonControls = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
@@ -20,7 +21,7 @@ const useLessonControls = () => {
     if (typeof payload === 'object' && Object.keys(payload).length > 0) {
       try {
         await API.graphql(
-          graphqlOperation(mutations.updateRoom, {
+          graphqlOperation(updateRoom, {
             input: payload
           })
         );

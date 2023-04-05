@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
+import 'components/Dashboard/GameChangers/styles/Flickity.scss';
+import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useEffect} from 'react';
 import Flickity from 'react-flickity-component';

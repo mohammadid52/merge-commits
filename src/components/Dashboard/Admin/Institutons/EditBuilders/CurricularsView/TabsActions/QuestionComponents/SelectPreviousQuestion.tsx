@@ -7,7 +7,7 @@ import SearchInput from 'atoms/Form/SearchInput';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listQuestions} from 'graphql/queries';
 import {getLanguageString, getTypeString} from 'utilities/strings';
 
 interface SelectPreviousQuestionProps {
@@ -62,9 +62,7 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
   const fetchQuestionsList = async () => {
     try {
       setLoading(true);
-      const fetchQuestionsData: any = await API.graphql(
-        graphqlOperation(queries.listQuestions)
-      );
+      const fetchQuestionsData: any = await API.graphql(graphqlOperation(listQuestions));
       if (!fetchQuestionsData) {
         setError(true);
         throw new Error('fail!');

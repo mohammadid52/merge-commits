@@ -9,8 +9,8 @@ import SearchInput from 'atoms/Form/SearchInput';
 
 import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {createCommonCheckpoint} from 'customGraphql/customMutations';
+import {listCheckpoints, getCurriculumCheckpoints} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import PageLayout from 'layout/PageLayout';
 import {getLanguageString} from 'utilities/strings';
@@ -74,7 +74,7 @@ const ProfileCheckpointlookup = () => {
     };
 
     await API.graphql(
-      graphqlOperation(customMutations.createCommonCheckpoint, {
+      graphqlOperation(createCommonCheckpoint, {
         input: profileCheckpointInput
       })
     );
@@ -96,12 +96,12 @@ const ProfileCheckpointlookup = () => {
       setLoading(true);
       const [allCheckpointList, curricularCheckp]: any = await Promise.all([
         await API.graphql(
-          graphqlOperation(customQueries.listCheckpoints, {
+          graphqlOperation(listCheckpoints, {
             filter: {type: {eq: 'profile'}}
           })
         ),
         await API.graphql(
-          graphqlOperation(customQueries.getCurriculumCheckpoints, {
+          graphqlOperation(getCurriculumCheckpoints, {
             id: courseId
           })
         )

@@ -5,7 +5,7 @@ import {UserPageState} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updatePerson} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {useState} from 'react';
 import {useHistory} from 'react-router-dom';
@@ -52,7 +52,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       lastPageStateUpdate: time
     };
     try {
-      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
+      await API.graphql(graphqlOperation(updatePerson, {input: input}));
 
       if (fromWhere === 'notebook') {
         setMessage({

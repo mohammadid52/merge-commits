@@ -2,7 +2,7 @@ import AddButton from 'atoms/Buttons/AddButton';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {deleteUniversalSyllabus} from 'graphql/mutations';
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
@@ -12,15 +12,18 @@ import Modal from 'components/Atoms/Modal';
 
 import InsitutionSelector from '@components/Dashboard/Admin/InsitutionSelector';
 import {useQuery} from '@tanstack/react-query';
-import {Descriptions, List, Tooltip} from 'antd';
 import {RoomStatus} from 'API';
+import {Descriptions, List, Tooltip} from 'antd';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
 import UnitName from 'components/MicroComponents/UnitName';
 import Table, {ITableProps} from 'components/Molecules/Table';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createUniversalSyllabusLesson,
+  updateUniversalSyllabusLessonSequence
+} from 'customGraphql/customMutations';
+import {listUniversalSyllabuss} from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
@@ -134,7 +137,7 @@ export const UnitList = ({
   const fetchSyllabusList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalSyllabuss, {
+        graphqlOperation(listUniversalSyllabuss, {
           filter: isSuperAdmin
             ? undefined
             : {
@@ -228,7 +231,7 @@ export const UnitList = ({
     try {
       console.log('deleting...');
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabus, {
+        graphqlOperation(deleteUniversalSyllabus, {
           input: {id: item.id}
         })
       );
@@ -336,7 +339,7 @@ export const UnitList = ({
     const existingLessonSeq = selectedItem?.universalLessonsSeq || [];
     setUnits((prevUnits: any) => [...prevUnits, selectedItem]);
     await API.graphql(
-      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+      graphqlOperation(updateUniversalSyllabusLessonSequence, {
         input: {
           id: unitId,
           universalLessonsSeq: [...existingLessonSeq, lessonId]
@@ -368,7 +371,7 @@ export const UnitList = ({
       };
       setSaving(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createUniversalSyllabusLesson, {
+        graphqlOperation(createUniversalSyllabusLesson, {
           input: input
         })
       );

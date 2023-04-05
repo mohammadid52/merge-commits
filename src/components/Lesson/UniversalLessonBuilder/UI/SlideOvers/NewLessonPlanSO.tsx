@@ -10,7 +10,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateUniversalLesson} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import {IFile} from 'interfaces/UniversalLessonInterfaces';
@@ -401,7 +401,7 @@ const NewLessonPlanSO = ({
           };
 
           const res: any = await API.graphql(
-            graphqlOperation(customMutations.updateUniversalLesson, {
+            graphqlOperation(updateUniversalLesson, {
               input
             })
           );

@@ -1,14 +1,12 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as mutations from "graphql/mutations";
-import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
-import React, { useEffect, useState } from "react";
-import {
-  getLocalStorageData,
-  setLocalStorageData,
-} from "utilities/localStorage";
-import OpenClosePagesToggle from "./TitleBarSections/OpenClosePagesToggle";
-import PresentationModeToggle from "./TitleBarSections/PresentationModeToggle";
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {} from 'graphql/mutations';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import React, {useEffect, useState} from 'react';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';
+import PresentationModeToggle from './TitleBarSections/PresentationModeToggle';
+import {updateRoom} from '@customGraphql/customMutations';
 
 export interface StudentWindowTitleBarProps {
   handleFullscreen?: () => void;
@@ -37,16 +35,12 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = () => {
   // ##################################################################### //
 
   // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
-  const getRoomData = getLocalStorageData("room_info");
+  const getRoomData = getLocalStorageData('room_info');
 
   const handleOpenComponent = async (pageNr: number) => {
     // ~~~~~~~ GET CURRENT CLOSED PAGES ~~~~~~ //
     const getPagesBefore = lessonState.lessonData.lessonPlan.reduce(
-      (
-        pagesBeforeAcc: string[],
-        page: UniversalLessonPage,
-        pageIdx: number
-      ) => {
+      (pagesBeforeAcc: string[], page: UniversalLessonPage, pageIdx: number) => {
         if (pageIdx <= pageNr) {
           return [...pagesBeforeAcc, page.id];
         } else {
@@ -66,20 +60,20 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = () => {
 
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
-      type: "TOGGLE_OPEN_PAGE",
-      payload: pageNr,
+      type: 'TOGGLE_OPEN_PAGE',
+      payload: pageNr
     });
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
-    setLocalStorageData("room_info", {
+    setLocalStorageData('room_info', {
       ...getRoomData,
-      ClosedPages: finalClosedPages,
+      ClosedPages: finalClosedPages
     });
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateRoom, {
+        graphqlOperation(updateRoom, {
           input: {
             id: getRoomData.id,
             institutionID: getRoomData.institutionID,
@@ -88,12 +82,12 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = () => {
             teacherEmail: getRoomData.teacherEmail,
             name: getRoomData.name,
             maxPersons: getRoomData.maxPersons,
-            ClosedPages: finalClosedPages,
-          },
+            ClosedPages: finalClosedPages
+          }
         })
       );
     } catch (e) {
-      console.error("handleOpenClose - updateRoom mutation - ", e);
+      console.error('handleOpenClose - updateRoom mutation - ', e);
     }
   };
 
@@ -110,20 +104,20 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = () => {
     );
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
-      type: "TOGGLE_CLOSE_PAGE",
-      payload: pageNr,
+      type: 'TOGGLE_CLOSE_PAGE',
+      payload: pageNr
     });
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
-    setLocalStorageData("room_info", {
+    setLocalStorageData('room_info', {
       ...getRoomData,
-      ClosedPages: getPagesAfter,
+      ClosedPages: getPagesAfter
     });
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateRoom, {
+        graphqlOperation(updateRoom, {
           input: {
             id: getRoomData.id,
             institutionID: getRoomData.institutionID,
@@ -132,19 +126,18 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = () => {
             teacherEmail: getRoomData.teacherEmail,
             name: getRoomData.name,
             maxPersons: getRoomData.maxPersons,
-            ClosedPages: getPagesAfter,
-          },
+            ClosedPages: getPagesAfter
+          }
         })
       );
     } catch (e) {
-      console.error("handleClosePages - updateRoom mutation - ", e);
+      console.error('handleClosePages - updateRoom mutation - ', e);
     }
   };
 
   return (
     <div
-      className={`relative w-full py-2 my-auto flex flex-shrink-0 justify-between bg-transparent`}
-    >
+      className={`relative w-full py-2 my-auto flex flex-shrink-0 justify-between bg-transparent`}>
       {/* LEFT - TITLEBAR CONTROL */}
       <OpenClosePagesToggle
         currentPage={lessonState.currentPage}

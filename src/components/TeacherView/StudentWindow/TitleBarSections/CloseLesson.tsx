@@ -1,3 +1,4 @@
+import {updateRoom} from '@customGraphql/customMutations';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
@@ -8,7 +9,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 
 const CloseLesson = ({}) => {
-  const {isLoading} = useGraphqlMutation('updateRoom');
+  const {isLoading} = useGraphqlMutation(updateRoom);
   const getRoomData = getLocalStorageData('room_info');
   const history = useHistory();
   const {lessonDispatch} = useGlobalContext();

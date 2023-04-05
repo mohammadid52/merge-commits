@@ -2,8 +2,8 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Fragment, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {deleteCommonCheckpoint} from 'customGraphql/customMutations';
+import {getCurriculumCheckpoints} from 'customGraphql/customQueries';
 
 import Loader from '@components/Atoms/Loader';
 import {RoomStatus} from 'API';
@@ -53,7 +53,7 @@ const CheckpointList = (props: CheckpointListProps) => {
     )?.commonCheckpointId;
     if (commonCheckpointId) {
       await API.graphql(
-        graphqlOperation(customMutations.deleteCommonCheckpoint, {
+        graphqlOperation(deleteCommonCheckpoint, {
           input: {
             id: commonCheckpointId
           }
@@ -69,7 +69,7 @@ const CheckpointList = (props: CheckpointListProps) => {
   const fetchCurricularCheckpoint = async () => {
     setLoading(true);
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.getCurriculumCheckpoints, {
+      graphqlOperation(getCurriculumCheckpoints, {
         id: curricularId
       })
     );

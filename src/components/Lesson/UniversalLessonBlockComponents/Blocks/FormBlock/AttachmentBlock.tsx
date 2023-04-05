@@ -8,7 +8,7 @@ import {Storage} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import * as mutations from 'graphql/mutations';
+import {createPersonFiles} from 'graphql/mutations';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
@@ -385,7 +385,7 @@ const AttachmentBlock = ({
         roomID: roomInfo?.id
       };
 
-      await API.graphql(graphqlOperation(mutations.createPersonFiles, {input: payload}));
+      await API.graphql(graphqlOperation(createPersonFiles, {input: payload}));
       onSuccess && onSuccess(filesUploading.map((file: any) => file.fileKey));
 
       resetAll();

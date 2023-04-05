@@ -3,7 +3,7 @@ import {formatPageName} from '@utilities/functions';
 import {Descriptions, Popover as AntdPopover} from 'antd';
 import {GetPersonLocationQueryVariables, PersonStatus, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customQueries from 'customGraphql/customQueries';
+import {getPersonLocation} from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -48,7 +48,7 @@ const LocationInfo = ({
     try {
       setIsLoading(true);
       const personLocation: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonLocation, {
+        graphqlOperation(getPersonLocation, {
           personAuthID: authId,
           personEmail: email
         } as GetPersonLocationQueryVariables)

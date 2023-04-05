@@ -4,16 +4,20 @@ import {useHistory} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  fallbackValue,
+  getUserRoleString
+} from 'utilities/strings';
 
 import {getImageFromS3} from 'utilities/services';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {fetchPersons} from 'customGraphql/customQueries';
+import {createCSequences, createStaff, updateCSequences} from 'graphql/mutations';
+import {getCSequences, listStaff} from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Table, {ITableProps} from '@components/Molecules/Table';
@@ -27,10 +31,9 @@ import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
-import {logError} from 'graphql-functions/functions';
 import {withZoiqFilter} from '@utilities/functions';
-import {Tag} from 'antd';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import {logError} from 'graphql-functions/functions';
 import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import moment from 'moment';
@@ -98,7 +101,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           };
 
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.fetchPersons, {
+        graphqlOperation(fetchPersons, {
           filter: withZoiqFilter(filter, zoiqFilter),
           limit: SEARCH_LIMIT
         })
@@ -122,7 +125,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
   const getStaffSequence = async () => {
     let sequence: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `staff_${instituteId}`})
+      graphqlOperation(getCSequences, {id: `staff_${instituteId}`})
     );
     let sequenceData = sequence?.data?.getCSequences;
     return sequenceData;
@@ -130,7 +133,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const updateStaffSequence = async (newList: any) => {
     await API.graphql(
-      graphqlOperation(mutations.updateCSequences, {
+      graphqlOperation(updateCSequences, {
         input: {id: `staff_${instituteId}`, sequence: newList}
       })
     );
@@ -138,7 +141,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const createStaffSequence = async (newList: any) => {
     await API.graphql(
-      graphqlOperation(mutations.createCSequences, {
+      graphqlOperation(createCSequences, {
         input: {id: `staff_${instituteId}`, sequence: [...newList]}
       })
     );
@@ -161,7 +164,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // ********
 
       const staff: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: institutions.length
             ? {
                 ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID')
@@ -234,7 +237,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           statusChangeDate: new Date().toISOString().split('T')[0]
         };
         const staff: any = await API.graphql(
-          graphqlOperation(mutations.createStaff, {input: input})
+          graphqlOperation(createStaff, {input: input})
         );
         // use the mutation result to add the selected user to the staff list
         const addedMember = staff.data.createStaff;
@@ -418,11 +421,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       />
     ),
 
-    role: (
-      <Tag color="default">
-        {item.staffMember.role ? getUserRoleString(item.staffMember.role) : ''}
-      </Tag>
-    ),
+    role: getUserRoleString(fallbackValue(item?.staffMember?.role)),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
     addedDate: moment(item.staffMember?.createdAt).format('ll'),
     status: <Status useDefault status={item?.status} />

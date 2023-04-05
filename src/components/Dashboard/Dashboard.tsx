@@ -2,11 +2,11 @@ import Loader from '@components/Atoms/Loader';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from 'graphql-functions/functions';
 import {useQuery} from '@tanstack/react-query';
 import {reorderSyllabus, withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
+import {logError, updatePageState} from 'graphql-functions/functions';
 
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 
@@ -16,8 +16,16 @@ import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import EmojiFeedback from 'components/General/EmojiFeedback';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
+import {
+  getDashboardData,
+  getDashboardDataForTeachers,
+  getDashboardDataForCoTeachers,
+  listRooms,
+  getCurriculumForClasses,
+  getUniversalSyllabus
+} from 'customGraphql/customQueries';
+import {getPerson} from 'graphql/queries';
+
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
@@ -180,8 +188,8 @@ const Dashboard = () => {
 
   useQuery({
     queryKey: ['user'],
+    enabled: Boolean(stateUser && stateUser.email.length && stateUser.authId.length),
     queryFn: getUser,
-    enabled: !stateUser?.firstName,
     onSuccess(data) {
       setUser(data);
     }
@@ -196,10 +204,12 @@ const Dashboard = () => {
         valueObj: {email: userEmail, authId: userAuthId}
       };
 
-      const user: any = await API.graphql(
-        graphqlOperation(queries.getPerson, queryObj.valueObj)
-      );
-      return user.data.getPerson;
+      if (userEmail && userAuthId) {
+        const user: any = await API.graphql(
+          graphqlOperation(getPerson, queryObj.valueObj)
+        );
+        return user.data.getPerson;
+      }
     } catch (error) {
       console.log('Removing cookies - Something went wrong');
       if (!userEmail && !userAuthId) {
@@ -258,18 +268,18 @@ const Dashboard = () => {
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
    ******************************************/
 
-  const getDashboardData = async (authId: string, email: string) => {
+  const getDashboardDataFn = async (authId: string, email: string) => {
     try {
       setRoomsLoading(true);
       const queryObj = {
-        name: 'customQueries.getDashboardData',
+        name: 'getDashboardData',
         valueObj: {
           authId: authId,
           email: email
         }
       };
       const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+        graphqlOperation(getDashboardData, queryObj.valueObj)
       );
 
       // @ts-ignore
@@ -293,16 +303,16 @@ const Dashboard = () => {
     }
   };
 
-  const getDashboardDataForTeachers = async (teacherAuthID: string) => {
+  const getDashboardDataForTeachersFn = async (teacherAuthID: string) => {
     setRoomsLoading(true);
     try {
       const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForTeachers, {
+        graphqlOperation(getDashboardDataForTeachers, {
           filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        graphqlOperation(getDashboardDataForCoTeachers, {
           filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
@@ -341,9 +351,10 @@ const Dashboard = () => {
     const email = stateUser?.email;
 
     if (stateUser?.role === 'ST') {
-      getDashboardData(authId, email);
+      if (!authId || !email) return;
+      getDashboardDataFn(authId, email);
     } else {
-      getDashboardDataForTeachers(authId);
+      getDashboardDataForTeachersFn(authId);
     }
   };
 
@@ -411,17 +422,17 @@ const Dashboard = () => {
   const listRoomTeacher = async (teacherAuthID: string) => {
     try {
       const queryObj = {
-        name: 'customQueries.listRooms',
+        name: 'listRooms',
         valueObj: {
           filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
         }
       };
 
       const classIdFromRoomsFetch: any = await API.graphql(
-        graphqlOperation(customQueries.listRooms, queryObj.valueObj)
+        graphqlOperation(listRooms, queryObj.valueObj)
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        graphqlOperation(getDashboardDataForCoTeachers, {
           filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
@@ -472,7 +483,7 @@ const Dashboard = () => {
       try {
         // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
         const roomCurriculumsFetch = await API.graphql(
-          graphqlOperation(customQueries.listRoomCurriculums, {
+          graphqlOperation(listRoomCurriculums, {
             filter: {
               roomID: {eq: activeRoom}
             }
@@ -535,7 +546,7 @@ const Dashboard = () => {
     try {
       // ~~~~~~~~~~~~~~ CURRICULUM ~~~~~~~~~~~~~ //
       let getCurriculum = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumForClasses, {
+        graphqlOperation(getCurriculumForClasses, {
           id: curriculumIds
         })
       );
@@ -598,7 +609,7 @@ const Dashboard = () => {
     try {
       setLessonLoading(true);
       const syllabusLessonFetch = await API.graphql(
-        graphqlOperation(customQueries.getUniversalSyllabus, {
+        graphqlOperation(getUniversalSyllabus, {
           id: syllabusID
         })
       );

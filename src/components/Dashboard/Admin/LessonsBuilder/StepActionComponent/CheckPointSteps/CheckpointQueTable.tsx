@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
-import * as customQueries from 'customGraphql/customQueries';
+import {getCheckpointDetails} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {Fragment, useEffect, useState} from 'react';
 import {getTypeString} from 'utilities/strings';
@@ -27,7 +27,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
     try {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
-        graphqlOperation(customQueries.getCheckpointDetails, {
+        graphqlOperation(getCheckpointDetails, {
           id: checkpointId
         })
       );

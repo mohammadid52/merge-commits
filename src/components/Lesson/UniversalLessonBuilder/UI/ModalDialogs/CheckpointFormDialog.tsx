@@ -9,8 +9,8 @@ import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {createQuestion} from 'graphql/mutations';
+import {listQuestions} from 'graphql/queries';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {isObject, map} from 'lodash';
 import {Fragment, useCallback, useEffect, useState} from 'react';
@@ -152,7 +152,7 @@ const CreateQuestion = ({
             language: item.language.value,
             options: filteredOptions(item.options)
           };
-          await API.graphql(graphqlOperation(mutations.createQuestion, {input}));
+          await API.graphql(graphqlOperation(createQuestion, {input}));
         })
       );
       setValidation({
@@ -486,9 +486,7 @@ const ExistingQuestionList = ({
   const fetchQuestionsList = useCallback(async () => {
     try {
       setLoading(true);
-      const fetchQuestionsData: any = await API.graphql(
-        graphqlOperation(queries.listQuestions)
-      );
+      const fetchQuestionsData: any = await API.graphql(graphqlOperation(listQuestions));
       if (!fetchQuestionsData) {
         setError(true);
         throw new Error('fail!');

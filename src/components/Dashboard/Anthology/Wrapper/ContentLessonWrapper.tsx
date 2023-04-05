@@ -1,6 +1,6 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import ContentCard from 'atoms/ContentCard';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUniversalLessonMinimum} from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
 
 interface IContentLessonWrapper {
@@ -17,7 +17,7 @@ const ContentLessonWrapper = ({children, lessonID}: IContentLessonWrapper) => {
 
     try {
       const minimumLessonInfo: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLessonMinimum, {
+        graphqlOperation(getUniversalLessonMinimum, {
           id: lessonID
         })
       );

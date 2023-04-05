@@ -29,6 +29,7 @@ import {NoticeType} from 'antd/es/message/interface';
 import {listRooms} from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
 import PageLayout from 'layout/PageLayout';
+import {createClassStudent, createPerson, createStaff} from '@graphql/mutations';
 
 const initialValues = {
   firstName: '',
@@ -136,18 +137,18 @@ const Registration = ({
   const createPersonMutation = useGraphqlMutation<
     {input: CreatePersonInput},
     CreatePersonMutation['createPerson']
-  >('createPerson');
+  >(createPerson);
 
   // mutation for creating a new staff user
   const createStaffMutation = useGraphqlMutation<{input: CreateStaffInput}, any>(
-    'createStaff'
+    createStaff
   );
 
   // mutation for creating a new class student
   const createClassStudentMutation = useGraphqlMutation<
     {input: CreateClassStudentInput},
     any
-  >('createClassStudent');
+  >(createClassStudent);
 
   async function registerUser(authId: string) {
     const {role, email, status} = values;

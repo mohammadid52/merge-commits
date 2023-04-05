@@ -9,9 +9,9 @@ import {getFormatedDate} from '@utilities/time';
 import {Card, Col, Divider, Row, Statistic} from 'antd';
 import {UniversalLessonPlan} from 'API';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import * as customQueries from 'customGraphql/customQueries';
+import {getStudentResponse, getUniversalLesson} from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
-import * as queries from 'graphql/queries';
+import {listUniversalArchiveData, listUniversalSurveyStudentData} from 'graphql/queries';
 import PageLayout from 'layout/PageLayout';
 import React, {lazy, useEffect, useRef, useState} from 'react';
 import {RiErrorWarningLine} from 'react-icons/ri';
@@ -109,7 +109,7 @@ const Csv = () => {
     studentsEmails: any
   ) => {
     let curriculumData: any = await API.graphql(
-      graphqlOperation(customQueries.getStudentResponse, {
+      graphqlOperation(getStudentResponse, {
         filter: {
           ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
           syllabusLessonID: {eq: syllabusLessonID},
@@ -127,7 +127,7 @@ const Csv = () => {
     try {
       setCsvGettingReady(true);
       let universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {
+        graphqlOperation(getUniversalLesson, {
           id: lessonId
         })
       );
@@ -230,7 +230,7 @@ const Csv = () => {
     setCsvGettingReady(true);
     let studsEmails = classStudents?.map((stu: any) => stu.email);
     let universalSurveyStudentData: any = await API.graphql(
-      graphqlOperation(queries.listUniversalSurveyStudentData, {
+      graphqlOperation(listUniversalSurveyStudentData, {
         nextToken: nextToken,
         limit: SEARCH_LIMIT,
         filter: {
@@ -271,7 +271,7 @@ const Csv = () => {
     setCsvGettingReady(true);
     let studsEmails = classStudents.map((stu: any) => stu.email);
     let universalSurveyStudentData: any = await API.graphql(
-      graphqlOperation(queries.listUniversalArchiveData, {
+      graphqlOperation(listUniversalArchiveData, {
         nextToken: nextToken,
         limit: SEARCH_LIMIT,
         filter: {

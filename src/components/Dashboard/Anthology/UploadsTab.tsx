@@ -1,7 +1,7 @@
 import Loader from '@components/Atoms/Loader';
 import {Empty} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as queries from 'graphql/queries';
+import {listPersonFiles} from 'graphql/queries';
 import {useCallback, useEffect, useState} from 'react';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabParentProps} from './TabView';
@@ -56,7 +56,7 @@ const UploadsTab = ({
       };
 
       const personLessonFiles: any = await API.graphql(
-        graphqlOperation(queries.listPersonFiles, listFilter)
+        graphqlOperation(listPersonFiles, listFilter)
       );
       const personLessonFilesRows = personLessonFiles.data.listPersonFiles.items;
 

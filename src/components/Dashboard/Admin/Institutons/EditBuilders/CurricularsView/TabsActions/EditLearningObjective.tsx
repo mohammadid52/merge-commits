@@ -11,8 +11,8 @@ import {useHistory, useParams} from 'react-router';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {updateLearningObjective} from 'graphql/mutations';
+import {getLearningObjective} from 'graphql/queries';
 
 const EditLearningObjective = () => {
   const urlParams: any = useParams();
@@ -74,7 +74,7 @@ const EditLearningObjective = () => {
       description: learning.description
     };
     const item: any = await API.graphql(
-      graphqlOperation(mutations.updateLearningObjective, {input})
+      graphqlOperation(updateLearningObjective, {input})
     );
     const updatedItem = item?.data?.updateLearningObjective;
     if (updatedItem) {
@@ -88,7 +88,7 @@ const EditLearningObjective = () => {
     console.log('In here for query');
     setLoading(true);
     let item: any = await API.graphql(
-      graphqlOperation(queries.getLearningObjective, {id: learningId})
+      graphqlOperation(getLearningObjective, {id: learningId})
     );
     item = item.data.getLearningObjective;
     if (item.curriculumID === curricularId) {

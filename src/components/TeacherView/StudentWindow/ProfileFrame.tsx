@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import {Tabs, TabsProps} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {FaEdit} from 'react-icons/fa';
@@ -15,6 +15,7 @@ import {requestResetPassword} from 'utilities/urls';
 import ProfileFrameDemographics from './ProfileFrame/ProfileFrameDemographics';
 import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
 import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
+import {updatePerson} from '@graphql/mutations';
 
 interface IProfileFrame {
   personAuthID?: string;
@@ -100,7 +101,7 @@ const ProfileFrame = ({
   // ##################################################################### //
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  async function updatePerson() {
+  async function updatePersonFn() {
     const input = {
       id: user.id,
       authId: user.authId,
@@ -118,7 +119,7 @@ const ProfileFrame = ({
 
     try {
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
+        graphqlOperation(updatePerson, {input: input})
       );
       setUser(update.data.updatePerson);
 
@@ -129,7 +130,7 @@ const ProfileFrame = ({
   }
 
   async function saveProfileInformation() {
-    await updatePerson();
+    await updatePersonFn();
   }
 
   const onChange = (e: any) => {

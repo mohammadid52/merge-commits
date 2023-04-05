@@ -36,7 +36,7 @@ const UserStatus = ({status}: StatusProps) => {
       return <Tag color="yellow">Training</Tag>;
 
     default:
-      return null;
+      return <Tag color="red">Inactive</Tag>;
   }
 };
 

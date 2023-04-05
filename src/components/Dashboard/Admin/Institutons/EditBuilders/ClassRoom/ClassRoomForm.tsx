@@ -3,36 +3,50 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutation from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  _updateRoom,
+  createRoom,
+  createClass,
+  createRoomCoTeachers
+} from 'customGraphql/customMutations';
+import {
+  getCurriculumUniversalSyllabusSequence,
+  getRoom,
+  GetInstitutionDetails,
+  getRoomCoTeachers,
+  getUnitsOnly
+} from 'customGraphql/customQueries';
+import {
+  updateRoomCurriculum,
+  createRoomCurriculum,
+  updateRoom,
+  deleteRoomCoTeachers
+} from 'graphql/mutations';
+import {listStaff, listCurricula} from 'graphql/queries';
 
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
 import CheckBox from '@components/Atoms/Form/CheckBox';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
 import useAuth from '@customHooks/useAuth';
 
 import {useQuery} from '@customHooks/urlParam';
-import {checkUniqRoomName, listInstitutions, logError} from 'graphql-functions/functions';
 import {methods, statusList, typeList} from '@utilities/staticData';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {checkUniqRoomName, listInstitutions, logError} from 'graphql-functions/functions';
+import PageLayout from 'layout/PageLayout';
 import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
-import PageLayout from 'layout/PageLayout';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
-    graphqlOperation(customQueries.getRoomCoTeachers, {id: roomId})
+    graphqlOperation(getRoomCoTeachers, {id: roomId})
   );
   return result.data.getRoomCoTeachers;
 };
@@ -56,7 +70,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const fetchUnits = async (curriculaId: string) => {
     try {
       let getCurriculum: any = await API.graphql(
-        graphqlOperation(customQueries.getUnitsOnly, {
+        graphqlOperation(getUnitsOnly, {
           id: curriculaId
         })
       );
@@ -277,7 +291,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       if (instId) {
         const list: any = await API.graphql(
-          graphqlOperation(customQueries.GetInstitutionDetails, {
+          graphqlOperation(GetInstitutionDetails, {
             id: instId
           })
         );
@@ -304,7 +318,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -383,7 +397,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       setLoadingCurricular(true);
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
+        graphqlOperation(listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -469,7 +483,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutation.updateRoomCurriculum, {
+          graphqlOperation(updateRoomCurriculum, {
             input: curricularInput
           })
         );
@@ -507,7 +521,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutation.createRoomCurriculum, {
+          graphqlOperation(createRoomCurriculum, {
             input: curricularInput
           })
         );
@@ -540,7 +554,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const getFirstSyllabus = async (curriculumID: string) => {
     if (curriculumID) {
       const syllabusCSequenceFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
+        graphqlOperation(getCurriculumUniversalSyllabusSequence, {
           id: `${curriculumID}`
         })
       );
@@ -584,7 +598,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             teachingStyle: roomData.teachingStyle
           };
           const newRoom: any = await API.graphql(
-            graphqlOperation(customMutations._updateRoom, {input: input})
+            graphqlOperation(_updateRoom, {input: input})
           );
           const curriculaId = newRoom.data.updateRoom.curricula.items[0]?.id;
           await saveRoomTeachers(roomData.id);
@@ -625,7 +639,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           };
 
           const newRoom: any = await API.graphql(
-            graphqlOperation(customMutations.createRoom, {input: input})
+            graphqlOperation(createRoom, {input: input})
           );
           const roomId = newRoom.data.createRoom.id;
           const classInput = {
@@ -634,10 +648,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             roomId
           };
           const newClass: any = await API.graphql(
-            graphqlOperation(customMutations.createClass, {input: classInput})
+            graphqlOperation(createClass, {input: classInput})
           );
           await API.graphql(
-            graphqlOperation(mutation.updateRoom, {
+            graphqlOperation(updateRoom, {
               input: {
                 id: roomId,
                 classID: newClass.data.createClass.id
@@ -704,7 +718,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       await Promise.all(
         newItems.map(async (teacher) => {
           await API.graphql(
-            graphqlOperation(customMutations.createRoomCoTeachers, {
+            graphqlOperation(createRoomCoTeachers, {
               input: teacher
             })
           );
@@ -718,9 +732,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           const input = {
             id: id
           };
-          await API.graphql(
-            graphqlOperation(mutation.deleteRoomCoTeachers, {input: input})
-          );
+          await API.graphql(graphqlOperation(deleteRoomCoTeachers, {input: input}));
         })
       );
     }
@@ -744,9 +756,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
-          const result: any = await API.graphql(
-            graphqlOperation(customQueries.getRoom, {id: roomId})
-          );
+          const result: any = await API.graphql(graphqlOperation(getRoom, {id: roomId}));
 
           let savedData = result.data.getRoom;
 

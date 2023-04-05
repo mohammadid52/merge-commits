@@ -8,7 +8,7 @@ import {
   communityTypes,
   COMMUNITY_UPLOAD_KEY
 } from 'components/Community/constants.community';
-import * as customQueries from 'customGraphql/customQueries';
+import {listCommunityChats} from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import {IChat, ICommunityCard} from 'interfaces/Community.interfaces';
@@ -22,6 +22,12 @@ import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {v4 as uuidV4} from 'uuid';
+import {
+  createCommunityChat,
+  deleteCommunityChat,
+  updateCommunity,
+  updateCommunityChat
+} from '@graphql/mutations';
 
 const getType = (cardType: string) => {
   switch (cardType) {
@@ -78,7 +84,7 @@ const EditChatModal = ({
     });
   };
 
-  const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
+  const {mutate, isLoading} = useGraphqlMutation(updateCommunityChat, {
     onSuccess: () => {
       const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
       update(chats[idx], `msg`, () => value);
@@ -129,7 +135,7 @@ const BottomSection = ({
   const likeIdx = copyLikes?.findIndex((d) => d === authId);
   const isLiked = likeIdx !== -1;
 
-  const community = useGraphqlMutation('updateCommunity');
+  const community = useGraphqlMutation(updateCommunity);
   const likeAction = () => {
     let payload: any = {id: cardDetails.id};
     if (isLiked) {
@@ -188,9 +194,9 @@ const PostComment = ({
   const [postText, setPostText] = useState('');
   const {authId: personAuthID, email: personEmail, user} = useAuth();
 
-  const community = useGraphqlMutation('updateCommunity');
+  const community = useGraphqlMutation(updateCommunity);
 
-  const {mutate} = useGraphqlMutation('createCommunityChat', {
+  const {mutate} = useGraphqlMutation(createCommunityChat, {
     onSuccess: () => {
       let updatedCount = chatCount + 1;
       community.mutate({
@@ -477,8 +483,8 @@ const Card = ({
 }): JSX.Element => {
   const [chats, setChats] = useState<any[]>([]);
 
-  const {mutate} = useGraphqlMutation('deleteCommunityChat');
-  const community = useGraphqlMutation('updateCommunity');
+  const {mutate} = useGraphqlMutation(deleteCommunityChat);
+  const community = useGraphqlMutation(updateCommunity);
 
   const onChatDelete = (chatId: string) => {
     remove(chats, ['id', chatId]);
@@ -501,7 +507,7 @@ const Card = ({
       setIsLoading(true);
 
       const res: any = await API.graphql(
-        graphqlOperation(customQueries.listCommunityChats, {
+        graphqlOperation(listCommunityChats, {
           filter: {communityId: {eq: cardDetails.id}}
         })
       );

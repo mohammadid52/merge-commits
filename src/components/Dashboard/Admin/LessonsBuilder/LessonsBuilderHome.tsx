@@ -1,7 +1,7 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listPersons} from 'customGraphql/customQueries';
 import {useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
@@ -29,7 +29,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
 
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.listPersons, {
+      graphqlOperation(listPersons, {
         filter: {
           or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]
         }

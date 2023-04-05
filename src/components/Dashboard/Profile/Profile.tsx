@@ -1,6 +1,4 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import UserProfileImage from '@components/Molecules/UserProfileImage';
 import {useGlobalContext} from '@contexts/GlobalContext';
@@ -9,43 +7,25 @@ import {Language, PersonStatus, Role, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updatePerson} from 'customGraphql/customMutations';
+import {getPersonData, listQuestionDatas} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {updatePageState, uploadImageToS3} from 'graphql-functions/functions';
+import PageLayout from 'layout/PageLayout';
 import React, {lazy, useEffect, useState} from 'react';
 import {FaEdit} from 'react-icons/fa';
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import PageLayout from 'layout/PageLayout';
+import {UserInfo} from '../Admin/UserManagement/User';
+import UserInformation from '../Admin/UserManagement/UserInformation';
 
 const AboutMe = lazy(() => import('dashboard/Profile/AboutMe'));
 const ChangePasscode = lazy(() => import('dashboard/Profile/ChangePasscode'));
 const ChangePassword = lazy(() => import('dashboard/Profile/ChangePassword'));
 const ProfileCropModal = lazy(() => import('dashboard/Profile/ProfileCropModal'));
 const ProfileEdit = lazy(() => import('dashboard/Profile/ProfileEdit'));
-const ProfileInfo = lazy(() => import('dashboard/Profile/ProfileInfo'));
-
-export interface UserInfo {
-  authId: string;
-  courses?: string;
-  createdAt: string;
-  email: string;
-
-  firstName: string;
-  id: string;
-  image?: string;
-  institution?: string;
-  language: string;
-  lastName: string;
-  preferredName?: string;
-  role: string;
-  status: string;
-
-  updatedAt: string;
-}
 
 const Profile = () => {
   const [person, setPerson] = useState<UserInfo>({
@@ -54,7 +34,8 @@ const Profile = () => {
     createdAt: '',
     email: '',
     firstName: '',
-
+    classes: null,
+    rooms: [],
     image: '',
     language: Language.EN,
     lastName: '',
@@ -67,7 +48,7 @@ const Profile = () => {
   const {state, userLanguage, clientKey, dispatch} = useGlobalContext();
   const {dashboardProfileDict, BreadcrumsTitles} = useDictionary();
   const match = useRouteMatch();
-  const history = useHistory();
+
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const [status, setStatus] = useState('');
@@ -158,7 +139,7 @@ const Profile = () => {
     };
     try {
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
+        graphqlOperation(updatePerson, {input: input})
       );
       setPerson({
         ...person,
@@ -188,7 +169,7 @@ const Profile = () => {
       ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -197,7 +178,7 @@ const Profile = () => {
   async function getUser() {
     try {
       const results: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonData, {
+        graphqlOperation(getPersonData, {
           email: state.user.email,
           authId: state.user.authId
         })
@@ -349,10 +330,10 @@ const Profile = () => {
                       path={`${match.url}/`}
                       render={() => (
                         <ErrorBoundary componentName="ProfileInfo">
-                          <ProfileInfo
+                          <UserInformation
                             user={person}
-                            status={status}
-                            stdCheckpoints={stdCheckpoints}
+                            isProfile
+                            checkpoints={stdCheckpoints}
                             questionData={questionData}
                           />
                         </ErrorBoundary>
@@ -393,12 +374,14 @@ const Profile = () => {
                     />
                   </Switch>
 
-                  <ProfileCropModal
-                    open={showCropper}
-                    upImg={upImage || ''}
-                    saveCroppedImage={(img: string) => saveCroppedImage(img)}
-                    closeAction={toggleCropper}
-                  />
+                  {showCropper && (
+                    <ProfileCropModal
+                      open={showCropper}
+                      upImg={upImage || ''}
+                      saveCroppedImage={(img: string) => saveCroppedImage(img)}
+                      closeAction={toggleCropper}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customQueries from 'customGraphql/customQueries';
+import {attendanceByStudent} from 'customGraphql/customQueries';
 import orderBy from 'lodash/orderBy';
 import {useEffect, useRef, useState} from 'react';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
@@ -96,9 +96,7 @@ const Attendance = ({
           eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`
         };
       }
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.attendanceByStudent, payload)
-      );
+      const list: any = await API.graphql(graphqlOperation(attendanceByStudent, payload));
       const temp = list?.data.attendanceByStudent?.items.map((record: any) => ({
         ...record,
         lessonName: record.lesson?.title,

@@ -9,7 +9,7 @@ import AddButton from 'atoms/Buttons/AddButton';
 import PageWrapper from 'atoms/PageWrapper';
 import Tooltip from 'atoms/Tooltip';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateCurriculumSyllabusSequence} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {reorder} from 'utilities/strings';
 
@@ -50,7 +50,7 @@ const SyllabusList = (props: SyllabusListProps) => {
         let data = updateSyllabusListorder(syllabusList, reorderedList);
         setList(data);
         await API.graphql(
-          graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+          graphqlOperation(updateCurriculumSyllabusSequence, {
             input: {id: curricularId, universalSyllabusSeq: reorderedList}
           })
         );

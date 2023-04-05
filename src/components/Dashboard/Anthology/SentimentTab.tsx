@@ -8,8 +8,12 @@ import FormInput from 'atoms/Form/FormInput';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createPersonSentiments,
+  updateLastSubmissionDate,
+  updatePersonSentiments
+} from 'customGraphql/customMutations';
+import {listPersonSentimentss} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {findIndex, isEmpty, update} from 'lodash';
 import moment from 'moment';
@@ -67,12 +71,12 @@ const EditBackstory = ({
 
         if (fromDashboard) {
           await API.graphql(
-            graphqlOperation(customMutations.createPersonSentiments, {
+            graphqlOperation(createPersonSentiments, {
               input: payload
             })
           );
           await API.graphql(
-            graphqlOperation(customMutations.updateLastSubmissionDate, {
+            graphqlOperation(updateLastSubmissionDate, {
               input: {
                 authId: data.personAuthID,
                 email: data.personEmail,
@@ -83,7 +87,7 @@ const EditBackstory = ({
           onSuccess && onSuccess();
         } else {
           await API.graphql(
-            graphqlOperation(customMutations.updatePersonSentiments, {
+            graphqlOperation(updatePersonSentiments, {
               input: payload
             })
           );
@@ -184,7 +188,7 @@ const SentimentTab = ({
       };
 
       const res: any = await API.graphql(
-        graphqlOperation(customQueries.listPersonSentimentss, payload)
+        graphqlOperation(listPersonSentimentss, payload)
       );
 
       const temp = res.data.listPersonSentiments?.items.map((record: any) => ({

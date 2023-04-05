@@ -5,9 +5,12 @@ import {useHistory} from 'react-router';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
+import {
+  updateCurriculumSyllabusSequence,
+  deleteCurriculumUnits
+} from 'customGraphql/customMutations';
+import {listUniversalSyllabusOptions} from 'customGraphql/customQueries';
+import {createCurriculumUnits} from 'graphql/mutations';
 
 import Buttons from '@components/Atoms/Buttons';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
@@ -98,7 +101,7 @@ const UnitManager = ({
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(mutations.createCurriculumUnits, {input})
+        graphqlOperation(createCurriculumUnits, {input})
       );
 
       const newSyllabus = result.data.createCurriculumUnits;
@@ -162,7 +165,7 @@ const UnitManager = ({
     try {
       setLoading(true);
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalSyllabusOptions, {
+        graphqlOperation(listUniversalSyllabusOptions, {
           filter: {institutionID: {eq: institutionId}},
           status: {eq: courseData.status || RoomStatus.ACTIVE}
         })
@@ -182,7 +185,7 @@ const UnitManager = ({
   const updateSyllabusSequence = async (syllabusIDs: string[]) => {
     setSyllabusIds(syllabusIDs);
     await API.graphql(
-      graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+      graphqlOperation(updateCurriculumSyllabusSequence, {
         input: {
           id: courseId,
           universalSyllabusSeq: syllabusIDs
@@ -220,7 +223,7 @@ const UnitManager = ({
     try {
       setDeleting(true);
       await API.graphql(
-        graphqlOperation(customMutations.deleteCurriculumUnits, {
+        graphqlOperation(deleteCurriculumUnits, {
           input: {id: item.id}
         })
       );

@@ -2,8 +2,11 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  deleteClassroomGroups,
+  deleteClassroomGroupStudents
+} from 'customGraphql/customMutations';
+import {listClassroomGroupss} from 'customGraphql/customQueries';
 
 import AddButton from 'atoms/Buttons/AddButton';
 import Loader from 'atoms/Loader';
@@ -47,7 +50,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listClassroomGroupss, {
+        graphqlOperation(listClassroomGroupss, {
           filter: {
             classRoomID: {eq: roomData?.id},
             groupType: {eq: 'Partner'}
@@ -95,7 +98,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
     const onDrop = async () => {
       setDeleting(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.deleteClassroomGroups, {
+        graphqlOperation(deleteClassroomGroups, {
           input: {id: group?.id}
         })
       );
@@ -104,7 +107,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
           group.classroomGroupsStudents?.items?.map(
             async (student: any) =>
               await API.graphql(
-                graphqlOperation(customMutations.deleteClassroomGroupStudents, {
+                graphqlOperation(deleteClassroomGroupStudents, {
                   input: {id: student.id}
                 })
               )

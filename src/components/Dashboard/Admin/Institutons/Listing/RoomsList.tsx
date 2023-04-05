@@ -15,9 +15,9 @@ import {ModelRoomFilterInput} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listRoomsDashboard} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listRoomCoTeachers} from 'graphql/queries';
 import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import InsitutionSelector from '../../InsitutionSelector';
@@ -88,7 +88,7 @@ const RoomsList = (props: RoomListProps) => {
 
   const fetchRooms = async () => {
     const assignedRoomsAsTeachers: any = await API.graphql(
-      graphqlOperation(customQueries.listRoomsDashboard, {
+      graphqlOperation(listRoomsDashboard, {
         filter: withZoiqFilter(filter, zoiqFilter)
       })
     );
@@ -98,7 +98,7 @@ const RoomsList = (props: RoomListProps) => {
 
   const fetchRoomCoTeachers = async () => {
     const assignedRoomsAsCoTeacher: any = await API.graphql(
-      graphqlOperation(queries.listRoomCoTeachers, {
+      graphqlOperation(listRoomCoTeachers, {
         filter: filter
       })
     );

@@ -5,7 +5,7 @@ import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createUniversalLesson} from 'graphql/mutations';
 
 import {map} from 'lodash';
 import React, {useState} from 'react';
@@ -114,7 +114,7 @@ const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) =>
         wait(3000)
           .then(async () => {
             const result: any = await API.graphql(
-              graphqlOperation(mutations.createUniversalLesson, {input: data})
+              graphqlOperation(createUniversalLesson, {input: data})
             );
 
             const newLesson = result.data.createUniversalLesson;

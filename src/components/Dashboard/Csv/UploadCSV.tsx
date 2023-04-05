@@ -24,11 +24,32 @@ import {
 } from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {createUploadLogs} from 'customGraphql/customMutations';
+import {
+  getUniversalLesson,
+  listRoomCoTeachers,
+  listRoomsDashboard,
+  listSurveys,
+  listUnits
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  createCheckpoint,
+  createQuestionData,
+  createTemporaryDemographicsUploadData,
+  createTemporaryUniversalUploadSurveyData,
+  createUniversalArchiveData,
+  deleteTemporaryDemographicsUploadData,
+  deleteTemporaryUniversalUploadSurveyData,
+  updateQuestionData,
+  updateUniversalArchiveData
+} from 'graphql/mutations';
+import {
+  getQuestionData,
+  getUniversalSurveyStudentData,
+  listTemporaryDemographicsUploadData,
+  listTemporaryUniversalUploadSurveyData
+} from 'graphql/queries';
 import PageLayout from 'layout/PageLayout';
 import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
@@ -127,7 +148,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const listQuestions = async (lessonId: string) => {
     try {
       let universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {
+        graphqlOperation(getUniversalLesson, {
           id: lessonId
         })
       );
@@ -298,7 +319,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     _: string
   ) => {
     const getUniversalSurveyStudent: any = await API.graphql(
-      graphqlOperation(queries.getUniversalSurveyStudentData, {
+      graphqlOperation(getUniversalSurveyStudentData, {
         id: value
       })
     );
@@ -399,7 +420,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const ddIDAndDemographicData = async (value: string, parsed: any, _: number) => {
     const getDemographicsData: any = await API.graphql(
-      graphqlOperation(queries.getQuestionData, {
+      graphqlOperation(getQuestionData, {
         id: value
       })
     );
@@ -677,7 +698,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       };
 
       const newSurveyData: any = await API.graphql(
-        graphqlOperation(mutations.createTemporaryUniversalUploadSurveyData, {
+        graphqlOperation(createTemporaryUniversalUploadSurveyData, {
           input: value
         })
       );
@@ -702,7 +723,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       };
 
       const newDemographicsData: any = await API.graphql(
-        graphqlOperation(mutations.createTemporaryDemographicsUploadData, {
+        graphqlOperation(createTemporaryDemographicsUploadData, {
           input: value
         })
       );
@@ -740,7 +761,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       };
 
       const newUploadLogs: any = await API.graphql(
-        graphqlOperation(customMutations.createUploadLogs, {
+        graphqlOperation(createUploadLogs, {
           input: input
         })
       );
@@ -769,7 +790,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       data.forEach(async (item: any) => {
         await createTempSurveyData(item.UniversalSurveyStudentID, item.surveyData);
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalArchiveData, {
+          graphqlOperation(updateUniversalArchiveData, {
             input: {
               id: item.UniversalSurveyStudentID,
               surveyData: item.surveyData
@@ -806,7 +827,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           surveyData: item.surveyData
         };
         const createData: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalArchiveData, {
+          graphqlOperation(createUniversalArchiveData, {
             input
           })
         );
@@ -842,7 +863,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         // createTempDemographicsDataResult &&
 
         await API.graphql(
-          graphqlOperation(mutations.updateQuestionData, {
+          graphqlOperation(updateQuestionData, {
             input: {
               id: item.questionDataId,
               responseObject: item.responseObject
@@ -869,7 +890,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       changedDemographicsUpdatedData.forEach(async (item: any) => {
         const createCheckpointData: any = await API.graphql(
-          graphqlOperation(mutations.createCheckpoint, {
+          graphqlOperation(createCheckpoint, {
             input: {
               label: 'IA1',
               type: 'profile',
@@ -880,7 +901,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
         if (createCheckpointData) {
           const createDemographicsQuestionData: any = await API.graphql(
-            graphqlOperation(mutations.createQuestionData, {
+            graphqlOperation(createQuestionData, {
               input: {
                 authID: item.authId,
                 checkpointID: createCheckpointData.data.createCheckpoint.id,
@@ -956,7 +977,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const deletePrevTempDataUploadSurveyData = async () => {
     try {
       const res: any = await API.graphql(
-        graphqlOperation(queries.listTemporaryUniversalUploadSurveyData)
+        graphqlOperation(listTemporaryUniversalUploadSurveyData)
       );
 
       const list: any[] = res.data.listTemporaryUniversalUploadSurveyData.items || [];
@@ -964,7 +985,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       if (list.length > 0) {
         list.forEach(async (item) => {
           await API.graphql(
-            graphqlOperation(mutations.deleteTemporaryUniversalUploadSurveyData, {
+            graphqlOperation(deleteTemporaryUniversalUploadSurveyData, {
               input: {id: item.id}
             })
           );
@@ -979,7 +1000,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const deletePrevTempDataDempographics = async () => {
     try {
       const res: any = await API.graphql(
-        graphqlOperation(queries.listTemporaryDemographicsUploadData)
+        graphqlOperation(listTemporaryDemographicsUploadData)
       );
 
       const list: any[] = res.data.listTemporaryDemographicsUploadData.items || [];
@@ -987,7 +1008,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       if (list.length > 0) {
         list.forEach(async (item) => {
           await API.graphql(
-            graphqlOperation(mutations.deleteTemporaryDemographicsUploadData, {
+            graphqlOperation(deleteTemporaryDemographicsUploadData, {
               input: {id: item.id}
             })
           );
@@ -1061,7 +1082,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     try {
       setUnitsLoading(true);
       let curriculumUnits: any = await API.graphql(
-        graphqlOperation(customQueries.listUnits, {
+        graphqlOperation(listUnits, {
           filter: {curriculumId: {eq: curriculumId}}
         })
       );
@@ -1103,7 +1124,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
     try {
       let curriculumUnits: any = await API.graphql(
-        graphqlOperation(customQueries.listUnits, {
+        graphqlOperation(listUnits, {
           filter: {or: arrayOfActiveUnits}
         })
       );
@@ -1138,7 +1159,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       if (isTeacher || isFellow) {
         classrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomsDashboard, {
+          graphqlOperation(listRoomsDashboard, {
             filter: withZoiqFilter(
               {
                 teacherAuthID: {eq: authId},
@@ -1150,7 +1171,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
 
         coTeahcerClassrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomCoTeachers, {
+          graphqlOperation(listRoomCoTeachers, {
             filter: {
               teacherAuthID: {eq: authId},
 
@@ -1160,13 +1181,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
       } else {
         classrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomsDashboard, {
+          graphqlOperation(listRoomsDashboard, {
             filter: withZoiqFilter({type: {eq: ClassroomType.TRADITIONAL}}, zoiqFilter)
           })
         );
 
         coTeahcerClassrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomCoTeachers, {
+          graphqlOperation(listRoomCoTeachers, {
             filter: {type: {eq: ClassroomType.TRADITIONAL}}
           })
         );
@@ -1236,7 +1257,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     setSurveysLoading(true);
     try {
       let syllabusLessons: any = await API.graphql(
-        graphqlOperation(customQueries.listSurveys, {
+        graphqlOperation(listSurveys, {
           id: unitId
         })
       );

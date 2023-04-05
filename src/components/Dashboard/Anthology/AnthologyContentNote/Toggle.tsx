@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import * as mutations from 'graphql/mutations';
+import {updateUniversalJournalData} from 'graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
 import {ITabViewProps} from '../TabView';
 import {Switch} from 'antd';
@@ -24,7 +24,7 @@ const Toggle = ({
     setUpdating(true);
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {
+        graphqlOperation(updateUniversalJournalData, {
           input: {
             id: currentContentObj?.id,
             shared: currentContentObj?.hasOwnProperty('shared')

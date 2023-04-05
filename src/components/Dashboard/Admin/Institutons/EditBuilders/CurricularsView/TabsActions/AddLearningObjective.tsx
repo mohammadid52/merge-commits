@@ -4,8 +4,13 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  updateLearningObjective,
+  createLearningObjective,
+  createCSequences,
+  updateCSequences
+} from 'graphql/mutations';
+import {getCSequences} from 'graphql/queries';
 import {useEffect, useState} from 'react';
 
 interface AddLearningObjectiveProps {
@@ -60,7 +65,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
     try {
       if (learningObjectiveData?.id) {
         const item: any = await API.graphql(
-          graphqlOperation(mutations.updateLearningObjective, {
+          graphqlOperation(updateLearningObjective, {
             input: {
               ...input,
               id: learningObjectiveData?.id
@@ -71,7 +76,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         messageApi.success('Learning Objective updated successfully');
       } else {
         const item: any = await API.graphql(
-          graphqlOperation(mutations.createLearningObjective, {input})
+          graphqlOperation(createLearningObjective, {input})
         );
         const addedItem = item.data.createLearningObjective;
 
@@ -80,7 +85,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
 
         if (!learningsIds.length) {
           let seqItem: any = await API.graphql(
-            graphqlOperation(mutations.createCSequences, {
+            graphqlOperation(createCSequences, {
               input: {id: `l_${curricularId}`, sequence: [addedItem.id]}
             })
           );
@@ -88,7 +93,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
           console.log('seqItem', seqItem);
         } else {
           let seqItem: any = await API.graphql(
-            graphqlOperation(mutations.updateCSequences, {
+            graphqlOperation(updateCSequences, {
               input: {
                 id: `l_${curricularId}`,
                 sequence: [...learningsIds, addedItem.id]
@@ -115,7 +120,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
 
   const fetchLOSequence = async () => {
     let item: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
+      graphqlOperation(getCSequences, {id: `l_${curricularId}`})
     );
     item = item?.data.getCSequences?.sequence || [];
     if (item) {

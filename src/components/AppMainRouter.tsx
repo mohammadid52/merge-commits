@@ -1,6 +1,5 @@
 import useAuth from '@customHooks/useAuth';
 import useTheme from '@customHooks/useTheme';
-import {getInstInfo, getPerson} from 'graphql-functions/functions';
 import {getUserInfo} from '@utilities/functions';
 import {ConfigProvider} from 'antd';
 import {getAsset} from 'assets';
@@ -9,8 +8,9 @@ import MobileOops from 'components/Error/MobileOops';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
+import {getInstInfo, getPerson} from 'graphql-functions/functions';
 import {forEach} from 'lodash';
-import React, {lazy, Suspense, useEffect} from 'react';
+import React, {Suspense, lazy, useEffect} from 'react';
 
 const AuthRoutes = lazy(() => import('components/AppRoutes/AuthRoutes'));
 const UnauthRoutes = lazy(() => import('components/AppRoutes/UnauthRoutes'));

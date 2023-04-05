@@ -8,8 +8,9 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {fallbackValue, getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import {UserInfo} from '../Admin/UserManagement/User';
 import DemographicsInfo from '../Demographics/DemographicsInfo';
-import {UserInfo} from './Profile';
+
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -114,8 +115,8 @@ const ProfileInfo = (props: UserInfoProps) => {
 
   {
     return (
-      <div className="w-full md:px-4 pt-4">
-        <Tabs animated defaultActiveKey="1" items={items} />
+      <div className="w-full">
+        <Tabs animated tabPosition="right" defaultActiveKey="1" items={items} />
       </div>
     );
   }

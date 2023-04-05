@@ -1,5 +1,3 @@
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {isEmpty} from 'lodash';
@@ -34,7 +32,7 @@ interface Options {
  */
 
 const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
-  queryName: string,
+  queryName: any,
   variables: VariablesType,
   options?: Options
 ): {
@@ -61,8 +59,6 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
     onSuccess = () => {}
   } = options || {};
 
-  const action = custom ? customQueries : queries;
-
   const _queryName = custom ? options?.originalName || queryName : queryName;
 
   const isGet = queryName.startsWith('get');
@@ -78,8 +74,7 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
 
       setIsLoading(true);
       const res: any = await API.graphql(
-        // @ts-ignore
-        graphqlOperation(action[queryName], {..._v, nextToken: nextToken})
+        graphqlOperation(queryName, {..._v, nextToken: nextToken})
       );
 
       const data = isGet ? res.data[_queryName] : res.data[_queryName].items;

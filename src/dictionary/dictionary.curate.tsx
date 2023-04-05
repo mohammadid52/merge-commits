@@ -607,9 +607,9 @@ const editClassDict: EditClassDictInterface = {
     SUBTITLE: 'Edit class information',
     NAME_INPUT_LABEL: 'Class Name',
     STUDENTS: 'STUDENTS',
-    ADD_STUDENT_PLACEHOLDER: 'Select student',
+    ADD_STUDENT_PLACEHOLDER: 'Add student',
     ADD_STUDENT_LABEL: 'Add students to class',
-    ADD_STUDENT_FROM_REGSITER: 'Register a new student to this class',
+    ADD_STUDENT_FROM_REGSITER: 'Register a new student to this classroom',
     ADD_STUDENT_BUTTON: 'Add',
     GROUP: 'Group',
     GROUP_PLACEHOLDER: 'Select Group',
@@ -1251,6 +1251,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     INFOA: 'Click circle to manage your avatar.',
     INFO: 'Click the circle above to update institution image.',
     TITLE: 'Add Institution',
+    EDIT_TITLE: 'Edit Institution',
     SUBTITLE: 'Add new institution to the list',
     FORM: {
       TITLE: 'General Information and Vendor Management',
@@ -1293,6 +1294,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     INFOA: 'Haga clic en el círculo para administrar su avatar.',
     INFO: 'Haga clic en el círculo de arriba para actualizar la imagen de la institución.',
     TITLE: 'Añadir institución',
+    EDIT_TITLE: 'Editar institución',
     SUBTITLE: 'Añadir nueva institución a la lista',
     FORM: {
       TITLE: 'Información general y gestión de proveedores',

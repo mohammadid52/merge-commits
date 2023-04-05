@@ -3,7 +3,7 @@ import {message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateRubric, createRubric} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {useEffect, useState} from 'react';
 
@@ -71,7 +71,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       try {
         if (rubricData?.id) {
           const item: any = await API.graphql(
-            graphqlOperation(customMutations.updateRubric, {
+            graphqlOperation(updateRubric, {
               input: {...input, id: rubricData?.id}
             })
           );
@@ -83,9 +83,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
             setLoading(false);
           }
         } else {
-          const item: any = await API.graphql(
-            graphqlOperation(customMutations.createRubric, {input})
-          );
+          const item: any = await API.graphql(graphqlOperation(createRubric, {input}));
           const addedItem = item.data.createRubric;
           if (addedItem) {
             postMutation(addedItem);

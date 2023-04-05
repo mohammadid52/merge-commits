@@ -6,10 +6,10 @@ import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listTopics, listRubrics} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {deleteLearningObjective, updateCSequences} from 'graphql/mutations';
+import {listLearningObjectives, getCSequences} from 'graphql/queries';
 import PageLayout from 'layout/PageLayout';
 import {isEmpty} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
@@ -197,13 +197,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setLoading(true);
     let [list, seq]: any = await Promise.all([
       await API.graphql(
-        graphqlOperation(queries.listLearningObjectives, {
+        graphqlOperation(listLearningObjectives, {
           filter: {curriculumID: {eq: curricularId}}
         })
       ),
-      await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      )
+      await API.graphql(graphqlOperation(getCSequences, {id: `l_${curricularId}`}))
     ]);
     seq = seq?.data?.getCSequences?.sequence || [];
     list = list?.data?.listLearningObjectives?.items || [];
@@ -214,7 +212,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       list.map(async (objective: any) => {
         objective.index = seq.indexOf(objective.id);
         const topicsData: any = await API.graphql(
-          graphqlOperation(customQueries.listTopics, {
+          graphqlOperation(listTopics, {
             filter: {learningObjectiveID: {eq: objective.id}}
           })
         );
@@ -225,7 +223,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             )
             .map(async (t: any) => {
               const measurementData: any = await API.graphql(
-                graphqlOperation(customQueries.listRubrics, {
+                graphqlOperation(listRubrics, {
                   filter: {topicID: {eq: t.id}}
                 })
               );
@@ -407,7 +405,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     const {section} = warnModal;
     switch (section) {
       case 'objective':
-        deleteLearningObjective();
+        deleteLearningObjectiveFn();
         break;
       case 'topic':
         deleteTopic();
@@ -420,16 +418,16 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     }
   };
 
-  const deleteLearningObjective = async () => {
+  const deleteLearningObjectiveFn = async () => {
     try {
       setDeleting(true);
       await API.graphql(
-        graphqlOperation(mutations.deleteLearningObjective, {
+        graphqlOperation(deleteLearningObjective, {
           input: {id: warnModal.id}
         })
       );
       await API.graphql(
-        graphqlOperation(mutations.updateCSequences, {
+        graphqlOperation(updateCSequences, {
           input: {
             id: `l_${curricularId}`,
             sequence: learningIds.filter((item) => item !== warnModal.id)
@@ -456,7 +454,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     try {
       setDeleting(true);
       const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteTopic, {
+        graphqlOperation(deleteTopic, {
           input: {id: warnModal.id}
         })
       );
@@ -481,7 +479,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     try {
       setDeleting(true);
       const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteRubric, {
+        graphqlOperation(deleteRubric, {
           input: {id: warnModal.id}
         })
       );

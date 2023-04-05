@@ -9,7 +9,11 @@ import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {
+  createQuestionData,
+  updatePerson,
+  updateQuestionData
+} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -94,7 +98,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(user);
   }, [user]);
 
-  async function updatePerson() {
+  async function updatePersonFn() {
     const input = {
       id: editUser.id,
       authId: editUser.authId,
@@ -119,7 +123,7 @@ const UserEdit = (props: UserInfoProps) => {
     };
 
     try {
-      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
+      await API.graphql(graphqlOperation(updatePerson, {input: input}));
       setUpdating(false);
 
       if (shouldNavigate) {
@@ -156,7 +160,7 @@ const UserEdit = (props: UserInfoProps) => {
     }
   }, [questionData]);
 
-  const updateQuestionData = async (responseObj: any, checkpointID: string) => {
+  const updateQuestionDataFn = async (responseObj: any, checkpointID: string) => {
     try {
       // Code for Other Field
 
@@ -179,7 +183,7 @@ const UserEdit = (props: UserInfoProps) => {
 
       // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
       await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {
+        graphqlOperation(updateQuestionData, {
           input: modifiedResponseObj
         })
       );
@@ -198,13 +202,13 @@ const UserEdit = (props: UserInfoProps) => {
       id: questionDataId,
       responseObject: questions
     };
-    updateQuestionData(responseObject, checkpointID);
+    updateQuestionDataFn(responseObject, checkpointID);
   };
 
-  const createQuestionData = async (responseObj: any) => {
+  const createQuestionDataFn = async (responseObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, {
+        graphqlOperation(createQuestionData, {
           input: responseObj
         })
       );
@@ -233,7 +237,7 @@ const UserEdit = (props: UserInfoProps) => {
       email: editUser.email,
       responseObject: questions
     };
-    createQuestionData(responseObject);
+    createQuestionDataFn(responseObject);
   };
 
   const saveAllCheckpointData = async () => {
@@ -271,7 +275,7 @@ const UserEdit = (props: UserInfoProps) => {
   async function setPerson() {
     setUpdating(true);
     await saveAllCheckpointData();
-    await updatePerson();
+    await updatePersonFn();
     getUserById(editUser.id);
     onSuccessCallback?.();
   }

@@ -9,7 +9,11 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {
+  createQuestionData,
+  updatePerson,
+  updateQuestionData
+} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {languageList} from 'utilities/staticData';
 import {convertArrayIntoObj} from 'utilities/strings';
@@ -50,7 +54,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     history.push('/dashboard/profile');
   };
 
-  const updateQuestionData = async (responseObj: any, checkpointID: string) => {
+  const updateQuestionDataFn = async (responseObj: any, checkpointID: string) => {
     const val = responseObj.responseObject.map((resp: any) => {
       if (hasOther(resp.response, 'Other')) {
         return {
@@ -69,7 +73,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
     try {
       await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {
+        graphqlOperation(updateQuestionData, {
           input: modifiedResponseObj
         })
       );
@@ -87,13 +91,13 @@ const ProfileEdit = (props: UserInfoProps) => {
       id: questionDataId,
       responseObject: questions
     };
-    updateQuestionData(responseObject, checkpointID);
+    updateQuestionDataFn(responseObject, checkpointID);
   };
 
-  const createQuestionData = async (responseObj: any) => {
+  const createQuestionDataFn = async (responseObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, {
+        graphqlOperation(createQuestionData, {
           input: responseObj
         })
       );
@@ -111,7 +115,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       email: editUser.email,
       responseObject: questions
     };
-    createQuestionData(responseObject);
+    createQuestionDataFn(responseObject);
   };
 
   const saveAllCheckpointData = async () => {
@@ -149,7 +153,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const {setUser} = useAuth();
 
-  async function updatePerson() {
+  async function updatePersonFn() {
     const input = {
       id: editUser.id,
       authId: editUser.authId,
@@ -167,7 +171,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
     try {
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
+        graphqlOperation(updatePerson, {input: input})
       );
       setEditUser(update.data.updatePerson);
       setStatus('loading');
@@ -182,7 +186,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   async function saveProfileInformation() {
     saveAllCheckpointData();
-    await updatePerson();
+    await updatePersonFn();
     getUser();
   }
 
@@ -222,8 +226,6 @@ const ProfileEdit = (props: UserInfoProps) => {
   if (status !== 'done') {
     return <LessonLoading />;
   }
-
-  const path = '/dashboard/profile/password';
 
   // Code for Other Field
   const hasOther = (val: string | string[], other: string) => {

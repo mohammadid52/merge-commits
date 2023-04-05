@@ -12,8 +12,8 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {Tree} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/TreeView/Tree';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateUniversalLesson} from 'customGraphql/customMutations';
+import {listUniversalLessons} from 'customGraphql/customQueries';
 
 import map from 'lodash/map';
 import {useState} from 'react';
@@ -69,7 +69,7 @@ const CopyCloneSlideOver = ({
         };
 
         const res: any = await API.graphql(
-          graphqlOperation(customMutations.updateUniversalLesson, {
+          graphqlOperation(updateUniversalLesson, {
             input
           })
         );
@@ -148,7 +148,7 @@ const CopyCloneSlideOver = ({
         };
 
         const fetchUList: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessons, {
+          graphqlOperation(listUniversalLessons, {
             filter: filter
           })
         );

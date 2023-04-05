@@ -6,7 +6,7 @@ import {HiPencil} from 'react-icons/hi';
 import {MdSpeakerNotes} from 'react-icons/md';
 import {useHistory, useLocation, useParams} from 'react-router';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {getCurriculum, listPersons} from 'customGraphql/customQueries';
 
 import {languageList} from 'utilities/staticData';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
@@ -205,7 +205,7 @@ const CurricularView = (props: CurricularViewProps) => {
       setLoading(true);
       try {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculum, {id: currID})
+          graphqlOperation(getCurriculum, {id: currID})
         );
         const savedData = result.data.getCurriculum;
         const savedLanguages = languageList.filter((item) =>
@@ -243,7 +243,7 @@ const CurricularView = (props: CurricularViewProps) => {
   };
   const fetchPersonsData = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.listPersons, {
+      graphqlOperation(listPersons, {
         filter: {...createFilterToFetchSpecificItemsOnly(designersId, 'id')}
       })
     );

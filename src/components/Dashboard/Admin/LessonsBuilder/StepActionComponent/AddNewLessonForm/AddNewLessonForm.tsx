@@ -5,9 +5,9 @@ import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import RichTextEditor from 'atoms/RichTextEditor';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateUniversalLesson} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createUniversalLesson} from 'graphql/mutations';
 import React, {useState} from 'react';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
@@ -259,7 +259,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           };
 
           const result: any = await API.graphql(
-            graphqlOperation(mutations.createUniversalLesson, {input})
+            graphqlOperation(createUniversalLesson, {input})
           );
           const newLesson = result.data.createUniversalLesson;
           postLessonCreation(newLesson?.id, 'add');
@@ -290,7 +290,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             targetAudience: formData.targetAudience || null
           };
           const results: any = await API.graphql(
-            graphqlOperation(customMutations.updateUniversalLesson, {
+            graphqlOperation(updateUniversalLesson, {
               input: input
             })
           );
@@ -463,16 +463,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       </div>
       {/* Image cropper */}
 
-      <ProfileCropModal
-        upImg={imageData}
-        open={showCropper}
-        cardLayout
-        customCropProps={{x: 25, y: 25, width: 384, height: 180}}
-        locked={false}
-        imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
-        saveCroppedImage={(img: string) => saveCroppedImage(img)}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          upImg={imageData}
+          open={showCropper}
+          cardLayout
+          customCropProps={{x: 25, y: 25, width: 384, height: 180}}
+          locked={false}
+          imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
     </div>
   );
 };

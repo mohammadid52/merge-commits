@@ -3,9 +3,9 @@ import {message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {createTopic, updateTopic} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {getCSequences} from 'graphql/queries';
 import {useEffect, useState} from 'react';
 interface AddTopicProps {
   curricularId: string;
@@ -92,7 +92,7 @@ const AddTopic = (props: AddTopicProps) => {
       try {
         if (topicData?.id) {
           const item: any = await API.graphql(
-            graphqlOperation(customMutations.updateTopic, {
+            graphqlOperation(updateTopic, {
               input: {...input, id: topicData.id}
             })
           );
@@ -104,9 +104,7 @@ const AddTopic = (props: AddTopicProps) => {
             setLoading(false);
           }
         } else {
-          const item: any = await API.graphql(
-            graphqlOperation(customMutations.createTopic, {input})
-          );
+          const item: any = await API.graphql(graphqlOperation(createTopic, {input}));
           const addedItem = item.data.createTopic;
           if (addedItem) {
             postMutation(addedItem);
@@ -126,7 +124,7 @@ const AddTopic = (props: AddTopicProps) => {
 
   const fetchTopicsSequence = async (leraningID: string) => {
     let seq: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `t_${leraningID}`})
+      graphqlOperation(getCSequences, {id: `t_${leraningID}`})
     );
     seq = seq?.data?.getCSequences?.sequence || [];
     setTopicIds(seq);

@@ -5,7 +5,7 @@ import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import * as queries from 'graphql/queries';
+import {listPersonSentiments} from 'graphql/queries';
 import React, {useEffect, useRef, useState} from 'react';
 import {AiOutlineStop} from 'react-icons/ai';
 import {keywordCapitilizer} from 'utilities/strings';
@@ -52,7 +52,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
     await Promise.all(
       studentAuthIDArray.map(async (authID: string) => {
         let response: any = await API.graphql(
-          graphqlOperation(queries.listPersonSentiments, {
+          graphqlOperation(listPersonSentiments, {
             limit: 100,
             personAuthID: authID,
             date: {

@@ -5,9 +5,16 @@ import {useHistory} from 'react-router';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
+import {updateUniversalSyllabusLessonSequence} from 'customGraphql/customMutations';
+import {
+  listRoomsByActiveSyllabusId,
+  listUniversalLessonsOptions
+} from 'customGraphql/customQueries';
+import {
+  createUniversalSyllabusLesson,
+  updateRoom,
+  deleteUniversalSyllabusLesson
+} from 'graphql/mutations';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
@@ -80,7 +87,7 @@ const LessonPlanManager = ({
     try {
       setLoading(true);
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonsOptions, {
+        graphqlOperation(listUniversalLessonsOptions, {
           filter: {
             institutionID: {eq: institutionId},
             status: {
@@ -157,19 +164,19 @@ const LessonPlanManager = ({
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalSyllabusLesson, {input})
+        graphqlOperation(createUniversalSyllabusLesson, {input})
       );
       const newLesson = result.data.createUniversalSyllabusLesson;
 
       if (!lessonsIds.length) {
         const associatedRooms: any = await API.graphql(
-          graphqlOperation(customQueries.listRoomsByActiveSyllabusId, {
+          graphqlOperation(listRoomsByActiveSyllabusId, {
             filter: {activeSyllabus: {eq: syllabusId}}
           })
         );
         associatedRooms?.data.listRooms.items?.map(async (room: any) => {
           await API.graphql(
-            graphqlOperation(mutations.updateRoom, {
+            graphqlOperation(updateRoom, {
               input: {id: room.id, activeLessons: [selectedLesson.id]}
             })
           );
@@ -263,7 +270,7 @@ const LessonPlanManager = ({
   const updateLessonSequence = async (lessonsIDs: string[]) => {
     setLessonsIds([...lessonsIDs]);
     await API.graphql(
-      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+      graphqlOperation(updateUniversalSyllabusLessonSequence, {
         input: {id: syllabusId, universalLessonsSeq: lessonsIDs}
       })
     );
@@ -306,7 +313,7 @@ const LessonPlanManager = ({
       setDeleting(false);
       setDeleteModal({show: false, message: '', action: () => {}});
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
+        graphqlOperation(deleteUniversalSyllabusLesson, {
           input: {id: id}
         })
       );

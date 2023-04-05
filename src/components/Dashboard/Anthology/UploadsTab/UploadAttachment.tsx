@@ -5,7 +5,7 @@ import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import {Storage} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
+import {updatePersonFiles} from 'graphql/mutations';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useRef, useState} from 'react';
@@ -378,7 +378,7 @@ const UploadAttachment = ({
         syllabusLessonID: syllabusLessonID
       };
 
-      await API.graphql(graphqlOperation(mutations.updatePersonFiles, {input: payload}));
+      await API.graphql(graphqlOperation(updatePersonFiles, {input: payload}));
       personFilesID && updateLoadedFilesList?.(personFilesID, payload.files);
       resetAll();
     } catch (error) {

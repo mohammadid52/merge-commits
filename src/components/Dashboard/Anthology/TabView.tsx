@@ -6,9 +6,9 @@ import useDictionary from 'customHooks/dictionary';
 import Buttons from 'atoms/Buttons';
 
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {Tabs, TabsProps} from 'antd';
 import {getAsset} from 'assets';
 import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
-import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
 import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
 import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
 import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
@@ -20,7 +20,6 @@ import {
 import {filter, orderBy} from 'lodash';
 import {IoIosJournal} from 'react-icons/io';
 import {stringToHslColor} from 'utilities/strings';
-import {Tabs, TabsProps} from 'antd';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -73,7 +72,7 @@ const TabView = ({
   subSection,
   setSubSection,
   tab,
-  setTab,
+
   createTemplate,
   currentContentObj,
   allStudentData,

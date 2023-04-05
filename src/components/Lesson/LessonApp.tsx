@@ -6,9 +6,17 @@ import {
 } from 'API';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getRoomSetup,
+  getUniversalLessonStudentData,
+  listUniversalLessonStudentDatas
+} from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import * as mutations from 'graphql/mutations';
+import {
+  createUniversalArchiveData,
+  createUniversalLessonStudentData,
+  createUniversalLessonWritingExcercises
+} from 'graphql/mutations';
 import {
   PagePart,
   PartContent,
@@ -288,10 +296,10 @@ const LessonApp = (props: ILessonSurveyApp) => {
 
   // ~~~~~~~~~~~~~~~ GET ROOM ~~~~~~~~~~~~~~ //
 
-  const getRoomSetup = async (roomID: string) => {
+  const getRoomSetupFn = async (roomID: string) => {
     try {
       const initialRoomSetup = await API.graphql(
-        graphqlOperation(customQueries.getRoomSetup, {id: roomID})
+        graphqlOperation(getRoomSetup, {id: roomID})
       );
       //@ts-ignore
       const response = initialRoomSetup.data.getRoom;
@@ -315,7 +323,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan?.length > 0
       ) {
-        getRoomSetup(getRoomData.id);
+        getRoomSetupFn(getRoomData.id);
         subscription = subscribeToRoom();
       }
     }
@@ -510,7 +518,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
       };
 
       const newStudentData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalLessonStudentData, {
+        graphqlOperation(createUniversalLessonStudentData, {
           input
         })
       );
@@ -537,7 +545,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
         await Promise.all(
           PAGES.map(async (page: any) => {
             let studentData: any = await API.graphql(
-              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+              graphqlOperation(getUniversalLessonStudentData, {
                 id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
                 // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
               })
@@ -704,7 +712,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
       };
 
       const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+        graphqlOperation(listUniversalLessonStudentDatas, listFilter)
       );
       const studentDataRows = studentData.data.listUniversalLessonStudentData.items || [];
 
@@ -781,7 +789,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
         console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
 
         newStudentData = await API.graphql(
-          graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
+          graphqlOperation(createUniversalLessonWritingExcercises, {
             input
           })
         );
@@ -792,7 +800,7 @@ const LessonApp = (props: ILessonSurveyApp) => {
         };
 
         newStudentData = await API.graphql(
-          graphqlOperation(mutations.createUniversalArchiveData, {
+          graphqlOperation(createUniversalArchiveData, {
             input: inputForArchive
           })
         );

@@ -9,7 +9,7 @@ import Selector from 'atoms/Form/Selector';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createQuestion} from 'graphql/mutations';
 import {languageList} from '@utilities/staticData';
 
 interface AddQuestionProps {
@@ -221,7 +221,7 @@ const AddQuestion = (props: AddQuestionProps) => {
           options: questOptions ? filteredOptions(questOptions) : []
         };
         const results: any = await API.graphql(
-          graphqlOperation(mutations.createQuestion, {input: input})
+          graphqlOperation(createQuestion, {input: input})
         );
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {

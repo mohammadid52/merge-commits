@@ -2,14 +2,14 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {getInstitution, getRoom} from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
 
 import {getLocalStorageData} from '@utilities/localStorage';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listStaff, listCurricula} from 'graphql/queries';
 import PageLayout from 'layout/PageLayout';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getFilterORArray} from 'utilities/strings';
@@ -31,7 +31,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {state, userLanguage} = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
@@ -67,7 +67,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getInstituteInfo = async (instId: string) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitution, {
+        graphqlOperation(getInstitution, {
           id: instId
         })
       );
@@ -92,7 +92,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -116,7 +116,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
+        graphqlOperation(listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -156,9 +156,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
-          const result: any = await API.graphql(
-            graphqlOperation(customQueries.getRoom, {id: roomId})
-          );
+          const result: any = await API.graphql(graphqlOperation(getRoom, {id: roomId}));
 
           let savedData = result.data.getRoom;
           if (!savedData) {

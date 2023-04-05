@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getRoomLessonImpactLogs} from 'customGraphql/customQueries';
+import dayJs from 'dayjs';
+import {updateRoom} from 'graphql/mutations';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {CgNotes} from 'react-icons/cg';
 import {FaCalendarDay} from 'react-icons/fa';
 import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
-import dayJs from 'dayjs';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutation from 'graphql/mutations';
 
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -21,7 +21,6 @@ import UnitPlanner from './UnitPlanner/UnitPlanner';
 
 import {DatePicker, Divider} from 'antd';
 import Modal from 'atoms/Modal';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import PageLayout from 'layout/PageLayout';
 
 interface ICourseScheduleProps {
@@ -130,7 +129,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     try {
       setLogsLoading(true);
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getRoomLessonImpactLogs, {
+        graphqlOperation(getRoomLessonImpactLogs, {
           id: roomData.id
         })
       );
@@ -222,7 +221,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           weekDay: scheduleData.weekDay
           // conferenceCallLink: scheduleData.conferenceCallLink,
         };
-        await API.graphql(graphqlOperation(mutation.updateRoom, {input: input}));
+        await API.graphql(graphqlOperation(updateRoom, {input: input}));
         setServerMessage({
           message: CourseScheduleDict[userLanguage]['MESSAGES']['SUCCESS_MESSAGE'],
           isError: false

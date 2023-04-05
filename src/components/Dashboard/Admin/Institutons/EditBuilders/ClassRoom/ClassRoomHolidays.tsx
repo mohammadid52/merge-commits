@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {HiPencil} from 'react-icons/hi';
 import {useParams} from 'react-router';
 
-import * as mutation from 'graphql/mutations';
+import {updateRoom} from 'graphql/mutations';
 
 import AddButton from 'atoms/Buttons/AddButton';
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
@@ -69,7 +69,7 @@ const ClassRoomHolidays = ({
       // @ts-ignore
       const dateToUpdate = lessonImpactLogs.filter((i: number) => index !== i);
       const result: any = await API.graphql(
-        graphqlOperation(mutation.updateRoom, {
+        graphqlOperation(updateRoom, {
           input: {
             id: roomId,
             lessonImpactLog: dateToUpdate

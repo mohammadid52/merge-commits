@@ -7,8 +7,8 @@ import UploadAttachment from 'components/Dashboard/Anthology/UploadsTab/UploadAt
 import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import {anthologyDict} from 'dictionary/dictionary.iconoclast';
 import {deleteImageFromS3} from 'graphql-functions/functions';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {} from 'graphql/mutations';
+import {listAnthologyComments} from 'graphql/queries';
 import {sortBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {BiImageAdd} from 'react-icons/bi';
@@ -111,7 +111,7 @@ const UploadCard = ({
 
       console.log('payu;lpoad - ', payload);
 
-      await API.graphql(graphqlOperation(mutations.updatePersonFiles, {input: payload}));
+      await API.graphql(graphqlOperation(updatePersonFiles, {input: payload}));
     } catch (error) {
       console.error('@uploadFileDataToTable: ', error.message);
     } finally {
@@ -158,7 +158,7 @@ const UploadCard = ({
           };
     try {
       const listCommentData: any = await API.graphql(
-        graphqlOperation(queries.listAnthologyComments, {
+        graphqlOperation(listAnthologyComments, {
           filter: filter
         })
       );

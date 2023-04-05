@@ -37,11 +37,6 @@ const DropDownMenu = () => {
       label: 'Admin links',
       children: [
         checkIfAdmin() && {
-          label: getLink('/dashboard/test-cases', TABS['TEST_CASES']),
-          key: TABS['TEST_CASES'],
-          href: '/dashboard/test-cases'
-        },
-        checkIfAdmin() && {
           label: getLink('/dashboard/errors', TABS['ERRORS']),
           key: TABS['ERRORS'],
           href: '/dashboard/errors'

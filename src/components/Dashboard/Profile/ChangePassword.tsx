@@ -13,7 +13,7 @@ import ErrorNote from '../Admin/UserManagement/ErrorNote';
 
 import {UserPageState} from 'API';
 import FormInput from 'atoms/Form/FormInput';
-import * as customMutations from 'customGraphql/customMutations';
+import {updatePersonLogoutTime} from 'customGraphql/customMutations';
 
 const ChangePassword = () => {
   const [oldPassToggle, setOldPassToggle] = useState(false);
@@ -64,7 +64,7 @@ const ChangePassword = () => {
         lastPageStateUpdate: time,
         pageState: UserPageState.NOT_LOGGED_IN
       };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
+      API.graphql(graphqlOperation(updatePersonLogoutTime, {input}));
       await Auth.signOut();
       updateAuthState(false);
       history.push('/forgot-password');

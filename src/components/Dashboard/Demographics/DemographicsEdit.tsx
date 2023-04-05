@@ -1,9 +1,8 @@
 import FormInput from '@components/Atoms/Form/FormInput';
 import MultipleSelector from '@components/Atoms/Form/MultipleSelector';
 import Selector from '@components/Atoms/Form/Selector';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Empty} from 'antd';
-import React, {Fragment} from 'react';
+import {Fragment} from 'react';
 
 // Add interface for props
 interface IDemographicsProps {

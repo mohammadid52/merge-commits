@@ -4,7 +4,7 @@ import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUniversalLessonBasicDetails} from 'customGraphql/customQueries';
 import {logError} from 'graphql-functions/functions';
 import React, {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
@@ -102,7 +102,7 @@ const InstitutionsHome: React.FC = () => {
       const splitted = splitUrl.split('/');
       if (splitUrl.indexOf('add') === -1 && splitted.length > 0) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
+          graphqlOperation(getUniversalLessonBasicDetails, {
             id: splitted[0]
           })
         );

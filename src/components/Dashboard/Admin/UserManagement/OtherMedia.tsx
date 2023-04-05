@@ -26,7 +26,7 @@ const downloadFile = (uri: string, name: string, isAudio: boolean) => {
 };
 
 const OtherMedia = ({attachment}: any) => {
-  const {clientKey, theme} = useGlobalContext();
+  const {clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const getColor = (theme = 'indigo') => {
     return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500`;

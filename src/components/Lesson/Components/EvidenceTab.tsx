@@ -5,8 +5,8 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {useState} from 'react';
 import {AiFillCheckCircle} from 'react-icons/ai';
 import {getSelectedCurriculum} from '../UniversalLesson/views/CoreUniversalLesson/LessonModule';
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
+import {listCurriculumsForLessons, listTopics} from 'customGraphql/customQueries';
+import {getCSequences, listLearningObjectives, listRubrics} from 'graphql/queries';
 
 const EvidenceTab = ({
   curTab,
@@ -32,7 +32,7 @@ const EvidenceTab = ({
 
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
-      graphqlOperation(queries.listRubrics, {
+      graphqlOperation(listRubrics, {
         filter: {
           curriculumID: {eq: curricularId}
         }
@@ -44,17 +44,15 @@ const EvidenceTab = ({
     setSelectedMeasurements(rubricList);
     const [results, learningObjectiveSeqResult, topics]: any = await Promise.all([
       await API.graphql(
-        graphqlOperation(queries.listLearningObjectives, {
+        graphqlOperation(listLearningObjectives, {
           filter: {
             curriculumID: {eq: curricularId}
           }
         })
       ),
+      await API.graphql(graphqlOperation(getCSequences, {id: `l_${curricularId}`})),
       await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      ),
-      await API.graphql(
-        graphqlOperation(customQueries.listTopics, {
+        graphqlOperation(listTopics, {
           filter: {
             curriculumID: {eq: curricularId}
           }
@@ -111,7 +109,7 @@ const EvidenceTab = ({
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForLessons, {
+        graphqlOperation(listCurriculumsForLessons, {
           filter: {
             institutionID: {eq: currentLesson.institutionID}
           }

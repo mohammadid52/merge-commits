@@ -12,10 +12,15 @@ import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {lessonsByType} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
-import * as mutations from 'graphql/mutations';
+import {
+  updateCurriculum,
+  updatePersonLessonsData,
+  updateRoom,
+  updateUniversalSyllabus
+} from 'graphql/mutations';
 import gsap from 'gsap';
 import isEmpty from 'lodash/isEmpty';
 import React, {Fragment, useEffect, useState} from 'react';
@@ -331,13 +336,11 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateRoom, {
+        graphqlOperation(updateRoom, {
           input: input
         })
       );
-      await API.graphql(
-        graphqlOperation(mutations.updateUniversalSyllabus, {input: input2})
-      );
+      await API.graphql(graphqlOperation(updateUniversalSyllabus, {input: input2}));
 
       if (classroomCurriculum) {
         const input3 = {
@@ -348,10 +351,10 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
               : [...classroomCurriculum.syllabiHistory, syllabusID]
             : [syllabusID]
         };
-        const updateCurriculum: any = await API.graphql(
-          graphqlOperation(mutations.updateCurriculum, {input: input3})
+        const updateCurriculum_: any = await API.graphql(
+          graphqlOperation(updateCurriculum, {input: input3})
         );
-        setClassroomCurriculum(updateCurriculum.data.updateCurriculum);
+        setClassroomCurriculum(updateCurriculum_.data.updateCurriculum);
       }
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
@@ -382,7 +385,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const fetchLessonPersonData = async () => {
     try {
       const lessonPersonData: any = await API.graphql(
-        graphqlOperation(customQueries.lessonsByType, {
+        graphqlOperation(lessonsByType, {
           filter: {
             roomId: {eq: roomId},
             studentAuthID: {eq: authId},
@@ -432,7 +435,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       const id = listPersonData.find((pd) => pd.lessonID === lessonID)?.id;
       try {
         await API.graphql(
-          graphqlOperation(mutations.updatePersonLessonsData, {
+          graphqlOperation(updatePersonLessonsData, {
             input: {
               id,
               lessonID: lessonID,

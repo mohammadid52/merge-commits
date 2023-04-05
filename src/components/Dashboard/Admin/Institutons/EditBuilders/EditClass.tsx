@@ -22,11 +22,18 @@ import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createClassStudent,
+  createClassroomGroupStudents
+} from 'customGraphql/customMutations';
+import {
+  listClassStudentsForRoom,
+  fetchPersons,
+  listClassroomGroupssOptions
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
-import * as mutations from 'graphql/mutations';
+import {updateClass} from 'graphql/mutations';
 import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
@@ -120,7 +127,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     let combined: any[];
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listClassStudentsForRoom, {
+        graphqlOperation(listClassStudentsForRoom, {
           limit: SEARCH_LIMIT,
           ...filter,
           nextToken: nextToken
@@ -144,7 +151,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     try {
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
-        graphqlOperation(customQueries.fetchPersons, {
+        graphqlOperation(fetchPersons, {
           limit: SEARCH_LIMIT,
           filter: {
             role: {eq: Role.ST},
@@ -243,7 +250,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const getClassRoomGroups = async (roomId: string) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listClassroomGroupssOptions, {
+        graphqlOperation(listClassroomGroupssOptions, {
           filter: {
             classRoomID: {eq: roomId},
             groupType: {eq: 'Proficiency'}
@@ -299,12 +306,12 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         status: PersonStatus.ACTIVE
       };
       let newStudent: any = await API.graphql(
-        graphqlOperation(customMutations.createClassStudent, {input: input})
+        graphqlOperation(createClassStudent, {input: input})
       );
       newStudent = newStudent.data.createClassStudent;
       if (newMember.group?.id) {
         await API.graphql(
-          graphqlOperation(customMutations.createClassroomGroupStudents, {
+          graphqlOperation(createClassroomGroupStudents, {
             input: {
               classRoomGroupID: newMember.group?.id,
               studentEmail: selected.email,
@@ -392,7 +399,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           name: classData.name,
           institutionID: classData.institute.id
         };
-        await API.graphql(graphqlOperation(mutations.updateClass, {input: input}));
+        await API.graphql(graphqlOperation(updateClass, {input: input}));
         toggleUpdateState?.();
         setMessages({
           show: true,

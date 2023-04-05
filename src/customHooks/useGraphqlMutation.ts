@@ -1,5 +1,3 @@
-import * as customMutations from 'customGraphql/customMutations';
-import * as mutations from 'graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useCallback, useState} from 'react';
 import {logError} from 'graphql-functions/functions';
@@ -11,12 +9,8 @@ interface Options {
   onSuccess?: (data: any) => void;
 }
 
-const allMutationNames = [...Object.keys(mutations), ...Object.keys(customMutations)];
-
-type MutationType = typeof allMutationNames[number];
-
 const useGraphqlMutation = <VariablesType, ReturnType>(
-  mutationName: MutationType,
+  mutationName: string,
   options?: Options
 ): {
   mutate: (
@@ -28,19 +22,12 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
   isSuccess: boolean;
   error: string;
 } => {
-  const {custom = false, onCancel = () => {}, onSuccess} = options || {};
+  const {onCancel = () => {}, onSuccess} = options || {};
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  const action = custom ? customMutations : mutations;
-
-  if (!allMutationNames.includes(mutationName)) {
-    console.error(
-      `Mutation ${mutationName} does not exist. Please check the spelling and try again.`
-    );
-  }
   const {authId, email} = useAuth();
 
   const mutate = useCallback(
@@ -51,8 +38,8 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
       setIsLoading(true);
       try {
         const res: any = await API.graphql(
-          //   @ts-ignore
-          graphqlOperation(action[mutationName], variables)
+          // @ts-ignore
+          graphqlOperation(mutationName, variables)
         );
 
         const data: ReturnType = res.data[mutationName];

@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 import moment, {Moment} from 'moment';
+import React, {useEffect, useState} from 'react';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {getClassroomSyllabus} from 'customGraphql/customQueries';
 
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import TableComponent from '@components/Molecules/Table';
+import {frequencyMapping} from '@utilities/staticData';
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
-import {IImpactLog} from '../ClassRoomHolidays';
-import {frequencyMapping} from '@utilities/staticData';
-import TableComponent, {ITableProps} from '@components/Molecules/Table';
-import {Empty} from 'antd';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useHistory} from 'react-router-dom';
+import {IImpactLog} from '../ClassRoomHolidays';
 
 interface IUnitPlannerProps {
   isDetailsComplete: boolean;
@@ -46,7 +46,7 @@ const UnitPlanner = ({
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.getClassroomSyllabus, {
+        graphqlOperation(getClassroomSyllabus, {
           id: roomData.curricular?.id
         })
       );

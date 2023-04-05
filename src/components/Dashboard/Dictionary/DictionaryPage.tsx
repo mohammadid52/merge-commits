@@ -13,6 +13,8 @@ import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
 import {orderBy, truncate} from 'lodash';
 import {useState} from 'react';
 import DictionaryMutationModal from './DictionaryMutationModal';
+import {listDicitionaries} from '@customGraphql/customQueries';
+import {deleteDicitionary} from '@graphql/mutations';
 
 const DictionaryPage = () => {
   const {
@@ -21,7 +23,7 @@ const DictionaryPage = () => {
     isLoading,
     refetch
   } = useGraphqlQuery<ListDicitionariesQueryVariables, Dicitionary[]>(
-    'listDicitionaries',
+    listDicitionaries,
     {limit: SEARCH_LIMIT},
     {
       onSuccess: (data) => {
@@ -44,7 +46,7 @@ const DictionaryPage = () => {
     setShowModal(false);
   };
 
-  const deleteDicitionary = useGraphqlMutation('deleteDicitionary', {
+  const deleteDicitionaryMt = useGraphqlMutation(deleteDicitionary, {
     onSuccess: () => {
       refetch();
     }
@@ -54,7 +56,7 @@ const DictionaryPage = () => {
 
   const onDelete = async (dictId: string) => {
     try {
-      await deleteDicitionary.mutate({input: {id: dictId}});
+      await deleteDicitionaryMt.mutate({input: {id: dictId}});
     } catch (error) {
       logError(error, {authId, email}, 'DictionaryPage @onDelete');
       console.error(error);

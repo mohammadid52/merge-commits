@@ -7,6 +7,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {AiOutlineBook} from 'react-icons/ai';
 import {v4 as uuidV4} from 'uuid';
+import {listDicitionaries} from '@customGraphql/customQueries';
 
 export const TranslationInsideComponent = ({
   setActive,
@@ -29,7 +30,7 @@ export const TranslationInsideComponent = ({
   };
 
   const {refetch} = useGraphqlQuery(
-    'listDicitionaries',
+    listDicitionaries,
     {},
     {
       custom: true,

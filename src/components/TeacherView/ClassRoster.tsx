@@ -6,13 +6,14 @@ import {PersonStatus, UserPageState} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useLessonControls from 'customHooks/lessonControls';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {deletePersonLocation} from 'graphql/mutations';
+import {listClassStudents, listPersonLocations} from 'graphql/queries';
 import * as subscriptions from 'graphql/subscriptions';
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import RosterSection from './ClassRoster/RosterSection';
+import {updatePerson} from '@customGraphql/customMutations';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -151,7 +152,7 @@ const ClassRoster = ({
   ) => {
     try {
       const classStudents: any = await API.graphql(
-        graphqlOperation(queries.listClassStudents, {
+        graphqlOperation(listClassStudents, {
           nextToken: nextToken,
           limit: SEARCH_LIMIT,
           filter: {classID: {eq: sessionClassID}}
@@ -199,7 +200,7 @@ const ClassRoster = ({
     }
     try {
       const syllabusLessonStudents: any = await API.graphql(
-        graphqlOperation(queries.listPersonLocations, {
+        graphqlOperation(listPersonLocations, {
           nextToken: nextToken,
           filter: {
             syllabusLessonID: {eq: getRoomData.activeSyllabus},
@@ -403,7 +404,7 @@ const ClassRoster = ({
       setRemoving(inputAuthId);
 
       await API.graphql(
-        graphqlOperation(mutations.updatePerson, {
+        graphqlOperation(updatePerson, {
           input: {
             email: inputEmail,
             authId: inputAuthId,
@@ -416,7 +417,7 @@ const ClassRoster = ({
       );
 
       await API.graphql(
-        graphqlOperation(mutations.deletePersonLocation, {
+        graphqlOperation(deletePersonLocation, {
           input: {
             personEmail: inputEmail,
             personAuthID: inputAuthId

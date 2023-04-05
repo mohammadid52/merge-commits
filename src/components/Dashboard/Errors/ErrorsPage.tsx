@@ -15,9 +15,9 @@ import {
   UpdateErrorLogInput
 } from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customMutations from 'customGraphql/customMutations';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {updateErrorLog} from 'customGraphql/customMutations';
+import {deleteErrorLog} from 'graphql/mutations';
+import {listErrorLogs} from 'graphql/queries';
 import {orderBy, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -97,14 +97,14 @@ const ErrorItem = ({
             }`,
             onClose: onMultipleCloseModal,
             onSave: () => {
+              onMultipleCloseModal();
               similarErrorItems.forEach((d) => {
                 updateStatus(d.id, ErrorStatus.CLOSED);
               });
-              onMultipleCloseModal();
             },
             cancelAction: () => {
-              error?.id && updateStatus(error?.id, ErrorStatus.CLOSED);
               onMultipleCloseModal();
+              error?.id && updateStatus(error?.id, ErrorStatus.CLOSED);
             }
           });
         }
@@ -194,7 +194,7 @@ const deleteClosedErrors = async () => {
     let date = new Date();
     date.setDate(date.getDate() - 7);
     const res: any = await API.graphql(
-      graphqlOperation(queries.listErrorLogs, {
+      graphqlOperation(listErrorLogs, {
         limit: SEARCH_LIMIT,
 
         filter: {
@@ -207,9 +207,7 @@ const deleteClosedErrors = async () => {
 
     if (items && items.length > 0) {
       for (const x of items) {
-        await API.graphql(
-          graphqlOperation(mutations.deleteErrorLog, {input: {id: x.id}})
-        );
+        await API.graphql(graphqlOperation(deleteErrorLog, {input: {id: x.id}}));
       }
     }
   } catch (error) {
@@ -232,7 +230,7 @@ const ErrorsPage = () => {
     ListErrorLogsQueryVariables,
     ErrorLog[]
   >(
-    'listErrorLogs',
+    listErrorLogs,
     {
       limit: SEARCH_LIMIT,
       filter: {
@@ -280,7 +278,7 @@ const ErrorsPage = () => {
         id,
         status
       };
-      await API.graphql(graphqlOperation(customMutations.updateErrorLog, {input}));
+      await API.graphql(graphqlOperation(updateErrorLog, {input}));
     } catch (error) {
       logError(error, {email, authId}, '@updateStatus');
     }

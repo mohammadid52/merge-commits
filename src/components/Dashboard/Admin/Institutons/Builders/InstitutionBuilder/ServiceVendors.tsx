@@ -5,10 +5,10 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import Tooltip from 'atoms/Tooltip';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateServiceProviderStatus} from 'customGraphql/customMutations';
+import {listServiceProviders} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createServiceProvider} from 'graphql/mutations';
 
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
@@ -71,7 +71,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       const serviceProvidersIds = items.map((sp: any) => sp.providerID);
       // fetch list of service providers expect the self and partner institutes
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listServiceProviders, {
+        graphqlOperation(listServiceProviders, {
           filter: {
             isServiceProvider: {eq: true},
             or: [...zoiqFilter],
@@ -113,7 +113,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
           status: 'Active'
         };
         const addedPartner: any = await API.graphql(
-          graphqlOperation(mutations.createServiceProvider, {input: input})
+          graphqlOperation(createServiceProvider, {input: input})
         );
         const item = addedPartner.data.createServiceProvider;
         props.updateServiceProviders(item);
@@ -153,7 +153,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
       await API.graphql(
-        graphqlOperation(customMutations.updateServiceProviderStatus, {
+        graphqlOperation(updateServiceProviderStatus, {
           input: {id, status}
         })
       );

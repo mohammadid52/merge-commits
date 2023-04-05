@@ -11,12 +11,12 @@ import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {createCurriculum} from 'customGraphql/customMutations';
+import {listPersons} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useFormik} from 'formik';
 import {checkUniqCurricularName, uploadImageToS3} from 'graphql-functions/functions';
-import * as mutation from 'graphql/mutations';
+import {updateCurriculum} from 'graphql/mutations';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
@@ -82,7 +82,7 @@ const CourseFormComponent = ({
 
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState<any | null>(null);
-  const [imageLoading, setImageLoading] = useState(false);
+  const [_, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState<any | null>(null);
 
@@ -151,7 +151,7 @@ const CourseFormComponent = ({
                 }
 
                 const response: any = await API.graphql(
-                  graphqlOperation(mutation.updateCurriculum, {input})
+                  graphqlOperation(updateCurriculum, {input})
                 );
                 const data = response.data.updateCurriculum;
                 history.push(
@@ -160,7 +160,7 @@ const CourseFormComponent = ({
                 setCourseData({...data});
               } else {
                 const response: any = await API.graphql(
-                  graphqlOperation(customMutations.createCurriculum, {input: input})
+                  graphqlOperation(createCurriculum, {input: input})
                 );
                 const newCourse: any = response?.data?.createCurriculum;
 
@@ -169,7 +169,7 @@ const CourseFormComponent = ({
                   await uploadImageToS3(s3Image, key, 'image/jpeg');
 
                   await API.graphql(
-                    graphqlOperation(mutation.updateCurriculum, {
+                    graphqlOperation(updateCurriculum, {
                       input: {
                         id: newCourse.id,
                         image: key
@@ -214,7 +214,7 @@ const CourseFormComponent = ({
   const fetchPersonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
+        graphqlOperation(listPersons, {
           filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
@@ -233,46 +233,6 @@ const CourseFormComponent = ({
       );
     }
   };
-
-  // const validateForm = async () => {
-  //   if (curricularData.name.trim() === '') {
-  //     setMessages({
-  //       show: true,
-  //       message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
-  //       isError: true
-  //     });
-  //     return false;
-  //   } else if (curricularData.instituteId === '') {
-  //     setMessages({
-  //       show: true,
-  //       message:
-  //         CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
-  //       isError: true
-  //     });
-  //     return false;
-  //   } else if (
-  // curricularData.name.trim() !== '' &&
-  // courseData.name !== curricularData.name
-  //   ) {
-  // const isUniq = await checkUniqCurricularName(
-  //   curricularData.instituteId,
-  //   curricularData.name
-  // );
-  //     if (!isUniq) {
-  //       setMessages({
-  //         show: true,
-  //         message:
-  //           CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
-  //         isError: true
-  //       });
-  //       return false;
-  //     } else {
-  //       return true;
-  //     }
-  //   } else {
-  //     return true;
-  //   }
-  // };
 
   const toggleCropper = () => {
     setShowCropper(!showCropper);
@@ -524,14 +484,16 @@ const CourseFormComponent = ({
       </div>
       {/* Image cropper */}
 
-      <ProfileCropModal
-        open={showCropper}
-        upImg={upImage || ''}
-        customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-        locked
-        saveCroppedImage={(img: string) => saveCroppedImage(img)}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+          locked
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
 
       {/* </PageWrapper> */}
     </form>

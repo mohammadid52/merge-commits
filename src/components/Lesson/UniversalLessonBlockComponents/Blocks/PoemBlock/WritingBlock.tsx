@@ -1,5 +1,4 @@
 import {Select} from 'antd';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {
   Options,
@@ -23,10 +22,6 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
   const {id = '', linestarters, sendTextToEditor} = props;
-
-  const {
-    state: {lessonPage: {themeTextColor = ''} = {}}
-  } = useGlobalContext();
 
   const {setDataValue} = useStudentDataValue();
 

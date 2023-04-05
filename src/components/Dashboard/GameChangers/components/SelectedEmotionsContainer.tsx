@@ -18,6 +18,7 @@ import {useRouteMatch} from 'react-router';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {SelectedEmotion, useGameChangers} from '../context/GameChangersContext';
 import Button from './Button';
+import {createFeelingsArchive} from '@graphql/mutations';
 const Emotion = ({
   selectedEmotion,
   removeEmotion,
@@ -87,7 +88,7 @@ const SelectedEmotionsContainer = () => {
   const {mutate, isLoading} = useGraphqlMutation<
     CreateFeelingsArchiveMutationVariables,
     FeelingsArchive
-  >('createFeelingsArchive');
+  >(createFeelingsArchive);
 
   const onSave = () => {
     try {

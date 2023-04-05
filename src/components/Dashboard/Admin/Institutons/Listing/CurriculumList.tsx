@@ -13,14 +13,14 @@ import CourseUnits from 'components/MicroComponents/CourseUnits';
 import ModalPopUp from 'components/Molecules/ModalPopUp';
 import Table, {ITableProps} from 'components/Molecules/Table';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listCurriculumsForSuperAdmin} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
 import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
 import {logError} from 'graphql-functions/functions';
-import * as mutations from 'graphql/mutations';
+import {deleteCurriculum} from 'graphql/mutations';
 import PageLayout from 'layout/PageLayout';
 import {isEmpty, map, orderBy} from 'lodash';
 import moment from 'moment';
@@ -146,9 +146,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   const fetchCurriculums = async () => {
     try {
       setLoading(true);
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
-      );
+      const list: any = await API.graphql(graphqlOperation(listCurriculumsForSuperAdmin));
 
       return list.data?.listCurricula?.items;
     } catch (error) {
@@ -174,7 +172,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     setDeleting(true);
     try {
       await API.graphql(
-        graphqlOperation(mutations.deleteCurriculum, {
+        graphqlOperation(deleteCurriculum, {
           input: {id: item.id}
         })
       );

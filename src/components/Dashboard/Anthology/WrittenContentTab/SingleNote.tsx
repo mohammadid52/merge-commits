@@ -9,6 +9,7 @@ import {sortBy} from 'lodash';
 import {Suspense, useEffect, useState} from 'react';
 import Toggle from './../AnthologyContentNote/Toggle';
 import Feedbacks from './Feedbacks';
+import {listAnthologyComments} from '@graphql/queries';
 
 const SingleNote = (props: any) => {
   const {
@@ -62,7 +63,7 @@ const SingleNote = (props: any) => {
     isLoading,
     isFetched
   } = useGraphqlQuery<ListAnthologyCommentsQueryVariables, AnthologyComment[]>(
-    'listAnthologyComments',
+    listAnthologyComments,
     {
       filter: filter
     },

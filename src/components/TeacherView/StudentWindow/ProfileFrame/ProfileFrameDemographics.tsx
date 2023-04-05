@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {graphqlOperation, API} from 'aws-amplify';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUserProfile, listQuestionDatas} from 'customGraphql/customQueries';
 import {getUniqItems} from 'utilities/strings';
 
 import {sortBy} from 'lodash';
@@ -23,12 +23,10 @@ const ProfileFrameDemographics = ({
 
   const [profileUser, setProfileUser] = useState<any>();
 
-  async function getUserProfile(id: string) {
+  async function getUserProfileFn(id: string) {
     setLoading(true);
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUserProfile, {id: id})
-      );
+      const result: any = await API.graphql(graphqlOperation(getUserProfile, {id: id}));
       const userData = result.data.userById.items.pop();
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
@@ -169,7 +167,7 @@ const ProfileFrameDemographics = ({
 
   useEffect(() => {
     if (studentID) {
-      getUserProfile(studentID);
+      getUserProfileFn(studentID);
     }
   }, [studentID]);
 
@@ -201,7 +199,7 @@ const ProfileFrameDemographics = ({
       ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);

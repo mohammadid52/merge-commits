@@ -4,7 +4,11 @@ import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'A
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getUniversalLesson,
+  getUniversalLessonStudentData,
+  listUniversalLessonStudentDatas
+} from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useLessonControls from 'customHooks/lessonControls';
 import useAuth from 'customHooks/useAuth';
@@ -184,7 +188,7 @@ const LessonControl = () => {
     if (filterObj) {
       try {
         let studentData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          graphqlOperation(listUniversalLessonStudentDatas, {
             ...filterObj,
             nextToken: nextToken
           })
@@ -228,7 +232,7 @@ const LessonControl = () => {
         await Promise.all(
           PAGES.map(async (page: any) => {
             let studentData: any = await API.graphql(
-              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+              graphqlOperation(getUniversalLessonStudentData, {
                 id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`
                 // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
               })
@@ -329,7 +333,7 @@ const LessonControl = () => {
     // lessonID will be undefined for testing
     try {
       const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+        graphqlOperation(getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
       const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {

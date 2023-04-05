@@ -13,6 +13,7 @@ import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
+import {updatePersonLessonsData} from '@graphql/mutations';
 
 const LessonHeaderBar = ({
   overlay,
@@ -65,7 +66,7 @@ const LessonHeaderBar = ({
       input: UpdatePersonLessonsDataInput;
     },
     UniversalLessonStudentData
-  >('updatePersonLessonsData');
+  >(updatePersonLessonsData);
 
   const {isStudent} = useAuth();
 

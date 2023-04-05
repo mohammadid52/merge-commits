@@ -2,12 +2,15 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getCurriculum,
+  listCurriculumUnitss,
+  getInstitutionBasicInfo
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
 import {useEffect, useState} from 'react';
-import {BsArrowLeft} from 'react-icons/bs';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
 import CheckpointList from '../../TabsListing/CheckpointList';
 import CourseFormComponent from './CourseFormComponent';
@@ -34,9 +37,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {state, userLanguage} = useGlobalContext();
-  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary();
-  const isSuperAdmin: any = state.user.role === 'SUP';
+  const {userLanguage} = useGlobalContext();
+  const {CourseBuilderDict} = useDictionary();
+
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedSyllabusList, setSavedSyllabusList] = useState<any[]>([]);
@@ -80,11 +83,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       setFetchingDetails(true);
       try {
         const [curriculumResult, curriculumUnits]: any = await Promise.all([
+          await API.graphql(graphqlOperation(getCurriculum, {id: courseId})),
           await API.graphql(
-            graphqlOperation(customQueries.getCurriculum, {id: courseId})
-          ),
-          await API.graphql(
-            graphqlOperation(customQueries.listCurriculumUnitss, {
+            graphqlOperation(listCurriculumUnitss, {
               filter: {curriculumId: {eq: courseId}}
             })
           )
@@ -126,7 +127,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
 
   const getBasicInstitutionInfo = async (instituteId: any) => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.getInstitutionBasicInfo, {
+      graphqlOperation(getInstitutionBasicInfo, {
         id: instituteId
       })
     );

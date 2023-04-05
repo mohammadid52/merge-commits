@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUniversalSyllabus} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import {languageList} from 'utilities/staticData';
@@ -106,7 +106,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
       setFetchingDetails(true);
       try {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalSyllabus, {
+          graphqlOperation(getUniversalSyllabus, {
             id: unitId
           })
         );

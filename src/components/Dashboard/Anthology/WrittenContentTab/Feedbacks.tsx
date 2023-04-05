@@ -8,7 +8,13 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import EmojiPicker from 'emoji-picker-react';
 import {deleteImageFromS3, uploadImageToS3} from 'graphql-functions/functions';
-import * as mutations from 'graphql/mutations';
+import {
+  createAnthologyComment,
+  deleteAnthologyComment,
+  updateAnthologyComment,
+  updateUniversalJournalData,
+  updateUniversalLessonStudentData
+} from 'graphql/mutations';
 import {find, findIndex} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useRef, useState} from 'react';
@@ -182,7 +188,7 @@ const Feedbacks = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalLessonStudentData, {
+        graphqlOperation(updateUniversalLessonStudentData, {
           input: {
             id: selectStudentDataRecord.id,
             exerciseData: newExerciseFeedback.exerciseData
@@ -210,7 +216,7 @@ const Feedbacks = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {
+        graphqlOperation(updateUniversalJournalData, {
           input: {
             id: item.id,
             feedbacks: newFeedBackIds
@@ -230,7 +236,7 @@ const Feedbacks = ({
   const updateCommentFromDB = async (commentObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateAnthologyComment, {
+        graphqlOperation(updateAnthologyComment, {
           input: {
             id: commentObj.id,
             text: commentObj.comment,
@@ -265,7 +271,7 @@ const Feedbacks = ({
             }
           : input;
       const results: any = await API.graphql(
-        graphqlOperation(mutations.createAnthologyComment, {
+        graphqlOperation(createAnthologyComment, {
           input: finalInput
         })
       );
@@ -289,9 +295,7 @@ const Feedbacks = ({
 
   const deleteCommentFromDatabase = async (id: string, item: any) => {
     try {
-      await API.graphql(
-        graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
-      );
+      await API.graphql(graphqlOperation(deleteAnthologyComment, {input: {id}}));
 
       let newFeedbacks =
         item.feedbacks.length > 0

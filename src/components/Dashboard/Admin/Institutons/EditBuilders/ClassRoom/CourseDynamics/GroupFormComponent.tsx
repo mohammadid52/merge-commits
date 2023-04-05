@@ -5,8 +5,13 @@ import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  updateClassroomGroups,
+  createClassroomGroups,
+  createClassroomGroupStudents,
+  deleteClassroomGroupStudents
+} from 'customGraphql/customMutations';
+import {getClassDetails} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 
 import CheckBox from 'atoms/Form/CheckBox';
@@ -113,9 +118,7 @@ const GroupFormComponent = ({
 
   const fetchClassStudents = async (id: string) => {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getClassDetails, {id})
-      );
+      const result: any = await API.graphql(graphqlOperation(getClassDetails, {id}));
       const students = result.data.getClass?.students?.items;
       setClassStudents(students);
     } catch (error) {}
@@ -179,7 +182,7 @@ const GroupFormComponent = ({
         );
         if (formValues.groupId) {
           const result: any = await API.graphql(
-            graphqlOperation(customMutations.updateClassroomGroups, {
+            graphqlOperation(updateClassroomGroups, {
               input: {
                 id: formValues.groupId,
                 classRoomID: roomData.id,
@@ -198,7 +201,7 @@ const GroupFormComponent = ({
           });
         } else {
           const result: any = await API.graphql(
-            graphqlOperation(customMutations.createClassroomGroups, {
+            graphqlOperation(createClassroomGroups, {
               input: {
                 classRoomID: roomData.id,
                 groupName: formValues.groupName,
@@ -232,7 +235,7 @@ const GroupFormComponent = ({
           if (student.checked) {
             if (!student.id) {
               const result: any = await API.graphql(
-                graphqlOperation(customMutations.createClassroomGroupStudents, {
+                graphqlOperation(createClassroomGroupStudents, {
                   input: {
                     classRoomGroupID: groupId,
                     studentEmail: student.studentEmail,
@@ -248,7 +251,7 @@ const GroupFormComponent = ({
             }
           } else {
             const result: any = await API.graphql(
-              graphqlOperation(customMutations.deleteClassroomGroupStudents, {
+              graphqlOperation(deleteClassroomGroupStudents, {
                 input: {
                   id: student.id // Database generated unique id
                 }

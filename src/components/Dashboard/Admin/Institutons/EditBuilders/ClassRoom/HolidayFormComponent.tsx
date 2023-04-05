@@ -10,7 +10,7 @@ import useDictionary from 'customHooks/dictionary';
 import Label from '@components/Atoms/Form/Label';
 import {DatePicker} from 'antd';
 import dayJs from 'dayjs';
-import * as mutation from 'graphql/mutations';
+import {updateRoom} from 'graphql/mutations';
 import {awsFormatDate, dateString} from 'utilities/time';
 const durationOptions = [
   {id: 1, label: '.25', value: '.25'},
@@ -147,7 +147,7 @@ const HolidayFormComponent = ({
               : [...lessonImpactLogs, payload]
         };
         const result: any = await API.graphql(
-          graphqlOperation(mutation.updateRoom, {input: input})
+          graphqlOperation(updateRoom, {input: input})
         );
         setLoading(false);
         postMutation(result?.data?.updateRoom.lessonImpactLog);

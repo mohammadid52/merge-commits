@@ -1,34 +1,34 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Fragment, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
+import {IoClose} from 'react-icons/io5';
 import {useHistory, useParams} from 'react-router';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createCheckpointQuestions,
+  deleteCheckpointQuestions,
+  updateCheckpoint
+} from 'customGraphql/customMutations';
+import {getCheckpointDetails, listPersons} from 'customGraphql/customQueries';
 import {getTypeString} from 'utilities/strings';
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import BreadCrums from 'atoms/BreadCrums';
+import {languageList, scopeList} from '@utilities/staticData';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import PageWrapper from 'atoms/PageWrapper';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import PageLayout from 'layout/PageLayout';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
-import {languageList, scopeList} from '@utilities/staticData';
-import PageLayout from 'layout/PageLayout';
 
 const EditProfileCheckpoint = () => {
   const history = useHistory();
   const urlParams: any = useParams();
   const {userLanguage} = useGlobalContext();
 
-  const {EditProfileCheckpointDict, BreadcrumsTitles} = useDictionary();
-  const curricularId = urlParams.curricularId;
-  const institutionId = urlParams.institutionId;
+  const {EditProfileCheckpointDict} = useDictionary();
+
   const checkpointId = urlParams.id;
   const initialData = {
     id: '',
@@ -60,24 +60,6 @@ const EditProfileCheckpoint = () => {
     message: '',
     isError: true
   });
-
-  const breadCrumsList = [
-    {
-      title: BreadcrumsTitles[userLanguage]['HOME'],
-      href: '/dashboard',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['AddChekpoint'],
-      href: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
-      last: true
-    }
-  ];
 
   const onInputChange = (e: any) => {
     setCheckpointData({
@@ -148,7 +130,7 @@ const EditProfileCheckpoint = () => {
         required: required ? required : false
       };
       await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {
+        graphqlOperation(createCheckpointQuestions, {
           input: input
         })
       );
@@ -173,7 +155,7 @@ const EditProfileCheckpoint = () => {
         id: deletedQuesID
       };
       await API.graphql(
-        graphqlOperation(customMutations.deleteCheckpointQuestions, {
+        graphqlOperation(deleteCheckpointQuestions, {
           input: input
         })
       );
@@ -228,7 +210,7 @@ const EditProfileCheckpoint = () => {
           questionSeq: qSequence
         };
         const results: any = await API.graphql(
-          graphqlOperation(customMutations.updateCheckpoint, {input: input})
+          graphqlOperation(updateCheckpoint, {input: input})
         );
         const newCheckpoint = results?.data?.updateCheckpoint;
         const newQuestions: any = checkpQuestions.filter(
@@ -284,12 +266,12 @@ const EditProfileCheckpoint = () => {
     try {
       const [savedCheckpointData, personsList]: any = await Promise.all([
         await API.graphql(
-          graphqlOperation(customQueries.getCheckpointDetails, {
+          graphqlOperation(getCheckpointDetails, {
             id: checkpointId
           })
         ),
         await API.graphql(
-          graphqlOperation(customQueries.listPersons, {
+          graphqlOperation(listPersons, {
             filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
           })
         )

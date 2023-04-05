@@ -14,10 +14,10 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import * as customQueries from 'customGraphql/customQueries';
+import {listUniversalLessons} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as mutations from 'graphql/mutations';
+import {deleteUniversalLesson} from 'graphql/mutations';
 import PageLayout from 'layout/PageLayout';
 import {find, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
@@ -127,7 +127,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
         };
       }
       const fetchUList: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessons, condition)
+        graphqlOperation(listUniversalLessons, condition)
       );
       if (!fetchUList) {
         throw new Error('fail!');
@@ -287,7 +287,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     try {
       console.log('deleting...');
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalLesson, {
+        graphqlOperation(deleteUniversalLesson, {
           input: {id: item.id}
         })
       );

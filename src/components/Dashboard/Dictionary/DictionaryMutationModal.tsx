@@ -13,6 +13,7 @@ import {isEmpty, update} from 'lodash';
 import {useEffect, useState} from 'react';
 
 import {v4 as uuidV4} from 'uuid';
+import {updateDicitionary} from '@graphql/mutations';
 
 interface FormType {
   translation?: TranslationInput[] | any[];
@@ -66,7 +67,7 @@ const DictionaryMutationModal = ({
 
   const [formData, setFormData] = useState<FormType>(INITIAL_DATA);
 
-  const _updateDictionary = useGraphqlMutation('updateDicitionary', {
+  const _updateDictionary = useGraphqlMutation(updateDicitionary, {
     onSuccess: onSuccessMutation
   });
 

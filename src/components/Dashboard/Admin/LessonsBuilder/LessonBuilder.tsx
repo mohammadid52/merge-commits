@@ -6,11 +6,23 @@ import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createCheckpoint,
+  createCheckpointQuestions,
+  createLessonCheckpoint,
+  updateLesson,
+  updateUniversalLesson
+} from 'customGraphql/customMutations';
+import {
+  getInstitution,
+  getStaffsForInstitution,
+  getUniversalLesson,
+  listCurriculaForLesson,
+  listUniversalSyllabusLessons
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as mutations from 'graphql/mutations';
+import {createCSequences} from 'graphql/mutations';
 import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
 import PageLayout from 'layout/PageLayout';
 import {uniqBy} from 'lodash';
@@ -149,7 +161,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setDesignersListLoading(true);
       const staffList: any = await API.graphql(
-        graphqlOperation(customQueries.getStaffsForInstitution, {
+        graphqlOperation(getStaffsForInstitution, {
           filter: {institutionID: {eq: institutionID}}
         })
       );
@@ -198,9 +210,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const getInstitutionByID = async (id: string) => {
     try {
-      const inst: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitution, {id})
-      );
+      const inst: any = await API.graphql(graphqlOperation(getInstitution, {id}));
       return inst.data.getInstitution;
     } catch (error) {
       console.error('@getInstitutionByID: ', error);
@@ -219,7 +229,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {
+        graphqlOperation(getUniversalLesson, {
           id: lessonId
         })
       );
@@ -281,7 +291,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const fetchUniversalSyllabus = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.listUniversalSyllabusLessons, {
+      graphqlOperation(listUniversalSyllabusLessons, {
         filter: {
           lessonID: {eq: lessonId}
         }
@@ -333,7 +343,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         required: required ? required : false
       };
       await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {
+        graphqlOperation(createCheckpointQuestions, {
           input: input
         })
       );
@@ -362,7 +372,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         estTime: unSavedCheckPData.estTime ? parseInt(unSavedCheckPData.estTime) : 0
       };
       const results: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpoint, {input: input})
+        graphqlOperation(createCheckpoint, {input: input})
       );
       const newCheckpoint = results?.data?.createCheckpoint;
       if (newCheckpoint) {
@@ -391,12 +401,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             ];
         let [_, lesson]: any = await Promise.all([
           await API.graphql(
-            graphqlOperation(customMutations.createLessonCheckpoint, {
+            graphqlOperation(createLessonCheckpoint, {
               input: lessonCheckpointInput
             })
           ),
           await API.graphql(
-            graphqlOperation(customMutations.updateLesson, {
+            graphqlOperation(updateLesson, {
               input: {
                 id: lessonId,
                 lessonPlan: lessonPlansInput
@@ -411,7 +421,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         );
         let checkpQuestionsIds = checkpQuestions.map((item: any) => item.id);
         await API.graphql(
-          graphqlOperation(mutations.createCSequences, {
+          graphqlOperation(createCSequences, {
             input: {
               id: `Ch_Ques_${newCheckpoint.id}`,
               sequence: checkpQuestionsIds
@@ -458,7 +468,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const fetchCurriculum = async (_: any = addedSyllabus) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculaForLesson, {
+        graphqlOperation(listCurriculaForLesson, {
           filter: {
             institutionID: {eq: formData?.institution?.id}
           }
@@ -507,7 +517,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       };
 
       await API.graphql(
-        graphqlOperation(customMutations.updateUniversalLesson, {
+        graphqlOperation(updateUniversalLesson, {
           input: input
         })
       );

@@ -6,7 +6,7 @@ import useAuth from '@customHooks/useAuth';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getCurriculumNotebook, listRoomsNotebook} from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
 
 import {getImageFromS3} from 'utilities/services';
@@ -51,7 +51,7 @@ const RoomView = ({
     const curriculumMap = responseData.map(async (roomObj: any) => {
       if (roomObj) {
         const curriculumFull: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumNotebook, {
+          graphqlOperation(getCurriculumNotebook, {
             id: roomObj.curricula?.items[0]?.curriculumID
           })
         );
@@ -104,7 +104,7 @@ const RoomView = ({
       }
 
       const roomsList: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsNotebook, {
+        graphqlOperation(listRoomsNotebook, {
           filter: filter
         })
       );

@@ -8,7 +8,12 @@ import Modal from 'atoms/Modal';
 import {Storage} from 'aws-amplify';
 import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import EmojiPicker from 'emoji-picker-react';
-import * as mutations from 'graphql/mutations';
+import {
+  createAnthologyComment,
+  deleteAnthologyComment,
+  updateAnthologyComment,
+  updatePersonFiles
+} from 'graphql/mutations';
 import {find, findIndex} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useRef, useState} from 'react';
@@ -154,7 +159,7 @@ const FeedbacksUploads = ({
   const updateUploadsFeedback = async (newFeedBackIds: string[]) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.updatePersonFiles, {
+        graphqlOperation(updatePersonFiles, {
           input: {
             id: contentObj.id,
             personEmail: personEmail,
@@ -178,7 +183,7 @@ const FeedbacksUploads = ({
   const updateCommentFromDB = async (commentObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateAnthologyComment, {
+        graphqlOperation(updateAnthologyComment, {
           input: {
             id: commentObj.id,
             text: commentObj.comment,
@@ -217,7 +222,7 @@ const FeedbacksUploads = ({
             }
           : input;
       const results: any = await API.graphql(
-        graphqlOperation(mutations.createAnthologyComment, {
+        graphqlOperation(createAnthologyComment, {
           input: finalInput
         })
       );
@@ -237,9 +242,7 @@ const FeedbacksUploads = ({
 
   const deleteCommentFromDatabase = async (id: string, contentObj: any) => {
     try {
-      await API.graphql(
-        graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
-      );
+      await API.graphql(graphqlOperation(deleteAnthologyComment, {input: {id}}));
 
       let newFeedbacks =
         contentObj.feedbacks.length > 0

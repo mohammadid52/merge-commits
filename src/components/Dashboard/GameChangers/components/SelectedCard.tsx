@@ -45,6 +45,7 @@ import times from 'lodash/times';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
 import Flickity from 'react-flickity-component';
+import {createGameChangerLog} from '@graphql/mutations';
 
 // Constants
 
@@ -180,7 +181,7 @@ const SelectedCard = ({
 
   const selected = cardsList[selectedCard];
 
-  const {mutate, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
+  const {mutate, isError, isLoading} = useGraphqlMutation(createGameChangerLog);
 
   const {email, authId, isStudent} = useAuth();
 

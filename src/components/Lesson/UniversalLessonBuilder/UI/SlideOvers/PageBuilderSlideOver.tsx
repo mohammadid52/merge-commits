@@ -1,4 +1,5 @@
 import {DownOutlined, UpOutlined} from '@ant-design/icons';
+import {listFeelingsArchives} from '@customGraphql/customQueries';
 import {Transition} from '@headlessui/react';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
@@ -646,7 +647,7 @@ const PageBuilderSlideOver = ({
     ListFeelingsArchivesQueryVariables,
     FeelingsArchive[]
   >(
-    'listFeelingsArchives',
+    listFeelingsArchives,
     {
       filter: {
         personAuthID: {eq: authId},

@@ -1,19 +1,19 @@
+import {LockOutlined} from '@ant-design/icons';
 import DemographicsInfo from '@components/Dashboard/Demographics/DemographicsInfo';
 import useAuth from '@customHooks/useAuth';
-import {fallbackValue, getUserRoleString} from '@utilities/strings';
+import {fallbackValue, getLanguageString, getUserRoleString} from '@utilities/strings';
 import {Card, Descriptions, Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
 import axios from 'axios';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
-import LessonLoading from 'lesson/Loading/ComponentLoading';
+import {} from 'graphql/queries';
 import {useEffect, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
+import {useRouteMatch} from 'react-router-dom';
 import {requestResetPassword} from 'utilities/urls';
 import {UserInfo} from './User';
-import UserRole from './UserRole';
 import {Status} from './UserStatus';
 
 const fetchQuery = async (authId: string, query: string, filterKey: string) => {
@@ -41,15 +41,15 @@ const statusDate = (dateValue: string) => {
 };
 interface UserInfoProps {
   user: UserInfo;
-  status: string;
+
   questionData: any;
   checkpoints: any;
-  tab: string;
-  setTab: Function;
+
+  isProfile?: boolean;
 }
 
-const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProps) => {
-  const {UserInformationDict, userLanguage} = useDictionary();
+const UserInformation = ({user, checkpoints, questionData, isProfile}: UserInfoProps) => {
+  const {UserInformationDict, dashboardProfileDict, userLanguage} = useDictionary();
   const [loading, setLoading] = useState(false);
   const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
     show: false,
@@ -89,7 +89,7 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
   const {authId: authId_auth} = useAuth();
 
   const dict = UserInformationDict[userLanguage];
-
+  const PersonalInfoDict = dashboardProfileDict[userLanguage]['PERSONAL_INFO'];
   const isStudent = user.role === 'ST';
 
   const hideDeleteBtn = user.authId === authId_auth;
@@ -165,6 +165,61 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
     }
   }, [user]);
 
+  const match = useRouteMatch();
+
+  const actionsForProfile = (
+    <div className="flex gap-4 items-center justify-center">
+      <Buttons
+        tooltip="Change your password"
+        Icon={LockOutlined}
+        label={PersonalInfoDict['PASSWORD']}
+        size="small"
+        variant="dashed"
+        url={`${match.url}/password`}
+      />
+
+      {isStudent && (
+        <Buttons
+          tooltip="Change your journal passcode"
+          url={`${match.url}/passcode`}
+          Icon={LockOutlined}
+          label={PersonalInfoDict['PASSCODE']}
+          size="small"
+          variant="dashed"
+        />
+      )}
+    </div>
+  );
+
+  const actionsForUser = (
+    <div className="flex gap-4 items-center justify-center">
+      <Buttons
+        dataCy="reset-password-button"
+        label={dict[loading ? 'RESETTING_PASSWORD' : 'RESET_PASSWORD']}
+        variant="dashed"
+        size="small"
+        onClick={resetPassword}
+        disabled={loading}
+      />
+      {/* {!hideDeleteBtn && (
+<Buttons
+dataCy="reset-password-button"
+label={dict['DELETE_USER']}
+redBtn
+tooltip={
+  !canDeleteUser
+    ? `${user.firstName} is currently contributing to other services `
+    : ''
+}
+size="small"
+variant="dashed"
+onClick={() => {}}
+disabled={!canDeleteUser}
+/>
+)} */}
+    </div>
+  );
+
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -172,34 +227,7 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
       children: (
         <Card>
           <Descriptions
-            extra={
-              <div className="flex gap-4 items-center justify-center">
-                <Buttons
-                  dataCy="reset-password-button"
-                  label={dict[loading ? 'RESETTING_PASSWORD' : 'RESET_PASSWORD']}
-                  variant="dashed"
-                  size="small"
-                  onClick={resetPassword}
-                  disabled={loading}
-                />
-                {/* {!hideDeleteBtn && (
-              <Buttons
-                dataCy="reset-password-button"
-                label={dict['DELETE_USER']}
-                redBtn
-                tooltip={
-                  !canDeleteUser
-                    ? `${user.firstName} is currently contributing to other services `
-                    : ''
-                }
-                size="small"
-                variant="dashed"
-                onClick={() => {}}
-                disabled={!canDeleteUser}
-              />
-            )} */}
-              </div>
-            }
+            extra={isProfile ? actionsForProfile : actionsForUser}
             title={'User Information'}>
             <Descriptions.Item label={dict['fullname']}>
               {fallbackValue(`${user?.firstName} ${user?.lastName}`)}
@@ -214,6 +242,9 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
 
             <Descriptions.Item span={2} label={dict['email']}>
               {fallbackValue(user.email)}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['LANGUAGE']}>
+              {fallbackValue(getLanguageString(user.language))}
             </Descriptions.Item>
             <Descriptions.Item label={dict['ondemand']}>
               {user?.onDemand ? 'Yes' : 'No'}
@@ -245,29 +276,25 @@ const UserInformation = ({user, status, checkpoints, questionData}: UserInfoProp
     }
   ];
 
-  if (status !== 'done') {
-    return <LessonLoading />;
-  } else {
-    return (
-      <div className="w-full">
-        <Tabs animated tabPosition="right" defaultActiveKey="1" items={items} />
-        <Modal
-          open={resetPasswordServerResponse.show}
-          showHeader={false}
-          showFooter={false}
-          closeAction={onAlertClose}>
-          <div className="py-8 px-16">
-            <div className="mx-auto flex items-center justify-center rounded-full">
-              <FiAlertCircle className="w-8 h-8" />
-            </div>
-            <div className="mt-4">{resetPasswordServerResponse.message}</div>
-            <div className="flex justify-center mt-4">
-              <Buttons label={'Ok'} onClick={onAlertClose} />
-            </div>
+  return (
+    <div className="w-full">
+      <Tabs animated tabPosition="right" defaultActiveKey="1" items={items} />
+      <Modal
+        open={resetPasswordServerResponse.show}
+        showHeader={false}
+        showFooter={false}
+        closeAction={onAlertClose}>
+        <div className="py-8 px-16">
+          <div className="mx-auto flex items-center justify-center rounded-full">
+            <FiAlertCircle className="w-8 h-8" />
           </div>
-        </Modal>
-      </div>
-    );
-  }
+          <div className="mt-4">{resetPasswordServerResponse.message}</div>
+          <div className="flex justify-center mt-4">
+            <Buttons label={'Ok'} onClick={onAlertClose} />
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
 };
 export default UserInformation;

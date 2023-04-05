@@ -34,7 +34,11 @@ const UserProfileImage = ({
                   setImage={setImage}
                   toggleCropper={toggleCropper}
                   mediaRef={mediaRef}>
-                  <Placeholder size="w-20 h-20 md:w-40 md:h-40" image={imageUrl} />
+                  <Placeholder
+                    name={name}
+                    size="w-20 h-20 md:w-40 md:h-40"
+                    image={imageUrl}
+                  />
                 </DroppableMedia>
               </Fragment>
             ) : (
@@ -48,7 +52,7 @@ const UserProfileImage = ({
             mediaRef={mediaRef}
             setImage={setImage}
             toggleCropper={toggleCropper}>
-            <div />
+            <Placeholder size="text-4xl w-20 h-20 md:w-40 md:h-40" name={name} />
           </DroppableMedia>
         )}
       </div>

@@ -14,10 +14,10 @@ import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {createCurriculum} from 'customGraphql/customMutations';
+import {getStaffsForInstitution} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutation from 'graphql/mutations';
+import {updateCurriculum} from 'graphql/mutations';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
@@ -153,14 +153,14 @@ const CurricularBuilder = () => {
         };
 
         const response: any = await API.graphql(
-          graphqlOperation(customMutations.createCurriculum, {input: input})
+          graphqlOperation(createCurriculum, {input: input})
         );
         const newCurricular: any = response?.data?.createCurriculum;
 
         if (s3Image) {
           await _uploadImageToS3(s3Image, newCurricular.id, 'image/jpeg');
           await API.graphql(
-            graphqlOperation(mutation.updateCurriculum, {
+            graphqlOperation(updateCurriculum, {
               input: {
                 id: newCurricular.id,
                 image: `instituteImages/curricular_image_${newCurricular.id}`
@@ -194,7 +194,7 @@ const CurricularBuilder = () => {
   const fetchPersonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getStaffsForInstitution, {
+        graphqlOperation(getStaffsForInstitution, {
           filter: {institutionID: {eq: params.get('id')}}
         })
       );
@@ -480,15 +480,16 @@ const CurricularBuilder = () => {
           />
         </div>
         {/* Image cropper */}
-
-        <ProfileCropModal
-          open={showCropper}
-          upImg={upImage || ''}
-          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-          locked
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
+        {showCropper && (
+          <ProfileCropModal
+            open={showCropper}
+            upImg={upImage || ''}
+            customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+            locked
+            saveCroppedImage={(img: string) => saveCroppedImage(img)}
+            closeAction={toggleCropper}
+          />
+        )}
       </PageWrapper>
     </div>
   );

@@ -31,9 +31,11 @@ import Selector from 'atoms/Form/Selector';
 import PageLayout from 'layout/PageLayout';
 import {map, orderBy, uniqBy} from 'lodash';
 import moment from 'moment';
-import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities/strings';
-import UserLocation from './UserLocation';
-import UserRole from './UserRole';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  fallbackValue,
+  getUserRoleString
+} from 'utilities/strings';
 import UserStatus from './UserStatus';
 
 export const sortByName = (data: any[]) => {
@@ -469,13 +471,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     no: getIndex(idx),
     onClick: () => handleUserLink(item.id),
     name: <UserLookupName searchTerm={searchInput.value} item={item} />,
-    flow: <UserLocation role={item.role} onDemand={item?.onDemand} />,
-    role: <UserRole role={item.role ? item.role : '--'} />,
+    flow: item?.onDemand ? 'Self Paced' : 'Classroom',
+    role: fallbackValue(item.role),
     status: (
-      <div className="w-auto flex justify-center flex-col">
-        <UserStatus status={item.status ? item.status : '--'} />
+      <div className="">
+        <UserStatus status={fallbackValue(item.status)} />
         {item.status === PersonStatus.INACTIVE && item.inactiveStatusDate !== null && (
-          <span className=" text-medium  pt-1 text-xs text-left -ml-4">
+          <span className="block text-medium  pt-1 text-xs text-left -ml-4">
             Since {moment(item.inactiveStatusDate).format('ll')}
           </span>
         )}

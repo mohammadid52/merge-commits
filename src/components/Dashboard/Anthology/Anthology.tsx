@@ -14,13 +14,22 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateUniversalJournalData} from 'customGraphql/customMutations';
+import {
+  getPersonPasscode,
+  listUniversalLessonStudentDatas,
+  listUniversalLessonWritingExcercises
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import usePrevious from 'customHooks/previousProps';
 import {updatePageState} from 'graphql-functions/functions';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  createUniversalJournalData,
+  deleteUniversalJournalData,
+  updateUniversalLessonStudentData,
+  updateUniversalLessonWritingExcercises
+} from 'graphql/mutations';
+import {listUniversalArchiveData, listUniversalJournalData} from 'graphql/queries';
 import {
   UniversalClassData,
   UniversalJournalData,
@@ -92,7 +101,7 @@ const Anthology = ({
 
   const initialDataFetch = async () => {
     setLoading(true);
-    await listUniversalJournalData();
+    await listUniversalJournalDataFn();
     await getStudentData();
     await getUniversalArchiveData();
     await getUniversalLessonWritingExercises();
@@ -141,7 +150,7 @@ const Anthology = ({
       };
 
       const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+        graphqlOperation(listUniversalLessonStudentDatas, listFilter)
       );
       // existing student rows
       const studentDataRows =
@@ -219,7 +228,7 @@ const Anthology = ({
 
       try {
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalLessonStudentData, {
+          graphqlOperation(updateUniversalLessonStudentData, {
             input: {
               id: selectStudentDataRecord.id,
               exerciseData: newExerciseData.exerciseData
@@ -264,7 +273,7 @@ const Anthology = ({
   const [universalJournalDataLoaded, setUniversalJournalDataLoaded] =
     useState<boolean>(false);
 
-  const listUniversalJournalData = async () => {
+  const listUniversalJournalDataFn = async () => {
     try {
       const listFilter = {
         limit: SEARCH_LIMIT,
@@ -274,7 +283,7 @@ const Anthology = ({
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalData, listFilter)
+        graphqlOperation(listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];
@@ -304,7 +313,7 @@ const Anthology = ({
 
     try {
       const newJournalData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalJournalData, {input})
+        graphqlOperation(createUniversalJournalData, {input})
       );
 
       const returnedData = newJournalData.data.createUniversalJournalData;
@@ -338,7 +347,7 @@ const Anthology = ({
       };
       try {
         await API.graphql(
-          graphqlOperation(customMutations.updateUniversalJournalData, {
+          graphqlOperation(updateUniversalJournalData, {
             input
           })
         );
@@ -404,7 +413,7 @@ const Anthology = ({
         setAllUniversalClassData(allUniversalClassData);
 
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalLessonWritingExcercises, {
+          graphqlOperation(updateUniversalLessonWritingExcercises, {
             input
           })
         );
@@ -435,7 +444,7 @@ const Anthology = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalJournalData, {
+        graphqlOperation(deleteUniversalJournalData, {
           input: {id: viewEditMode.dataID}
         })
       );
@@ -542,7 +551,7 @@ const Anthology = ({
         } else if (viewEditMode.mode === 'savenew') {
           await createJournalData();
           await handleResetJournalEntry();
-          await listUniversalJournalData();
+          await listUniversalJournalDataFn();
         } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
           await deleteJournalData();
         } else if (viewEditMode.mode === '') {
@@ -611,7 +620,7 @@ const Anthology = ({
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalArchiveData, {
+        graphqlOperation(listUniversalArchiveData, {
           limit: SEARCH_LIMIT,
           filter: {
             studentID: {
@@ -632,7 +641,7 @@ const Anthology = ({
   const getUniversalLessonWritingExercises = async () => {
     try {
       const _allUniversalClassData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
+        graphqlOperation(listUniversalLessonWritingExcercises, {
           limit: SEARCH_LIMIT,
           filter: {
             studentID: {
@@ -726,7 +735,7 @@ const Anthology = ({
             textClass: 'text-indigo-500'
           });
           const personPasscode: any = await API.graphql(
-            graphqlOperation(customQueries.getPersonPasscode, {
+            graphqlOperation(getPersonPasscode, {
               email: state?.user?.email,
               authId: state?.user?.authId
             })

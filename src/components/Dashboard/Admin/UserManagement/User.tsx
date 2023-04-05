@@ -1,20 +1,25 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import AddButton from '@components/Atoms/Buttons/AddButton';
+import Buttons from '@components/Atoms/Buttons';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import UserProfileImage from '@components/Molecules/UserProfileImage';
-import {uploadImageToS3} from 'graphql-functions/functions';
-import {Tabs, TabsProps} from 'antd';
 import {PersonStatus, Role} from 'API';
+import {Tabs, TabsProps} from 'antd';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updatePerson} from 'customGraphql/customMutations';
+import {
+  getDashboardData,
+  getUserProfile,
+  listQuestionDatas
+} from 'customGraphql/customQueries';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import sortBy from 'lodash/sortBy';
 import React, {useEffect, useState} from 'react';
+import {FaEdit} from 'react-icons/fa';
 import {useParams} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
@@ -23,8 +28,6 @@ import Attendance from './Attendance';
 import SurveyList from './SurveyList';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
-import Buttons from '@components/Atoms/Buttons';
-import {FaEdit} from 'react-icons/fa';
 
 export interface UserInfo {
   authId: string;
@@ -117,7 +120,7 @@ const User = (props: IUserProps) => {
 
   const urlParam: any = useParams();
 
-  const {theme, state, dispatch} = useGlobalContext();
+  const {state, dispatch} = useGlobalContext();
 
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState<any | null>(null);
@@ -127,7 +130,7 @@ const User = (props: IUserProps) => {
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string>('');
 
-  const getDashboardData = async (authId: string, email: string) => {
+  const getDashboardDataFn = async (authId: string, email: string) => {
     try {
       const queryObj = {
         name: 'customQueries.getDashboardData',
@@ -137,7 +140,7 @@ const User = (props: IUserProps) => {
         }
       };
       const dashboardDataFetch = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+        graphqlOperation(getDashboardData, queryObj.valueObj)
       );
 
       // @ts-ignore
@@ -197,7 +200,7 @@ const User = (props: IUserProps) => {
 
   useEffect(() => {
     if (state?.temp?.authId !== user.authId && user.authId && user.email) {
-      getDashboardData(user.authId, user.email);
+      getDashboardDataFn(user.authId, user.email);
     }
   }, [user.authId, user.email]);
 
@@ -228,7 +231,7 @@ const User = (props: IUserProps) => {
       ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -243,11 +246,9 @@ const User = (props: IUserProps) => {
   const [demographicCheckpoints, setDemographicCheckpoints] = useState<any[]>([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState<any[]>([]);
 
-  async function getUserProfile(id: string) {
+  async function getUserProfileFn(id: string) {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUserProfile, {id: id})
-      );
+      const result: any = await API.graphql(graphqlOperation(getUserProfile, {id: id}));
       const userData = result.data.userById.items.pop();
 
       dispatch({
@@ -438,7 +439,7 @@ const User = (props: IUserProps) => {
     };
 
     try {
-      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
+      await API.graphql(graphqlOperation(updatePerson, {input: input}));
       setUser({
         ...user
       });
@@ -449,7 +450,7 @@ const User = (props: IUserProps) => {
 
   useEffect(() => {
     if (userId) {
-      getUserProfile(userId);
+      getUserProfileFn(userId);
     }
   }, [userId]);
 
@@ -506,7 +507,7 @@ const User = (props: IUserProps) => {
               status={status}
               setStatus={setStatus}
               setIsEditMode={setIsEditMode}
-              getUserById={getUserProfile}
+              getUserById={getUserProfileFn}
               questionData={questionData}
               checkpoints={
                 tab === 'demographics'
@@ -521,8 +522,8 @@ const User = (props: IUserProps) => {
           <ErrorBoundary componentName="UserInformation">
             <UserInformation
               // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-              tab={tab}
-              setTab={setTab}
+
+              isProfile={false}
               questionData={questionData}
               checkpoints={
                 tab === 'demographics'
@@ -532,7 +533,6 @@ const User = (props: IUserProps) => {
                   : []
               }
               user={user}
-              status={status}
             />
           </ErrorBoundary>
         )}
@@ -621,6 +621,7 @@ const User = (props: IUserProps) => {
         return items;
       }
     }
+    return [];
   };
 
   const [activeKey, setActiveKey] = useState('1');
@@ -657,14 +658,16 @@ const User = (props: IUserProps) => {
         </div>
       </PageLayout>
 
-      <ProfileCropModal
-        open={showCropper}
-        upImg={upImage || ''}
-        saveCroppedImage={(img: string) => {
-          saveCroppedImage(img);
-        }}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          saveCroppedImage={(img: string) => {
+            saveCroppedImage(img);
+          }}
+          closeAction={toggleCropper}
+        />
+      )}
     </>
   );
 };

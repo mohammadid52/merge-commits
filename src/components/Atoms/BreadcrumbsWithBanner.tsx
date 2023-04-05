@@ -2,16 +2,21 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getCurriculumBasicDetails,
+  getRoomBasicDetails,
+  getUniversalLessonBasicDetails,
+  getUniversalSyllabusBasicDetails
+} from 'customGraphql/customQueries';
 
 import useAuth from '@customHooks/useAuth';
-import {logError} from 'graphql-functions/functions';
 import {Breadcrumb} from 'antd';
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
+import {logError} from 'graphql-functions/functions';
 import {AiOutlineHome} from 'react-icons/ai';
-import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 import {Link} from 'react-router-dom';
+import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 
 export type BreadCrumb = {
   title: string;
@@ -75,7 +80,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
         : '';
       if (splitUrl.indexOf('add') === -1) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
+          graphqlOperation(getUniversalLessonBasicDetails, {
             id: splitUrl.split('/')[0]
           })
         );
@@ -99,7 +104,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
       if (roomId) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getRoomBasicDetails, {
+          graphqlOperation(getRoomBasicDetails, {
             id: roomId
           })
         );
@@ -124,7 +129,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
       if (courseId) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumBasicDetails, {
+          graphqlOperation(getCurriculumBasicDetails, {
             id: courseId.split('/')[0]
           })
         );
@@ -143,19 +148,23 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
   const getUnitData = async () => {
     try {
       // To extract unit id from path name
-      const unitId = pathname.split('/units/')?.length
-        ? pathname.split('/units/')[1].replace('/edit', '')
-        : '';
+      const partOfUnitUrl = pathname.split('/units/')[1];
+      const unitId =
+        partOfUnitUrl && partOfUnitUrl.length > 0
+          ? partOfUnitUrl.replace('/edit', '')
+          : '';
 
       if (unitId) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalSyllabusBasicDetails, {
+          graphqlOperation(getUniversalSyllabusBasicDetails, {
             id: unitId
           })
         );
         setUnitData(result.data?.getUniversalSyllabus);
       }
     } catch (error) {
+      console.error(error);
+
       logError(
         error,
         {authId: state.user.authId, email: state.user.email},
@@ -217,6 +226,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
   const itemRender = (route: any, _: any, routes: string | any[]) => {
     const last = routes.indexOf(route.title as string) === routes.length - 1;
+
     return last ? <span>{route.title}</span> : <Link to={route.href}>{route.title}</Link>;
   };
 

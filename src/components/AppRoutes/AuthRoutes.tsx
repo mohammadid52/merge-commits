@@ -1,4 +1,3 @@
-import Loader from '@components/Atoms/Loader';
 import LogoutAfterInactivity from '@components/Auth/LogoutAfterInactivity';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';

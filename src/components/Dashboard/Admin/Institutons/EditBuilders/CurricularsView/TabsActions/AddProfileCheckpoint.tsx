@@ -5,8 +5,12 @@ import {useHistory, useParams} from 'react-router';
 
 import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createCheckpointQuestions,
+  createCheckpoint,
+  createCommonCheckpoint
+} from 'customGraphql/customMutations';
+import {listPersons} from 'customGraphql/customQueries';
 import {getTypeString} from 'utilities/strings';
 
 import {languageList, scopeList} from '@utilities/staticData';
@@ -24,11 +28,10 @@ const AddProfileCheckpoint = () => {
   const history = useHistory();
   const urlParams: any = useParams();
   const {courseId} = urlParams;
-  const institutionId = urlParams.institutionId;
 
   const {theme, clientKey, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddProfileCheckpointDict, BreadcrumsTitles} = useDictionary();
+  const {AddProfileCheckpointDict} = useDictionary();
 
   const initialData = {
     title: '',
@@ -55,34 +58,6 @@ const AddProfileCheckpoint = () => {
     message: '',
     isError: true
   });
-
-  const breadCrumsList = [
-    {
-      title: BreadcrumsTitles[userLanguage]['HOME'],
-      href: '/dashboard',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      href: '/dashboard/manage-institutions',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
-      href: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['AddCheckpint'],
-      href: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
-      last: true
-    }
-  ];
 
   const onInputChange = (e: any) => {
     setCheckpointData({
@@ -133,7 +108,7 @@ const AddProfileCheckpoint = () => {
         required: false
       };
       await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {
+        graphqlOperation(createCheckpointQuestions, {
           input: input
         })
       );
@@ -187,7 +162,7 @@ const AddProfileCheckpoint = () => {
           language: checkpointData.language.value
         };
         const results: any = await API.graphql(
-          graphqlOperation(customMutations.createCheckpoint, {input: input})
+          graphqlOperation(createCheckpoint, {input: input})
         );
         const newCheckpoint = results?.data?.createCheckpoint;
         if (newCheckpoint) {
@@ -198,7 +173,7 @@ const AddProfileCheckpoint = () => {
             checkpointID: newCheckpoint.id
           };
           await API.graphql(
-            graphqlOperation(customMutations.createCommonCheckpoint, {
+            graphqlOperation(createCommonCheckpoint, {
               input: profileCheckpointInput
             })
           );
@@ -239,7 +214,7 @@ const AddProfileCheckpoint = () => {
 
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.listPersons, {
+      graphqlOperation(listPersons, {
         filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
       })
     );

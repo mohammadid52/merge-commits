@@ -10,10 +10,10 @@ import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateTopic} from 'customGraphql/customMutations';
+import {getTopicDetails} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listLearningObjectives} from 'graphql/queries';
 
 const EditTopic = () => {
   const urlParams: any = useParams();
@@ -103,9 +103,7 @@ const EditTopic = () => {
         adequite: topic.adequite,
         basic: topic.basic
       };
-      const item: any = await API.graphql(
-        graphqlOperation(customMutations.updateTopic, {input})
-      );
+      const item: any = await API.graphql(graphqlOperation(updateTopic, {input}));
       const updatedItem = item.data.updateTopic;
       if (updatedItem) {
         history.goBack();
@@ -117,9 +115,7 @@ const EditTopic = () => {
 
   const fetchTopic = async () => {
     setLoading(true);
-    let item: any = await API.graphql(
-      graphqlOperation(customQueries.getTopicDetails, {id: topicId})
-    );
+    let item: any = await API.graphql(graphqlOperation(getTopicDetails, {id: topicId}));
     item = item.data.getTopic;
     if (item.curriculumID === curricularId) {
       setTopic({
@@ -144,7 +140,7 @@ const EditTopic = () => {
   };
   const fetchLearningObjectives = async () => {
     let list: any = await API.graphql(
-      graphqlOperation(queries.listLearningObjectives, {
+      graphqlOperation(listLearningObjectives, {
         filter: {curriculumID: {eq: curricularId}}
       })
     );

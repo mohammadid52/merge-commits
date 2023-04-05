@@ -1,13 +1,12 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
-import {logError} from 'graphql-functions/functions';
 import {InstInfo} from '@interfaces/InstitutionInterface';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import PageWrapper from 'atoms/PageWrapper';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {GetInstitutionDetails} from 'customGraphql/customQueries';
+import {logError} from 'graphql-functions/functions';
 import queryString from 'query-string';
 import {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
@@ -125,7 +124,7 @@ const Institution = (props: InstitutionProps) => {
            * DO NOT change the ' institutionId ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(customQueries.GetInstitutionDetails, {
+          graphqlOperation(GetInstitutionDetails, {
             id: institutionId
           })
         );

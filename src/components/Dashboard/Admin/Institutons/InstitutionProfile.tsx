@@ -7,7 +7,7 @@ import useAuth from '@customHooks/useAuth';
 import {getImageFromS3} from '@utilities/services';
 import {formatPhoneNumber} from '@utilities/strings';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateInstitution} from 'customGraphql/customMutations';
 import {uploadImageToS3} from 'graphql-functions/functions';
 import {isEmpty} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
@@ -68,9 +68,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
       id: institute?.id,
       image: key
     };
-    await API.graphql(
-      graphqlOperation(customMutations.updateInstitution, {input: input})
-    );
+    await API.graphql(graphqlOperation(updateInstitution, {input: input}));
     await getUrl();
     toggleCropper();
     setImageLoading(false);
@@ -83,12 +81,14 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
 
   return (
     <>
-      <ProfileCropModal
-        open={showCropper}
-        upImg={upImage || ''}
-        saveCroppedImage={(img: string) => saveCroppedImage(img)}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
 
       <div
         className={`${

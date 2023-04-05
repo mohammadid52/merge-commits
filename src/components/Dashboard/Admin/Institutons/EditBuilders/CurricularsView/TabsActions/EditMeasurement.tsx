@@ -10,8 +10,8 @@ import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateRubric} from 'customGraphql/customMutations';
+import {getRubric} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 
 const EditMeasurement = () => {
@@ -63,9 +63,7 @@ const EditMeasurement = () => {
 
   const fetchMeasurement = async () => {
     setLoading(true);
-    let item: any = await API.graphql(
-      graphqlOperation(customQueries.getRubric, {id: measurementId})
-    );
+    let item: any = await API.graphql(graphqlOperation(getRubric, {id: measurementId}));
     item = item.data.getRubric;
     if (item?.curriculumID === curricularId) {
       setMeasurement({
@@ -114,9 +112,7 @@ const EditMeasurement = () => {
         topicID: measurement.topic.id,
         curriculumID: curricularId
       };
-      const item: any = await API.graphql(
-        graphqlOperation(customMutations.updateRubric, {input})
-      );
+      const item: any = await API.graphql(graphqlOperation(updateRubric, {input}));
       const updatedItem = item.data.updateRubric;
       if (updatedItem) {
         history.goBack();

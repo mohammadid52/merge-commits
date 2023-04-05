@@ -21,6 +21,7 @@ import {
   periodOptions,
   targetAudienceForIconoclast
 } from 'utilities/staticData';
+import {updateUniversalLesson} from '@customGraphql/customMutations';
 
 const UploadLessonPlanModal = ({
   onClose,
@@ -60,7 +61,7 @@ const UploadLessonPlanModal = ({
     mutate,
 
     isSuccess
-  } = useGraphqlMutation('updateUniversalLesson', {
+  } = useGraphqlMutation(updateUniversalLesson, {
     custom: true
   });
 

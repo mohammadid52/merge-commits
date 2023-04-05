@@ -1,7 +1,11 @@
 import {logError} from 'graphql-functions/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
+import {
+  createUniversalSurveyStudentData,
+  updateUniversalLessonStudentData,
+  updateUniversalSurveyStudentData
+} from 'graphql/mutations';
 import {useEffect, useState} from 'react';
 import {getLocalStorageData} from 'utilities/localStorage';
 
@@ -162,7 +166,7 @@ const useStudentTimer = () => {
 
           try {
             await API.graphql(
-              graphqlOperation(mutations.updateUniversalLessonStudentData, {
+              graphqlOperation(updateUniversalLessonStudentData, {
                 input: data
               })
             );
@@ -207,14 +211,14 @@ const useStudentTimer = () => {
 
       try {
         await API.graphql(
-          graphqlOperation(mutations?.updateUniversalSurveyStudentData, {
+          graphqlOperation(updateUniversalSurveyStudentData, {
             input: data
           })
         );
         // await filterData();
       } catch (e) {
         await API.graphql(
-          graphqlOperation(mutations?.createUniversalSurveyStudentData, {
+          graphqlOperation(createUniversalSurveyStudentData, {
             input: data
           })
         );
