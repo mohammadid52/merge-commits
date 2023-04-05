@@ -67,7 +67,7 @@ const DictionaryMutationModal = ({
 
   const [formData, setFormData] = useState<FormType>(INITIAL_DATA);
 
-  const _updateDictionary = useGraphqlMutation(updateDicitionary, {
+  const _updateDictionary = useGraphqlMutation('updateDicitionary', updateDicitionary, {
     onSuccess: onSuccessMutation
   });
 

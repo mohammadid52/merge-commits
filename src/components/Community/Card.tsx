@@ -84,15 +84,19 @@ const EditChatModal = ({
     });
   };
 
-  const {mutate, isLoading} = useGraphqlMutation(updateCommunityChat, {
-    onSuccess: () => {
-      const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
-      update(chats[idx], `msg`, () => value);
-      update(chats[idx], `isEditedChat`, () => true);
-      setChats([...chats]);
-      closeAction();
+  const {mutate, isLoading} = useGraphqlMutation(
+    'updateCommunityChat',
+    updateCommunityChat,
+    {
+      onSuccess: () => {
+        const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
+        update(chats[idx], `msg`, () => value);
+        update(chats[idx], `isEditedChat`, () => true);
+        setChats([...chats]);
+        closeAction();
+      }
     }
-  });
+  );
 
   const disableSaveBtn =
     chatConfig.chatValue === value || value.length === 0 || isLoading;
@@ -135,7 +139,7 @@ const BottomSection = ({
   const likeIdx = copyLikes?.findIndex((d) => d === authId);
   const isLiked = likeIdx !== -1;
 
-  const community = useGraphqlMutation(updateCommunity);
+  const community = useGraphqlMutation('updateCommunity', updateCommunity);
   const likeAction = () => {
     let payload: any = {id: cardDetails.id};
     if (isLiked) {
@@ -194,9 +198,9 @@ const PostComment = ({
   const [postText, setPostText] = useState('');
   const {authId: personAuthID, email: personEmail, user} = useAuth();
 
-  const community = useGraphqlMutation(updateCommunity);
+  const community = useGraphqlMutation('updateCommunity', updateCommunity);
 
-  const {mutate} = useGraphqlMutation(createCommunityChat, {
+  const {mutate} = useGraphqlMutation('createCommunityChat', createCommunityChat, {
     onSuccess: () => {
       let updatedCount = chatCount + 1;
       community.mutate({
@@ -483,8 +487,8 @@ const Card = ({
 }): JSX.Element => {
   const [chats, setChats] = useState<any[]>([]);
 
-  const {mutate} = useGraphqlMutation(deleteCommunityChat);
-  const community = useGraphqlMutation(updateCommunity);
+  const {mutate} = useGraphqlMutation('deleteCommunityChat', deleteCommunityChat);
+  const community = useGraphqlMutation('updateCommunity', updateCommunity);
 
   const onChatDelete = (chatId: string) => {
     remove(chats, ['id', chatId]);
@@ -558,6 +562,7 @@ const Card = ({
 
   return (
     <AntdCard
+      type="inner"
       title={
         <CardTitle cardDate={cardDetails.cardDate} cardType={cardDetails.cardType} />
       }

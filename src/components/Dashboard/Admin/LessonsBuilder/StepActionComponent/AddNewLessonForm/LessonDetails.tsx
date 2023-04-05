@@ -61,7 +61,7 @@ const UploadLessonPlanModal = ({
     mutate,
 
     isSuccess
-  } = useGraphqlMutation(updateUniversalLesson, {
+  } = useGraphqlMutation('updateUniversalLesson', updateUniversalLesson, {
     custom: true
   });
 

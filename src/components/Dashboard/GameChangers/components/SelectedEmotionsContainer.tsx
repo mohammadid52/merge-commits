@@ -88,7 +88,7 @@ const SelectedEmotionsContainer = () => {
   const {mutate, isLoading} = useGraphqlMutation<
     CreateFeelingsArchiveMutationVariables,
     FeelingsArchive
-  >(createFeelingsArchive);
+  >('createFeelingsArchive', createFeelingsArchive);
 
   const onSave = () => {
     try {

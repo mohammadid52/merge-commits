@@ -30,6 +30,7 @@ export const TranslationInsideComponent = ({
   };
 
   const {refetch} = useGraphqlQuery(
+    'listDicitionaries',
     listDicitionaries,
     {},
     {

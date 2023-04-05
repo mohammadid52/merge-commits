@@ -1397,6 +1397,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       </Modal>
 
       <PageLayout
+        hideGoBack
+        hideInstProfile
         extra={
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div className="w-auto relative">

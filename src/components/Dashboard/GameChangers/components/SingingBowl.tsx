@@ -6,6 +6,7 @@ import {nanoid} from 'nanoid';
 import {useEffect, useState} from 'react';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {SingingBowlSvg} from '../svg';
+import {createGameChangerLog} from '@graphql/mutations';
 
 const BowlSvg = ({}: {}) => {
   return <SingingBowlSvg />;
@@ -32,7 +33,7 @@ const SingingBowl = () => {
   const mutationLog = useGraphqlMutation<
     {input: CreateGameChangerLogInput},
     GameChangerLog
-  >('createGameChangerLog');
+  >('createGameChangerLog', createGameChangerLog);
   const {email, authId} = useAuth();
 
   const start = () => {

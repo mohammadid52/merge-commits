@@ -276,6 +276,8 @@ const Profile = () => {
 
   const mediaRef = React.useRef<any>(null);
 
+  // check if url has staff keyword
+
   if (status !== 'done') {
     return <LessonLoading />;
   } else {

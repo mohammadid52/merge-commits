@@ -181,7 +181,10 @@ const SelectedCard = ({
 
   const selected = cardsList[selectedCard];
 
-  const {mutate, isError, isLoading} = useGraphqlMutation(createGameChangerLog);
+  const {mutate, isError, isLoading} = useGraphqlMutation(
+    'createGameChangerLog',
+    createGameChangerLog
+  );
 
   const {email, authId, isStudent} = useAuth();
 

@@ -41,6 +41,7 @@ import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
 import {listCommunities} from '@graphql/queries';
+import PageLayout from 'layout/PageLayout';
 
 const TitleBar = ({
   selectedFilterType,
@@ -129,6 +130,7 @@ const Community = () => {
     isFetched,
     isLoading
   } = useGraphqlQuery<ListCommunitiesQueryVariables, any[]>(
+    'listCommunities',
     listCommunities,
     payloadForCommunities,
     {
@@ -187,7 +189,7 @@ const Community = () => {
     personEmail
   });
 
-  const createCommunityMt = useGraphqlMutation(createCommunity, {
+  const createCommunityMt = useGraphqlMutation('createCommunity', createCommunity, {
     onCancel,
     onSuccess: (data: any) => {
       if (data) {
@@ -197,7 +199,7 @@ const Community = () => {
       }
     }
   });
-  const updateCommunityMt = useGraphqlMutation(updateCommunity, {
+  const updateCommunityMt = useGraphqlMutation('updateCommunity', updateCommunity, {
     onCancel,
     onSuccess: (data: ICommunityCard) => {
       let listCopy = [...list];
@@ -346,7 +348,7 @@ const Community = () => {
     }
   };
 
-  const changeFilter = (val: string, name: string, id: string) => {
+  const changeFilter = (val: string, option: any) => {
     if (val !== 'all') {
       const filtered = filter(list, (d: ICommunityCard) => {
         return d.cardType === val;
@@ -354,7 +356,7 @@ const Community = () => {
 
       setFilteredList([...filtered]);
     }
-    setSelectedFilterType({id: id, name: name, value: val});
+    setSelectedFilterType({id: option.id, name: val, value: val});
   };
 
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
@@ -436,29 +438,33 @@ const Community = () => {
         <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
           <BreadCrums items={breadCrumsList} />
         </div>
-        <PageWrapper>
-          <div className={`p-4 pt-0`}>
-            <TitleBar
-              selectedFilterType={selectedFilterType}
-              filterList={filterList}
-              changeFilter={changeFilter}
+        <PageLayout
+          hideGoBack
+          hideInstProfile
+          title={'Community'}
+          extra={
+            <Selector
+              width={250}
+              selectedItem={selectedFilterType.name}
+              list={filterList}
+              placeholder={'All'}
+              onChange={changeFilter}
             />
-
-            <div className="">
-              <CommonList
-                selectedFilterType={selectedFilterType}
-                filteredList={filteredList}
-                list={list}
-                onDelete={onDelete}
-                onCardEdit={onCardEdit}
-                error={error}
-                isFetched={isFetched}
-                isLoading={isLoading}
-                setShowCardsModal={setShowCardsModal}
-              />
-            </div>
+          }>
+          <div className="">
+            <CommonList
+              selectedFilterType={selectedFilterType}
+              filteredList={filteredList}
+              list={list}
+              onDelete={onDelete}
+              onCardEdit={onCardEdit}
+              error={error}
+              isFetched={isFetched}
+              isLoading={isLoading}
+              setShowCardsModal={setShowCardsModal}
+            />
           </div>
-        </PageWrapper>
+        </PageLayout>
       </DashboardContainer>
     </ErrorBoundary>
   );

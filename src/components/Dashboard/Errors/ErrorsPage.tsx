@@ -230,6 +230,7 @@ const ErrorsPage = () => {
     ListErrorLogsQueryVariables,
     ErrorLog[]
   >(
+    'listErrorLogs',
     listErrorLogs,
     {
       limit: SEARCH_LIMIT,

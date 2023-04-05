@@ -26,6 +26,7 @@ const SurveyList = ({
   }));
 
   const {data, isLoading, isFetched} = useGraphqlQuery<any, PersonLessonsData[]>(
+    'listPersonLessonsData',
     listPersonLessonsData,
     {
       limit: SEARCH_LIMIT,

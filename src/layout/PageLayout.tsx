@@ -14,7 +14,7 @@ interface PageLayoutProps {
   footer?: React.ReactNode;
   extra?: React.ReactNode;
   type?: CardProps['type'];
-  onBackUrl?: string;
+
   hideInstProfile?: boolean;
   hideGoBack?: boolean;
   warning?: string;
@@ -41,7 +41,7 @@ const PageLayout = ({
   hideInstProfile,
   hideGoBack,
   type,
-  onBackUrl,
+
   info,
   warning
 }: PageLayoutProps) => {
@@ -59,11 +59,7 @@ const PageLayout = ({
           // variant="text"
 
           onClick={() => {
-            if (onBackUrl) {
-              history.push(onBackUrl);
-            } else {
-              history.goBack();
-            }
+            history.goBack();
           }}
           variant="link"
         />

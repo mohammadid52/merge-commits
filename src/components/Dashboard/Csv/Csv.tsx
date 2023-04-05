@@ -17,6 +17,7 @@ import React, {lazy, useEffect, useRef, useState} from 'react';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import useCsv from './Hooks/useCsv';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 const DownloadCsvButtons = lazy(
   () => import('components/Dashboard/Csv/Components/DownloadCsvButtons')
 );
@@ -366,7 +367,7 @@ const Csv = () => {
   const surveyDropdownRef = useRef<any>(null);
 
   return (
-    <>
+    <ErrorBoundary componentName="CSV">
       <Modal
         open={showWarnModal}
         closeAction={() => setShowWarnModal(false)}
@@ -384,7 +385,7 @@ const Csv = () => {
         </div>
       </Modal>
 
-      <PageLayout>
+      <PageLayout hideGoBack hideInstProfile>
         <div className="">
           <DownloadCsvTitleComponent
             setSCQAnswers={setSCQAnswers}
@@ -469,7 +470,7 @@ const Csv = () => {
           </AnimatedContainer>
         </div>
       </PageLayout>
-    </>
+    </ErrorBoundary>
   );
 };
 

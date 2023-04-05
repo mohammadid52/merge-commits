@@ -137,10 +137,11 @@ const Registration = ({
   const createPersonMutation = useGraphqlMutation<
     {input: CreatePersonInput},
     CreatePersonMutation['createPerson']
-  >(createPerson);
+  >('createPerson', createPerson);
 
   // mutation for creating a new staff user
   const createStaffMutation = useGraphqlMutation<{input: CreateStaffInput}, any>(
+    'createStaff',
     createStaff
   );
 
@@ -148,7 +149,7 @@ const Registration = ({
   const createClassStudentMutation = useGraphqlMutation<
     {input: CreateClassStudentInput},
     any
-  >(createClassStudent);
+  >('createClassStudent', createClassStudent);
 
   async function registerUser(authId: string) {
     const {role, email, status} = values;

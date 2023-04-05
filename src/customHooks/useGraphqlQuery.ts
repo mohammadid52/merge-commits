@@ -33,6 +33,7 @@ interface Options {
 
 const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
   queryName: any,
+  query: any,
   variables: VariablesType,
   options?: Options
 ): {
@@ -74,7 +75,7 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
 
       setIsLoading(true);
       const res: any = await API.graphql(
-        graphqlOperation(queryName, {..._v, nextToken: nextToken})
+        graphqlOperation(query, {..._v, nextToken: nextToken})
       );
 
       const data = isGet ? res.data[_queryName] : res.data[_queryName].items;

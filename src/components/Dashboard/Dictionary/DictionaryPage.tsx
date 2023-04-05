@@ -23,6 +23,7 @@ const DictionaryPage = () => {
     isLoading,
     refetch
   } = useGraphqlQuery<ListDicitionariesQueryVariables, Dicitionary[]>(
+    'listDicitionaries',
     listDicitionaries,
     {limit: SEARCH_LIMIT},
     {
@@ -46,7 +47,7 @@ const DictionaryPage = () => {
     setShowModal(false);
   };
 
-  const deleteDicitionaryMt = useGraphqlMutation(deleteDicitionary, {
+  const deleteDicitionaryMt = useGraphqlMutation('deleteDicitionary', deleteDicitionary, {
     onSuccess: () => {
       refetch();
     }

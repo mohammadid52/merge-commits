@@ -1,5 +1,6 @@
 import {DownOutlined, UpOutlined} from '@ant-design/icons';
 import {listFeelingsArchives} from '@customGraphql/customQueries';
+import {deleteFeelingsArchive} from '@graphql/mutations';
 import {Transition} from '@headlessui/react';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
@@ -636,7 +637,7 @@ const PageBuilderSlideOver = ({
   const deleteMutation = useGraphqlMutation<
     {input: DeleteFeelingsArchiveInput},
     DeleteFeelingsArchiveInput
-  >('deleteFeelingsArchive');
+  >('deleteFeelingsArchive', deleteFeelingsArchive);
 
   const {authId} = useAuth();
   const route: any = useRouteMatch();
@@ -647,6 +648,7 @@ const PageBuilderSlideOver = ({
     ListFeelingsArchivesQueryVariables,
     FeelingsArchive[]
   >(
+    'listFeelingsArchives',
     listFeelingsArchives,
     {
       filter: {

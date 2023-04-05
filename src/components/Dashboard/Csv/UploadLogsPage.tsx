@@ -22,6 +22,7 @@ const UploadLogsPage = () => {
     ListUploadLogsQueryVariables,
     UploadLogs[]
   >(
+    'listUploadLogs',
     listUploadLogs,
     {limit: SEARCH_LIMIT},
     {

@@ -3,8 +3,9 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {Result} from 'antd';
+import {updatePersonLessonsData} from '@graphql/mutations';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
+import {Result} from 'antd';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
@@ -13,7 +14,6 @@ import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
-import {updatePersonLessonsData} from '@graphql/mutations';
 
 const LessonHeaderBar = ({
   overlay,
@@ -66,7 +66,7 @@ const LessonHeaderBar = ({
       input: UpdatePersonLessonsDataInput;
     },
     UniversalLessonStudentData
-  >(updatePersonLessonsData);
+  >('updatePersonLessonsData', updatePersonLessonsData);
 
   const {isStudent} = useAuth();
 

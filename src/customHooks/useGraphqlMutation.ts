@@ -11,6 +11,7 @@ interface Options {
 
 const useGraphqlMutation = <VariablesType, ReturnType>(
   mutationName: string,
+  mutation: string,
   options?: Options
 ): {
   mutate: (
@@ -39,7 +40,7 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
       try {
         const res: any = await API.graphql(
           // @ts-ignore
-          graphqlOperation(mutationName, variables)
+          graphqlOperation(mutation, variables)
         );
 
         const data: ReturnType = res.data[mutationName];

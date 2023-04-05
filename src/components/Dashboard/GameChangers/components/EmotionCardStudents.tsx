@@ -57,6 +57,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     isLoading: listLoading,
     isSuccess
   } = useGraphqlQuery<ListFeelingsArchivesQueryVariables, FeelingsArchive[]>(
+    'listFeelingsArchives',
     listFeelingsArchives,
     {
       filter: {

@@ -281,10 +281,11 @@ const EmojiFeedback = () => {
   const createPersonSentimentsMt = useGraphqlMutation<
     {input: CreatePersonSentimentsInput},
     any
-  >(createPersonSentiments, {
+  >('createPersonSentiments', createPersonSentiments, {
     custom: true
   });
   const updateLastSubmissionDateMt = useGraphqlMutation<{input: UpdatePersonInput}, any>(
+    'updateLastSubmissionDate',
     updateLastSubmissionDate,
     {
       custom: true

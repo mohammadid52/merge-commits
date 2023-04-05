@@ -63,6 +63,7 @@ const SingleNote = (props: any) => {
     isLoading,
     isFetched
   } = useGraphqlQuery<ListAnthologyCommentsQueryVariables, AnthologyComment[]>(
+    'listAnthologyComments',
     listAnthologyComments,
     {
       filter: filter
