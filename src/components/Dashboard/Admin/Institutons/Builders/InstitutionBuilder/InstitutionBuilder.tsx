@@ -1,16 +1,15 @@
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import {Empty} from 'antd';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
+import StaffBuilder from '../../Listing/StaffBuilder';
 import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceVendors from './ServiceVendors';
-import StaffBuilder from '../../Listing/StaffBuilder';
-import {Empty} from 'antd';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -62,13 +61,7 @@ const InstitutionBuilder = ({
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {
-    state: {user},
-
-    userLanguage
-  } = useGlobalContext();
-
-  const {InstitutionBuilderDict} = useDictionary();
+  const {InstitutionBuilderDict, userLanguage} = useDictionary();
   const [activeStep, setActiveStep] = useState('overview');
   const [institutionInfo, setInstitutionInfo] = useState({
     id: institutionId || '',

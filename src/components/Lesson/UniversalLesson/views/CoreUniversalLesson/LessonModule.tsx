@@ -4,7 +4,7 @@ import {UniversalLesson} from 'API';
 
 import map from 'lodash/map';
 
-import {lazy, useState} from 'react';
+import {useState} from 'react';
 
 import EvidenceTab from '@components/Lesson/Components/EvidenceTab';
 
