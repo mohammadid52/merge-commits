@@ -14,7 +14,11 @@ const ComponentLoading = ({}: {from?: string}) => {
         <div className=" theme-card-shadow max-w-96 rounded-lg">
           <div
             className={`p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-white rounded-t-lg`}>
-            <img src={getAsset(clientKey, 'loading_logo')} alt={`${clientKey} Logo`} />
+            <img
+              className={clientKey === 'curate' ? 'h-[7rem]' : ''}
+              src={getAsset(clientKey, 'loading_logo')}
+              alt={`${clientKey} Logo`}
+            />
           </div>
           <div
             className={`  p-4 text-sm text-center text-white flex flex-col justify-center items-center font-light iconoclast:bg-500 curate:bg-500    rounded-b-lg`}>
