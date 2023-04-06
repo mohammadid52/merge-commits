@@ -219,9 +219,7 @@ const LessonRowComposer = () => {
             )}
           </div>
 
-          {shouldShowLessonModule && (
-            <LessonModule currentLesson={lessonState?.lessonData} />
-          )}
+          {true && <LessonModule currentLesson={lessonState?.lessonData} />}
         </>
       )}
 

@@ -446,6 +446,9 @@ const Lesson = () => {
       setPersonLocationObj(newLocationObj);
       setLocalStorageData('person_location', newLocationObj);
     } catch (error) {
+      if (error.errorType === 'DynamoDB:ConditionalCheckFailedException') {
+        return;
+      }
       logError(error, {authId, email}, 'Lesson @createPersonLocation', error.toString());
 
       console.log('createPersonLocation failed', error, newLocation);

@@ -6,7 +6,7 @@ import map from 'lodash/map';
 
 import {lazy, useState} from 'react';
 
-const EvidenceTab = lazy(() => import('@components/Lesson/Components/EvidenceTab'));
+import EvidenceTab from '@components/Lesson/Components/EvidenceTab';
 
 const getFilteredUniversalSyllabus = (curriculum: any, lessonId: string) => {
   const assignedSyllabi = curriculum?.universalSyllabus?.items?.filter(
@@ -73,7 +73,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
 
     {
       key: '2',
-      label: 'Evidences',
+      label: 'Resources',
       children: (
         <WithHtml
           emptyText="No Resources Listed"
@@ -84,7 +84,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
 
     {
       key: '3',
-      label: 'Resources',
+      label: 'Evidences',
       children: (
         <EvidenceTab
           selectedMeasurements={selectedMeasurements}

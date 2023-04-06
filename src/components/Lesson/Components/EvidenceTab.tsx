@@ -1,15 +1,13 @@
 import Loader from '@components/Atoms/Loader';
-import useUpdateEffect from '@customHooks/useUpdateEffect';
 import {Transition} from '@headlessui/react';
 import {API, graphqlOperation} from 'aws-amplify';
-import {useState} from 'react';
-import {AiFillCheckCircle} from 'react-icons/ai';
-import {getSelectedCurriculum} from '../UniversalLesson/views/CoreUniversalLesson/LessonModule';
 import {listCurriculumsForLessons, listTopics} from 'customGraphql/customQueries';
 import {getCSequences, listLearningObjectives, listRubrics} from 'graphql/queries';
+import {useEffect, useState} from 'react';
+import {AiFillCheckCircle} from 'react-icons/ai';
+import {getSelectedCurriculum} from '../UniversalLesson/views/CoreUniversalLesson/LessonModule';
 
 const EvidenceTab = ({
-  curTab,
   currentLesson,
 
   setSelectedMeasurements,
@@ -21,11 +19,11 @@ const EvidenceTab = ({
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     if (selectedCurriculumList.length === 0) {
       fetchCurriculum();
     }
-  }, [curTab]);
+  }, [selectedCurriculumList.length]);
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
