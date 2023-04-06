@@ -4,7 +4,7 @@ import {initials, stringToHslColor} from 'utilities/strings';
 const ImageAlternate = ({user, textSize, styleClass, rounded = true}: any) => {
   return (
     <div
-      className={`${styleClass} flex justify-center items-center border-0 border-gray-400 `}>
+      className={`${styleClass} flex justify-center items-center border-0 border-light  `}>
       <div
         className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white ${
           rounded ? 'rounded-full' : ''

@@ -60,7 +60,7 @@ const ThemeModal = ({
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             <div
               className={`${
-                dark ? 'bg-gray-800 ' : 'bg-white'
+                dark ? 'bg-darkest    ' : 'bg-white'
               } w-auto border-0 border-gray-${dark ? '600' : '200'} max-w-${
                 max.w || 256
               } inline-block align-bottom  rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6`}>
@@ -68,8 +68,8 @@ const ThemeModal = ({
                 <button
                   type="button"
                   className={`${
-                    dark ? 'bg-gray-800' : 'bg-white'
-                  } w-auto  rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                    dark ? 'bg-darkest   ' : 'bg-white'
+                  } w-auto  rounded-md text-light  hover:text-medium  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                   onClick={() => setOpen(false)}>
                   <span className="sr-only">Close</span>
                   <CloseOutlined />
@@ -78,10 +78,10 @@ const ThemeModal = ({
               {header && (
                 <div
                   className={`${
-                    dark ? 'border-gray-700' : 'border-gray-200'
+                    dark ? 'border-dark  ' : 'border-light'
                   } modal-header border-b-0 pb-2  `}>
                   <h3 className="dark:text-white text-2xl font-semibold">{header}</h3>
-                  {subHeader && <p className="text-sm  text-gray-400">{subHeader}</p>}
+                  {subHeader && <p className="text-sm  text-light ">{subHeader}</p>}
                 </div>
               )}
               <div

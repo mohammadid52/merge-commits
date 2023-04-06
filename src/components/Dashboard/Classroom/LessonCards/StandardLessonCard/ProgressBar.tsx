@@ -46,7 +46,7 @@ const ProgressBar = ({personDataObj, _isCompleted}: ProgressBarProps) => {
   return (
     <div className="flex justify-end px-4 flex-wrap mb-3">
       <div className="flex items-center justify-between my-2">
-        <p className="text-gray-500 text-sm">
+        <p className="text-medium  text-sm">
           {_isCompleted ? 100 : progressValue > 0 ? progressValue : 0}% complete{' '}
           <span className="italic">{progressValue === 99 ? infoWhenNinetyNine : ''}</span>
         </p>

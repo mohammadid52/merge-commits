@@ -38,7 +38,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
         className="relative bg-white w-full rounded shadow-sm h-16 lg:h-12 flex"
         aria-label="Breadcrumb">
         {anyoneIsShared && !isPresenting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 disabled z-50">
+          <div className="absolute inset-0 flex items-center justify-center bg-light  bg-opacity-50 disabled z-50">
             <p className="text-center font-bold text-sm">
               Disabled when sharing is active!
             </p>
@@ -50,7 +50,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
           }`}>
           <li className="flex w-auto">
             <div className="flex items-center">
-              <a href="#" className="text-gray-600">
+              <a href="#" className="text-medium ">
                 <BiBook className="flex-shrink-0 h-5 w-5" aria-hidden="true" />
                 <span className="sr-only">Home</span>
               </a>

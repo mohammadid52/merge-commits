@@ -108,12 +108,12 @@ const SelectorWithAvatar = (props: SelectorProps) => {
           aria-labelledby="listbox-label"
           className={` ${
             disabled
-              ? 'bg-gray-200 pointer-events-none cursor-not-allowed'
+              ? 'bg-lightest pointer-events-none cursor-not-allowed'
               : 'cursor-pointer'
-          } flex items-center  relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          } flex items-center  relative w-full h-full rounded-full  border-0 border-lightest  bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
-          <span className="block truncate text-gray-700">
+          <span className="block truncate text-dark  ">
             {selectedItem?.value ? selectedItem.value : placeholder}
           </span>
           {!loading && (
@@ -123,7 +123,7 @@ const SelectorWithAvatar = (props: SelectorProps) => {
               }`}>
               {/* UPDOWN ARRAW */}
               <svg
-                className="h-5 w-5 text-gray-400"
+                className="h-5 w-5 text-light "
                 viewBox="0 0 20 20"
                 fill="none"
                 stroke="currentColor">

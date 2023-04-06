@@ -1,14 +1,14 @@
-import React, { useCallback, useState } from "react";
-import { FaTasks } from "react-icons/fa";
-import { Directory } from "./Directory";
-import { Item } from "./Item";
+import React, {useCallback, useState} from 'react';
+import {FaTasks} from 'react-icons/fa';
+import {Directory} from './Directory';
+import {Item} from './Item';
 
 export const Tree = ({
   root,
   dark = false,
   onClick = () => {},
   customClick = false,
-  selPageId,
+  selPageId
 }: React.PropsWithChildren<{
   root: any;
   dark?: boolean;
@@ -39,11 +39,10 @@ export const Tree = ({
 
   return (
     <ul
-      className={`border-l-2 space-y-3 border-green-500 p-2 pt-0 ml-2 mb-0 mt-0 pb-0 menu bg-default text-content-700 text-white`}
-    >
+      className={`border-l-2 space-y-3 border-green-500 p-2 pt-0 ml-2 mb-0 mt-0 pb-0 menu bg-default text-content-700 text-white`}>
       {root.children &&
         root.children.map((item: any) => {
-          if (item.type !== "pages")
+          if (item.type !== 'pages')
             return (
               <Directory
                 key={item.id || item.title}
@@ -62,13 +61,11 @@ export const Tree = ({
               dark={dark}
               key={item.id || item.title}
               onClick={onItemClicked}
-              onContextMenu={onContextMenu}
-            >
+              onContextMenu={onContextMenu}>
               <span
                 className={`${
-                  dark ? "text-gray-900" : ""
-                }  hover:bg-gray-200 transition-all p-2  truncate flex`}
-              >
+                  dark ? 'text-darkest' : ''
+                }  hover:bg-lightest transition-all p-2  truncate flex`}>
                 <span className="w-6 h-6 mx-1 inline-flex items-center">
                   <FaTasks />
                 </span>

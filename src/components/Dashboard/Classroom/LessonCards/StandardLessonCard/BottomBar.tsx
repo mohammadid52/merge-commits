@@ -41,21 +41,21 @@ const BottomBar = (props: LessonCardProps) => {
     <div>
       <div
         style={{borderTop: '1px solid rgba(237, 242, 247,1)'}}
-        className={`bg-transparent py-2 relative flex justify-around items-center px-4 `}>
+        className={`bg-transparent py-2 relative flex justify-between items-center px-4 `}>
         {/* TIME */}
-        <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
-          <div className="flex items-center text-gray-500">
+        <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-medium `}>
+          <div className="flex items-center text-medium ">
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div
-            className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
+            className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-medium `}>
             {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>
 
         {/* TEACHER */}
         <div className={`flex justify-center items-center md:w-5/10 w-auto md:mr-2`}>
-          <div className="w-auto text-gray-500">
+          <div className="w-auto text-medium ">
             <Placeholder
               size="h-6 w-6 sm:h-8 sm:w-8"
               firstName={activeRoomInfo?.teacher?.firstName}
@@ -69,14 +69,14 @@ const BottomBar = (props: LessonCardProps) => {
            */}
           {typeof activeRoomInfo !== 'undefined' ? (
             <div
-              className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
+              className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-medium `}>
               {activeRoomInfo?.teacher?.firstName} {activeRoomInfo?.teacher?.lastName}
             </div>
           ) : null}
         </div>
 
         {/* START */}
-        <div className="w-4/10 hidden sm:block">
+        <div className="hidden sm:block">
           <Start {...startButtonProps} />
         </div>
       </div>

@@ -1,19 +1,24 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 import useAuth from '@customHooks/useAuth';
+import {Tabs, TabsProps} from 'antd';
 import {Language} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {
+  createQuestionData,
+  updatePerson,
+  updateQuestionData
+} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {languageList} from 'utilities/staticData';
 import {convertArrayIntoObj} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import DemographicsEdit, {selectedMultiOptions} from '../Demographics/DemographicsEdit';
 import {UserInfo} from './Profile';
 
 interface UserInfoProps {
@@ -28,84 +33,12 @@ interface UserInfoProps {
 const ProfileEdit = (props: UserInfoProps) => {
   const history = useHistory();
   const {userLanguage} = useGlobalContext();
-  const {dashboardProfileDict} = useDictionary();
+  const {dashboardProfileDict, UserEditDict, UserInformationDict} = useDictionary();
   const {user, getUser, status, setStatus, stdCheckpoints, questionData} = props;
 
   const [editUser, setEditUser] = useState(user);
   const [loading, setLoading] = useState(false);
   const [checkpointData, setCheckpointData] = useState<any>({});
-
-  const onInputChange = (e: any, checkpointID: string, questionID: string) => {
-    setCheckpointData({
-      ...checkpointData,
-      [checkpointID]: {
-        ...checkpointData[checkpointID],
-        [questionID]: e.target.value
-      }
-    });
-  };
-
-  const onOtherInputChange = (e: any, checkpointID: string, questionID: string) => {
-    setCheckpointData({
-      ...checkpointData,
-      [checkpointID]: {
-        ...checkpointData[checkpointID],
-        [questionID]: `Other || ${e.target.value}`
-      }
-    });
-  };
-
-  const onMultipleSelection = (
-    option: any[],
-    checkpointID: string,
-    questionID: string
-  ) => {
-    const selectedQuestion = checkpointData[checkpointID]
-      ? checkpointData[checkpointID][questionID]
-      : [];
-
-    if (selectedQuestion?.length > 0) {
-      if (typeof selectedQuestion === 'string') {
-        setCheckpointData({
-          ...checkpointData,
-          [checkpointID]: {
-            ...checkpointData[checkpointID],
-            [questionID]: []
-          }
-        });
-      }
-
-      setCheckpointData({
-        ...checkpointData,
-        [checkpointID]: {
-          ...checkpointData[checkpointID],
-          [questionID]: [...option]
-        }
-      });
-    } else {
-      setCheckpointData({
-        ...checkpointData,
-        [checkpointID]: {
-          ...checkpointData[checkpointID],
-          [questionID]: [...option]
-        }
-      });
-    }
-  };
-  const onSingleSelect = (
-    name: string,
-
-    checkpointID: string,
-    questionID: string
-  ) => {
-    setCheckpointData({
-      ...checkpointData,
-      [checkpointID]: {
-        ...checkpointData[checkpointID],
-        [questionID]: name
-      }
-    });
-  };
 
   const getQuestionArray = (obj: any) => {
     const keys: any = Object.keys(obj);
@@ -121,7 +54,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     history.push('/dashboard/profile');
   };
 
-  const updateQuestionData = async (responseObj: any, checkpointID: string) => {
+  const updateQuestionDataFn = async (responseObj: any, checkpointID: string) => {
     const val = responseObj.responseObject.map((resp: any) => {
       if (hasOther(resp.response, 'Other')) {
         return {
@@ -140,7 +73,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
     try {
       await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {
+        graphqlOperation(updateQuestionData, {
           input: modifiedResponseObj
         })
       );
@@ -158,13 +91,13 @@ const ProfileEdit = (props: UserInfoProps) => {
       id: questionDataId,
       responseObject: questions
     };
-    updateQuestionData(responseObject, checkpointID);
+    updateQuestionDataFn(responseObject, checkpointID);
   };
 
-  const createQuestionData = async (responseObj: any) => {
+  const createQuestionDataFn = async (responseObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, {
+        graphqlOperation(createQuestionData, {
           input: responseObj
         })
       );
@@ -182,7 +115,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       email: editUser.email,
       responseObject: questions
     };
-    createQuestionData(responseObject);
+    createQuestionDataFn(responseObject);
   };
 
   const saveAllCheckpointData = async () => {
@@ -220,7 +153,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const {setUser} = useAuth();
 
-  async function updatePerson() {
+  async function updatePersonFn() {
     const input = {
       id: editUser.id,
       authId: editUser.authId,
@@ -238,7 +171,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
     try {
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
+        graphqlOperation(updatePerson, {input: input})
       );
       setEditUser(update.data.updatePerson);
       setStatus('loading');
@@ -253,8 +186,8 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   async function saveProfileInformation() {
     saveAllCheckpointData();
-    await updatePerson();
-    await getUser();
+    await updatePersonFn();
+    getUser();
   }
 
   const onChange = (e: any) => {
@@ -264,43 +197,6 @@ const ProfileEdit = (props: UserInfoProps) => {
       ...editUser,
       [id]: value
     });
-  };
-
-  const convertToSelectorList = (options: any) => {
-    const newArr: any = options.map((item: any, index: number) => ({
-      id: index,
-      name: item.text,
-      value: item.text
-    }));
-
-    return newArr;
-  };
-  const convertToMultiSelectList = (options: any) => {
-    const newArr: any = options.map((item: any, index: number) => ({
-      id: index.toString(),
-      name: item.text,
-      value: item.text
-    }));
-    return newArr;
-  };
-
-  const selectedMultiOptions = (options: any[]) => {
-    if (typeof options === 'string') {
-      return [{id: '0', name: options, value: options}];
-    }
-    if (options && typeof options[0] === 'string') {
-      const newArr: any = options?.map((option: any, index: number) => {
-        return {
-          id: index.toString(),
-          name: option,
-          value: option
-        };
-      });
-
-      return [...newArr];
-    } else {
-      return [...options];
-    }
   };
 
   const extractItemFromArray = (responceArray: any[]) => {
@@ -331,8 +227,6 @@ const ProfileEdit = (props: UserInfoProps) => {
     return <LessonLoading />;
   }
 
-  const path = '/dashboard/profile/password';
-
   // Code for Other Field
   const hasOther = (val: string | string[], other: string) => {
     try {
@@ -343,290 +237,79 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   };
 
-  const isOther = (val: any) => {
-    if (hasOther(val, 'Other')) {
-      return true;
-    } else return false;
-  };
-  // ⬆️ Ends here ⬆️
-
-  const getValue = (checkpointId: string, questionId: string) => {
-    if (checkpointData[checkpointId]) {
-      const currentQuestionResponse = checkpointData[checkpointId][questionId];
-      return currentQuestionResponse
-        ? currentQuestionResponse.split(' || ').length === 2
-          ? currentQuestionResponse.split(' || ')[1]
-          : ''
-        : '';
-    }
-  };
-
   const dictionary = dashboardProfileDict[userLanguage]['EDIT_PROFILE'];
+
+  const items: TabsProps['items'] = [
+    {
+      label: UserEditDict[userLanguage]['heading'],
+      key: '1',
+      children: (
+        <div className="h-full px-4 py-5 sm:px-6">
+          <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-darkest">
+            <>
+              <div className="sm:col-span-3 p-2">
+                <FormInput
+                  id="firstName"
+                  value={editUser.firstName}
+                  name="firstName"
+                  onChange={onChange}
+                  label={dictionary['FIRST_NAME']}
+                />
+              </div>
+
+              <div className="sm:col-span-3 p-2">
+                <FormInput
+                  id="lastName"
+                  value={editUser.lastName}
+                  onChange={onChange}
+                  label={dictionary['LAST_NAME']}
+                />
+              </div>
+
+              <div className="sm:col-span-3 p-2">
+                <FormInput
+                  id="preferredName"
+                  value={editUser?.preferredName || ''}
+                  onChange={onChange}
+                  label={dictionary['NICKNAME']}
+                />
+              </div>
+
+              <div className="sm:col-span-3 p-2">
+                <Selector
+                  placeholder="Select Language"
+                  list={languageList}
+                  width="100%"
+                  onChange={(value) =>
+                    setEditUser({...editUser, language: value as Language})
+                  }
+                  label={dictionary['LANGUAGE']}
+                  selectedItem={editUser.language === 'EN' ? 'English' : 'Spanish'}
+                />
+              </div>
+            </>
+          </div>
+        </div>
+      )
+    },
+    {
+      label: UserInformationDict[userLanguage]['demographics'],
+      key: '2',
+      children: (
+        <DemographicsEdit
+          setCheckpointData={setCheckpointData}
+          checkpointData={checkpointData}
+          stdCheckpoints={stdCheckpoints}
+        />
+      )
+    }
+  ];
 
   {
     return (
       <div className="h-full w-full md:px-4 pt-4">
         <form>
-          <div>
-            <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
-              <div className="px-4 py-1 md:py-5 flex items-center justify-between border-b-0 border-gray-200 sm:px-6">
-                <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
-                  {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
-                </h3>
-                <Buttons
-                  variant="dashed"
-                  size="small"
-                  label={'Click here to edit password'}
-                  onClick={() => history.push(path)}
-                />
-              </div>
-
-              <div className="h-full px-4 py-5 sm:px-6">
-                <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
-                  <>
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        id="firstName"
-                        value={editUser.firstName}
-                        name="firstName"
-                        onChange={onChange}
-                        label={dictionary['FIRST_NAME']}
-                      />
-                    </div>
-
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        id="lastName"
-                        value={editUser.lastName}
-                        onChange={onChange}
-                        label={dictionary['LAST_NAME']}
-                      />
-                    </div>
-
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        id="preferredName"
-                        value={editUser?.preferredName || ''}
-                        onChange={onChange}
-                        label={dictionary['NICKNAME']}
-                      />
-                    </div>
-
-                    <div className="sm:col-span-3 p-2">
-                      <Selector
-                        placeholder="Select Language"
-                        list={languageList}
-                        width="100%"
-                        onChange={(value) =>
-                          setEditUser({...editUser, language: value as Language})
-                        }
-                        label={dictionary['LANGUAGE']}
-                        selectedItem={editUser.language === 'EN' ? 'English' : 'Spanish'}
-                      />
-                    </div>
-                  </>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {stdCheckpoints?.length > 0 ? (
-            <div className="mt-8">
-              {stdCheckpoints.map((checkpoint: any) => (
-                <Fragment key={checkpoint.id}>
-                  <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
-                    <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                      <h3 className="text-lg leading-6 font-medium uppercase">
-                        {checkpoint.title}
-                      </h3>
-                    </div>
-
-                    <div className="h-full px-4 py-5 sm:px-6">
-                      <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
-                        {checkpoint.questions?.items.map((item: any) => (
-                          <Fragment key={item.question.id}>
-                            <div className="sm:col-span-6 p-2 flex items-end">
-                              <div className="flex flex-col justify-between">
-                                {item.question.type === 'text' ? (
-                                  <FormInput
-                                    value={
-                                      checkpointData[checkpoint.id]
-                                        ? checkpointData[checkpoint.id][item.question.id]
-                                        : ''
-                                    }
-                                    id={item.question.id}
-                                    name=""
-                                    label={item?.question?.question}
-                                    onChange={(e) =>
-                                      onInputChange(e, checkpoint.id, item.question.id)
-                                    }
-                                  />
-                                ) : null}
-                                {/* Will change it to text box if required. */}
-                                {item.question.type === 'input' ? (
-                                  <FormInput
-                                    value={
-                                      checkpointData[checkpoint.id]
-                                        ? checkpointData[checkpoint.id][item.question.id]
-                                        : ''
-                                    }
-                                    id={item.question.id}
-                                    name=""
-                                    label={item?.question?.question}
-                                    onChange={(e) =>
-                                      onInputChange(e, checkpoint.id, item.question.id)
-                                    }
-                                  />
-                                ) : null}
-                                {item.question.type === 'link' ? (
-                                  <div className="sm:col-span-3">
-                                    <label
-                                      htmlFor="date picker"
-                                      className="block text-m font-medium leading-5 text-gray-700">
-                                      {item?.question?.question}
-                                    </label>
-                                    <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                                      <input
-                                        id={item.question.id}
-                                        type="url"
-                                        name="url"
-                                        placeholder="https://example.com"
-                                        pattern="https://.*"
-                                        size={30}
-                                        required
-                                        value={
-                                          checkpointData[checkpoint.id]
-                                            ? checkpointData[checkpoint.id][
-                                                item.question.id
-                                              ]
-                                            : ''
-                                        }
-                                        onChange={(e) =>
-                                          onInputChange(
-                                            e,
-                                            checkpoint.id,
-                                            item.question.id
-                                          )
-                                        }
-                                        className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
-                                      />
-                                    </div>
-                                  </div>
-                                ) : null}
-                                {item.question.type === 'datePicker' ? (
-                                  <FormInput
-                                    value={
-                                      checkpointData[checkpoint.id]
-                                        ? checkpointData[checkpoint.id][item.question.id]
-                                        : ''
-                                    }
-                                    id={item.question.id}
-                                    name=""
-                                    label={item?.question?.question}
-                                    onChange={(e) =>
-                                      onInputChange(e, checkpoint.id, item.question.id)
-                                    }
-                                  />
-                                ) : null}
-                                {item.question.type === 'selectOne' ? (
-                                  <Fragment>
-                                    <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                                      {item?.question?.question}
-                                    </label>
-
-                                    <Selector
-                                      selectedItem={
-                                        checkpointData[checkpoint.id]
-                                          ? isOther(
-                                              checkpointData[checkpoint.id][
-                                                item.question.id
-                                              ]
-                                            )
-                                            ? 'Other'
-                                            : checkpointData[checkpoint.id][
-                                                item.question.id
-                                              ]
-                                          : ''
-                                      }
-                                      placeholder=""
-                                      list={convertToSelectorList(
-                                        item?.question?.options
-                                      )}
-                                      onChange={(value) =>
-                                        onSingleSelect(
-                                          value,
-
-                                          checkpoint.id,
-                                          item.question.id
-                                        )
-                                      }
-                                    />
-                                    {checkpointData[checkpoint.id] &&
-                                      isOther(
-                                        checkpointData[checkpoint.id][item.question.id]
-                                      ) && (
-                                        <div className="col-span-2">
-                                          <FormInput
-                                            value={getValue(
-                                              checkpoint.id,
-                                              item.question.id
-                                            )}
-                                            id={item.question.id}
-                                            placeHolder="Mention other"
-                                            name="other"
-                                            onChange={(e) => {
-                                              onOtherInputChange(
-                                                e,
-                                                checkpoint.id,
-                                                item.question.id
-                                              );
-                                            }}
-                                          />
-                                        </div>
-                                      )}
-                                  </Fragment>
-                                ) : null}
-                                {item.question.type === 'selectMany' ? (
-                                  <Fragment>
-                                    <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                                      {item?.question?.question}
-                                    </label>
-                                    <MultipleSelector
-                                      list={convertToMultiSelectList(
-                                        item?.question?.options
-                                      )}
-                                      selectedItems={
-                                        checkpointData[checkpoint.id] &&
-                                        checkpointData[checkpoint.id][item.question.id]
-                                          ? selectedMultiOptions(
-                                              checkpointData[checkpoint.id][
-                                                item.question.id
-                                              ]
-                                            )
-                                          : []
-                                      }
-                                      placeholder=""
-                                      onChange={(_, option) =>
-                                        onMultipleSelection(
-                                          option,
-                                          checkpoint.id,
-                                          item.question.id
-                                        )
-                                      }
-                                    />
-                                  </Fragment>
-                                ) : null}
-                              </div>
-                            </div>
-                          </Fragment>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Fragment>
-              ))}
-            </div>
-          ) : null}
+          <Tabs items={items} animated defaultActiveKey="1" />
 
           <div className="px-4 pt-4 w-full flex justify-end">
             <div className="flex justify-center gap-4">

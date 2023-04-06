@@ -47,3 +47,8 @@ export const CreatePasswordSchema = Yup.object().shape({
 export const ForgotSchema = Yup.object().shape({
   email: LoginSchema.fields.email
 });
+
+export const CourseSchema = Yup.object().shape({
+  // name cannot be empty
+  name: Yup.string().required('Course name cannot be empty')
+});

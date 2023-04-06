@@ -3,14 +3,14 @@ import {Auth} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useCookies} from 'react-cookie';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customMutations from 'customGraphql/customMutations';
+import {updatePersonLogoutTime} from 'customGraphql/customMutations';
 import {removeLocalStorageData} from '@utilities/localStorage';
 
 export type User = {
   authId: string;
   id: string;
 
-  role: Role;
+  role: Role | null;
   email: string;
   preferredName?: string;
   firstName: string;
@@ -30,7 +30,7 @@ export type User = {
 };
 
 const useAuth = (): {
-  role: Role;
+  role: Role | null;
   isStudent: boolean;
   isTeacher: boolean;
   isBuilder: boolean;
@@ -111,9 +111,7 @@ const useAuth = (): {
         lastPageStateUpdate: time,
         pageState: UserPageState.NOT_LOGGED_IN
       };
-      await API.graphql(
-        graphqlOperation(customMutations.updatePersonLogoutTime, {input})
-      );
+      await API.graphql(graphqlOperation(updatePersonLogoutTime, {input}));
       await Auth.signOut();
 
       removeAuthToken();

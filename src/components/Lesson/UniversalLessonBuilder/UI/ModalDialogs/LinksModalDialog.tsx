@@ -157,7 +157,7 @@ const LinksModalDialog = ({
               <div className={'my-2'} key={`keyword_${idx}`}>
                 <label
                   htmlFor={'Link'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                  className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
                   Link {idx + 1}:
                 </label>
                 <div className="mb-2">
@@ -201,7 +201,7 @@ const LinksModalDialog = ({
         <div className="flex items-center w-auto">
           <button
             onClick={handleAddNewLink}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-lightest  p-2 px-4 text-tiny hover:border-medium  rounded-md text-dark transition-all duration-300 ">
             + Add Field
           </button>
         </div>

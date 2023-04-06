@@ -1,5 +1,6 @@
 import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
+import {Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
@@ -9,8 +10,6 @@ import {IOnChange} from 'interfaces/index';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {map, remove, update} from 'lodash';
 import {useEffect, useState} from 'react';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 
@@ -150,58 +149,62 @@ const NotesModalDialog = (props: NoteModalProps) => {
     }
   };
 
-  const {curTab, setCurTab, helpers} = useTabs();
-  const [onSetupTab, onPreviewTab] = helpers;
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: `Component Details`,
+      children: (
+        <div>
+          <div className="flex flex-col">
+            {map(fields, (singleNoteData, idx) => (
+              <SingleNote
+                onFieldUpdate={onFieldUpdate}
+                onChange={onChange}
+                key={singleNoteData.id}
+                removeItemFromList={removeItemFromList}
+                singleNoteData={singleNoteData}
+                isEditingMode={isEditingMode}
+                idx={idx}
+              />
+            ))}
+          </div>
+          <Buttons label={'Add another note'} onClick={addNewNoteField} transparent />
+          <div className="flex mt-8 justify-end px-6 pl-0 pb-4">
+            <div className="flex items-center w-auto gap-4">
+              <Buttons
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                onClick={askBeforeClose}
+                transparent
+              />
+              <Buttons
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                onClick={() => onSubmit()}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: '2',
+      label: `Preview`,
+      children: (
+        <div className="">
+          <PreviewLayout
+            notAvailable={
+              notesList.length === 0 ? 'Please add notes to see preview' : false
+            }>
+            {/* @ts-ignore */}
+            <NotesBlock preview grid={{cols: 2, rows: 2}} value={notesList} />
+          </PreviewLayout>
+        </div>
+      )
+    }
+  ];
 
   return (
     <div>
-      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
-      <AnimatedContainer show={onSetupTab}>
-        {onSetupTab && (
-          <div>
-            <div className="flex flex-col">
-              {map(fields, (singleNoteData, idx) => (
-                <SingleNote
-                  onFieldUpdate={onFieldUpdate}
-                  onChange={onChange}
-                  key={singleNoteData.id}
-                  removeItemFromList={removeItemFromList}
-                  singleNoteData={singleNoteData}
-                  isEditingMode={isEditingMode}
-                  idx={idx}
-                />
-              ))}
-            </div>
-            <Buttons label={'Add another note'} onClick={addNewNoteField} transparent />
-            <div className="flex mt-8 justify-end px-6 pl-0 pb-4">
-              <div className="flex items-center w-auto gap-4">
-                <Buttons
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-                  onClick={askBeforeClose}
-                  transparent
-                />
-                <Buttons
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-                  onClick={() => onSubmit()}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </AnimatedContainer>
-      <AnimatedContainer show={onPreviewTab}>
-        {onPreviewTab && (
-          <div className="">
-            <PreviewLayout
-              notAvailable={
-                notesList.length === 0 ? 'Please add notes to see preview' : false
-              }>
-              {/* @ts-ignore */}
-              <NotesBlock preview grid={{cols: 2, rows: 2}} value={notesList} />
-            </PreviewLayout>
-          </div>
-        )}
-      </AnimatedContainer>
+      <Tabs items={items} />
     </div>
   );
 };

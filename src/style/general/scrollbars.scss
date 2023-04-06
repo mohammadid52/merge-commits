@@ -43,16 +43,16 @@
   &::-webkit-scrollbar {
     height: 8px;
     width: 8px;
-    background: $dark-gray;
+    background: $dark;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: $gray-600;
+    background: $medium;
     -webkit-border-radius: 10px;
   }
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
-    background: $dark-gray;
+    background: $dark;
   }
 }

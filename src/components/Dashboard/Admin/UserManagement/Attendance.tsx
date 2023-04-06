@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 import {IoMdArrowBack} from 'react-icons/io';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {attendanceByStudent} from 'customGraphql/customQueries';
 
 import Buttons from 'atoms/Buttons';
 
@@ -76,9 +76,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         };
       }
 
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.attendanceByStudent, payload)
-      );
+      const list: any = await API.graphql(graphqlOperation(attendanceByStudent, payload));
       const temp = list?.data.attendanceByStudent?.items.map((record: any) => ({
         ...record,
         lessonName: record.lesson?.title,
@@ -132,6 +130,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         <DatePicker
           placeholder="Search by date"
           onChange={handleDateChange}
+          className="w-56"
           placement="bottomRight"
         />
       </div>

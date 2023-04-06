@@ -31,11 +31,11 @@ const StudentName = ({
       <div className="ml-4">
         <div
           className={`${
-            onHover ? '' : user?.role !== 'BLD' ? 'hover:text-gray-600' : ''
-          } text-sm leading-5 font-medium text-gray-900`}>
+            onHover ? '' : user?.role !== 'BLD' ? 'hover:text-medium ' : ''
+          } text-sm leading-5 font-medium text-darkest`}>
           {item.student.name}
         </div>
-        <div className="text-sm leading-5 text-gray-500">{item.student.email}</div>
+        <div className="text-sm leading-5 text-medium ">{item.student.email}</div>
       </div>
     </div>
   );

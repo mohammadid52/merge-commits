@@ -29,7 +29,7 @@ const Spacer = (props: any) => {
   return (
     <Divider
       style={{margin: `${props.value[0].value || 32}px 0px`}}
-      className="bg-gray-600"
+      className="bg-medium "
       dashed
     />
   );

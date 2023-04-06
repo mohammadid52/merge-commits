@@ -1,11 +1,8 @@
 import {InstitutionInfoProps} from '@interfaces/InstitutionInterface';
 import {useEffect, useState} from 'react';
-import NavBarRouter from '../../../../router/NavBarRouter';
-import InstitutionProfile from './InstitutionProfile';
+import NavBarRouter from 'router/NavBarRouter';
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
-  const {institute} = instProps;
-
   // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
   const [curricular, setCurricular] = useState<any>({});
   useEffect(() => {
@@ -29,21 +26,18 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   return (
     <div>
-      <div className="">
-        {/* Profile section */}
-        <div className="flex-col flex justify-center lg:justify-start w-full">
-          <div className="flex flex-1 overflow-x-hidden mb-8">
-            <div className="w-full">
-              <NavBarRouter
-                {...instProps}
-                updateCurricularList={updateCurricularList}
-                curricular={curricular}
-              />
-            </div>
-          </div>
+      {/* Profile section */}
 
-          <InstitutionProfile institute={institute} />
+      <div className="flex flex-1 overflow-x-hidden mb-8">
+        <div className="w-full">
+          <NavBarRouter
+            {...instProps}
+            updateCurricularList={updateCurricularList}
+            curricular={curricular}
+          />
         </div>
+
+        {/* <InstitutionProfile institute={institute} /> */}
       </div>
     </div>
   );

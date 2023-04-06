@@ -16,9 +16,9 @@ const Size = ({size}: {size: number}) => {
       style={{
         bottom: '0rem',
         fontSize: '0.65rem',
-        right: '-3.5rem',
+        right: '-3.5rem'
       }}
-      className="absolute size-stamp w-auto text-gray-500">
+      className="absolute size-stamp w-auto text-medium ">
       {getSizeInBytes(size)}
     </span>
   );

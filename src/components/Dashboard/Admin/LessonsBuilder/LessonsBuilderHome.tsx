@@ -1,14 +1,13 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listPersons} from 'customGraphql/customQueries';
 import {useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
-import LessonTabView from './StepActionComponent/LessonTabView';
 
 interface ILessonBuilderHomeProps {
   instId?: string;
@@ -30,7 +29,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
 
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.listPersons, {
+      graphqlOperation(listPersons, {
         filter: {
           or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]
         }
@@ -59,7 +58,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
 
   return (
     <>
-      <div className={`w-full h-full flex justify-center`}>
+      <div className={``}>
         {/*<UniversalLessonBuilderProvider>*/}
         <Switch>
           <Route
@@ -90,15 +89,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
               </ErrorBoundary>
             )} // Edit lesson, assessment or survey form
           />
-          <Route
-            exact
-            path={`${match.url}/lesson/view`}
-            render={() => (
-              <ErrorBoundary componentName="LessonTabView">
-                <LessonTabView designersList={designersList} />
-              </ErrorBoundary>
-            )}
-          />
+
           {/* <Route
             exact
             path={`${match.url}/lesson/add/lesson-plan`}

@@ -1,13 +1,17 @@
-import React, {useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 import moment, {Moment} from 'moment';
+import React, {useEffect, useState} from 'react';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {getClassroomSyllabus} from 'customGraphql/customQueries';
 
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import TableComponent from '@components/Molecules/Table';
+import {frequencyMapping} from '@utilities/staticData';
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
+import {useHistory} from 'react-router-dom';
 import {IImpactLog} from '../ClassRoomHolidays';
-import {frequencyMapping} from '@utilities/staticData';
 
 interface IUnitPlannerProps {
   isDetailsComplete: boolean;
@@ -36,12 +40,13 @@ const UnitPlanner = ({
       fetchClassRoomSyllabus();
     }
   }, [roomData.curricular?.id]);
+  const history = useHistory();
 
   const fetchClassRoomSyllabus = async () => {
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.getClassroomSyllabus, {
+        graphqlOperation(getClassroomSyllabus, {
           id: roomData.curricular?.id
         })
       );
@@ -183,117 +188,81 @@ const UnitPlanner = ({
     // do something
   };
 
+  const tableConfig = (lessons: any[]) => {
+    return {
+      headers: [
+        'Lesson Name',
+        `Duration (${roomData.frequency})`,
+        'Start Date',
+        'Est End Date',
+        'Act End Date'
+      ],
+      dataList: lessons.map((lesson: any, idx) => ({
+        lessonName: lesson.lesson?.title,
+        onClick: () => {},
+        duration: lesson.lesson?.duration,
+        startDate: moment(lesson.startDate).format('MM/DD/YYYY'),
+        estEndDate: (
+          <>
+            {new Date(lesson.estEndDate).toLocaleDateString()}
+            {lesson === syllabusList.length - 1 &&
+            idx === lessons.length - 1 &&
+            moment(lesson.estEndDate).isBefore(moment(roomData.endDate))
+              ? '*'
+              : ''}
+          </>
+        ),
+        actEndDate: '--'
+      }))
+    };
+  };
+
   return (
-    <div className="py-8">
+    <div className="py-0">
       <div className="flex my-4">
-        <h3 className="text-xl leading-6 font-bold text-gray-900">Schedule</h3>
+        <h3 className="text-xl leading-6 font-bold text-darkest">Schedule</h3>
       </div>
       <div className="my-8">
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
+              <Loader withText="Loading schedule..." />
             </div>
           </div>
         ) : syllabusList.length ? (
           <>
-            {syllabusList.map((syllabus: any, index: number) => (
-              <div className="border-0 border-gray-400 rounded-md my-2" key={syllabus.id}>
-                <div className="mb-4 bg-gray-200 flex justify-between">
-                  <div className="px-4 py-2">
-                    <div className="text-lg">{syllabus.name}</div>
-                  </div>
-                  <div className="px-4 py-2 w-88">
-                    <div className="text-lg">
-                      Start Date:{' '}
-                      {syllabus.lessons.items?.length &&
+            {syllabusList.map((syllabus: any) => {
+              const tableProps = tableConfig(syllabus?.lessons?.items);
+              return (
+                <div className="border-0 border-light  rounded-md my-2" key={syllabus.id}>
+                  <SectionTitleV3
+                    title={syllabus.name}
+                    subtitle={`Start Date: ${
+                      syllabus.lessons.items?.length &&
                       syllabus.lessons.items[0].startDate
                         ? new Date(
                             syllabus.lessons.items[0].startDate
                           ).toLocaleDateString()
-                        : '-'}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div className="w-full flex justify-between mt-4">
-                    <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                      Lesson Name
-                    </div>
-                    <div className="w-2/10 flex justify-center px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                      Duration ({roomData.frequency})
-                    </div>
-                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                      Start date
-                    </div>
-                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                      Est. end date
-                    </div>
-                    <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider whitespace-normal">
-                      Act. end date
-                    </div>
-                  </div>
+                        : '-'
+                    }`}
+                  />
 
-                  <div className="mb-4 w-full m-auto max-h-88 overflow-y-auto">
-                    {syllabus.lessons.items?.length ? (
-                      syllabus.lessons.items.map((item: any, idx: number) => {
-                        return (
-                          <div
-                            key={`${idx}`}
-                            className={`flex justify-between bg-white w-full`}>
-                            <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                              {item.lesson?.title}
-                            </div>
-                            <div className="w-2/10 flex justify-center px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                              {item.lesson?.duration}
-                            </div>
-                            <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                              {item.startDate
-                                ? new Date(item.startDate).toLocaleDateString()
-                                : '-'}
-                            </div>
-                            <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                              {item.estEndDate ? (
-                                <>
-                                  {new Date(item.estEndDate).toLocaleDateString()}
-                                  {index === syllabusList.length - 1 &&
-                                  idx === syllabus.lessons.items.length - 1 &&
-                                  moment(item.estEndDate).isBefore(
-                                    moment(roomData.endDate)
-                                  )
-                                    ? '*'
-                                    : ''}
-                                </>
-                              ) : (
-                                '-'
-                              )}
-                            </div>
-                            <div className="w-2/10 flex px-4 py-3 text-gray-500">-</div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div className="text-center p-5">No lesson assigned</div>
-                    )}
-                  </div>
+                  <TableComponent {...tableProps} />
                 </div>
-              </div>
-            ))}
-            <div className="flex justify-end">*Past course end date</div>
+              );
+            })}
+            <div className="flex text-medium  justify-end">*Past course end date</div>
           </>
         ) : (
-          <div>No unit added in the course</div>
+          <Empty description="No unit added in the course" />
         )}
       </div>
-      <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
-        <Buttons
-          label={'Cancel'}
-          // onClick={history.goBack}
-          transparent
-        />
+      <div className="flex my-8 gap-4 justify-end w-full mr-2 2xl:mr-0">
+        <Buttons label={'Cancel'} onClick={history.goBack} transparent size="middle" />
         <Buttons
           disabled={saving || !logsChanged}
           label={'Run calculations and save'}
+          size="middle"
           onClick={() => {
             validateAllRequiredFields(() => {
               calculateSchedule();

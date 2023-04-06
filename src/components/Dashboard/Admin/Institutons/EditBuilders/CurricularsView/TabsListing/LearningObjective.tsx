@@ -13,10 +13,15 @@ import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listTopics, listRubrics} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  deleteLearningObjective as deleteLearningObjectiveAPI,
+  updateCSequences,
+  deleteTopic as deleteTopicAPI,
+  deleteRubric as deleteRubricAPI
+} from 'graphql/mutations';
+import {listLearningObjectives, getCSequences} from 'graphql/queries';
 
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
@@ -83,13 +88,11 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     setLoading(true);
     let [list, seq]: any = await Promise.all([
       await API.graphql(
-        graphqlOperation(queries.listLearningObjectives, {
+        graphqlOperation(listLearningObjectives, {
           filter: {curriculumID: {eq: curricularId}}
         })
       ),
-      await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      )
+      await API.graphql(graphqlOperation(getCSequences, {id: `l_${curricularId}`}))
     ]);
     seq = seq?.data?.getCSequences?.sequence || [];
     list = list?.data?.listLearningObjectives?.items || [];
@@ -100,7 +103,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       list.map(async (objective: any) => {
         objective.index = seq.indexOf(objective.id);
         const topicsData: any = await API.graphql(
-          graphqlOperation(customQueries.listTopics, {
+          graphqlOperation(listTopics, {
             filter: {learningObjectiveID: {eq: objective.id}}
           })
         );
@@ -111,7 +114,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             )
             .map(async (t: any) => {
               const measurementData: any = await API.graphql(
-                graphqlOperation(customQueries.listRubrics, {
+                graphqlOperation(listRubrics, {
                   filter: {topicID: {eq: t.id}}
                 })
               );
@@ -316,12 +319,12 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     try {
       setDeleting(true);
       await API.graphql(
-        graphqlOperation(mutations.deleteLearningObjective, {
+        graphqlOperation(deleteLearningObjectiveAPI, {
           input: {id: warnModal.id}
         })
       );
       await API.graphql(
-        graphqlOperation(mutations.updateCSequences, {
+        graphqlOperation(updateCSequences, {
           input: {
             id: `l_${curricularId}`,
             sequence: learningIds.filter((item) => item !== warnModal.id)
@@ -343,7 +346,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     try {
       setDeleting(true);
       const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteTopic, {
+        graphqlOperation(deleteTopicAPI, {
           input: {id: warnModal.id}
         })
       );
@@ -364,7 +367,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     try {
       setDeleting(true);
       const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteRubric, {
+        graphqlOperation(deleteRubricAPI, {
           input: {id: warnModal.id}
         })
       );
@@ -389,14 +392,16 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       setLearnings(temp);
       setDeleting(false);
       onCancel();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="py-2 px-0 2xl:p-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-4 bg-gray-100">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
+        <PageWrapper defaultClass="px-4 bg-lightest ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8">
             {LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
           </h3>
           {!loading ? (
@@ -524,7 +529,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                     ) : learning.topics?.length < 2 ? (
                                       <div className="flex justify-center items-center">
                                         <div
-                                          className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                          className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-light  text-medium  cursor-pointer"
                                           onClick={() =>
                                             createNewMeasurement(topic.id, learning.id)
                                           }>

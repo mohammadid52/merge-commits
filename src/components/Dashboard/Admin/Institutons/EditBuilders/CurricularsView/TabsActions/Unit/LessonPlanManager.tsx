@@ -5,20 +5,29 @@ import {useHistory} from 'react-router';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
+import {updateUniversalSyllabusLessonSequence} from 'customGraphql/customMutations';
+import {
+  listRoomsByActiveSyllabusId,
+  listUniversalLessonsOptions
+} from 'customGraphql/customQueries';
+import {
+  createUniversalSyllabusLesson,
+  updateRoom,
+  deleteUniversalSyllabusLesson
+} from 'graphql/mutations';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getLessonType} from 'utilities/strings';
+import {DragEndEvent} from '@dnd-kit/core';
+import {arrayMove} from '@dnd-kit/sortable';
 
 interface UIMessages {
   show: boolean;
@@ -80,7 +89,7 @@ const LessonPlanManager = ({
     try {
       setLoading(true);
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonsOptions, {
+        graphqlOperation(listUniversalLessonsOptions, {
           filter: {
             institutionID: {eq: institutionId},
             status: {
@@ -112,7 +121,7 @@ const LessonPlanManager = ({
 
       updateLessonSequence(lessonSeq);
     }
-  }, [savedLessonsList]);
+  }, []);
 
   // ~~~~~~~~~~~~~~~~~ CRUD ~~~~~~~~~~~~~~~~ //
   const createNewLesson = () => {
@@ -157,19 +166,19 @@ const LessonPlanManager = ({
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalSyllabusLesson, {input})
+        graphqlOperation(createUniversalSyllabusLesson, {input})
       );
       const newLesson = result.data.createUniversalSyllabusLesson;
 
       if (!lessonsIds.length) {
         const associatedRooms: any = await API.graphql(
-          graphqlOperation(customQueries.listRoomsByActiveSyllabusId, {
+          graphqlOperation(listRoomsByActiveSyllabusId, {
             filter: {activeSyllabus: {eq: syllabusId}}
           })
         );
         associatedRooms?.data.listRooms.items?.map(async (room: any) => {
           await API.graphql(
-            graphqlOperation(mutations.updateRoom, {
+            graphqlOperation(updateRoom, {
               input: {id: room.id, activeLessons: [selectedLesson.id]}
             })
           );
@@ -258,12 +267,12 @@ const LessonPlanManager = ({
         setDropdownLessonsList([...updatedList]);
       }
     }
-  }, [savedLessonsList, allLessonsList]);
+  }, [allLessonsList]);
 
   const updateLessonSequence = async (lessonsIDs: string[]) => {
     setLessonsIds([...lessonsIDs]);
     await API.graphql(
-      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+      graphqlOperation(updateUniversalSyllabusLessonSequence, {
         input: {id: syllabusId, universalLessonsSeq: lessonsIDs}
       })
     );
@@ -306,7 +315,7 @@ const LessonPlanManager = ({
       setDeleting(false);
       setDeleteModal({show: false, message: '', action: () => {}});
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
+        graphqlOperation(deleteUniversalSyllabusLesson, {
           input: {id: id}
         })
       );
@@ -358,12 +367,38 @@ const LessonPlanManager = ({
     };
   });
 
+  const updateSortedListToUI = (updatedIds: string[]) => {
+    let sorted = selectedLessonsList
+      .map((t: any) => {
+        let index = updatedIds?.indexOf(t.id);
+        return {...t, index};
+      })
+      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+    setSelectedLessonsList(sorted);
+  };
+
+  const onDragEnd = ({active, over}: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      const prev = dataList;
+      const activeIndex = prev.findIndex((i) => i.id === active.id);
+      const overIndex = prev.findIndex((i) => i.id === over?.id);
+      const ids = arrayMove(prev, activeIndex, overIndex).map((i) => i.id);
+
+      updateSortedListToUI(ids);
+      updateLessonSequence(ids);
+    }
+  };
+
   const tableConfig: ITableProps = {
     headers: [dict['NUMBER'], dict['LESSON_NAME'], dict['TYPE'], dict['MEASUREMENTS']],
     dataList,
     config: {
       dataList: {
-        loading
+        loading,
+        sortableConfig: {
+          onSort: onDragEnd
+        }
       }
     }
   };
@@ -374,23 +409,20 @@ const LessonPlanManager = ({
 
       <SectionTitleV3
         title={'Lesson Plan Manager'}
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
-        extraContainerClass="flex-col lg:flex-row "
-        borderBottom
         withButton={
-          <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
+          <div className="flex gap-x-4 justify-end items-center">
             <Selector
               selectedItem={selectedLesson.name}
               list={dropdownLessonsList}
               placeholder={SyllabusDict[userLanguage]['SELECT_LESSON']}
               onChange={selectLesson}
-              width="w-96"
+              width={250}
+              showSearch
+              size="middle"
             />
 
             <AddButton
-              className="ml-4 py-1"
+              // className="ml-4 py-1"
               label={'Add'}
               onClick={addNewLesson}
               disabled={!Boolean(selectedLesson.value) || addingLesson}

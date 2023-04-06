@@ -1,33 +1,34 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Fragment, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
+import {IoClose} from 'react-icons/io5';
 import {useHistory, useParams} from 'react-router';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createCheckpointQuestions,
+  deleteCheckpointQuestions,
+  updateCheckpoint
+} from 'customGraphql/customMutations';
+import {getCheckpointDetails, listPersons} from 'customGraphql/customQueries';
 import {getTypeString} from 'utilities/strings';
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import BreadCrums from 'atoms/BreadCrums';
+import {languageList, scopeList} from '@utilities/staticData';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import PageWrapper from 'atoms/PageWrapper';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import PageLayout from 'layout/PageLayout';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
-import {languageList, scopeList} from '@utilities/staticData';
 
 const EditProfileCheckpoint = () => {
   const history = useHistory();
   const urlParams: any = useParams();
   const {userLanguage} = useGlobalContext();
 
-  const {EditProfileCheckpointDict, BreadcrumsTitles} = useDictionary();
-  const curricularId = urlParams.curricularId;
-  const institutionId = urlParams.institutionId;
+  const {EditProfileCheckpointDict} = useDictionary();
+
   const checkpointId = urlParams.id;
   const initialData = {
     id: '',
@@ -59,24 +60,6 @@ const EditProfileCheckpoint = () => {
     message: '',
     isError: true
   });
-
-  const breadCrumsList = [
-    {
-      title: BreadcrumsTitles[userLanguage]['HOME'],
-      href: '/dashboard',
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['AddChekpoint'],
-      href: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
-      last: true
-    }
-  ];
 
   const onInputChange = (e: any) => {
     setCheckpointData({
@@ -147,7 +130,7 @@ const EditProfileCheckpoint = () => {
         required: required ? required : false
       };
       await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {
+        graphqlOperation(createCheckpointQuestions, {
           input: input
         })
       );
@@ -172,7 +155,7 @@ const EditProfileCheckpoint = () => {
         id: deletedQuesID
       };
       await API.graphql(
-        graphqlOperation(customMutations.deleteCheckpointQuestions, {
+        graphqlOperation(deleteCheckpointQuestions, {
           input: input
         })
       );
@@ -227,7 +210,7 @@ const EditProfileCheckpoint = () => {
           questionSeq: qSequence
         };
         const results: any = await API.graphql(
-          graphqlOperation(customMutations.updateCheckpoint, {input: input})
+          graphqlOperation(updateCheckpoint, {input: input})
         );
         const newCheckpoint = results?.data?.updateCheckpoint;
         const newQuestions: any = checkpQuestions.filter(
@@ -283,12 +266,12 @@ const EditProfileCheckpoint = () => {
     try {
       const [savedCheckpointData, personsList]: any = await Promise.all([
         await API.graphql(
-          graphqlOperation(customQueries.getCheckpointDetails, {
+          graphqlOperation(getCheckpointDetails, {
             id: checkpointId
           })
         ),
         await API.graphql(
-          graphqlOperation(customQueries.listPersons, {
+          graphqlOperation(listPersons, {
             filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
           })
         )
@@ -358,24 +341,8 @@ const EditProfileCheckpoint = () => {
   const {title, language, label} = checkpointData;
   return (
     <div className="w-full h-full">
-      {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitleV3
-          title={EditProfileCheckpointDict[userLanguage]['title']}
-          subtitle={EditProfileCheckpointDict[userLanguage]['subtitle']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go Back"
-            onClick={history.goBack}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div>
-
       {/* Body section */}
-      <PageWrapper>
+      <PageLayout title={EditProfileCheckpointDict[userLanguage]['title']}>
         {currentState !== 'checkpoint' ? (
           <Fragment>
             {currentState === 'addQuestion' && (
@@ -394,14 +361,9 @@ const EditProfileCheckpoint = () => {
           </Fragment>
         ) : (
           <Fragment>
-            <div className="md:w-full lg:w-8/10 m-auto">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-                {EditProfileCheckpointDict[userLanguage]['heading']}
-              </h3>
-            </div>
-            <div className="md:w-full lg:w-8/10 m-auto">
-              <div className="px-3">
-                <div className="py-4 grid gap-x-6 grid-cols-2">
+            <div className="">
+              <div className="">
+                <div className="py-4 grid gap-4 grid-cols-2">
                   <div>
                     <FormInput
                       value={title}
@@ -428,11 +390,8 @@ const EditProfileCheckpoint = () => {
                       <p className="text-red-600 text-sm">{validation.label}</p>
                     )}
                   </div>
-                </div>
-
-                <div className="py-4 grid gap-x-6 grid-cols-3">
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {EditProfileCheckpointDict[userLanguage]['designer']}
                     </label>
                     <MultipleSelector
@@ -443,7 +402,7 @@ const EditProfileCheckpoint = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       Select Scope
                     </label>
                     <Selector
@@ -456,7 +415,7 @@ const EditProfileCheckpoint = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       {EditProfileCheckpointDict[userLanguage]['language']}
                     </label>
                     <Selector
@@ -470,7 +429,7 @@ const EditProfileCheckpoint = () => {
 
                 {/* Question table */}
                 <div className="p-6 inner_card my-4">
-                  <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
+                  <p className="text-m font-medium leading-5 text-dark   my-2 text-center">
                     {EditProfileCheckpointDict[userLanguage]['checkpoint']}:{' '}
                   </p>
                   {!checkpQuestions?.length ? (
@@ -493,19 +452,19 @@ const EditProfileCheckpoint = () => {
                   ) : (
                     <Fragment>
                       <div className="max-h-112 overflow-auto">
-                        <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
-                          <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-light">
+                          <div className="w-.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>{EditProfileCheckpointDict[userLanguage]['no']}</span>
                           </div>
-                          <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-6/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>
                               {EditProfileCheckpointDict[userLanguage]['question']}
                             </span>
                           </div>
-                          <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>{EditProfileCheckpointDict[userLanguage]['type']}</span>
                           </div>
-                          <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="w-1.5/10 px-8 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                             <span>
                               {EditProfileCheckpointDict[userLanguage]['option']}
                             </span>
@@ -526,8 +485,8 @@ const EditProfileCheckpoint = () => {
                                     }
                                   }}
                                   key={item.id}
-                                  className={`flex cursor-pointer justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                                    questionOptions.quesId === item.id && 'bg-gray-200'
+                                  className={`flex cursor-pointer justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-lightest ${
+                                    questionOptions.quesId === item.id && 'bg-light'
                                   }`}>
                                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                     {' '}
@@ -553,8 +512,8 @@ const EditProfileCheckpoint = () => {
                                   </div>
                                 </div>
                                 {questionOptions.quesId === item.id && (
-                                  <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
-                                    <p className="text-gray-900 px-2 py-2 text-base">
+                                  <div className="px-16 py-4 flex flex-col text-dark   font-medium text-sm border-b-0 border-light">
+                                    <p className="text-darkest   px-2 py-2 text-base">
                                       {EditProfileCheckpointDict[userLanguage]['option']}:
                                     </p>
                                     {questionOptions.options?.map((item, index) => (
@@ -576,7 +535,7 @@ const EditProfileCheckpoint = () => {
                           )}
                         </div>
                       </div>
-                      <div className="flex w-full mx-auto p-8 justify-center ">
+                      <div className="flex w-full mx-auto gap-4 justify-center ">
                         <Buttons
                           onClick={() => setCurrentState('questionsList')}
                           label={EditProfileCheckpointDict[userLanguage]['addexist']}
@@ -599,7 +558,7 @@ const EditProfileCheckpoint = () => {
                 </p>
               </div>
             )}
-            <div className="flex my-8 justify-center">
+            <div className="flex my-8 gap-4 justify-center">
               <Buttons label="Cancel" onClick={history.goBack} transparent />
               <Buttons
                 label={
@@ -613,7 +572,7 @@ const EditProfileCheckpoint = () => {
             </div>
           </Fragment>
         )}
-      </PageWrapper>
+      </PageLayout>
     </div>
   );
 };

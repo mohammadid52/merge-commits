@@ -45,6 +45,7 @@ import times from 'lodash/times';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
 import Flickity from 'react-flickity-component';
+import {createGameChangerLog} from '@graphql/mutations';
 
 // Constants
 
@@ -180,7 +181,10 @@ const SelectedCard = ({
 
   const selected = cardsList[selectedCard];
 
-  const {mutate, isError, isLoading} = useGraphqlMutation('createGameChangerLog');
+  const {mutate, isError, isLoading} = useGraphqlMutation(
+    'createGameChangerLog',
+    createGameChangerLog
+  );
 
   const {email, authId, isStudent} = useAuth();
 
@@ -211,7 +215,7 @@ const SelectedCard = ({
   return (
     <ErrorBoundary componentName="SelectedCard">
       <div
-        className={`${inLesson ? 'border-0 border-gray-700' : ''} rounded-2xl box ${
+        className={`${inLesson ? 'border-0 border-dark  ' : ''} rounded-2xl box ${
           inLesson ? '' : 'm-8'
         } mt-8 md:mt-0 z-100  relative w-auto  2xl:m-0 transition-all  flex flex-col items-center justify-center overflow-hidden form-button`}>
         <audio id="finish-sound">
@@ -226,7 +230,7 @@ const SelectedCard = ({
         <div
           className={`h-full  transition-all rounded-xl  ${
             selected?.type === EMOTIONS ? '' : 'p-4 md:p-16 md:px-14 px-8'
-          } game-changer-card flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
+          } game-changer-card flex flex-col bg-darkest   md:border-2 items-center justify-center overflow-hidden `}>
           <div>
             <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
               {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
@@ -318,13 +322,13 @@ const SelectedCard = ({
                   {/* <StartButton isActive={isActive} onStart={onStart} onPause={onPause} /> */}
 
                   {exerciseType === 'square' && isActive && (
-                    <ul className="mt-8 fse-text-helper-list">
+                    <ul className="mt-8 fse-text-helper-list  flex items-center justify-center">
                       {map(breathingHelpingTexts, (item, i) => (
                         <li
                           key={item}
                           className={`${
                             i === currentIteration ? 'showing' : 'hide'
-                          } text-xl text-center w-auto text-gray-200 font-light`}>
+                          } text-xl text-center w-auto text-lightest font-light`}>
                           {item}
                         </li>
                       ))}
@@ -354,7 +358,7 @@ const SelectedCard = ({
                   <h1 className="text-4xl my-4  text-white font-bold text-left">
                     Well done.
                   </h1>
-                  <p className="text-base my-4  text-gray-100 font-light max-w-72 transition-all text-left">
+                  <p className="text-base my-4  text-lightest  font-light max-w-72 transition-all text-left">
                     You have completed this activity.
                     <br /> Come back anytime when you want to feel more focused and
                     centered during your day.

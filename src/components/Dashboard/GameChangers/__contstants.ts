@@ -89,30 +89,8 @@ const cardsList = [
   }
 ];
 
-const FSEBreathingHowTo = [
-  'First, let your lips part. Make a whooshing sound, exhaling completely through your mouth.',
-  'Next, close your lips, inhaling silently through your nose as you count to four in your head.',
-  'Then, for seven seconds, hold your breath.',
-  'Make another whooshing exhale from your mouth for eight seconds.'
-];
-
 const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It's based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
   When practiced regularly, it's possible that this technique could help some people fall asleep in a shorter period of time.`;
-
-const sqaureBreathingHowTo = [
-  'Begin by slowly exhaling all of your air out',
-  'Then, gently inhale through your nose to a slow count of 4',
-  'Hold at the top of the breath for a count of 4',
-  'Then gently exhale through your mouth for a count of 4',
-  'At the bottom of the breath, pause and hold for the count of 4'
-];
-
-const sqaureBreathingInfoText = `Square breathing is a type of breathwork that can shift your energy, connect you
-  more deeply with your body, calm your nervous system, and reduce the stress in
-  your body. It is also referred to as box breathing, 4x4 breathing, and 4-part
-  breath. Here are instructions for square breathing and some ideas for when to
-  practice the technique. We'll also share tips for making the breathwork as
-  effective as possible.`;
 
 const qaList = [
   {
@@ -151,12 +129,4 @@ const qaList = [
   }
 ];
 
-export {
-  cardsList,
-  FSEBreathingHowTo,
-  FSEInfoText,
-  sqaureBreathingHowTo,
-  sqaureBreathingInfoText,
-  qaList,
-  successSound
-};
+export {cardsList, FSEInfoText, qaList, successSound};

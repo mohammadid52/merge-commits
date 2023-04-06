@@ -1,12 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from 'aws-amplify';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  createUniversalJournalData,
+  updateUniversalJournalData,
+  updateUniversalLessonStudentData
+} from 'graphql/mutations';
+import {listUniversalJournalData} from 'graphql/queries';
 import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
 import {isEmpty} from 'lodash';
 import filter from 'lodash/filter';
@@ -120,7 +124,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       };
 
       const newJournalData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalJournalData, {input})
+        graphqlOperation(createUniversalJournalData, {input})
       );
 
       const returnedData = newJournalData.data.createUniversalJournalData;
@@ -149,7 +153,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
 
           try {
             await API.graphql(
-              graphqlOperation(mutations.updateUniversalLessonStudentData, {
+              graphqlOperation(updateUniversalLessonStudentData, {
                 input: data
               })
             );
@@ -188,7 +192,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       updateStudentData({domID: `post-it_${newNote.domID}`, input: ['']});
 
       const updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
+        graphqlOperation(updateUniversalJournalData, {input})
       );
 
       const updatedData = updateJournalData.data.updateUniversalJournalData;
@@ -231,7 +235,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       };
 
       const updatedJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
+        graphqlOperation(updateUniversalJournalData, {input})
       );
       const updatedData = updatedJournalData.data.updateUniversalJournalData;
 
@@ -275,7 +279,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       };
 
       const _updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
+        graphqlOperation(updateUniversalJournalData, {input})
       );
       const updatedData = _updateJournalData.data.updateUniversalJournalData;
 
@@ -315,7 +319,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       };
 
       const _updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
+        graphqlOperation(updateUniversalJournalData, {input})
       );
       const updatedData = _updateJournalData.data.updateUniversalJournalData;
 
@@ -381,7 +385,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       };
 
       const _updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
+        graphqlOperation(updateUniversalJournalData, {input})
       );
       const updatedData = _updateJournalData.data.updateUniversalJournalData;
 
@@ -422,7 +426,7 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
       };
 
       const notesData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalData, {
+        graphqlOperation(listUniversalJournalData, {
           limit: SEARCH_LIMIT,
           filter: {...listFilter.filter, type: {eq: 'class-note'}}
         })

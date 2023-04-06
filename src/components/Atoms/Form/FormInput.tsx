@@ -4,7 +4,6 @@ import {Input, Tooltip} from 'antd';
 import {SizeType} from 'antd/es/config-provider/SizeContext';
 import Label from 'atoms/Form/Label';
 import React from 'react';
-import {BiErrorCircle} from 'react-icons/bi';
 
 interface FormInputProps {
   label?: string;
@@ -71,7 +70,7 @@ const FormInput: React.FC<FormInputProps> = ({
     className: inputClassName,
     placeholder: placeHolder,
     status: error ? 'error' : '',
-    prefix: error ? <BiErrorCircle /> : Icon ? <Icon /> : undefined,
+    prefix: Icon ? <Icon /> : undefined,
     suffix,
     showCount: showCharacterUsage,
     onKeyDown

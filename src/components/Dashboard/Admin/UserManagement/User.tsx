@@ -1,33 +1,31 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import AddButton from '@components/Atoms/Buttons/AddButton';
-import Placeholder from '@components/Atoms/Placeholder';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Buttons from '@components/Atoms/Buttons';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table, {ITableProps} from '@components/Molecules/Table';
-import {uploadImageToS3} from '@graphql/functions';
+import UserProfileImage from '@components/Molecules/UserProfileImage';
 import {PersonStatus, Role} from 'API';
-import Loader from 'atoms/Loader';
+import {Tabs, TabsProps} from 'antd';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updatePerson} from 'customGraphql/customMutations';
+import {
+  getDashboardData,
+  getUserProfile,
+  listQuestionDatas
+} from 'customGraphql/customQueries';
+import {uploadImageToS3} from 'graphql-functions/functions';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import sortBy from 'lodash/sortBy';
-import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
+import {FaEdit} from 'react-icons/fa';
 import {useParams} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
-import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {
-  ITab,
-  useTabs
-} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Attendance from './Attendance';
 import SurveyList from './SurveyList';
-import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
 
@@ -122,7 +120,7 @@ const User = (props: IUserProps) => {
 
   const urlParam: any = useParams();
 
-  const {theme, state, dispatch} = useGlobalContext();
+  const {state, dispatch} = useGlobalContext();
 
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState<any | null>(null);
@@ -132,7 +130,7 @@ const User = (props: IUserProps) => {
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string>('');
 
-  const getDashboardData = async (authId: string, email: string) => {
+  const getDashboardDataFn = async (authId: string, email: string) => {
     try {
       const queryObj = {
         name: 'customQueries.getDashboardData',
@@ -142,7 +140,7 @@ const User = (props: IUserProps) => {
         }
       };
       const dashboardDataFetch = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+        graphqlOperation(getDashboardData, queryObj.valueObj)
       );
 
       // @ts-ignore
@@ -202,7 +200,7 @@ const User = (props: IUserProps) => {
 
   useEffect(() => {
     if (state?.temp?.authId !== user.authId && user.authId && user.email) {
-      getDashboardData(user.authId, user.email);
+      getDashboardDataFn(user.authId, user.email);
     }
   }, [user.authId, user.email]);
 
@@ -211,7 +209,6 @@ const User = (props: IUserProps) => {
   const {t: tab} = urlState;
 
   const mediaRef = React.useRef<any>(null);
-  const handleImage = () => mediaRef?.current?.click();
 
   // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
 
@@ -234,7 +231,7 @@ const User = (props: IUserProps) => {
       ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -249,11 +246,9 @@ const User = (props: IUserProps) => {
   const [demographicCheckpoints, setDemographicCheckpoints] = useState<any[]>([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState<any[]>([]);
 
-  async function getUserProfile(id: string) {
+  async function getUserProfileFn(id: string) {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUserProfile, {id: id})
-      );
+      const result: any = await API.graphql(graphqlOperation(getUserProfile, {id: id}));
       const userData = result.data.userById.items.pop();
 
       dispatch({
@@ -392,23 +387,9 @@ const User = (props: IUserProps) => {
     }
   }
 
-  let tabs = [
-    {name: 'User Information', current: true},
-    {name: 'Coursework & Attendance', current: false},
-    user.role === 'ST' && {name: 'Notebook', current: false},
-    user.role === 'ST' && {name: 'Completed Surveys', current: false}
-  ];
-  tabs = tabs.filter(Boolean);
-
-  const {curTab, setCurTab, helpers} = useTabs(tabs as ITab[]);
-
-  const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
-
   // ##################################################################### //
   // ########################### PROFILE IMAGE ########################### //
   // ##################################################################### //
-
-  const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
 
   useEffect(() => {
     async function getUrl() {
@@ -458,7 +439,7 @@ const User = (props: IUserProps) => {
     };
 
     try {
-      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
+      await API.graphql(graphqlOperation(updatePerson, {input: input}));
       setUser({
         ...user
       });
@@ -469,7 +450,7 @@ const User = (props: IUserProps) => {
 
   useEffect(() => {
     if (userId) {
-      getUserProfile(userId);
+      getUserProfileFn(userId);
     }
   }, [userId]);
 
@@ -487,234 +468,197 @@ const User = (props: IUserProps) => {
     setIsTimelineOpen(false);
   };
 
-  const [isEditMode, setIsEditMode] = useState(false);
-
   const isTeacher =
     state.user.role === 'TR' ||
     state.user.role === 'FLW' ||
     state.user.role === 'ADM' ||
     state.user.role === 'SUP';
-  {
-    return (
-      <>
-        <>
-          <div
-            className={`px-4 `}
-            style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
-            {/* <BreadCrums items={breadCrumsList} /> */}
 
-            <SectionTitleV3
-              title={''}
-              fontSize="xl"
-              backButton
-              fontStyle="semibold"
-              extraClass="leading-6 text-gray-900"
-              borderBottom
-              shadowOff
-              withButton={
-                <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
-                  <AddButton
-                    label={'Edit User'}
-                    disabled={isEditMode}
-                    onClick={() => {
-                      setIsEditMode(true);
-                      tabs[0] && setCurTab(tabs[0]?.name);
-                    }}
-                  />
-                </div>
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const userProfile = (
+    <div className={``}>
+      <div className="flex flex-col md:flex-row">
+        <UserProfileImage
+          imageUrl={imageUrl}
+          image={user.image}
+          mediaRef={mediaRef}
+          setImage={(img: any, file: any) => {
+            setUpImage(img);
+            setFileObj(file);
+          }}
+          toggleCropper={toggleCropper}
+          imageLoading={imageLoading}
+          name={`${user.preferredName ? user.preferredName : user.firstName} ${
+            user.lastName
+          }`}
+        />
+
+        {isEditMode ? (
+          <ErrorBoundary componentName="UserEdit">
+            <UserEdit
+              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+              instituteId={props.instituteId}
+              tab={tab}
+              setTab={setTab}
+              onSuccessCallback={onSuccessCallback}
+              user={user}
+              shouldNavigate={shouldNavigate}
+              status={status}
+              setStatus={setStatus}
+              setIsEditMode={setIsEditMode}
+              getUserById={getUserProfileFn}
+              questionData={questionData}
+              checkpoints={
+                tab === 'demographics'
+                  ? demographicCheckpoints
+                  : tab === 'private'
+                  ? privateCheckpoints
+                  : []
               }
             />
+          </ErrorBoundary>
+        ) : (
+          <ErrorBoundary componentName="UserInformation">
+            <UserInformation
+              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
 
-            <div className="flex justify-between items-center mb-4 py-4 w-auto">
-              <UserTabs
-                tabs={tabs}
-                currentTab={curTab}
-                viewedUser={user}
-                setCurrentTab={setCurTab}
-                isTeacher={isTeacher}
-                isAdmin={isAdmin}
-                theme={theme}
-              />
-            </div>
-            <div className="mb-4">
-              <AnimatedContainer className="h-full" show={onUserInformationTab}>
-                {onUserInformationTab && (
-                  <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
-                    <div className="h-1/2 flex flex-col md:flex-row">
-                      <div className="w-1/4 p-4 flex flex-col text-center items-center">
-                        <div className="cursor-pointer">
-                          {user.image ? (
-                            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                              {!imageLoading ? (
-                                <>
-                                  <div className="cursor-pointer">
-                                    <DroppableMedia
-                                      mediaRef={mediaRef}
-                                      setImage={(img: any, file: any) => {
-                                        setUpImage(img);
-                                        setFileObj(file);
-                                      }}
-                                      toggleCropper={toggleCropper}>
-                                      {imageUrl ? (
-                                        <img
-                                          className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                          src={imageUrl}
-                                        />
-                                      ) : (
-                                        <div
-                                          className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                        />
-                                      )}
-                                    </DroppableMedia>
-                                  </div>
-                                </>
-                              ) : (
-                                <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light">
-                                  <Loader />
-                                </div>
-                              )}
-                            </button>
-                          ) : (
-                            <div className={`flex justify-center items-center mx-auto`}>
-                              {!imageLoading ? (
-                                <DroppableMedia
-                                  mediaRef={mediaRef}
-                                  setImage={(img: any, file: any) => {
-                                    setUpImage(img);
-                                    setFileObj(file);
-                                  }}
-                                  toggleCropper={toggleCropper}>
-                                  <div
-                                    onClick={handleImage}
-                                    className="w-20 h-20 md:w-40 md:h-40">
-                                    <Placeholder
-                                      textSize="text-5xl"
-                                      firstName={user.firstName}
-                                      lastName={user.lastName}
-                                      size="w-20 h-20 md:w-40 md:h-40"
-                                    />
-                                  </div>
-                                </DroppableMedia>
-                              ) : (
-                                <Loader />
-                              )}
-                            </div>
-                          )}
-                        </div>
-                        <div
-                          className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
-                          {`${user.preferredName ? user.preferredName : user.firstName} ${
-                            user.lastName
-                          }`}
-                          <p className="text-md md:text-lg">{`${
-                            user.institution ? user.institution : ''
-                          }`}</p>
-                        </div>
-                      </div>
+              isProfile={false}
+              questionData={questionData}
+              checkpoints={
+                tab === 'demographics'
+                  ? demographicCheckpoints
+                  : tab === 'private'
+                  ? privateCheckpoints
+                  : []
+              }
+              user={user}
+            />
+          </ErrorBoundary>
+        )}
+      </div>
+    </div>
+  );
 
-                      {isEditMode ? (
-                        <ErrorBoundary componentName="UserEdit">
-                          <UserEdit
-                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                            instituteId={props.instituteId}
-                            tab={tab}
-                            setTab={setTab}
-                            onSuccessCallback={onSuccessCallback}
-                            user={user}
-                            shouldNavigate={shouldNavigate}
-                            status={status}
-                            setStatus={setStatus}
-                            setIsEditMode={setIsEditMode}
-                            getUserById={getUserProfile}
-                            questionData={questionData}
-                            checkpoints={
-                              tab === 'demographics'
-                                ? demographicCheckpoints
-                                : tab === 'private'
-                                ? privateCheckpoints
-                                : []
-                            }
-                          />
-                        </ErrorBoundary>
-                      ) : (
-                        <ErrorBoundary componentName="UserInformation">
-                          <UserInformation
-                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                            tab={tab}
-                            setTab={setTab}
-                            questionData={questionData}
-                            checkpoints={
-                              tab === 'demographics'
-                                ? demographicCheckpoints
-                                : tab === 'private'
-                                ? privateCheckpoints
-                                : []
-                            }
-                            user={user}
-                            status={status}
-                          />
-                        </ErrorBoundary>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer show={onCATab}>
-                {onCATab && (
-                  <>
-                    {user?.classes?.items.length > 0 && user.role === 'ST' && (
-                      <div className={`mb-8`}>
-                        {isTimelineOpen ? (
-                          <Attendance
-                            id={userId}
-                            goToClassroom={goToClassroom}
-                            selectedRoomId={selectedRoomId}
-                            role={user.role}
-                          />
-                        ) : (
-                          <AssociatedClasses
-                            setIsTimelineOpen={setIsTimelineOpen}
-                            handleClassRoomClick={handleClassRoomClick}
-                            list={user?.rooms}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {(user.role === 'TR' || user.role === 'FLW') && (
-                      <Attendance
-                        id={userId}
-                        goToClassroom={goToClassroom}
-                        selectedRoomId={selectedRoomId}
-                        role={user.role}
-                      />
-                    )}
-                  </>
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer show={onNotebookTab}>
-                {onNotebookTab && (
-                  <Anthology
-                    isTeacher={isTeacher}
-                    studentID={user.id}
-                    studentAuthID={user.authId}
-                    studentName={user.firstName}
-                    studentEmail={user.email}
-                  />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer show={onSurveyTab}>
-                {onSurveyTab && (
-                  <SurveyList
-                    insideModalPopUp={insideModalPopUp}
-                    studentAuthID={user.authId}
-                    studentEmail={user.email}
-                  />
-                )}
-              </AnimatedContainer>
+  const items: TabsProps['items'] = [
+    {
+      label: 'User Information',
+      key: '1',
+      children: userProfile
+    },
+    {
+      label: 'Coursework & Attendance',
+      key: '2',
+      disabled: user?.role === 'ADM' || user?.role === 'SUP',
+      children: (
+        <>
+          {user?.classes?.items.length > 0 && user.role === 'ST' && (
+            <div className={`mb-8`}>
+              {isTimelineOpen ? (
+                <Attendance
+                  id={userId}
+                  goToClassroom={goToClassroom}
+                  selectedRoomId={selectedRoomId}
+                  role={user.role}
+                />
+              ) : (
+                <AssociatedClasses
+                  setIsTimelineOpen={setIsTimelineOpen}
+                  handleClassRoomClick={handleClassRoomClick}
+                  list={user?.rooms}
+                />
+              )}
             </div>
-          </div>
+          )}
+          {(user.role === 'TR' || user.role === 'FLW') && (
+            <Attendance
+              id={userId}
+              goToClassroom={goToClassroom}
+              selectedRoomId={selectedRoomId}
+              role={user.role}
+            />
+          )}
         </>
+      )
+    },
+    {
+      label: 'Notebook',
+      key: '3',
+      disabled: user.role !== 'ST',
+      children: (
+        <Anthology
+          studentImage={user.image}
+          isTeacher={isTeacher}
+          studentID={user.id}
+          studentAuthID={user.authId}
+          studentName={user.firstName}
+          studentEmail={user.email}
+        />
+      )
+    },
+    {
+      label: 'Completed Surveys',
+      key: '4',
 
+      disabled: user.role !== 'ST',
+      children: (
+        <SurveyList
+          insideModalPopUp={insideModalPopUp}
+          studentAuthID={user.authId}
+          studentEmail={user.email}
+        />
+      )
+    }
+  ];
+
+  const getTabsData = () => {
+    if (items && Boolean(user?.role)) {
+      if (user?.role === 'TR' || user?.role === 'FLW') {
+        return items.filter((tabObj: any) => tabObj.label !== 'Notebook');
+      } else if (user?.role === 'ADM' || user?.role === 'SUP') {
+        return items.filter((tabObj: any) => tabObj.label === 'User Information');
+      } else {
+        return items;
+      }
+    }
+    return [];
+  };
+
+  const [activeKey, setActiveKey] = useState('1');
+
+  return (
+    <>
+      <PageLayout
+        hideInstProfile
+        title={'User Profile'}
+        extra={
+          <Buttons
+            label={'Edit User'}
+            Icon={FaEdit}
+            disabled={isEditMode || activeKey !== '1'}
+            onClick={() => {
+              setIsEditMode(true);
+            }}
+          />
+        }>
+        <div style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
+          {/* <BreadCrums items={breadCrumsList} /> */}
+
+          <Tabs
+            items={getTabsData()}
+            animated
+            hidden={getTabsData()?.length === 1}
+            onChange={(key: string) => {
+              setActiveKey(key);
+            }}
+            defaultActiveKey={activeKey}
+          />
+
+          {getTabsData()?.length === 1 && userProfile}
+        </div>
+      </PageLayout>
+
+      {showCropper && (
         <ProfileCropModal
           open={showCropper}
           upImg={upImage || ''}
@@ -723,9 +667,9 @@ const User = (props: IUserProps) => {
           }}
           closeAction={toggleCropper}
         />
-      </>
-    );
-  }
+      )}
+    </>
+  );
 };
 
 export default User;

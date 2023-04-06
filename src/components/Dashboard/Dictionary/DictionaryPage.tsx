@@ -7,12 +7,14 @@ import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
 import {orderBy, truncate} from 'lodash';
 import {useState} from 'react';
 import DictionaryMutationModal from './DictionaryMutationModal';
+import {listDicitionaries} from '@customGraphql/customQueries';
+import {deleteDicitionary} from '@graphql/mutations';
 
 const DictionaryPage = () => {
   const {
@@ -22,6 +24,7 @@ const DictionaryPage = () => {
     refetch
   } = useGraphqlQuery<ListDicitionariesQueryVariables, Dicitionary[]>(
     'listDicitionaries',
+    listDicitionaries,
     {limit: SEARCH_LIMIT},
     {
       onSuccess: (data) => {
@@ -44,7 +47,7 @@ const DictionaryPage = () => {
     setShowModal(false);
   };
 
-  const deleteDicitionary = useGraphqlMutation('deleteDicitionary', {
+  const deleteDicitionaryMt = useGraphqlMutation('deleteDicitionary', deleteDicitionary, {
     onSuccess: () => {
       refetch();
     }
@@ -54,7 +57,7 @@ const DictionaryPage = () => {
 
   const onDelete = async (dictId: string) => {
     try {
-      await deleteDicitionary.mutate({input: {id: dictId}});
+      await deleteDicitionaryMt.mutate({input: {id: dictId}});
     } catch (error) {
       logError(error, {authId, email}, 'DictionaryPage @onDelete');
       console.error(error);
@@ -77,7 +80,7 @@ const DictionaryPage = () => {
             dict?.translation?.map((translation) => {
               return (
                 <li key={translation?.id}>
-                  <div className="font-medium text-gray-600">
+                  <div className="font-medium text-medium ">
                     In {translation?.translateLanguage || '--'}:
                   </div>
                   <p>{translation?.languageTranslation || '--'}</p>
@@ -97,7 +100,7 @@ const DictionaryPage = () => {
             dict?.translation?.map((translation) => {
               return (
                 <li key={translation?.id}>
-                  <div className="font-medium text-gray-600">
+                  <div className="font-medium text-medium ">
                     In {translation?.translateLanguage || '--'}:
                   </div>
                   <p>{translation?.languageDefinition || '--'}</p>
@@ -149,7 +152,7 @@ const DictionaryPage = () => {
           title={'Glossary'}
           fontSize="xl"
           fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-darkest"
           borderBottom
           shadowOff
           withButton={

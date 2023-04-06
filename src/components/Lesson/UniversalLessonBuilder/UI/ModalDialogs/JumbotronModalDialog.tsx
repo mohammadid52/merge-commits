@@ -3,6 +3,7 @@ import {
   UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
+import {Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ULBFileUploader from 'atoms/Form/FileUploader';
 import FormInput from 'atoms/Form/FormInput';
@@ -12,8 +13,6 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import React, {useEffect, useState} from 'react';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
 import {getImageFromS3Static} from 'utilities/services';
 import {blur, tinting} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
@@ -37,14 +36,14 @@ const Toggle = ({
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch.Label as="span" className="mr-3 w-auto">
-        <span className="text-sm font-medium text-gray-900">{text}</span>
+        <span className="text-sm font-medium text-darkest">{text}</span>
       </Switch.Label>
       <Switch
         disabled={disabled}
         checked={checked}
         onChange={onClick}
         className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          checked ? 'bg-indigo-600' : 'bg-light',
           'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
         )}>
         <span
@@ -444,10 +443,6 @@ const JumbotronModalDialog = ({
     setInputFieldsArray(initialInputFieldsState);
   };
 
-  const {curTab, setCurTab, helpers, goTo} = useTabs();
-  const [onSetupTab, onPreviewTab] = helpers;
-  const [toSetupTab] = goTo;
-
   const previewAvailable = url && url.length > 0;
 
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
@@ -456,58 +451,59 @@ const JumbotronModalDialog = ({
     setColorPickerActive(false);
   };
 
-  return (
-    <>
-      <Tabs3 curTab={curTab} setCurTab={setCurTab} />
-
-      <AnimatedContainer animationType="scale" show={onSetupTab}>
-        {onSetupTab && (
-          <div className="grid grid-cols-2 my-2 gap-4">
-            <div className="col-span-2">
-              {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
-                if (inputObj.id === 'background' && !isEditingMode) {
-                  return (
-                    <ULBFileUploader
-                      key={`jumboform_${idx}`}
-                      fileUrl={url}
-                      updateFileUrl={updateFileUrl}
-                      acceptedFilesFormat={'image/*'}
-                      error={errors?.url}
-                      classString={
-                        'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2 mb-1'
-                      }
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: `Component Details`,
+      children: (
+        <div className="grid grid-cols-2 my-2 gap-4">
+          <div className="col-span-2">
+            {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
+              if (inputObj.id === 'background' && !isEditingMode) {
+                return (
+                  <ULBFileUploader
+                    key={`jumboform_${idx}`}
+                    fileUrl={url}
+                    updateFileUrl={updateFileUrl}
+                    acceptedFilesFormat={'image/*'}
+                    error={errors?.url}
+                    classString={
+                      'border-0 border-dashed border-light  rounded-lg h-35 cursor-pointer p-2 mb-1'
+                    }
+                  />
+                );
+              } else {
+                if (isEditingMode && inputObj.id === 'background') return;
+                const isDesc = inputObj.id === 'description';
+                return (
+                  <div className="mb-2" key={`jumboform_${idx}`}>
+                    <FormInput
+                      onChange={onChange}
+                      label={inputFieldsArray[idx]?.label}
+                      isRequired={!isDesc}
+                      textarea={isDesc}
+                      value={inputFieldsArray[idx]?.value}
+                      id={inputFieldsArray[idx]?.id}
+                      placeHolder={inputFieldsArray[idx]?.placeholderText}
+                      type="text"
+                      rows={5}
+                      showCharacterUsage={isDesc}
+                      maxLength={650}
                     />
-                  );
-                } else {
-                  if (isEditingMode && inputObj.id === 'background') return;
-                  const isDesc = inputObj.id === 'description';
-                  return (
-                    <div className="mb-2" key={`jumboform_${idx}`}>
-                      <FormInput
-                        onChange={onChange}
-                        label={inputFieldsArray[idx]?.label}
-                        isRequired={!isDesc}
-                        textarea={isDesc}
-                        value={inputFieldsArray[idx]?.value}
-                        id={inputFieldsArray[idx]?.id}
-                        placeHolder={inputFieldsArray[idx]?.placeholderText}
-                        type="text"
-                        rows={5}
-                        showCharacterUsage={isDesc}
-                        maxLength={650}
-                      />
-                    </div>
-                  );
-                }
-              })}
-            </div>
+                  </div>
+                );
+              }
+            })}
           </div>
-        )}
-      </AnimatedContainer>
-
-      <AnimatedContainer animationType="scale" show={onPreviewTab}>
-        {onPreviewTab &&
-          (previewAvailable ? (
+        </div>
+      )
+    },
+    {
+      key: '2',
+      label: `Preview`,
+      children: (
+        <>
+          {previewAvailable ? (
             <div className="my-4">
               <div
                 ref={imageRef}
@@ -523,7 +519,7 @@ const JumbotronModalDialog = ({
                   description={inputFieldsArray[3]?.value || ''}
                 />
               </div>
-              <p className="italic text-xs text-right text-gray-600">
+              <p className="italic text-xs text-right text-medium ">
                 This is how jumbotron will look on page
               </p>
               <h4 className="font-semibold text-lg">Edit Jumbotron Styles: </h4>
@@ -541,18 +537,18 @@ const JumbotronModalDialog = ({
                 </div>
 
                 <div className="relative h-full">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                     Select Background Color
                   </label>
                   <button
                     onClick={() => setColorPickerActive(!colorPickerActive)}
-                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                    <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                    className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                    <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                       {selectedStyles.bgColor.split('-')[1]}
                     </span>
 
                     <span
-                      className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-gray-400`}></span>
+                      className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-light `}></span>
                   </button>
                   {colorPickerActive && (
                     <ColorPicker
@@ -585,53 +581,49 @@ const JumbotronModalDialog = ({
               </div>
             </div>
           ) : (
-            <div className="text-center text-gray-500 my-4">
+            <div className="text-center text-medium  my-4">
               <div className="text-lg">Preview not available yet.</div>
-              <div className="text-sm mt-2">
-                <span
-                  onClick={() => setCurTab(toSetupTab)}
-                  className="w-auto cursor-pointer underline text-blue-400">
-                  Add image
-                </span>{' '}
-                to see preview.
-              </div>
+              {/* <div className="text-sm mt-2">
+              <span
+                onClick={() => setCurTab(toSetupTab)}
+                className="w-auto cursor-pointer underline text-blue-400">
+                Add image
+              </span>{' '}
+              to see preview.
+            </div> */}
             </div>
-          ))}
+          )}
 
-        {loading && uploadProgress !== 'done' && (
-          <ProgressBar
-            status={uploadProgress < 99 ? 'Uploading Image' : 'Upload Done'}
-            progress={uploadProgress}
-          />
-        )}
-      </AnimatedContainer>
+          {loading && uploadProgress !== 'done' && (
+            <ProgressBar
+              status={uploadProgress < 99 ? 'Uploading Image' : 'Upload Done'}
+              progress={uploadProgress}
+            />
+          )}
+        </>
+      )
+    }
+  ];
 
-      <div className="flex mt-8 justify-between items-center px-6 pb-4">
-        {onPreviewTab && previewAvailable ? (
-          <Buttons
-            label={'Reset to default'}
-            onClick={() => setSelectedStyles(initialStyles)}
-          />
-        ) : (
-          <div className="w-auto" />
-        )}
+  return (
+    <>
+      <Tabs animated defaultActiveKey="1" items={items} />
 
-        <div className="flex items-center justify-end w-auto gap-4">
-          <Buttons
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={askBeforeClose}
-            transparent
-            size="middle"
-          />
+      <div className="flex mt-8 justify-end gap-4 items-center px-6 pb-4">
+        <Buttons
+          label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+          onClick={askBeforeClose}
+          transparent
+          size="middle"
+        />
 
-          <Buttons
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            loading={loading}
-            size="middle"
-            onClick={onJumbotronCreate}
-            disabled={loading}
-          />
-        </div>
+        <Buttons
+          label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+          loading={loading}
+          size="middle"
+          onClick={onJumbotronCreate}
+          disabled={loading}
+        />
       </div>
     </>
   );

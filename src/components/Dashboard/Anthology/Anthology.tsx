@@ -4,7 +4,6 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {updatePageState} from '@graphql/functions';
 import {
   UniversalLessonWritingExcercises,
   UpdateUniversalLessonWritingExcercisesInput,
@@ -14,19 +13,29 @@ import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Modal from 'atoms/Modal';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateUniversalJournalData} from 'customGraphql/customMutations';
+import {
+  getPersonPasscode,
+  listUniversalLessonStudentDatas,
+  listUniversalLessonWritingExcercises
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import usePrevious from 'customHooks/previousProps';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {updatePageState} from 'graphql-functions/functions';
+import {
+  createUniversalJournalData,
+  deleteUniversalJournalData,
+  updateUniversalLessonStudentData,
+  updateUniversalLessonWritingExcercises
+} from 'graphql/mutations';
+import {listUniversalArchiveData, listUniversalJournalData} from 'graphql/queries';
 import {
   UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
@@ -47,6 +56,7 @@ export interface IAnthologyProps {
   studentEmail?: string;
   studentName?: string;
   isTeacher?: boolean;
+  studentImage?: string | null;
 }
 export interface ViewEditMode {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -59,7 +69,8 @@ const Anthology = ({
   studentAuthID,
   studentEmail,
   studentName,
-  isTeacher
+  isTeacher,
+  studentImage
 }: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   // const {state, dispatch, userLanguage, theme, clientKey} = useGlobalContext();
@@ -90,7 +101,7 @@ const Anthology = ({
 
   const initialDataFetch = async () => {
     setLoading(true);
-    await listUniversalJournalData();
+    await listUniversalJournalDataFn();
     await getStudentData();
     await getUniversalArchiveData();
     await getUniversalLessonWritingExercises();
@@ -139,7 +150,7 @@ const Anthology = ({
       };
 
       const studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+        graphqlOperation(listUniversalLessonStudentDatas, listFilter)
       );
       // existing student rows
       const studentDataRows =
@@ -217,7 +228,7 @@ const Anthology = ({
 
       try {
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalLessonStudentData, {
+          graphqlOperation(updateUniversalLessonStudentData, {
             input: {
               id: selectStudentDataRecord.id,
               exerciseData: newExerciseData.exerciseData
@@ -262,7 +273,7 @@ const Anthology = ({
   const [universalJournalDataLoaded, setUniversalJournalDataLoaded] =
     useState<boolean>(false);
 
-  const listUniversalJournalData = async () => {
+  const listUniversalJournalDataFn = async () => {
     try {
       const listFilter = {
         limit: SEARCH_LIMIT,
@@ -272,7 +283,7 @@ const Anthology = ({
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalData, listFilter)
+        graphqlOperation(listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];
@@ -302,7 +313,7 @@ const Anthology = ({
 
     try {
       const newJournalData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalJournalData, {input})
+        graphqlOperation(createUniversalJournalData, {input})
       );
 
       const returnedData = newJournalData.data.createUniversalJournalData;
@@ -336,7 +347,7 @@ const Anthology = ({
       };
       try {
         await API.graphql(
-          graphqlOperation(customMutations.updateUniversalJournalData, {
+          graphqlOperation(updateUniversalJournalData, {
             input
           })
         );
@@ -402,7 +413,7 @@ const Anthology = ({
         setAllUniversalClassData(allUniversalClassData);
 
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalLessonWritingExcercises, {
+          graphqlOperation(updateUniversalLessonWritingExcercises, {
             input
           })
         );
@@ -433,7 +444,7 @@ const Anthology = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalJournalData, {
+        graphqlOperation(deleteUniversalJournalData, {
           input: {id: viewEditMode.dataID}
         })
       );
@@ -540,7 +551,7 @@ const Anthology = ({
         } else if (viewEditMode.mode === 'savenew') {
           await createJournalData();
           await handleResetJournalEntry();
-          await listUniversalJournalData();
+          await listUniversalJournalDataFn();
         } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
           await deleteJournalData();
         } else if (viewEditMode.mode === '') {
@@ -609,7 +620,7 @@ const Anthology = ({
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalArchiveData, {
+        graphqlOperation(listUniversalArchiveData, {
           limit: SEARCH_LIMIT,
           filter: {
             studentID: {
@@ -630,7 +641,7 @@ const Anthology = ({
   const getUniversalLessonWritingExercises = async () => {
     try {
       const _allUniversalClassData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
+        graphqlOperation(listUniversalLessonWritingExcercises, {
           limit: SEARCH_LIMIT,
           filter: {
             studentID: {
@@ -724,7 +735,7 @@ const Anthology = ({
             textClass: 'text-indigo-500'
           });
           const personPasscode: any = await API.graphql(
-            graphqlOperation(customQueries.getPersonPasscode, {
+            graphqlOperation(getPersonPasscode, {
               email: state?.user?.email,
               authId: state?.user?.authId
             })
@@ -821,7 +832,7 @@ const Anthology = ({
           <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
         </div>
       )}
-      <div className="px-10">
+      <div className="">
         {!isTeacher && <HeaderTextBar>All your work in place</HeaderTextBar>}
 
         <div className={'z-100 flex justify-center items-center'}>
@@ -897,33 +908,28 @@ const Anthology = ({
           </Modal>
         </div>
 
-        <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256">
-          <div className="my-8">
-            <SectionTitleV3
-              title={
-                !isTeacher
-                  ? 'Your ' + anthologyDict[userLanguage]['TITLE']
-                  : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
-              }
-              fontSize="xl"
-              withButton={
-                roomId ? (
-                  <div className="w-auto flex items-end justify-end">
-                    <a
-                      className="w-auto hover:underline iconoclast:text-main curate:text-main"
-                      href={`/dashboard/classroom/${roomId}`}>
-                      Go back to classroom
-                    </a>
-                  </div>
-                ) : (
-                  false
-                )
-              }
-              fontStyle="semibold"
-              extraContainerClass="px-6"
-              borderBottom
-              extraClass="leading-6 text-gray-900"
-            />
+        <PageLayout
+          type="inner"
+          hideInstProfile
+          title={
+            !isTeacher
+              ? 'Your ' + anthologyDict[userLanguage]['TITLE']
+              : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
+          }
+          extra={
+            roomId ? (
+              <div className="w-auto flex items-end justify-end">
+                <a
+                  className="w-auto hover:underline iconoclast:text-main curate:text-main"
+                  href={`/dashboard/classroom/${roomId}`}>
+                  Go back to classroom
+                </a>
+              </div>
+            ) : (
+              false
+            )
+          }>
+          <div className="">
             <EmptyViewWrapper
               wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
               revealContents={true}>
@@ -933,6 +939,7 @@ const Anthology = ({
                 roomIdList={roomCardIds}
                 mainSection={mainSection}
                 sectionRoomID={sectionRoomID}
+                studentImage={studentImage}
                 sectionTitle={sectionTitle}
                 handleSectionSelect={handleSectionSelect}
                 isTeacher={isTeacher}
@@ -944,7 +951,7 @@ const Anthology = ({
             wrapperClass={`min-h-24 py-4 overflow-hidden mb-4`}
             revealContents={sectionRoomID !== 'none' || !loading}
             fallbackContents={
-              <p className="text-center text-lg text-gray-500">
+              <p className="text-center text-lg text-medium ">
                 Please select a notebook above to view your data
               </p>
             }>
@@ -972,7 +979,7 @@ const Anthology = ({
               setAllUniversalJournalData={setAllUniversalJournalData}
             />
           </EmptyViewWrapper>
-        </div>
+        </PageLayout>
       </div>
     </ErrorBoundary>
   );

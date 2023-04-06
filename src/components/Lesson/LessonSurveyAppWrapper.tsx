@@ -2,12 +2,13 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonHeaderBar from '@components/Header/LessonHeaderBar';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {notification} from 'antd';
-import {useEffect, useRef, useState} from 'react';
+import {Suspense, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import ComponentLoading from './Loading/ComponentLoading';
 
 interface LessonSurveyAppWrapper extends ILessonSurveyApp {
   type: 'survey' | 'lesson';
@@ -28,7 +29,8 @@ const LessonSurveyAppWrapper = ({
   personLessonData,
   setPersonLessonData,
   updatePageInLocalStorage,
-  lessonDataLoaded
+  lessonDataLoaded,
+  getValidatedPages
 }: LessonSurveyAppWrapper) => {
   const {
     lessonState,
@@ -77,7 +79,7 @@ const LessonSurveyAppWrapper = ({
       ref={topLessonRef}>
       {contextHolder}
       <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-        <h6 className="text-xs text-shadow text-gray-500">{NAME}</h6>
+        <h6 className="text-xs text-shadow text-medium ">{NAME}</h6>
       </div>
 
       <div className="fixed w-full" style={{zIndex: 5000}}>
@@ -93,6 +95,7 @@ const LessonSurveyAppWrapper = ({
           isAtEnd={isAtEnd}
           setPersonLessonData={setPersonLessonData}
           setisAtEnd={setisAtEnd}
+          getValidatedPages={getValidatedPages}
           validateRequired={validateRequired}
           handleRequiredNotification={() => {
             invokeRequiredField?.();

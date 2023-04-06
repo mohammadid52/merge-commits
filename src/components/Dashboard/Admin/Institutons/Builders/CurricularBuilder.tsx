@@ -5,7 +5,7 @@ import {
   checkUniqCurricularName,
   getInstitutionList,
   uploadImageToS3
-} from '@graphql/functions';
+} from 'graphql-functions/functions';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -14,10 +14,10 @@ import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {createCurriculum} from 'customGraphql/customMutations';
+import {getStaffsForInstitution} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutation from 'graphql/mutations';
+import {updateCurriculum} from 'graphql/mutations';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
@@ -153,14 +153,14 @@ const CurricularBuilder = () => {
         };
 
         const response: any = await API.graphql(
-          graphqlOperation(customMutations.createCurriculum, {input: input})
+          graphqlOperation(createCurriculum, {input: input})
         );
         const newCurricular: any = response?.data?.createCurriculum;
 
         if (s3Image) {
           await _uploadImageToS3(s3Image, newCurricular.id, 'image/jpeg');
           await API.graphql(
-            graphqlOperation(mutation.updateCurriculum, {
+            graphqlOperation(updateCurriculum, {
               input: {
                 id: newCurricular.id,
                 image: `instituteImages/curricular_image_${newCurricular.id}`
@@ -194,7 +194,7 @@ const CurricularBuilder = () => {
   const fetchPersonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getStaffsForInstitution, {
+        graphqlOperation(getStaffsForInstitution, {
           filter: {institutionID: {eq: params.get('id')}}
         })
       );
@@ -356,7 +356,7 @@ const CurricularBuilder = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-9/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {CurricularBuilderdict[userLanguage]['HEADING']}
           </h3>
           <div className="h-9/10 flex flex-col md:flex-row">
@@ -373,20 +373,20 @@ const CurricularBuilder = () => {
                     {imageUrl ? (
                       <img
                         onClick={handleImage}
-                        className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                        className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-light `}
                         src={imageUrl}
                       />
                     ) : (
                       <div
                         onClick={handleImage}
-                        className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                        className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-lightest  border flex-shrink-0 flex border-light `}>
                         <IoImage className="fill-current text-gray-80" size={32} />
                       </div>
                     )}
                   </DroppableMedia>
                 </label>
               </button>
-              <p className="text-gray-600 my-4">Click to add curricular image</p>
+              <p className="text-medium  my-4">Click to add curricular image</p>
             </div>
             <div className="h-9/10 md:flex-row">
               <div className="px-3 py-4">
@@ -420,7 +420,7 @@ const CurricularBuilder = () => {
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                   {CurricularBuilderdict[userLanguage]['TYPE']}
                 </label>
                 <Selector
@@ -480,15 +480,16 @@ const CurricularBuilder = () => {
           />
         </div>
         {/* Image cropper */}
-
-        <ProfileCropModal
-          open={showCropper}
-          upImg={upImage || ''}
-          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-          locked
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
+        {showCropper && (
+          <ProfileCropModal
+            open={showCropper}
+            upImg={upImage || ''}
+            customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+            locked
+            saveCroppedImage={(img: string) => saveCroppedImage(img)}
+            closeAction={toggleCropper}
+          />
+        )}
       </PageWrapper>
     </div>
   );

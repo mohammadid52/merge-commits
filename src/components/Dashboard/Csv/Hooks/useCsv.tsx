@@ -1,5 +1,5 @@
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {getSeparatedHeaders} from '@utilities/functions';
 import {cleanString} from '@utilities/strings';
 import {orderBy} from 'lodash';

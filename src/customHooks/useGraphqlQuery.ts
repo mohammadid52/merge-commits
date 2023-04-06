@@ -1,10 +1,8 @@
-import * as customQueries from "customGraphql/customQueries";
-import * as queries from "graphql/queries";
-import { API, graphqlOperation } from "aws-amplify";
-import { useEffect, useState } from "react";
-import { isEmpty } from "lodash";
-import { logError } from "@graphql/functions";
-import useAuth from "./useAuth";
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {logError} from 'graphql-functions/functions';
+import useAuth from './useAuth';
 
 /*
   Example:
@@ -34,7 +32,8 @@ interface Options {
  */
 
 const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
-  queryName: string,
+  queryName: any,
+  query: any,
   variables: VariablesType,
   options?: Options
 ): {
@@ -49,7 +48,7 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
 } => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isFetched, setIsFetched] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [data, setData] = useState<ReturnType | []>([]);
@@ -58,15 +57,13 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
     enabled = true,
     loopOnNextToken = false,
     custom = false,
-    onSuccess = () => {},
+    onSuccess = () => {}
   } = options || {};
-
-  const action = custom ? customQueries : queries;
 
   const _queryName = custom ? options?.originalName || queryName : queryName;
 
-  const isGet = queryName.startsWith("get");
-  const { authId, email } = useAuth();
+  const isGet = queryName.startsWith('get');
+  const {authId, email} = useAuth();
 
   const fetch = async (
     nextToken?: string,
@@ -78,18 +75,13 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
 
       setIsLoading(true);
       const res: any = await API.graphql(
-        // @ts-ignore
-        graphqlOperation(action[queryName], { ..._v, nextToken: nextToken })
+        graphqlOperation(query, {..._v, nextToken: nextToken})
       );
 
       const data = isGet ? res.data[_queryName] : res.data[_queryName].items;
 
       const theNextToken = isGet ? null : res.data[_queryName]?.nextToken;
-      const outputData = isGet
-        ? data
-        : loopArray
-        ? [...loopArray, ...data]
-        : data;
+      const outputData = isGet ? data : loopArray ? [...loopArray, ...data] : data;
 
       if (theNextToken && loopOnNextToken) {
         await fetch(theNextToken, outputData);
@@ -98,18 +90,13 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
           setData([]);
         }
 
-        if (
-          (isGet && isEmpty(outputData)) ||
-          (!isGet && outputData.length > 0)
-        ) {
+        if ((isGet && isEmpty(outputData)) || (!isGet && outputData.length > 0)) {
           setIsSuccess(true);
           setData(outputData);
-          setError("");
+          setError('');
           setIsError(false);
-          if (onSuccess && typeof onSuccess === "function") {
-            onSuccess(outputData, (updatedData: ReturnType) =>
-              setData(updatedData)
-            );
+          if (onSuccess && typeof onSuccess === 'function') {
+            onSuccess(outputData, (updatedData: ReturnType) => setData(updatedData));
           }
 
           return outputData;
@@ -120,15 +107,14 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
       setIsError(true);
       setError(error.message);
       setIsSuccess(false);
-      logError(error, { authId, email }, "useGraphlQuery");
+      logError(error, {authId, email}, 'useGraphlQuery');
     } finally {
       setIsLoading(false);
       setIsFetched(true);
     }
   };
 
-  const refetch = (variables?: VariablesType) =>
-    fetch(undefined, [], variables);
+  const refetch = (variables?: VariablesType) => fetch(undefined, [], variables);
 
   useEffect(() => {
     if (!isFetched && enabled) {
@@ -144,7 +130,7 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
     isError,
     error,
     isFetched,
-    refetch,
+    refetch
   };
 };
 

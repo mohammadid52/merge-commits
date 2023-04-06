@@ -58,27 +58,27 @@ const FileListItem = ({
 
   return (
     <li
-      className={`pr-4 mb-2 border-b-0 border-gray-200 ${
-        fileIdx % 2 === 0 ? 'bg-gray-50' : ''
+      className={`pr-4 mb-2 border-b-0 border-lightest ${
+        fileIdx % 2 === 0 ? 'bg-lightest' : ''
       }`}>
       <div className="flex items-center space-x-4">
         <div className="flex flex-shrink-0 min-w-16 w-16 h-16">
-          <span className="flex justify-center items-center rounded border-0 border-gray-400  bg-gray-200 overflow-hidden">
+          <span className="flex justify-center items-center rounded border-0 border-light   bg-lightest overflow-hidden">
             {isImage(fileName) ? (
               <img className="w-auto h-full object-cover" src={imageUrl} alt={fileName} />
             ) : (
-              <AiOutlineFile className="text-gray-400 p-2" size={'32px'} />
+              <AiOutlineFile className="text-light  p-2" size={'32px'} />
             )}
           </span>
         </div>
 
         <div className="w-full">
-          <p className="text-sm font-medium text-gray-900 truncate">
-            <span className="text-gray-500">Filename: </span>
+          <p className="text-sm font-medium text-darkest   truncate">
+            <span className="text-medium ">Filename: </span>
             {fileName}
           </p>
           <p className="text-sm text-green-500 truncate">
-            <span className="text-gray-500">Filesize: </span>
+            <span className="text-medium ">Filesize: </span>
             {fileSize} kB
           </p>
         </div>
@@ -88,12 +88,12 @@ const FileListItem = ({
             <>
               <a
                 onClick={() => handleToggleDelete(fileKey)}
-                className="bg-red-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-red-400">
+                className="bg-red-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-lightest  text-sm leading-5 font-medium rounded-full text-white hover:bg-red-400">
                 Cancel
               </a>
               <a
                 onClick={() => handleConfirmDelete()}
-                className="ml-2 bg-green-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-green-400">
+                className="ml-2 bg-green-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-lightest  text-sm leading-5 font-medium rounded-full text-white hover:bg-green-400">
                 {!deleting ? 'Confirm' : 'Deleting...'}
               </a>
             </>
@@ -101,13 +101,13 @@ const FileListItem = ({
             <>
               <a
                 onClick={() => handleToggleDelete(fileKey)}
-                className=" cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                className=" cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-lightest  text-sm leading-5 font-medium rounded-full text-dark   bg-white hover:bg-lightest">
                 Delete
               </a>
               <a
                 target="_blank"
                 href={imageUrl}
-                className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-lightest  text-sm leading-5 font-medium rounded-full text-dark   bg-white hover:bg-lightest">
                 View
               </a>
             </>

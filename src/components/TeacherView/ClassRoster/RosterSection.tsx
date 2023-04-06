@@ -108,7 +108,7 @@ const RosterSection = ({
     <>
       <div className={`w-full flex items-center bg-transparent mt-4 mb-2 px-4`}>
         <div className="relative w-full h-auto flex flex-row items-center">
-          <div className="text-sm flex font-semibold text-gray-600">
+          <div className="text-sm flex font-semibold text-medium ">
             <p className="w-auto">
               {sectionTitle} ({activeStudentList.length})
             </p>
@@ -125,7 +125,7 @@ const RosterSection = ({
             )}
           </div>
           <span
-            className="text-sm font-bold w-auto text-gray-600 cursor-pointer p-2"
+            className="text-sm font-bold w-auto text-medium  cursor-pointer p-2"
             onClick={() =>
               toggleAnimation(minimized, listRef, rollDownAnimation, rollUpAnimation)
             }>
@@ -160,7 +160,7 @@ const RosterSection = ({
       <div
         ref={listRef}
         className={`w-full flex flex-col items-center ${
-          activeStudentList.length > 0 ? 'border-b-0 border-gray-300' : ''
+          activeStudentList.length > 0 ? 'border-b-0 border-lightest ' : ''
         }`}>
         {activeStudentList && activeStudentList.length > 0 ? (
           activeStudentList.map(

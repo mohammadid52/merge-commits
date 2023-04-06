@@ -77,17 +77,7 @@ const Foot = () => {
           className={`w-full lg:w-256 h-auto mx-auto  py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK BUTTON */}
 
-          <div className="w-3.3/10 flex justify-center items-center">
-            {/* <div
-              className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
-                lessonState.currentPage > 0
-                  ? 'cursor-pointer bg-dark-red'
-                  : 'cursor-default bg-darker-gray'
-              } }`}
-              onClick={handleBack}>
-              <div className="w-auto h-auto text-white">Back</div>
-            </div> */}
-          </div>
+          <div className="w-3.3/10 flex justify-center items-center"></div>
 
           {/* LOGO */}
           <div className="w-3.3/10 flex justify-center items-center">
@@ -107,7 +97,7 @@ const Foot = () => {
               className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                 canContinue() || userAtEnd()
                   ? 'bg-sea-green cursor-pointer'
-                  : 'bg-dark-gray cursor-default'
+                  : 'bg-dark cursor-default'
               } `}
               onClick={handleForward}>
               <div className="w-auto h-auto text-white">Continue</div>

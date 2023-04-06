@@ -8,6 +8,7 @@ import {PageBuilderProvider} from 'contexts/PageBuilderContext';
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import {BrowserRouter as Router} from 'react-router-dom';
+
 // This is the main component that wraps all other components
 // It is the entry point for the application
 

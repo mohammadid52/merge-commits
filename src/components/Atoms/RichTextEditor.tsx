@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import useAuth from '@customHooks/useAuth';
 
 interface RichTextEditorProps {

@@ -73,7 +73,7 @@ const LessonDetails = ({
       } min-h-30 flex flex-col justify-between px-4 pt-2`}>
       <div
         title={title}
-        className="align-middle mb-2 text-gray-600 text-sm leading-8  relative w-full h-auto flex flex-row items-center">
+        className="align-middle mb-2 text-medium  text-sm leading-8  relative w-full h-auto flex flex-row items-center">
         <div className="w-auto flex items-center">
           <span className="font-bold w-auto mr-1">
             {classRoomDict[userLanguage]['LESSON']}:{' '}
@@ -92,7 +92,7 @@ const LessonDetails = ({
         </div>
       </div>
 
-      <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm rounded">
+      <div className="relative w-full flex flex-col my-auto bg-lightest p-2 text-medium  text-sm shadow-sm rounded">
         <p className="">
           <span className="font-medium">
             {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
