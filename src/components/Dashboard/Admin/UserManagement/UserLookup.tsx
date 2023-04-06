@@ -4,11 +4,16 @@ import {AiOutlineUsergroupAdd} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
+
+import {
+  getDashboardDataForCoTeachers,
+  getDashboardDataForTeachers,
+  listClassUserLookup,
+  listStaffWithBasicInfo
+} from 'customGraphql/customQueries';
+import {listPeople} from 'graphql/queries';
 
 import Filters from '@components/Atoms/Filters';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import UserLookupAction from '@components/MicroComponents/UserLookupAction';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
@@ -23,11 +28,14 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import PageLayout from 'layout/PageLayout';
 import {map, orderBy, uniqBy} from 'lodash';
 import moment from 'moment';
-import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities/strings';
-import UserLocation from './UserLocation';
-import UserRole from './UserRole';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  fallbackValue,
+  getUserRoleString
+} from 'utilities/strings';
 import UserStatus from './UserStatus';
 
 export const sortByName = (data: any[]) => {
@@ -189,9 +197,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const fetchAllPerson = async (filter?: any) => {
     let resp: any = await API.graphql(
-      graphqlOperation(queries.listPeople, {
+      graphqlOperation(listPeople, {
         limit: SEARCH_LIMIT,
-
         filter: withZoiqFilter(filter, zoiqFilter)
       })
     );
@@ -212,7 +219,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       if (isTeacher || isBuilder || isAdmin) {
         let promises = [
           API.graphql(
-            graphqlOperation(customQueries.listStaffWithBasicInfo, {
+            graphqlOperation(listStaffWithBasicInfo, {
               filter: {
                 ...createFilterToFetchSpecificItemsOnly(
                   state.user.associateInstitute.map((item: any) => item.institution.id),
@@ -226,7 +233,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         if (isTeacher) {
           promises.push(
             API.graphql(
-              graphqlOperation(customQueries.getTeacherLookUp, {
+              graphqlOperation(listStaffWithBasicInfo, {
                 filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
               })
             )
@@ -263,7 +270,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
       const authIdFilter = createFilterToFetchSpecificItemsOnly(authIds, 'authId');
 
-      if ((authIdFilter.or.length && (isTeacher || isBuilder || isAdmin)) || !isTeacher) {
+      if (
+        (authIdFilter &&
+          authIdFilter.or &&
+          authIdFilter.or.length &&
+          (isTeacher || isBuilder || isAdmin)) ||
+        !isTeacher
+      ) {
         let users: any;
         let response: any;
 
@@ -302,12 +315,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       const [response, assignedRoomsAsCoTeacher] = await Promise.all<any>([
         API.graphql(
-          graphqlOperation(customQueries.getDashboardDataForTeachers, {
+          graphqlOperation(getDashboardDataForTeachers, {
             filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
           })
         ),
         API.graphql(
-          graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          graphqlOperation(getDashboardDataForCoTeachers, {
             filter: {teacherAuthID: {eq: state.user.authId}}
           })
         )
@@ -392,7 +405,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       setLoading(true);
       const classStudents: any = await API.graphql(
-        graphqlOperation(customQueries.listClassUserLookup, {
+        graphqlOperation(listClassUserLookup, {
           limit: SEARCH_LIMIT,
           filter: {classID: {eq: classId}}
         })
@@ -464,13 +477,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     no: getIndex(idx),
     onClick: () => handleUserLink(item.id),
     name: <UserLookupName searchTerm={searchInput.value} item={item} />,
-    flow: <UserLocation role={item.role} onDemand={item?.onDemand} />,
-    role: <UserRole role={item.role ? item.role : '--'} />,
+    flow: item?.onDemand ? 'Self Paced' : 'Classroom',
+    role: getUserRoleString(fallbackValue(item.role)),
     status: (
-      <div className="w-auto flex justify-center flex-col">
-        <UserStatus status={item.status ? item.status : '--'} />
+      <div className="">
+        <UserStatus status={fallbackValue(item.status)} />
         {item.status === PersonStatus.INACTIVE && item.inactiveStatusDate !== null && (
-          <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
+          <span className="block text-medium  pt-1 text-xs text-left -ml-4">
             Since {moment(item.inactiveStatusDate).format('ll')}
           </span>
         )}
@@ -523,75 +536,66 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   };
 
   return (
-    <div className="mb-2">
-      {/* Header Section */}
-      {!isInInstitute && <BreadCrums items={breadCrumsList} />}
-      <div className="">
-        <SectionTitleV3
-          fontSize="xl"
-          fontStyle="semibold"
-          extraContainerClass="px-4"
-          extraClass="leading-6 text-gray-900 uppercase"
-          borderBottom
-          shadowOff
-          title={
-            !isInInstitute
-              ? UserLookupDict[userLanguage]['title']
-              : isStudentRoster
-              ? `Your Students (${headerForStudentRoster()})`
-              : 'User List'
-          }
-          subtitle={isInInstitute ? null : UserLookupDict[userLanguage]['subtitle']}
-          withButton={
-            <div
-              className={
-                isStudentRoster
-                  ? 'flex justify-end mb-4 gap-4 items-center w-auto'
-                  : 'flex justify-end mb-4 gap-4 w-auto'
-              }>
-              {isStudentRoster && (
-                <div className="w-auto relative flex mr-2 min-w-64">
-                  <Selector
-                    placeholder={'Select a class'}
-                    list={getClassListForSelector()}
-                    selectedItem={selectedClass?.name}
-                    onChange={setSelectedClassValue}
-                    disabled={loading}
-                  />
-
-                  {selectedClass !== null && (
-                    <span
-                      onClick={goToClassroom}
-                      style={{bottom: '-1.5rem'}}
-                      className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
-                      Go to classroom
-                    </span>
-                  )}
-                </div>
-              )}
-
-              <SearchInput
-                value={searchInput.value}
-                onChange={setSearch}
+    <PageLayout
+      title={
+        !isInInstitute
+          ? UserLookupDict[userLanguage]['title']
+          : isStudentRoster
+          ? `Your Students (${headerForStudentRoster()})`
+          : 'User List'
+      }
+      extra={
+        <div
+          className={`flex justify-end gap-4 w-auto ${
+            isStudentRoster ? 'items-center' : ''
+          }`}>
+          {isStudentRoster && (
+            <div className="w-auto relative flex ">
+              <Selector
+                placeholder={'Select a class'}
+                list={getClassListForSelector()}
+                selectedItem={selectedClass?.name}
+                onChange={setSelectedClassValue}
                 disabled={loading}
-                onKeyDown={searchUserFromList}
-                closeAction={_removeSearchAction}
+                width={250}
+                size="middle"
+                showSearch
+                optionFilterProp="label"
               />
 
-              {state.user.role !== 'SUP' && (
-                <Buttons
-                  label={UserLookupDict[userLanguage]['button']['add']}
-                  onClick={handleLink}
-                  Icon={AiOutlineUsergroupAdd}
-                />
+              {selectedClass !== null && (
+                <span
+                  onClick={goToClassroom}
+                  style={{bottom: '-1.5rem'}}
+                  className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
+                  Go to classroom
+                </span>
               )}
             </div>
-          }
-        />
-      </div>
+          )}
+
+          <SearchInput
+            value={searchInput.value}
+            onChange={setSearch}
+            disabled={loading}
+            onKeyDown={searchUserFromList}
+            closeAction={_removeSearchAction}
+          />
+
+          {state.user.role !== 'SUP' && (
+            <Buttons
+              label={UserLookupDict[userLanguage]['button']['add']}
+              onClick={handleLink}
+              Icon={AiOutlineUsergroupAdd}
+            />
+          )}
+        </div>
+      }>
+      {/* Header Section */}
+      {!isInInstitute && <BreadCrums items={breadCrumsList} />}
 
       {/* List / Table */}
-      <div className="flex flex-col px-4 bg-white">
+      <div className="flex flex-col ">
         <Filters
           loading={loading}
           list={currentList}
@@ -607,16 +611,9 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           }}
         />
 
-        <div className="">
-          <div
-            className={`${
-              isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
-            }`}>
-            <Table {...tableConfig} />
-          </div>
-        </div>
+        <Table {...tableConfig} />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

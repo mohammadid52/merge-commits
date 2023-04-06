@@ -1,13 +1,12 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
 import {InstInfo} from '@interfaces/InstitutionInterface';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import PageWrapper from 'atoms/PageWrapper';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {GetInstitutionDetails} from 'customGraphql/customQueries';
+import {logError} from 'graphql-functions/functions';
 import queryString from 'query-string';
 import {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
@@ -92,8 +91,6 @@ const Institution = (props: InstitutionProps) => {
     curricula: {items: [{name: '', id: ''}]}
   });
 
-  const [isNewUpdate, setISNewUpdate] = useState(false);
-
   const match = useRouteMatch();
   const location = useLocation();
 
@@ -101,10 +98,6 @@ const Institution = (props: InstitutionProps) => {
   const {clientKey} = useGlobalContext();
 
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-
-  const toggleUpdateState = () => {
-    setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
-  };
 
   const postInfoUpdate = (data: any) => {
     setInstitutionData((prevData) => ({
@@ -125,7 +118,7 @@ const Institution = (props: InstitutionProps) => {
            * DO NOT change the ' institutionId ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(customQueries.GetInstitutionDetails, {
+          graphqlOperation(GetInstitutionDetails, {
             id: institutionId
           })
         );
@@ -135,7 +128,6 @@ const Institution = (props: InstitutionProps) => {
           setInstitutionData({...fetchInstitutionData.data.getInstitution});
         }
         setFetchingDetails(false);
-        setISNewUpdate(false);
       }
     } catch (error) {
       logError(error, {authId: authId, email: email}, 'Institution');
@@ -161,12 +153,6 @@ const Institution = (props: InstitutionProps) => {
     setInstitutionData(instData);
   };
 
-  useEffect(() => {
-    if (isNewUpdate) {
-      getInstitutionData();
-    }
-  }, [isNewUpdate]);
-
   return (
     <div className={`w-full h-full`}>
       <BreadcrumbsWithBanner
@@ -176,25 +162,24 @@ const Institution = (props: InstitutionProps) => {
         forInstitution
       />
       <div className="">
-        <PageWrapper>
-          <Switch>
-            <Route
-              path={`${match.url}/`}
-              render={() => (
-                <ErrorBoundary componentName="InstitutionInfo">
-                  <InstitutionInfoComponent
-                    institute={institutionData}
-                    loading={fetchingDetails}
-                    postInfoUpdate={postInfoUpdate}
-                    tabProps={props.tabProps}
-                    toggleUpdateState={toggleUpdateState}
-                    updateServiceProviders={updateServiceProviders}
-                  />
-                </ErrorBoundary>
-              )}
-            />
-          </Switch>
-        </PageWrapper>
+        {/* <PageWrapper> */}
+        <Switch>
+          <Route
+            path={`${match.url}/`}
+            render={() => (
+              <ErrorBoundary componentName="InstitutionInfo">
+                <InstitutionInfoComponent
+                  institute={institutionData}
+                  loading={fetchingDetails}
+                  postInfoUpdate={postInfoUpdate}
+                  tabProps={props.tabProps}
+                  updateServiceProviders={updateServiceProviders}
+                />
+              </ErrorBoundary>
+            )}
+          />
+        </Switch>
+        {/* </PageWrapper> */}
       </div>
     </div>
   );

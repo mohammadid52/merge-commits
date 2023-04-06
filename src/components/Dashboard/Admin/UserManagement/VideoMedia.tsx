@@ -7,8 +7,8 @@ const VideoMedia = ({attachment, type}: {type: string; attachment: any}) => {
   return attachment.url === 'loading' ? (
     <LoadingMedia size={attachment.size} filename={attachment.filename} />
   ) : (
-    <div className="h-auto relative w-72 border-0 p-4 border-gray-300">
-      <p className="truncate text-center min-w-auto p-2 pt-0 text-gray-500">
+    <div className="h-auto relative w-72 border-0 p-4 border-lightest ">
+      <p className="truncate text-center min-w-auto p-2 pt-0 text-medium ">
         {attachment.filename}
       </p>
       <Size size={attachment.size} />

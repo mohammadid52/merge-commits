@@ -11,7 +11,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUniversalLesson} from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
 import {LessonPlansProps} from 'interfaces/LessonInterfaces';
 import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
@@ -95,7 +95,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     try {
       setFetchingLessonDetails(true);
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {
+        graphqlOperation(getUniversalLesson, {
           id: lessonId
         })
       );

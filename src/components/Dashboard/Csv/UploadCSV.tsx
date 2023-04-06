@@ -1,11 +1,10 @@
 import Buttons from '@components/Atoms/Buttons';
-import {logError, uploadImageToS3} from '@graphql/functions';
+import {logError, uploadImageToS3} from 'graphql-functions/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
@@ -25,11 +24,33 @@ import {
 } from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {createUploadLogs} from 'customGraphql/customMutations';
+import {
+  getUniversalLesson,
+  listRoomCoTeachers,
+  listRoomsDashboard,
+  listSurveys,
+  listUnits
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  createCheckpoint,
+  createQuestionData,
+  createTemporaryDemographicsUploadData,
+  createTemporaryUniversalUploadSurveyData,
+  createUniversalArchiveData,
+  deleteTemporaryDemographicsUploadData,
+  deleteTemporaryUniversalUploadSurveyData,
+  updateQuestionData,
+  updateUniversalArchiveData
+} from 'graphql/mutations';
+import {
+  getQuestionData,
+  getUniversalSurveyStudentData,
+  listTemporaryDemographicsUploadData,
+  listTemporaryUniversalUploadSurveyData
+} from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useEffect, useRef, useState} from 'react';
@@ -127,7 +148,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const listQuestions = async (lessonId: string) => {
     try {
       let universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {
+        graphqlOperation(getUniversalLesson, {
           id: lessonId
         })
       );
@@ -298,7 +319,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     _: string
   ) => {
     const getUniversalSurveyStudent: any = await API.graphql(
-      graphqlOperation(queries.getUniversalSurveyStudentData, {
+      graphqlOperation(getUniversalSurveyStudentData, {
         id: value
       })
     );
@@ -399,7 +420,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const ddIDAndDemographicData = async (value: string, parsed: any, _: number) => {
     const getDemographicsData: any = await API.graphql(
-      graphqlOperation(queries.getQuestionData, {
+      graphqlOperation(getQuestionData, {
         id: value
       })
     );
@@ -527,7 +548,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               title: 'Confirm File',
               element: (
                 <div>
-                  <p className="p-4 text-sm text-gray-700">
+                  <p className="p-4 text-sm text-dark  ">
                     please check your input file, You are trying to import unapproved
                     response types
                   </p>
@@ -559,7 +580,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               title: 'Confirm File',
               element: (
                 <div>
-                  <p className="p-4 text-sm text-gray-700">
+                  <p className="p-4 text-sm text-dark  ">
                     Selected file does not match target survey
                   </p>
                 </div>
@@ -657,7 +678,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         element: (
           <div className="flex flex-col justify-center items-center gap-y-4">
             <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
-            <p className="text-gray-600 pt-0 p-4 text-center">
+            <p className="text-medium  pt-0 p-4 text-center">
               xlsx file is not supported. Please convert it to csv file and then try
               again.
             </p>
@@ -677,7 +698,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       };
 
       const newSurveyData: any = await API.graphql(
-        graphqlOperation(mutations.createTemporaryUniversalUploadSurveyData, {
+        graphqlOperation(createTemporaryUniversalUploadSurveyData, {
           input: value
         })
       );
@@ -702,7 +723,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       };
 
       const newDemographicsData: any = await API.graphql(
-        graphqlOperation(mutations.createTemporaryDemographicsUploadData, {
+        graphqlOperation(createTemporaryDemographicsUploadData, {
           input: value
         })
       );
@@ -740,7 +761,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       };
 
       const newUploadLogs: any = await API.graphql(
-        graphqlOperation(customMutations.createUploadLogs, {
+        graphqlOperation(createUploadLogs, {
           input: input
         })
       );
@@ -769,7 +790,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       data.forEach(async (item: any) => {
         await createTempSurveyData(item.UniversalSurveyStudentID, item.surveyData);
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalArchiveData, {
+          graphqlOperation(updateUniversalArchiveData, {
             input: {
               id: item.UniversalSurveyStudentID,
               surveyData: item.surveyData
@@ -806,7 +827,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           surveyData: item.surveyData
         };
         const createData: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalArchiveData, {
+          graphqlOperation(createUniversalArchiveData, {
             input
           })
         );
@@ -842,7 +863,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         // createTempDemographicsDataResult &&
 
         await API.graphql(
-          graphqlOperation(mutations.updateQuestionData, {
+          graphqlOperation(updateQuestionData, {
             input: {
               id: item.questionDataId,
               responseObject: item.responseObject
@@ -869,7 +890,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       changedDemographicsUpdatedData.forEach(async (item: any) => {
         const createCheckpointData: any = await API.graphql(
-          graphqlOperation(mutations.createCheckpoint, {
+          graphqlOperation(createCheckpoint, {
             input: {
               label: 'IA1',
               type: 'profile',
@@ -880,7 +901,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
         if (createCheckpointData) {
           const createDemographicsQuestionData: any = await API.graphql(
-            graphqlOperation(mutations.createQuestionData, {
+            graphqlOperation(createQuestionData, {
               input: {
                 authID: item.authId,
                 checkpointID: createCheckpointData.data.createCheckpoint.id,
@@ -914,7 +935,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       title: 'Confirmation',
       element: (
         <div>
-          <p className="text-gray-700 text-sm p-4">
+          <p className="text-dark   text-sm p-4">
             Please confirm column headers and tab names have not been modified
           </p>
         </div>
@@ -956,7 +977,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const deletePrevTempDataUploadSurveyData = async () => {
     try {
       const res: any = await API.graphql(
-        graphqlOperation(queries.listTemporaryUniversalUploadSurveyData)
+        graphqlOperation(listTemporaryUniversalUploadSurveyData)
       );
 
       const list: any[] = res.data.listTemporaryUniversalUploadSurveyData.items || [];
@@ -964,7 +985,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       if (list.length > 0) {
         list.forEach(async (item) => {
           await API.graphql(
-            graphqlOperation(mutations.deleteTemporaryUniversalUploadSurveyData, {
+            graphqlOperation(deleteTemporaryUniversalUploadSurveyData, {
               input: {id: item.id}
             })
           );
@@ -979,7 +1000,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const deletePrevTempDataDempographics = async () => {
     try {
       const res: any = await API.graphql(
-        graphqlOperation(queries.listTemporaryDemographicsUploadData)
+        graphqlOperation(listTemporaryDemographicsUploadData)
       );
 
       const list: any[] = res.data.listTemporaryDemographicsUploadData.items || [];
@@ -987,7 +1008,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       if (list.length > 0) {
         list.forEach(async (item) => {
           await API.graphql(
-            graphqlOperation(mutations.deleteTemporaryDemographicsUploadData, {
+            graphqlOperation(deleteTemporaryDemographicsUploadData, {
               input: {id: item.id}
             })
           );
@@ -1061,7 +1082,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     try {
       setUnitsLoading(true);
       let curriculumUnits: any = await API.graphql(
-        graphqlOperation(customQueries.listUnits, {
+        graphqlOperation(listUnits, {
           filter: {curriculumId: {eq: curriculumId}}
         })
       );
@@ -1103,7 +1124,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
     try {
       let curriculumUnits: any = await API.graphql(
-        graphqlOperation(customQueries.listUnits, {
+        graphqlOperation(listUnits, {
           filter: {or: arrayOfActiveUnits}
         })
       );
@@ -1138,7 +1159,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       if (isTeacher || isFellow) {
         classrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomsDashboard, {
+          graphqlOperation(listRoomsDashboard, {
             filter: withZoiqFilter(
               {
                 teacherAuthID: {eq: authId},
@@ -1150,7 +1171,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
 
         coTeahcerClassrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomCoTeachers, {
+          graphqlOperation(listRoomCoTeachers, {
             filter: {
               teacherAuthID: {eq: authId},
 
@@ -1160,13 +1181,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
       } else {
         classrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomsDashboard, {
+          graphqlOperation(listRoomsDashboard, {
             filter: withZoiqFilter({type: {eq: ClassroomType.TRADITIONAL}}, zoiqFilter)
           })
         );
 
         coTeahcerClassrooms = await API.graphql(
-          graphqlOperation(customQueries.listRoomCoTeachers, {
+          graphqlOperation(listRoomCoTeachers, {
             filter: {type: {eq: ClassroomType.TRADITIONAL}}
           })
         );
@@ -1236,7 +1257,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     setSurveysLoading(true);
     try {
       let syllabusLessons: any = await API.graphql(
-        graphqlOperation(customQueries.listSurveys, {
+        graphqlOperation(listSurveys, {
           id: unitId
         })
       );
@@ -1375,111 +1396,103 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         {showModal.element}
       </Modal>
 
-      <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
-        <div className="mx-auto w-full">
-          <div className="flex flex-row my-0 w-full py-0 justify-start">
-            <div className="w-full">
-              <SectionTitleV3
-                textWidth="lg:w-1/3 2xl:w-1/4"
-                withButton={
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div className="w-auto relative">
-                      <Selector
-                        dataCy="upload-analytics-classroom"
-                        loading={classRoomLoading}
-                        selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
-                        placeholder="Select Classroom"
-                        width={250}
-                        list={instClassRooms}
-                        onChange={(value, option: any) => {
-                          setHoveringItem({});
-                          onClassRoomSelect(option.id, value, value);
-                          focusOn('upload-analytics-unit');
-                        }}
-                      />
-                    </div>
-                    <Selector
-                      dataCy="upload-analytics-unit"
-                      loading={unitsLoading}
-                      selectedItem={selectedUnit ? selectedUnit.name : ''}
-                      placeholder="Select Unit"
-                      list={units}
-                      width={250}
-                      disabled={!selectedCurriculum}
-                      onChange={(value, option: any) => {
-                        onUnitSelect(option.id, value, value);
-                        focusOn('analytics-survey');
-                      }}
-                    />
-
-                    <Selector
-                      dataCy="analytics-survey"
-                      loading={surveysLoading}
-                      disabled={!selectedUnit}
-                      selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-                      placeholder="Select Survey"
-                      list={surveys}
-                      onChange={(value, option: any) =>
-                        onChangeSurvey(option.id, value, value)
-                      }
-                    />
-                  </div>
-                }
-                title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}
+      <PageLayout
+        hideGoBack
+        hideInstProfile
+        extra={
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="w-auto relative">
+              <Selector
+                dataCy="upload-analytics-classroom"
+                loading={classRoomLoading}
+                selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
+                placeholder="Select Classroom"
+                width={250}
+                list={instClassRooms}
+                onChange={(value, option: any) => {
+                  setHoveringItem({});
+                  onClassRoomSelect(option.id, value, value);
+                  focusOn('upload-analytics-unit');
+                }}
               />
             </div>
+            <Selector
+              dataCy="upload-analytics-unit"
+              loading={unitsLoading}
+              selectedItem={selectedUnit ? selectedUnit.name : ''}
+              placeholder="Select Unit"
+              list={units}
+              width={250}
+              disabled={!selectedCurriculum}
+              onChange={(value, option: any) => {
+                onUnitSelect(option.id, value, value);
+                focusOn('analytics-survey');
+              }}
+            />
+
+            <Selector
+              dataCy="analytics-survey"
+              loading={surveysLoading}
+              disabled={!selectedUnit}
+              selectedItem={selectedSurvey ? selectedSurvey.name : ''}
+              placeholder="Select Survey"
+              list={surveys}
+              onChange={(value, option: any) => onChangeSurvey(option.id, value, value)}
+            />
+          </div>
+        }
+        title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}>
+        <div className="flex flex-col overflow-h-scroll w-full h-full">
+          <div className="flex items-center justify-start  gap-x-4 mb-4">
+            <UploadButton
+              disabled={isMapping || !Boolean(selectedSurvey)}
+              label={file ? 'Change file' : 'Choose file'}
+              acceptedFilesFormat=".csv, .xlsx"
+              ref={csvInputRef}
+              id="upload-csv-button"
+              onUpload={handleUpload}
+            />
+
+            <Selector
+              disabled={!file}
+              selectedItem={selectedReason ? selectedReason.name : ''}
+              placeholder={CsvDict[userLanguage]['SELECT_REASON']}
+              list={reasonDropdown}
+              width={250}
+              onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
+            />
+          </div>
+          <AnimatedContainer show={checkingCsvFile} animationType="translateY">
+            {checkingCsvFile && (
+              <p className={`mt-1 text-medium  text-xs`}>Checking file information...</p>
+            )}
+          </AnimatedContainer>
+
+          <AnimatedContainer show={success} animationType="translateY">
+            {success && (
+              <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
+            )}
+          </AnimatedContainer>
+
+          <AnimatedContainer show={error} animationType="translateY">
+            {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
+          </AnimatedContainer>
+
+          {!isEmpty(parsedObj) && (
+            <>
+              <Table {...tableConfig} />
+            </>
+          )}
+
+          <div className="flex items-center justify-end mt-3">
+            <Buttons
+              label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
+              disabled={uploadingCSV || isEmpty(parsedObj)}
+              onClick={(e) => showModalWhenUploadCsv(e)}
+            />
           </div>
         </div>
-
-        <div className="flex items-center justify-start  gap-x-4  py-4 mb-4">
-          <UploadButton
-            disabled={isMapping || !Boolean(selectedSurvey)}
-            label={file ? 'Change file' : 'Choose file'}
-            acceptedFilesFormat=".csv, .xlsx"
-            ref={csvInputRef}
-            id="upload-csv-button"
-            onUpload={handleUpload}
-          />
-
-          <Selector
-            disabled={!file}
-            selectedItem={selectedReason ? selectedReason.name : ''}
-            placeholder={CsvDict[userLanguage]['SELECT_REASON']}
-            list={reasonDropdown}
-            width={250}
-            onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
-          />
-        </div>
-        <AnimatedContainer show={checkingCsvFile} animationType="translateY">
-          {checkingCsvFile && (
-            <p className={`mt-1 text-gray-500 text-xs`}>Checking file information...</p>
-          )}
-        </AnimatedContainer>
-
-        <AnimatedContainer show={success} animationType="translateY">
-          {success && (
-            <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
-          )}
-        </AnimatedContainer>
-
-        <AnimatedContainer show={error} animationType="translateY">
-          {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
-        </AnimatedContainer>
-
-        {!isEmpty(parsedObj) && (
-          <>
-            <Table {...tableConfig} />
-          </>
-        )}
-
-        <div className="flex items-center justify-end mt-3">
-          <Buttons
-            label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
-            disabled={uploadingCSV || isEmpty(parsedObj)}
-            onClick={(e) => showModalWhenUploadCsv(e)}
-          />
-        </div>
-      </div>
+      </PageLayout>
     </>
   );
 };

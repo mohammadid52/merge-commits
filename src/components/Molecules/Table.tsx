@@ -4,6 +4,7 @@ import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
 import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
 import {removeQuery, setQuery} from '@utilities/urls';
+import SortTable, {SortTableProps} from './SortTable';
 
 interface IDataListItem {
   [key: string]: any;
@@ -14,6 +15,9 @@ interface IConfig {
   dataList?: {
     loading?: boolean;
     expandable?: boolean;
+    sortableConfig?: {
+      onSort: SortTableProps['onDragEnd'];
+    };
     pagination?: {
       showPagination: boolean;
       config?: {
@@ -73,7 +77,7 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
         data?.onClick?.();
       }
     }),
-    className: 'universal-table mt-2',
+    className: 'universal-table mt-2 overflow-x-auto',
     loading: config.dataList?.loading,
 
     pagination: showPagination
@@ -102,9 +106,18 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
     columns: columns
   };
 
+  //  render sortable table
+
+  const isSortable = Boolean(dataListConfig?.sortableConfig?.onSort);
+
   return (
     <ErrorBoundary componentName="Table">
-      <Table {...tableProps} />
+      {isSortable ? (
+        // @ts-ignore
+        <SortTable onDragEnd={dataListConfig?.sortableConfig?.onSort} {...tableProps} />
+      ) : (
+        <Table {...tableProps} />
+      )}
     </ErrorBoundary>
   );
 };

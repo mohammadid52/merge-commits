@@ -1251,6 +1251,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     INFOA: 'Click circle to manage your avatar.',
     INFO: 'Click the circle above to update institution image.',
     TITLE: 'Add Institution',
+    EDIT_TITLE: 'Edit Institution',
     SUBTITLE: 'Add new institution to the list',
     FORM: {
       TITLE: 'General Information and Vendor Management',
@@ -1293,6 +1294,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     INFOA: 'Haga clic en el círculo para administrar su avatar.',
     INFO: 'Haga clic en el círculo de arriba para actualizar la imagen de la institución.',
     TITLE: 'Añadir institución',
+    EDIT_TITLE: 'Editar institución',
     SUBTITLE: 'Añadir nueva institución a la lista',
     FORM: {
       TITLE: 'Información general y gestión de proveedores',

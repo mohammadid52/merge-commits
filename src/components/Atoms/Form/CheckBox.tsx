@@ -25,12 +25,12 @@ const CheckBoxComponent = (checkBoxProps: CheckBoxProps) => {
     //       onChange={onChange}
     //       checked={value ? true : false}
     //       type="checkbox"
-    //       className={`${className} cursor-pointer transition-all focus:ring-indigo-500 h-4 w-4 iconoclast:text-main curate:text-main border-gray-400 rounded`}
+    //       className={`${className} cursor-pointer transition-all focus:ring-indigo-500 h-4 w-4 iconoclast:text-main curate:text-main border-light  rounded`}
     //     />
     //   </div>
     //   {label && (
     //     <div className="ml-3 text-sm">
-    //       <label htmlFor={label} className="font-medium text-gray-700">
+    //       <label htmlFor={label} className="font-medium text-dark  ">
     //         {label}
     //       </label>
     //     </div>

@@ -286,3 +286,7 @@ const pipeFn =
 export const cleanString = (str: string) => {
   return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
 };
+
+export const fallbackValue = (value: any, fallback = 'Not Provided') => {
+  return value || fallback;
+};

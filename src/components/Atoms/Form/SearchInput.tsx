@@ -38,7 +38,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   return (
     <Search
       disabled={disabled}
-      size="large"
+      size="middle"
       placeholder={liveSearch ? 'Type atleaset 3 characters...' : 'Search...'}
       onChange={(e: any) => onChange?.(e.target.value)}
       onSearch={search}

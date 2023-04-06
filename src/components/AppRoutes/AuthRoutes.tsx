@@ -1,9 +1,8 @@
 import LogoutAfterInactivity from '@components/Auth/LogoutAfterInactivity';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import useAuth from '@customHooks/useAuth';
 import PrivateRoute from 'components/Auth/PrivateRoute';
-import React, {lazy, Suspense} from 'react';
+import {lazy, Suspense} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 
 const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
@@ -14,7 +13,7 @@ const AuthRoutes = () => {
   const {signOut} = useAuth();
 
   return (
-    <Suspense fallback={<ComponentLoading from="AuthRoutes" />}>
+    <Suspense>
       <LogoutAfterInactivity
         logout={() => {
           signOut();

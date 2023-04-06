@@ -33,9 +33,9 @@ const AttendanceList = ({
 
   return (
     <div className="rounded shadow-5">
-      <div className="flex flex-row bg-gray-100 flex-shrink-0">
+      <div className="flex flex-row bg-lightest  flex-shrink-0">
         <div
-          className="w-2/10 text-left  p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+          className="w-2/10 text-left  p-3 text-xs font-semibold text-medium  uppercase tracking-wider"
           onClick={() =>
             handleOrderBy(
               'roomName',
@@ -49,7 +49,7 @@ const AttendanceList = ({
           {withOrderBy('ClassName', 'roomName')}
         </div>
         <div
-          className="w-2/10 text-left p-3 text-xs font-semibold text-gray-500 uppercase overflow-hidden tracking-wider"
+          className="w-2/10 text-left p-3 text-xs font-semibold text-medium  uppercase overflow-hidden tracking-wider"
           onClick={() =>
             handleOrderBy(
               'curriculumName',
@@ -63,7 +63,7 @@ const AttendanceList = ({
           {withOrderBy('Curriculum', 'curriculumName')}
         </div>
         <div
-          className="w-3/10 text-left p-3 text-xs font-semibold text-gray-500 uppercase overflow-hidden tracking-wider"
+          className="w-3/10 text-left p-3 text-xs font-semibold text-medium  uppercase overflow-hidden tracking-wider"
           onClick={() =>
             handleOrderBy(
               'lessonName',
@@ -78,12 +78,12 @@ const AttendanceList = ({
         </div>
         <div
           style={{width: '15%'}}
-          className="text-left  p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          className="text-left  p-3 text-xs font-semibold text-medium  uppercase tracking-wider">
           Date
         </div>
         <div
           style={{width: '15%'}}
-          className="text-left  p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          className="text-left  p-3 text-xs font-semibold text-medium  uppercase tracking-wider">
           Time
         </div>
       </div>
@@ -101,25 +101,27 @@ const AttendanceList = ({
             return (
               <div
                 key={`${item.class?.name}_${idx}`}
-                className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'} flex flex-row`}>
-                <div className="w-2/10 text-left p-3 overflow-hidden text-sm font-bold text-gray-600">
+                className={`${
+                  idx % 2 === 0 ? 'bg-white' : 'bg-lightest '
+                } flex flex-row`}>
+                <div className="w-2/10 text-left p-3 overflow-hidden text-sm font-bold text-medium ">
                   {item.roomName || '-'}
                 </div>
-                <div className="w-2/10 text-left p-3 overflow-hidden text-sm text-gray-500">
+                <div className="w-2/10 text-left p-3 overflow-hidden text-sm text-medium ">
                   {item.curriculumName || '-'}
                 </div>
-                <div className="w-3/10 text-left p-3 overflow-hidden text-sm text-gray-500">
+                <div className="w-3/10 text-left p-3 overflow-hidden text-sm text-medium ">
                   {item.lessonName || '-'}
                 </div>
                 <div
                   style={{width: '15%'}}
-                  className="text-left p-3 overflow-hidden text-sm text-gray-500">
+                  className="text-left p-3 overflow-hidden text-sm text-medium ">
                   {new Date(item.date).toLocaleDateString()}
                   {/* {moment(item.date).format('DD/MM/YYYY')} */}
                 </div>
                 <div
                   style={{width: '15%'}}
-                  className="text-left p-3 overflow-hidden text-sm text-gray-500">
+                  className="text-left p-3 overflow-hidden text-sm text-medium ">
                   {moment(item?.time, 'HH:mm:ss').format('hh:mm A')}
                 </div>
               </div>
@@ -127,7 +129,7 @@ const AttendanceList = ({
           })
         ) : (
           <div>
-            <div className="py-3 text-dark-gray text-center">No records found</div>
+            <div className="py-3 text-dark text-center">No records found</div>
           </div>
         )}
       </div>

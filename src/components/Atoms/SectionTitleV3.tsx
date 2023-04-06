@@ -1,4 +1,5 @@
 import useDictionary from '@customHooks/dictionary';
+import {theme} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
@@ -24,12 +25,11 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
   const {
     title,
     subtitle,
-    extraClass,
+
     extraContainerClass,
     withButton,
     borderBottom = false,
-    fontSize = 'lg',
-    fontStyle = 'medium',
+
     shadowOff = false,
     bgColor = 'bg-white',
     backButton,
@@ -38,6 +38,9 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
   const {userLanguage} = useGlobalContext();
   const history = useHistory();
   const {CommonlyUsedDict} = useDictionary();
+
+  // take fontSize and color from antd token
+  const {token} = theme.useToken();
 
   return (
     <div
@@ -48,21 +51,21 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
           : ''
       } mx-auto m-auto py-4 ${
         borderBottom
-          ? `px-0 border-b-0 border-gray-200 ${
+          ? `px-0 border-b-0 border-lightest ${
               shadowOff ? '' : 'customShadow'
             } rounded-t-xl ${bgColor} mb-0`
           : ''
       } ${extraContainerClass} w-full`}>
       <div className={`${textWidth}`}>
         {title && (
-          <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>
+          <h2 style={{color: token.colorTextHeading, fontSize: token.fontSizeLG}}>
             {title}
           </h2>
         )}
 
         {backButton && (
           <div
-            className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+            className="flex items-center mt-1 cursor-pointer text-medium  hover:text-dark  "
             onClick={() => history.goBack()}>
             <span className="w-auto mr-2">
               <BsArrowLeft />
@@ -74,7 +77,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
         )}
 
         {subtitle && (
-          <p className="text-sm mt-2 md:mt-0 2xl:text-base text-gray-500">{subtitle}</p>
+          <p className="text-sm mt-2 md:mt-0 2xl:text-base text-medium ">{subtitle}</p>
         )}
       </div>
       {withButton}

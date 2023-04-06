@@ -5,7 +5,7 @@ import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createUniversalLesson} from 'graphql/mutations';
 
 import {map} from 'lodash';
 import React, {useState} from 'react';
@@ -114,7 +114,7 @@ const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) =>
         wait(3000)
           .then(async () => {
             const result: any = await API.graphql(
-              graphqlOperation(mutations.createUniversalLesson, {input: data})
+              graphqlOperation(createUniversalLesson, {input: data})
             );
 
             const newLesson = result.data.createUniversalLesson;
@@ -157,9 +157,9 @@ const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) =>
         {initial && (
           <div>
             <dl>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Title</dt>
-                <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
+              <div className="bg-lightest px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-medium ">Title</dt>
+                <dd className="mt-1 text-sm text-darkest    sm:mt-0 sm:col-span-2">
                   {
                     //@ts-ignore
                     cloneLesson?.title || '--'
@@ -167,21 +167,21 @@ const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) =>
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Type</dt>
-                <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
+                <dt className="text-sm font-medium text-medium ">Type</dt>
+                <dd className="mt-1 text-sm text-darkest    sm:mt-0 sm:col-span-2">
                   {
                     //@ts-ignore
                     cloneLesson?.type || '--'
                   }
                 </dd>
               </div>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Summary</dt>
-                <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
+              <div className="bg-lightest px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-medium ">Summary</dt>
+                <dd className="mt-1 text-sm text-darkest    sm:mt-0 sm:col-span-2">
                   {cloneLesson?.summary || '--'}
                 </dd>
               </div>
-              <p className="text-gray-400 italic mt-2 text-xs font-medium sm:px-6">
+              <p className="text-light  italic mt-2 text-xs font-medium sm:px-6">
                 Found {cloneLesson?.lessonPlan?.length}{' '}
                 {cloneLesson?.lessonPlan && cloneLesson?.lessonPlan?.length > 1
                   ? 'pages'
@@ -210,7 +210,7 @@ const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) =>
 
         {failed && (
           <div className="flex items-center justify-center ">
-            <h4 className="text-center text-lg text-gray-800">
+            <h4 className="text-center text-lg text-darkest   ">
               Oops! Something went wrong
             </h4>
           </div>

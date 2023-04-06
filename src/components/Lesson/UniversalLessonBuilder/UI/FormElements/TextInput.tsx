@@ -156,7 +156,7 @@ const TextInput = ({
               </div>
 
               {shouldShowActions && (
-                <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+                <div className="border-b-2 border-dashed border-lightest  my-4 "></div>
               )}
             </div>
           );

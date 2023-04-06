@@ -140,7 +140,7 @@ const KeywordModalDialog = ({
                 <div className="w-auto flex items-center justify-between">
                   <label
                     htmlFor={'Link'}
-                    className="mb-2 w-auto block text-xs font-semibold leading-5 text-gray-700">
+                    className="mb-2 w-auto block text-xs font-semibold leading-5 text-dark  ">
                     Word Tile {idx + 1}:
                   </label>
                   {idx !== 0 ? (

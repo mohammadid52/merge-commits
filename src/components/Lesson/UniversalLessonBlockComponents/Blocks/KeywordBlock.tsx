@@ -65,7 +65,7 @@ const KeywordBlock = (props: KeywordBlockProps) => {
                           className={`text-lg font-medium ${themeTextColor}`}></h5>
                         <p
                           dangerouslySetInnerHTML={{__html: word.value}}
-                          className={`text-sm leading-5 text-gray-100`}></p>
+                          className={`text-sm leading-5 text-lightest `}></p>
                       </div>
                     </div>
                   )

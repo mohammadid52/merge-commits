@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 /**
  * Quick function to get date string in US format:
  * mm-dd-yyyy
@@ -55,34 +53,6 @@ export const MinutesToHHMM = (minutes: number, separator?: string) => {
     ? `${h ? `${h.toString()} ${h > 1 ? 'hrs' : 'hr'}` : ''} ${m.toString()} minutes`
     : `${h.toString()} ${h > 1 ? 'hrs' : 'hr'}`;
 };
-
-/**
- * Function to generate time array
- * In 24 hour format
- * with 30 min interval
- * using moment
- */
-export function timeIntervals(): any[] {
-  let items: any[] = [];
-  new Array(24).fill(undefined).forEach((_, index: number) => {
-    items = [
-      ...items,
-      {
-        name: moment({hour: index}).format('h:mm A'),
-        value: moment({hour: index}).format('h:mm A')
-      }
-    ];
-    items = [
-      ...items,
-      {
-        name: moment({hour: index, minute: 30}).format('h:mm A'),
-        value: moment({hour: index, minute: 30}).format('h:mm A')
-      }
-    ];
-  });
-
-  return items;
-}
 
 export const getFormatedDate = (date: string) => {
   if (date) {

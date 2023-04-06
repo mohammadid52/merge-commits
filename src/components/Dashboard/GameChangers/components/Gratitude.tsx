@@ -11,6 +11,7 @@ import {nanoid} from 'nanoid';
 import {useState} from 'react';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {useGameChangers} from '../context/GameChangersContext';
+import {createGameChanger, createGameChangerLog} from '@graphql/mutations';
 
 const Gratitude = () => {
   const {email, authId} = useAuth();
@@ -27,14 +28,15 @@ const Gratitude = () => {
   const mutationLog = useGraphqlMutation<
     {input: CreateGameChangerLogInput},
     GameChangerLog
-  >('createGameChangerLog', {
+  >('createGameChangerLog', createGameChangerLog, {
     onSuccess: () => {
       setIsCompleted(true);
     }
   });
 
   const mutation = useGraphqlMutation<{input: CreateGameChangerInput}, GameChangerLog>(
-    'createGameChanger'
+    'createGameChanger',
+    createGameChanger
   );
 
   const onEditorStateChange = (

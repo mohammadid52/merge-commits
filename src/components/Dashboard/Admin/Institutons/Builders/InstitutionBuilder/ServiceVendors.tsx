@@ -5,10 +5,10 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import Tooltip from 'atoms/Tooltip';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateServiceProviderStatus} from 'customGraphql/customMutations';
+import {listServiceProviders} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createServiceProvider} from 'graphql/mutations';
 
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
@@ -71,7 +71,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       const serviceProvidersIds = items.map((sp: any) => sp.providerID);
       // fetch list of service providers expect the self and partner institutes
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listServiceProviders, {
+        graphqlOperation(listServiceProviders, {
           filter: {
             isServiceProvider: {eq: true},
             or: [...zoiqFilter],
@@ -113,7 +113,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
           status: 'Active'
         };
         const addedPartner: any = await API.graphql(
-          graphqlOperation(mutations.createServiceProvider, {input: input})
+          graphqlOperation(createServiceProvider, {input: input})
         );
         const item = addedPartner.data.createServiceProvider;
         props.updateServiceProviders(item);
@@ -153,7 +153,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
       await API.graphql(
-        graphqlOperation(customMutations.updateServiceProviderStatus, {
+        graphqlOperation(updateServiceProviderStatus, {
           input: {id, status}
         })
       );
@@ -174,8 +174,8 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       <div className="">
         <div className={`h-full mb-4`}>
           {/* TITLE */}
-          <div className="w-full px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+          <div className="w-full px-4 py-5 border-b-0 border-lightest sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-darkest">
               {dictionary.SERVICE}
             </h3>
           </div>
@@ -195,18 +195,18 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
 
           {partners?.length ? (
             <div className="px-4 pb-4">
-              <div className="w-full pt-4 m-auto border-b-0 border-gray-200">
-                <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
-                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-full pt-4 m-auto border-b-0 border-light">
+                <div className="flex justify-between bg-lightest px-8 whitespace-nowrap">
+                  <div className="w-1/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                     <span>{dictionary.NO}</span>
                   </div>
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-4/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                     <span>{dictionary.SERVICE}</span>
                   </div>
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-4/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                     <span>{dictionary.STATUS}</span>
                   </div>
-                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                     <span>{dictionary.ACTION}</span>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
                 {partners.map((item: any, index: number) => (
                   <div
                     key={item.id}
-                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-light">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {index + 1}.
                     </div>

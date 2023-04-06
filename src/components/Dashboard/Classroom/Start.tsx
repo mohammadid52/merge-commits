@@ -5,8 +5,13 @@ import Buttons from 'atoms/Buttons';
 import axios from 'axios';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  createAttendance,
+  updateRoom,
+  updateUniversalLesson,
+  updateUniversalSyllabus
+} from 'graphql/mutations';
+import {listAttendances} from 'graphql/queries';
 import {noop} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {useEffect, useState} from 'react';
@@ -108,7 +113,7 @@ const Start: React.FC<StartProps> = ({
           filter.date = {eq: awsFormatDate(dateString('-', 'WORLD'))};
         }
         const list: any = await API.graphql(
-          graphqlOperation(queries.listAttendances, {
+          graphqlOperation(listAttendances, {
             filter,
             limit: SEARCH_LIMIT
           })
@@ -139,7 +144,7 @@ const Start: React.FC<StartProps> = ({
         time: new Date().toTimeString().split(' ')[0]
       };
       await API.graphql(
-        graphqlOperation(mutations.createAttendance, {
+        graphqlOperation(createAttendance, {
           input: payload
         })
       );
@@ -155,7 +160,7 @@ const Start: React.FC<StartProps> = ({
   const setLessonIsUsed = async (lessonObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalLesson, {
+        graphqlOperation(updateUniversalLesson, {
           input: {id: lessonObj.id, isUsed: true}
         })
       );
@@ -167,7 +172,7 @@ const Start: React.FC<StartProps> = ({
   const setSyllabusLessonHistory = async (syllabusID: string, historyArray: any[]) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalSyllabus, {
+        graphqlOperation(updateUniversalSyllabus, {
           input: {id: syllabusID, lessonHistory: historyArray}
         })
       );
@@ -230,7 +235,7 @@ const Start: React.FC<StartProps> = ({
   const discardChanges = async () => {
     const activeLessons = activeRoomInfo?.activeLessons || [];
     await API.graphql(
-      graphqlOperation(mutations.updateRoom, {
+      graphqlOperation(updateRoom, {
         input: {id: roomID, activeLessons: [...activeLessons, lessonKey]}
       })
     );
@@ -245,7 +250,7 @@ const Start: React.FC<StartProps> = ({
     // UPDATE ROOM MUTATION
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateRoom, {
+        graphqlOperation(updateRoom, {
           input: {
             id: roomID,
             completedLessons: [

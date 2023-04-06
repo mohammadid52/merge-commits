@@ -4,48 +4,49 @@ import {useHistory} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {getUserRoleString} from 'utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  fallbackValue,
+  getUserRoleString
+} from 'utilities/strings';
 
 import {getImageFromS3} from 'utilities/services';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {fetchPersons} from 'customGraphql/customQueries';
+import {createCSequences, createStaff, updateCSequences} from 'graphql/mutations';
+import {getCSequences, listStaff} from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
 import {withZoiqFilter} from '@utilities/functions';
-import {Tag} from 'antd';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import {logError} from 'graphql-functions/functions';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import moment from 'moment';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
-import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface StaffBuilderProps {
-  instituteId: String;
-  serviceProviders: {items: {id: string; providerID: string}[]};
-  instName: string;
+  instituteId: string;
+  inner?: boolean;
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const {instituteId} = props;
+  const {instituteId, inner} = props;
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
@@ -99,7 +100,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           };
 
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.fetchPersons, {
+        graphqlOperation(fetchPersons, {
           filter: withZoiqFilter(filter, zoiqFilter),
           limit: SEARCH_LIMIT
         })
@@ -123,7 +124,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
   const getStaffSequence = async () => {
     let sequence: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `staff_${instituteId}`})
+      graphqlOperation(getCSequences, {id: `staff_${instituteId}`})
     );
     let sequenceData = sequence?.data?.getCSequences;
     return sequenceData;
@@ -131,7 +132,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const updateStaffSequence = async (newList: any) => {
     await API.graphql(
-      graphqlOperation(mutations.updateCSequences, {
+      graphqlOperation(updateCSequences, {
         input: {id: `staff_${instituteId}`, sequence: newList}
       })
     );
@@ -139,7 +140,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const createStaffSequence = async (newList: any) => {
     await API.graphql(
-      graphqlOperation(mutations.createCSequences, {
+      graphqlOperation(createCSequences, {
         input: {id: `staff_${instituteId}`, sequence: [...newList]}
       })
     );
@@ -162,7 +163,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // ********
 
       const staff: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: institutions.length
             ? {
                 ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID')
@@ -235,7 +236,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           statusChangeDate: new Date().toISOString().split('T')[0]
         };
         const staff: any = await API.graphql(
-          graphqlOperation(mutations.createStaff, {input: input})
+          graphqlOperation(createStaff, {input: input})
         );
         // use the mutation result to add the selected user to the staff list
         const addedMember = staff.data.createStaff;
@@ -419,11 +420,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       />
     ),
 
-    role: (
-      <Tag color="default">
-        {item.staffMember.role ? getUserRoleString(item.staffMember.role) : ''}
-      </Tag>
-    ),
+    role: getUserRoleString(fallbackValue(item?.staffMember?.role)),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
     addedDate: moment(item.staffMember?.createdAt).format('ll'),
     status: <Status useDefault status={item?.status} />
@@ -472,74 +469,65 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   return (
-    <div className="mb-2">
-      <div className="px-4">
-        <SectionTitleV3
-          title={dictionary['TITLE']}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
-          borderBottom
-          shadowOff
-          withButton={
-            <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
-              {!showAddSection ? (
-                <div className="w-auto flex items-center gap-x-4">
-                  <SearchInput
-                    dataCy="staff-loookup-search"
-                    value={searchInput.value}
-                    onChange={setSearch}
-                    disabled={dataLoading}
-                    onKeyDown={searchStaff}
-                    closeAction={removeSearchAction}
-                  />
-                  <AddButton
-                    label={'Staff member'}
-                    onClick={() => showAddStaffSection(!isSuperAdmin ? 'SUP' : '')}
-                  />
-                </div>
-              ) : (
-                <Buttons
-                  label={BUTTONS[userLanguage]['CANCEL']}
-                  onClick={() => setShowAddSection(false)}
-                />
-              )}
-
-              {showAddSection ? (
-                <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
-                  <SelectorWithAvatar
-                    imageFromS3={false}
-                    selectedItem={newMember}
-                    list={availableUsers}
-                    placeholder={
-                      showSuperAdmin
-                        ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER
-                        : dictionary['ADD_PLACEHOLDER']
-                    }
-                    onChange={onChange}
-                  />
-                  <Buttons label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
-                </div>
-              ) : null}
+    <PageLayout
+      type={inner ? 'inner' : undefined}
+      title={dictionary['TITLE']}
+      extra={
+        <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
+          {!showAddSection ? (
+            <div className="w-auto flex items-center gap-x-4">
+              <SearchInput
+                dataCy="staff-loookup-search"
+                value={searchInput.value}
+                onChange={setSearch}
+                disabled={dataLoading}
+                onKeyDown={searchStaff}
+                closeAction={removeSearchAction}
+              />
+              <AddButton
+                label={'Staff member'}
+                onClick={() => showAddStaffSection(!isSuperAdmin ? 'SUP' : '')}
+              />
             </div>
-          }
-        />
+          ) : (
+            <Buttons
+              label={BUTTONS[userLanguage]['CANCEL']}
+              onClick={() => setShowAddSection(false)}
+            />
+          )}
 
-        <div className="">
-          <Filters
-            loading={dataLoading}
-            list={finalList}
-            resetPagination={resetPagination}
-            updateFilter={updateFilter}
-            filters={filters}
-            showingCount={{
-              currentPage: allAsProps.currentPage,
-              lastPage: allAsProps.lastPage,
-              totalResults: allAsProps.totalResults,
-              pageCount: allAsProps.pageCount
-            }}
-          />
+          {showAddSection ? (
+            <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
+              <SelectorWithAvatar
+                imageFromS3={false}
+                selectedItem={newMember}
+                list={availableUsers}
+                placeholder={
+                  showSuperAdmin
+                    ? dictionary.ADD_SUPER_ADMIN_PLACEHOLDER
+                    : dictionary['ADD_PLACEHOLDER']
+                }
+                onChange={onChange}
+              />
+              <Buttons label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
+            </div>
+          ) : null}
         </div>
+      }>
+      <div className="">
+        <Filters
+          loading={dataLoading}
+          list={finalList}
+          resetPagination={resetPagination}
+          updateFilter={updateFilter}
+          filters={filters}
+          showingCount={{
+            currentPage: allAsProps.currentPage,
+            lastPage: allAsProps.lastPage,
+            totalResults: allAsProps.totalResults,
+            pageCount: allAsProps.pageCount
+          }}
+        />
 
         <Table {...tableConfig} />
 
@@ -558,7 +546,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           />
         </Modal>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

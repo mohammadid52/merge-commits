@@ -6,9 +6,13 @@ import Media from 'components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getDashboardDataForTeachers,
+  getDashboardDataForCoTeachers,
+  getInstitution
+} from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
-import * as queries from 'graphql/queries';
+import {listStaff} from 'graphql/queries';
 import {ICommunityCardProps, ISpotlightInput} from 'interfaces/Community.interfaces';
 import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
@@ -123,12 +127,12 @@ const Spotlight = ({
   const fetchStudentList = async () => {
     setLoadingStudents(true);
     const response: any = await API.graphql(
-      graphqlOperation(customQueries.getDashboardDataForTeachers, {
+      graphqlOperation(getDashboardDataForTeachers, {
         filter: {teacherAuthID: {eq: authId}}
       })
     );
     const assignedRoomsAsCoTeacher: any = await API.graphql(
-      graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+      graphqlOperation(getDashboardDataForCoTeachers, {
         filter: {teacherAuthID: {eq: authId}}
       })
     );
@@ -168,7 +172,7 @@ const Spotlight = ({
     setLoadingTeachers(true);
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitution, {
+        graphqlOperation(getInstitution, {
           id: instId
         })
       );
@@ -202,7 +206,7 @@ const Spotlight = ({
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -324,7 +328,7 @@ const Spotlight = ({
   return (
     <div className="">
       <div className="px-3 py-4">
-        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+        <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
           Step 1: Select person in the community to spotlight
           <span className="text-red-500"> *</span>
         </label>
@@ -365,7 +369,7 @@ const Spotlight = ({
       )}
 
       <div className="px-3 py-4">
-        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+        <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
           Add a note about the person
           <span className="text-red-500"> *</span>
         </label>
@@ -380,7 +384,7 @@ const Spotlight = ({
             }
           />
 
-          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
+          <div className="text-right text-light ">{fields.summary.length} of 750</div>
         </div>
       </div>
       <AnimatedContainer show={Boolean(error)}>

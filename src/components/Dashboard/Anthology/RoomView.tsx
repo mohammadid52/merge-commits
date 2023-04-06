@@ -6,7 +6,7 @@ import useAuth from '@customHooks/useAuth';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getCurriculumNotebook, listRoomsNotebook} from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
 
 import {getImageFromS3} from 'utilities/services';
@@ -19,6 +19,7 @@ interface IRoomViewProps {
   studentEmail?: string;
   sectionRoomID?: string;
   sectionTitle?: string;
+  studentImage?: string | null;
   handleSectionSelect?: (
     section: string,
     roomIdString: string,
@@ -32,7 +33,9 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  roomIdList
+  studentImage,
+  roomIdList,
+  isTeacher
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -48,7 +51,7 @@ const RoomView = ({
     const curriculumMap = responseData.map(async (roomObj: any) => {
       if (roomObj) {
         const curriculumFull: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumNotebook, {
+          graphqlOperation(getCurriculumNotebook, {
             id: roomObj.curricula?.items[0]?.curriculumID
           })
         );
@@ -101,7 +104,7 @@ const RoomView = ({
       }
 
       const roomsList: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsNotebook, {
+        graphqlOperation(listRoomsNotebook, {
           filter: filter
         })
       );
@@ -204,7 +207,7 @@ const RoomView = ({
         <div className="relative  p-6 mx-auto">
           {!loaded && (
             <div className="my-4">
-              <Loader color="rgba(160, 174, 192, 1)" />
+              <Loader />
             </div>
           )}
 
@@ -213,7 +216,7 @@ const RoomView = ({
             animationType="opacity"
             show={sectionRoomID === ''}>
             {sectionRoomID === '' && (
-              <p className="text-base inline text-gray-500">
+              <p className="text-base inline text-medium ">
                 Select a notebook to continue
               </p>
             )}
@@ -228,6 +231,8 @@ const RoomView = ({
             className="mt-2 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             <RoomViewCard
               roomID={'private'}
+              studentImage={studentImage}
+              isTeacher={isTeacher}
               mainSection={mainSection}
               sectionRoomID={sectionRoomID}
               sectionTitle={sectionTitle}

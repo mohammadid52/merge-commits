@@ -1,6 +1,6 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import {UniversalLessonPlan} from 'API';
-import * as mutations from 'graphql/mutations';
+import {} from 'graphql/mutations';
 import React, {useContext, useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {GlobalActions, globalReducer} from 'reducers/GlobalReducer';
 import {LessonControlActions, lessonControlReducer} from 'reducers/LessonControlReducer';
@@ -124,7 +124,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     };
     try {
       await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, {
+        graphqlOperation(updatePersonLocation, {
           input: updatedLocation
         })
       );

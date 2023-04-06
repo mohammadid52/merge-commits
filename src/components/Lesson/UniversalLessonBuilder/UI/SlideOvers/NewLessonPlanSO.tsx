@@ -10,7 +10,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateUniversalLesson} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import {IFile} from 'interfaces/UniversalLessonInterfaces';
@@ -47,16 +47,16 @@ const Checkbox = ({
           type="checkbox"
           checked={checked}
           onChange={onChange}
-          className="focus:ring-indigo-500 h-4 w-4 theme-text border-gray-400 rounded"
+          className="focus:ring-indigo-500 h-4 w-4 theme-text border-light  rounded"
         />
       </div>
       <div className="ml-3 text-sm">
         <label
           htmlFor="group"
-          className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
+          className="whitespace-pre-line font-medium dark:text-lightest  text-dark  ">
           {title}
         </label>
-        <p className="text-sm whitespace-pre-line text-gray-500">{label}</p>
+        <p className="text-sm whitespace-pre-line text-medium ">{label}</p>
       </div>
     </div>
   );
@@ -401,7 +401,7 @@ const NewLessonPlanSO = ({
           };
 
           const res: any = await API.graphql(
-            graphqlOperation(customMutations.updateUniversalLesson, {
+            graphqlOperation(updateUniversalLesson, {
               input
             })
           );

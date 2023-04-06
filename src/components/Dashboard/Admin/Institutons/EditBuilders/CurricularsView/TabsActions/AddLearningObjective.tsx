@@ -1,10 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  updateLearningObjective,
+  createLearningObjective,
+  createCSequences,
+  updateCSequences
+} from 'graphql/mutations';
+import {getCSequences} from 'graphql/queries';
 import {useEffect, useState} from 'react';
 
 interface AddLearningObjectiveProps {
@@ -56,52 +62,65 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       curriculumID: curricularId
     };
     setLoading(true);
-    if (learningObjectiveData?.id) {
-      const item: any = await API.graphql(
-        graphqlOperation(mutations.updateLearningObjective, {
-          input: {
-            ...input,
-            id: learningObjectiveData?.id
-          }
-        })
-      );
-      postMutation(item.data?.updateLearningObjective);
-    } else {
-      const item: any = await API.graphql(
-        graphqlOperation(mutations.createLearningObjective, {input})
-      );
-      const addedItem = item.data.createLearningObjective;
-      if (!learningsIds.length) {
-        let seqItem: any = await API.graphql(
-          graphqlOperation(mutations.createCSequences, {
-            input: {id: `l_${curricularId}`, sequence: [addedItem.id]}
-          })
-        );
-        seqItem = seqItem.data.createCSequences;
-        console.log('seqItem', seqItem);
-      } else {
-        let seqItem: any = await API.graphql(
-          graphqlOperation(mutations.updateCSequences, {
+    try {
+      if (learningObjectiveData?.id) {
+        const item: any = await API.graphql(
+          graphqlOperation(updateLearningObjective, {
             input: {
-              id: `l_${curricularId}`,
-              sequence: [...learningsIds, addedItem.id]
+              ...input,
+              id: learningObjectiveData?.id
             }
           })
         );
-        seqItem = seqItem.data.updateCSequences;
-        console.log('seqItem', seqItem);
-      }
-      if (addedItem) {
-        postMutation(addedItem);
+        postMutation(item.data?.updateLearningObjective);
+        messageApi.success('Learning Objective updated successfully');
       } else {
-        setLoading(false);
+        const item: any = await API.graphql(
+          graphqlOperation(createLearningObjective, {input})
+        );
+        const addedItem = item.data.createLearningObjective;
+
+        setName('');
+        setDescription('');
+
+        if (!learningsIds.length) {
+          let seqItem: any = await API.graphql(
+            graphqlOperation(createCSequences, {
+              input: {id: `l_${curricularId}`, sequence: [addedItem.id]}
+            })
+          );
+          seqItem = seqItem.data.createCSequences;
+          console.log('seqItem', seqItem);
+        } else {
+          let seqItem: any = await API.graphql(
+            graphqlOperation(updateCSequences, {
+              input: {
+                id: `l_${curricularId}`,
+                sequence: [...learningsIds, addedItem.id]
+              }
+            })
+          );
+          seqItem = seqItem.data.updateCSequences;
+          console.log('seqItem', seqItem);
+        }
+        if (addedItem) {
+          postMutation(addedItem);
+          messageApi.success('Learning Objective added successfully');
+        } else {
+          setLoading(false);
+        }
       }
+    } catch (error) {
+      messageApi.error('Something went wrong');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchLOSequence = async () => {
     let item: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
+      graphqlOperation(getCSequences, {id: `l_${curricularId}`})
     );
     item = item?.data.getCSequences?.sequence || [];
     if (item) {
@@ -113,40 +132,35 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
     fetchLOSequence();
   }, []);
 
-  return (
-    <div className=" lg:min-w-132">
-      <div className="w-full m-auto">
-        <div className="mb-4">
-          <div className="px-3">
-            <FormInput
-              value={name}
-              id="name"
-              onChange={onInputChange}
-              name="name"
-              label={ADDLEARINGOBJDICT[userLanguage]['NAME']}
-              isRequired
-              maxLength={30}
-              showCharacterUsage
-            />
-            {!validation.isValid ? (
-              <p className="text-red-600">{validation.msg}</p>
-            ) : null}
-          </div>
+  const [messageApi, contextHolder] = message.useMessage();
 
-          <div className="px-3">
-            <FormInput
-              textarea
-              id="description"
-              value={description}
-              rows={5}
-              onChange={onInputChange}
-              name="description"
-              label={ADDLEARINGOBJDICT[userLanguage]['DESC']}
-            />
-          </div>
-        </div>
+  return (
+    <div className="">
+      {contextHolder}
+      <div className="grid w-full grid-cols-1 gap-4">
+        <FormInput
+          value={name}
+          id="name"
+          onChange={onInputChange}
+          name="name"
+          label={ADDLEARINGOBJDICT[userLanguage]['NAME']}
+          isRequired
+          maxLength={30}
+          error={validation.msg}
+          showCharacterUsage
+        />
+
+        <FormInput
+          textarea
+          id="description"
+          value={description}
+          rows={5}
+          onChange={onInputChange}
+          name="description"
+          label={ADDLEARINGOBJDICT[userLanguage]['DESC']}
+        />
       </div>
-      <div className="flex my-4 justify-end">
+      <div className="flex my-4 gap-4 justify-end">
         <Buttons label={'Cancel'} onClick={handleCancel} transparent />
         <Buttons
           label={ADDLEARINGOBJDICT[userLanguage]['SAVE']}

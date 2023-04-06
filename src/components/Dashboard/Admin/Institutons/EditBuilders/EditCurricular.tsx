@@ -4,12 +4,12 @@ import React, {useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory} from 'react-router-dom';
 
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutation from 'graphql/mutations';
+import {listPersons} from 'customGraphql/customQueries';
+import {updateCurriculum} from 'graphql/mutations';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {checkUniqCurricularName} from '@graphql/functions';
+import {checkUniqCurricularName} from 'graphql-functions/functions';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
@@ -123,7 +123,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const fetchPersonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
+        graphqlOperation(listPersons, {
           filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
@@ -175,7 +175,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         }
 
         const newCurricular: any = await API.graphql(
-          graphqlOperation(mutation.updateCurriculum, {input: input})
+          graphqlOperation(updateCurriculum, {input: input})
         );
 
         setMessages({
@@ -349,20 +349,20 @@ const EditCurricular = (props: EditCurricularProps) => {
                   {imageUrl ? (
                     <img
                       onClick={handleImage}
-                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-light `}
                       src={imageUrl}
                     />
                   ) : (
                     <div
                       onClick={handleImage}
-                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-lightest  border flex-shrink-0 flex border-light `}>
                       <IoImage className="fill-current text-gray-80" size={32} />
                     </div>
                   )}
                 </DroppableMedia>
               </label>
             </button>
-            <p className="text-sm text-gray-600 my-4">Click to edit curricular image</p>
+            <p className="text-sm text-medium  my-4">Click to edit curricular image</p>
           </div>
           <div className="h-6/10 md:flex-row">
             <div className="px-3 py-4">
@@ -459,14 +459,16 @@ const EditCurricular = (props: EditCurricularProps) => {
         />
       </div>
 
-      <ProfileCropModal
-        open={showCropper}
-        upImg={upImage || ''}
-        locked
-        customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-        saveCroppedImage={(img: string) => saveCroppedImage(img)}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          locked
+          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
 
       <ModalPopUp
         open={warnModal.show}

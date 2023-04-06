@@ -1,3 +1,5 @@
+/** @type {import('vite').UserConfig} */
+
 import react from '@vitejs/plugin-react';
 
 import path from 'path';
@@ -17,11 +19,6 @@ export default defineConfig({
 
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
-      rollupOptions: {
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js'
-      },
-
       plugins: [
         // @ts-ignore
         rollupNodePolyFill()

@@ -17,7 +17,7 @@ const Status = ({status}: StatusProps) => {
           ? 'bg-green-100 text-green-800'
           : capitalizedStatus === 'YES'
           ? 'bg-green-100 text-green-800'
-          : 'bg-gray-100 text-gray-800'
+          : 'bg-lightest  text-darkest   '
       }`}>
       {status}
     </span>

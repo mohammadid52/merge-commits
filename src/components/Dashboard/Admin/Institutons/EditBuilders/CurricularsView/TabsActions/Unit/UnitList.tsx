@@ -2,37 +2,40 @@ import AddButton from 'atoms/Buttons/AddButton';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {deleteUniversalSyllabus} from 'graphql/mutations';
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
 import Buttons from 'components/Atoms/Buttons';
 import Filters, {SortType} from 'components/Atoms/Filters';
 import Modal from 'components/Atoms/Modal';
-import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
 
 import InsitutionSelector from '@components/Dashboard/Admin/InsitutionSelector';
-import {Descriptions, List, Tooltip} from 'antd';
+import {useQuery} from '@tanstack/react-query';
 import {RoomStatus} from 'API';
+import {Descriptions, List, Tooltip} from 'antd';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
 import UnitName from 'components/MicroComponents/UnitName';
 import Table, {ITableProps} from 'components/Molecules/Table';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createUniversalSyllabusLesson,
+  updateUniversalSyllabusLessonSequence
+} from 'customGraphql/customMutations';
+import {listUniversalSyllabuss} from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
 import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import moment from 'moment';
 import AttachedCourses from './AttachedCourses';
 import UnitFormComponent from './UnitFormComponent';
-import {useQuery} from '@tanstack/react-query';
 
-export const UnitList = ({
+const UnitList = ({
   instId,
   curricular,
   addedSyllabus,
@@ -40,7 +43,8 @@ export const UnitList = ({
   lessonType,
   lessonId,
   isFromLesson,
-  setAddedSyllabus
+  setAddedSyllabus,
+  inner
 }: any) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -134,7 +138,7 @@ export const UnitList = ({
   const fetchSyllabusList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalSyllabuss, {
+        graphqlOperation(listUniversalSyllabuss, {
           filter: isSuperAdmin
             ? undefined
             : {
@@ -169,7 +173,13 @@ export const UnitList = ({
               !addedSyllabus.find((_d: {syllabusID: any}) => _d.syllabusID === unit.id)
           );
 
-          setUnits([...filtered]);
+          // add label to the unit
+
+          const updatedList = filtered
+            ? filtered?.map((d: {name: any}) => ({...d, label: d.name}))
+            : [];
+
+          setUnits([...updatedList]);
         }
       } else {
         const updatedList = getUpdatedList(items);
@@ -228,7 +238,7 @@ export const UnitList = ({
     try {
       console.log('deleting...');
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabus, {
+        graphqlOperation(deleteUniversalSyllabus, {
           input: {id: item.id}
         })
       );
@@ -336,7 +346,7 @@ export const UnitList = ({
     const existingLessonSeq = selectedItem?.universalLessonsSeq || [];
     setUnits((prevUnits: any) => [...prevUnits, selectedItem]);
     await API.graphql(
-      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+      graphqlOperation(updateUniversalSyllabusLessonSequence, {
         input: {
           id: unitId,
           universalLessonsSeq: [...existingLessonSeq, lessonId]
@@ -368,7 +378,7 @@ export const UnitList = ({
       };
       setSaving(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createUniversalSyllabusLesson, {
+        graphqlOperation(createUniversalSyllabusLesson, {
           input: input
         })
       );
@@ -525,71 +535,71 @@ export const UnitList = ({
   // ##################################################################### //
 
   return (
-    <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col w-full">
-        <SectionTitleV3
-          title={'Unit List'}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
-          borderBottom
-          shadowOff
-          withButton={
-            <div className={`w-auto flex gap-x-4 justify-end items-center`}>
-              {isSuperAdmin && (
-                <InsitutionSelector
-                  selectedInstitution={selectedInstitution?.label}
-                  onChange={instituteChange}
-                />
-              )}
+    <PageLayout
+      type={inner ? 'inner' : undefined}
+      title={'Unit List'}
+      extra={
+        <div className={`w-auto flex gap-x-4 justify-end items-center`}>
+          {isSuperAdmin && (
+            <InsitutionSelector
+              selectedInstitution={selectedInstitution?.label}
+              onChange={instituteChange}
+            />
+          )}
 
-              {showAddSection ? (
-                <div className="flex items-center w-auto m-auto px-2 gap-x-4">
-                  <Selector
-                    selectedItem={unitInput.name}
-                    list={units}
-                    placeholder="Select Unit"
-                    onChange={(name: string, option: any) =>
-                      setUnitInput({name, id: option.id})
-                    }
-                  />
-                  <Buttons
-                    label={BUTTONS[userLanguage]['ADD']}
-                    disabled={saving || !unitInput.id}
-                    onClick={() => addLessonToSyllabusLesson(unitInput.id)}
-                  />
-                  <Buttons
-                    label={BUTTONS[userLanguage]['CANCEL']}
-                    onClick={() => setShowAddSection(false)}
-                  />
-                </div>
-              ) : null}
-              {!showAddSection && (
-                <SearchInput
-                  value={searchInput.value}
-                  onChange={setSearch}
-                  disabled={loading}
-                  onKeyDown={searchRoom}
-                  closeAction={removeSearchAction}
-                />
-              )}
-              {isFromLesson && !isSuperAdmin && !showAddSection && (
-                <Buttons
-                  label={'Add Lesson to Unit'}
-                  onClick={() => setShowAddSection(true)}
-                />
-              )}
-
-              {!isSuperAdmin && (
-                <AddButton
-                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                  onClick={isFromLesson ? () => setAddModalShow(true) : handleAdd}
-                />
-              )}
+          {showAddSection ? (
+            <div className="flex items-center w-auto m-auto px-2 gap-x-4">
+              <Selector
+                selectedItem={unitInput.name}
+                list={units}
+                width={300}
+                size="middle"
+                showSearch
+                placeholder="Select Unit"
+                onChange={(name: string, option: any) =>
+                  setUnitInput({name, id: option.id})
+                }
+              />
+              <Buttons
+                label={BUTTONS[userLanguage]['ADD']}
+                disabled={saving || !unitInput.id}
+                transparent={Boolean(inner)}
+                onClick={() => addLessonToSyllabusLesson(unitInput.id)}
+              />
+              <Buttons
+                label={BUTTONS[userLanguage]['CANCEL']}
+                transparent={Boolean(inner)}
+                onClick={() => setShowAddSection(false)}
+              />
             </div>
-          }
-        />
+          ) : null}
+          {!showAddSection && (
+            <SearchInput
+              value={searchInput.value}
+              onChange={setSearch}
+              disabled={loading}
+              onKeyDown={searchRoom}
+              closeAction={removeSearchAction}
+            />
+          )}
+          {isFromLesson && !isSuperAdmin && !showAddSection && (
+            <Buttons
+              label={'Add Lesson to Unit'}
+              transparent={Boolean(inner)}
+              onClick={() => setShowAddSection(true)}
+            />
+          )}
 
+          {!isSuperAdmin && (
+            <AddButton
+              transparent={Boolean(inner)}
+              label={UnitLookupDict[userLanguage]['NEW_UNIT']}
+              onClick={isFromLesson ? () => setAddModalShow(true) : handleAdd}
+            />
+          )}
+        </div>
+      }>
+      <div className="flex flex-col w-full">
         <Filters
           loading={loading}
           list={units}
@@ -642,7 +652,7 @@ export const UnitList = ({
           message={deleteModal.message}
         />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

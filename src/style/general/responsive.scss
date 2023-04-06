@@ -11,13 +11,13 @@
       .floating-item {
         border: 0;
         width: auto;
-        background-color: $gray-800 !important;
+        background-color: $darkest !important;
         .item-open {
           min-width: 23rem;
           border: 0;
-          background-color: $gray-800;
+          background-color: $darkest;
           .card-list-item {
-            background-color: $gray-700;
+            background-color: $dark;
           }
 
           &.teacher-card {
@@ -32,7 +32,7 @@
             left: -17rem;
             top: -15rem;
             input {
-              background-color: $gray-700;
+              background-color: $dark;
               border: 0;
             }
           }

@@ -1,7 +1,7 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {API, graphqlOperation} from 'aws-amplify';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
-import * as customQueries from 'customGraphql/customQueries';
+import {getInstitutionBasicInfo} from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
 import HeroBanner from '../Header/HeroBanner';
 
@@ -26,7 +26,7 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
     try {
       setIsLoading(true);
       const res: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitutionBasicInfo, {id: id})
+        graphqlOperation(getInstitutionBasicInfo, {id: id})
       );
       setInstitute(res.data.getInstitution);
     } catch (error) {

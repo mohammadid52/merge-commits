@@ -20,7 +20,7 @@ const FloatingActionTranslation = () => {
         }}
         title={isActive ? '' : 'Search meaning'}
         className="theme-bg floating-item  relative p-2 customShadow rounded-full  border-white border-2 hover:theme-bg:500 transition-all cursor-pointer ">
-        <div className="text-lg text-white w-auto">
+        <div className="text-lg  flex items-center justify-center text-white w-auto">
           <AiOutlineBook />
         </div>
         <AnimatedContainer animationType="sliderInvert" duration="700" show={isActive}>
@@ -35,7 +35,7 @@ const FloatingActionTranslation = () => {
                   ? '150px'
                   : 'unset'
               }}
-              className="bg-gray-200 item-open translation transition-all cursor-default  z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
+              className="bg-lightest item-open translation transition-all cursor-default  z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
               <TranslationInsideComponent
                 setContentHeight={setContentHeight}
                 inClassroom

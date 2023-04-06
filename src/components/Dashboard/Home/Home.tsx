@@ -1,10 +1,10 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
@@ -51,11 +51,9 @@ const Home = (props: ClassroomControlProps) => {
   const {state, dispatch, userLanguage, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
-  const {DashboardDict} = useDictionary();
+  const {user} = useAuth();
 
-  const user = !isEmpty(state)
-    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
-    : null;
+  const {DashboardDict} = useDictionary();
 
   useEffect(() => {
     if (state.user.role === 'ST') {
@@ -268,7 +266,7 @@ const Home = (props: ClassroomControlProps) => {
           )}
 
           {/* Classroom Section */}
-          <div className="px-3">
+          <div className="">
             <ErrorBoundary componentName="RoomTiles">
               <RoomTiles
                 refetchHomeData={refetchHomeData}
@@ -286,7 +284,7 @@ const Home = (props: ClassroomControlProps) => {
                 <div className="my-8">
                   <SectionTitleV3
                     title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
-                    extraClass="leading-6 text-gray-900"
+                    extraClass="leading-6 text-darkest"
                     fontSize="xl"
                     fontStyle="semibold"
                     extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"

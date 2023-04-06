@@ -5,27 +5,24 @@ import {useHistory} from 'react-router';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
+import {
+  updateCurriculumSyllabusSequence,
+  deleteCurriculumUnits
+} from 'customGraphql/customMutations';
+import {listUniversalSyllabusOptions} from 'customGraphql/customQueries';
+import {createCurriculumUnits} from 'graphql/mutations';
 
 import Buttons from '@components/Atoms/Buttons';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 
 import {RoomStatus} from 'API';
+import {message} from 'antd';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-
-interface UIMessages {
-  show: boolean;
-  message: string;
-  isError: boolean;
-  lessonError?: boolean;
-}
 
 const UnitManager = ({
   courseId,
@@ -46,13 +43,14 @@ const UnitManager = ({
   const [_, setAddingSyllabus] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [allSyllabusList, setAllSyllabusList] = useState<any[]>([]);
-  const [_1, setDropdownSyllabusList] = useState<any[]>([]);
+
   const [selectedSyllabusList, setSelectedSyllabusList] = useState<any[]>([]);
   const [selectedSyllabus, setSelectedSyllabus] = useState({
     id: '',
     name: '',
     value: ''
   });
+
   const [unsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -64,12 +62,6 @@ const UnitManager = ({
     show: false,
     message: '',
     action: () => {}
-  });
-  const [messages, setMessages] = useState<UIMessages>({
-    show: false,
-    message: '',
-    isError: false,
-    lessonError: false
   });
 
   useEffect(() => {
@@ -94,8 +86,10 @@ const UnitManager = ({
   };
 
   const handleSelectSyllabus = (value: string, option: any) => {
-    setSelectedSyllabus({id: option.id, name: value, value});
+    setSelectedSyllabus({id: option.id, name: value, value: option.value});
   };
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const addNewSyllabusToCourse = async () => {
     try {
@@ -107,7 +101,7 @@ const UnitManager = ({
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(mutations.createCurriculumUnits, {input})
+        graphqlOperation(createCurriculumUnits, {input})
       );
 
       const newSyllabus = result.data.createCurriculumUnits;
@@ -120,14 +114,13 @@ const UnitManager = ({
       setSelectedSyllabus({id: '', name: '', value: ''});
       setSavedSyllabusList([...savedSyllabusList, newSyllabus]);
       setAddingSyllabus(false);
+      messageApi.success('Unit added successfully');
     } catch {
       setAddingSyllabus(false);
-      setMessages({
-        show: true,
-        message: CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['UPDATE_ERROR'],
-        isError: true,
-        lessonError: true
-      });
+
+      messageApi.error(
+        CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['UPDATE_ERROR']
+      );
     }
   };
 
@@ -139,9 +132,6 @@ const UnitManager = ({
       id: assignedSyllabus.id,
       unitId: assignedSyllabus.unitId
     }));
-    const filteredDropDownList = allSyllabusList.filter((item) =>
-      filteredList.find((unit) => unit.unitId === item.id) ? false : true
-    );
 
     filteredList = filteredList
 
@@ -152,15 +142,6 @@ const UnitManager = ({
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
     setSelectedSyllabusList(filteredList);
-    setDropdownSyllabusList(
-      filteredDropDownList
-        .filter((d) => d?.unit?.status === courseData?.status)
-        .map((item: {id: string; name: string}) => ({
-          id: item.id,
-          name: item.name,
-          value: item.name
-        }))
-    );
   };
 
   useEffect(() => {
@@ -173,17 +154,8 @@ const UnitManager = ({
   useEffect(() => {
     if (Array.isArray(savedSyllabusList) && savedSyllabusList.length) {
       updateListAndDropdown();
-    } else {
-      if (allSyllabusList.length) {
-        const updatedList = allSyllabusList.map((item: {id: string; name: string}) => ({
-          id: item.id,
-          name: item.name,
-          value: item.name
-        }));
-        setDropdownSyllabusList([...updatedList]);
-      }
     }
-  }, [savedSyllabusList, allSyllabusList]);
+  }, [savedSyllabusList]);
 
   useEffect(() => {
     fetchSyllabusList();
@@ -193,32 +165,27 @@ const UnitManager = ({
     try {
       setLoading(true);
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalSyllabusOptions, {
+        graphqlOperation(listUniversalSyllabusOptions, {
           filter: {institutionID: {eq: institutionId}},
           status: {eq: courseData.status || RoomStatus.ACTIVE}
         })
       );
       const savedData = result.data.listUniversalSyllabi;
-      const sortedList = savedData?.items?.sort((a: any, b: any) =>
-        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-      );
+      const sortedList = savedData?.items
+        ?.sort((a: any, b: any) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
+        .map((item: any) => ({label: item.name, value: item.name, id: item.id}));
 
       setAllSyllabusList([...sortedList]);
       setLoading(false);
     } catch {
-      setMessages({
-        show: true,
-        message: CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['fetchlist'],
-        isError: true,
-        lessonError: true
-      });
+      messageApi.error(CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['fetchlist']);
     }
   };
 
   const updateSyllabusSequence = async (syllabusIDs: string[]) => {
     setSyllabusIds(syllabusIDs);
     await API.graphql(
-      graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+      graphqlOperation(updateCurriculumSyllabusSequence, {
         input: {
           id: courseId,
           universalSyllabusSeq: syllabusIDs
@@ -256,7 +223,7 @@ const UnitManager = ({
     try {
       setDeleting(true);
       await API.graphql(
-        graphqlOperation(customMutations.deleteCurriculumUnits, {
+        graphqlOperation(deleteCurriculumUnits, {
           input: {id: item.id}
         })
       );
@@ -328,86 +295,72 @@ const UnitManager = ({
   const isInactive = courseData?.status === RoomStatus.INACTIVE;
 
   return (
-    <div className="">
-      {/* *************** SECTION HEADER ************ */}
+    <PageLayout
+      title={'Unit List'}
+      warning={
+        isInactive
+          ? 'This course is inactive. Adding units to this course has been disabled'
+          : ''
+      }
+      type="inner"
+      extra={
+        <div className=" w-full flex gap-x-4 justify-end items-center">
+          <Selector
+            selectedItem={isInactive ? 'Course inactive' : selectedSyllabus.value}
+            list={allSyllabusList}
+            placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
+            onChange={handleSelectSyllabus}
+            width={300}
+            showSearch
+            size="middle"
+            disabled={isInactive}
+          />
 
-      <SectionTitleV3
-        title={'Unit List'}
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
-        extraContainerClass="flex-col lg:flex-row "
-        borderBottom
-        withButton={
-          <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
-            <Selector
-              selectedItem={isInactive ? 'Course inactive' : selectedSyllabus.value}
-              list={allSyllabusList}
-              placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
-              onChange={handleSelectSyllabus}
-              width="w-96"
-              disabled={isInactive}
-            />
+          <AnimatedContainer className="w-auto" show={Boolean(selectedSyllabus.id)}>
+            {Boolean(selectedSyllabus.id) && (
+              <Buttons
+                label={BUTTONS[userLanguage]['ADD']}
+                onClick={addNewSyllabusToCourse}
+              />
+            )}
+          </AnimatedContainer>
 
-            <AnimatedContainer className="w-auto" show={Boolean(selectedSyllabus.id)}>
-              {Boolean(selectedSyllabus.id) && (
-                <Buttons
-                  label={BUTTONS[userLanguage]['ADD']}
-                  onClick={addNewSyllabusToCourse}
-                />
-              )}
-            </AnimatedContainer>
+          <AddButton
+            disabled={isInactive}
+            label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
+            onClick={createNewUnit}
+          />
+        </div>
+      }>
+      {contextHolder}
+      <div className="">
+        {/* *************** SECTION HEADER ************ */}
 
-            <AddButton
-              disabled={isInactive}
-              label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
-              onClick={createNewUnit}
-            />
-          </div>
-        }
-        shadowOff
-      />
+        {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
+        <div className="w-full m-auto">
+          {/* *************** SYLLABUS LIST ************ */}
+          <Table {...tableConfig} />
+        </div>
 
-      {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
-      <div className="w-full m-auto p-4">
-        {messages.show && messages.lessonError ? (
-          <div className="py-2 mb-4 m-auto text-center">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message ? messages.message : ''}
-            </p>
-          </div>
-        ) : null}
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          message={deleteModal.message}
+        />
 
-        {/* *************** SYLLABUS LIST ************ */}
-        <Table {...tableConfig} />
+        <ModalPopUp
+          open={warnModal2.show}
+          closeAction={closeLessonAction}
+          saveAction={warnModal2.action}
+          saveLabel="Yes"
+          message={warnModal2.message}
+          loading={deleting}
+        />
       </div>
-
-      <ModalPopUp
-        open={deleteModal.show}
-        closeAction={handleToggleDelete}
-        saveAction={deleting ? () => {} : deleteModal.action}
-        saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-        cancelLabel="CANCEL"
-        message={deleteModal.message}
-      />
-
-      <AnimatedContainer show={isInactive}>
-        {isInactive && (
-          <p className="text-gray-500 text-sm text-center">
-            This course is inactive. Adding units to this course has been disabled
-          </p>
-        )}
-      </AnimatedContainer>
-
-      <ModalPopUp
-        open={warnModal2.show}
-        closeAction={closeLessonAction}
-        saveAction={warnModal2.action}
-        saveLabel="Yes"
-        message={warnModal2.message}
-        loading={deleting}
-      />
-    </div>
+    </PageLayout>
   );
 };
 

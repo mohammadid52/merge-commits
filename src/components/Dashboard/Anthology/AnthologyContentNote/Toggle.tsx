@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import * as mutations from 'graphql/mutations';
+import {updateUniversalJournalData} from 'graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
 import {ITabViewProps} from '../TabView';
 import {Switch} from 'antd';
@@ -24,7 +24,7 @@ const Toggle = ({
     setUpdating(true);
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {
+        graphqlOperation(updateUniversalJournalData, {
           input: {
             id: currentContentObj?.id,
             shared: currentContentObj?.hasOwnProperty('shared')
@@ -58,7 +58,7 @@ const Toggle = ({
         onClick={!updating ? () => handleToggler() : () => {}}
         type="button"
         className={`${
-          toggled ? "bg-green-600" : "bg-gray-200"
+          toggled ? "bg-green-600" : "bg-light"
         } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
         role="switch"
         aria-checked="false"
@@ -75,7 +75,7 @@ const Toggle = ({
 
       {label && (
         <span className="mx-2" id="shared-label">
-          <span className="text-sm font-medium text-gray-900"> Shared</span>
+          <span className="text-sm font-medium text-darkest"> Shared</span>
         </span>
       )}
     </div>

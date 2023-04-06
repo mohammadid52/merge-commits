@@ -4,18 +4,20 @@ import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {getFormatedDate} from '@utilities/time';
 import {Card, Col, Divider, Row, Statistic} from 'antd';
 import {UniversalLessonPlan} from 'API';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import * as customQueries from 'customGraphql/customQueries';
+import {getStudentResponse, getUniversalLesson} from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
-import * as queries from 'graphql/queries';
+import {listUniversalArchiveData, listUniversalSurveyStudentData} from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import React, {lazy, useEffect, useRef, useState} from 'react';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import useCsv from './Hooks/useCsv';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 const DownloadCsvButtons = lazy(
   () => import('components/Dashboard/Csv/Components/DownloadCsvButtons')
 );
@@ -39,10 +41,8 @@ export const DataValue = ({
       className={` w-auto flex mb-2 flex-col items-start justify-start ${
         withBg ? 'bg-white rounded-md px-4 py-2' : ''
       } ${className}`}>
-      <span className="text-sm mb-1 text-gray-500">{title}</span>
-      <span className="text-dark-gray font-medium text-left w-auto text-sm">
-        {content}
-      </span>
+      <span className="text-sm mb-1 text-medium ">{title}</span>
+      <span className="text-dark font-medium text-left w-auto text-sm">{content}</span>
     </div>
   );
 };
@@ -110,7 +110,7 @@ const Csv = () => {
     studentsEmails: any
   ) => {
     let curriculumData: any = await API.graphql(
-      graphqlOperation(customQueries.getStudentResponse, {
+      graphqlOperation(getStudentResponse, {
         filter: {
           ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
           syllabusLessonID: {eq: syllabusLessonID},
@@ -128,7 +128,7 @@ const Csv = () => {
     try {
       setCsvGettingReady(true);
       let universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {
+        graphqlOperation(getUniversalLesson, {
           id: lessonId
         })
       );
@@ -231,7 +231,7 @@ const Csv = () => {
     setCsvGettingReady(true);
     let studsEmails = classStudents?.map((stu: any) => stu.email);
     let universalSurveyStudentData: any = await API.graphql(
-      graphqlOperation(queries.listUniversalSurveyStudentData, {
+      graphqlOperation(listUniversalSurveyStudentData, {
         nextToken: nextToken,
         limit: SEARCH_LIMIT,
         filter: {
@@ -272,7 +272,7 @@ const Csv = () => {
     setCsvGettingReady(true);
     let studsEmails = classStudents.map((stu: any) => stu.email);
     let universalSurveyStudentData: any = await API.graphql(
-      graphqlOperation(queries.listUniversalArchiveData, {
+      graphqlOperation(listUniversalArchiveData, {
         nextToken: nextToken,
         limit: SEARCH_LIMIT,
         filter: {
@@ -367,7 +367,7 @@ const Csv = () => {
   const surveyDropdownRef = useRef<any>(null);
 
   return (
-    <>
+    <ErrorBoundary componentName="CSV">
       <Modal
         open={showWarnModal}
         closeAction={() => setShowWarnModal(false)}
@@ -378,97 +378,99 @@ const Csv = () => {
         <div className="flex flex-col justify-center items-center gap-y-4">
           <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
           <hr />
-          <p className="text-gray-600 pt-0 p-4 text-center">
+          <p className="text-medium  pt-0 p-4 text-center">
             If you will be using this file to upload results to the app, please do not
             change column header or tab names
           </p>
         </div>
       </Modal>
 
-      <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
-        <DownloadCsvTitleComponent
-          setSCQAnswers={setSCQAnswers}
-          listQuestions={listQuestions}
-          selectedClassRoom={selectedClassRoom}
-          selectedUnit={selectedUnit}
-          selectedSurvey={selectedSurvey}
-          selectedInst={selectedInst}
-          surveys={surveys}
-          setSelectedCurriculum={setSelectedCurriculum}
-          setSelectedClassRoom={setSelectedClassRoom}
-          getStudentsDemographicsQuestionsResponse={
-            getStudentsDemographicsQuestionsResponse
-          }
-          instituteDropdownRef={instituteDropdownRef}
-          classroomDropdownRef={classroomDropdownRef}
-          unitDropdownRef={unitDropdownRef}
-          surveyDropdownRef={surveyDropdownRef}
-          setSurveys={setSurveys}
-          setSelectedsurvey={setSelectedsurvey}
-          setDemographicsQuestions={setDemographicsQuestions}
-          setClassStudents={setClassStudents}
-          setSelectedInst={setSelectedInst}
-          resetInstitution={resetInstitution}
-          setSelectedUnit={setSelectedUnit}
-          clearCSVData={clearCSVData}
-        />
+      <PageLayout hideGoBack hideInstProfile>
+        <div className="">
+          <DownloadCsvTitleComponent
+            setSCQAnswers={setSCQAnswers}
+            listQuestions={listQuestions}
+            selectedClassRoom={selectedClassRoom}
+            selectedUnit={selectedUnit}
+            selectedSurvey={selectedSurvey}
+            selectedInst={selectedInst}
+            surveys={surveys}
+            setSelectedCurriculum={setSelectedCurriculum}
+            setSelectedClassRoom={setSelectedClassRoom}
+            getStudentsDemographicsQuestionsResponse={
+              getStudentsDemographicsQuestionsResponse
+            }
+            instituteDropdownRef={instituteDropdownRef}
+            classroomDropdownRef={classroomDropdownRef}
+            unitDropdownRef={unitDropdownRef}
+            surveyDropdownRef={surveyDropdownRef}
+            setSurveys={setSurveys}
+            setSelectedsurvey={setSelectedsurvey}
+            setDemographicsQuestions={setDemographicsQuestions}
+            setClassStudents={setClassStudents}
+            setSelectedInst={setSelectedInst}
+            resetInstitution={resetInstitution}
+            setSelectedUnit={setSelectedUnit}
+            clearCSVData={clearCSVData}
+          />
 
-        <Divider />
+          <Divider />
 
-        <DownloadCsvButtons
-          isCSVDownloadReady={isCSVDownloadReady}
-          selectedSurvey={selectedSurvey}
-          selectedClassRoom={selectedClassRoom}
-          CSVData={CSVData}
-          mappedHeaders={mappedHeaders}
-          lessonPDFData={lessonPDFData}
-          setShowTestData={setShowTestData}
-          setResponseValue={setResponseValue}
-          showTestData={showTestData}
-          responseValue={responseValue}
-        />
-        <Divider />
-        <div className="w-full">
-          <div className="w-auto my-4">
-            <SectionTitleV3 title={'Survey Results'} />
+          <DownloadCsvButtons
+            isCSVDownloadReady={isCSVDownloadReady}
+            selectedSurvey={selectedSurvey}
+            selectedClassRoom={selectedClassRoom}
+            CSVData={CSVData}
+            mappedHeaders={mappedHeaders}
+            lessonPDFData={lessonPDFData}
+            setShowTestData={setShowTestData}
+            setResponseValue={setResponseValue}
+            showTestData={showTestData}
+            responseValue={responseValue}
+          />
+          <Divider />
+          <div className="w-full">
+            <div className="w-auto my-4">
+              <SectionTitleV3 title={'Survey Results'} />
+            </div>
+            {Boolean(selectedSurvey) ? (
+              <Table {...tableConfig} />
+            ) : (
+              <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
+                <p>Select filters options to populate data</p>
+              </Card>
+            )}
           </div>
-          {Boolean(selectedSurvey) ? (
-            <Table {...tableConfig} />
-          ) : (
-            <Card className="min-h-56 flex-col flex items-center justify-center text-base text-center">
-              <p>Select filters options to populate data</p>
+
+          <AnimatedContainer show={isCSVDownloadReady}>
+            <SectionTitleV3 title={'Statistics'} />
+
+            <Card>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Statistic
+                    title="Survey First"
+                    value={getFormatedDate(statistics.surveyFirst)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="Survey Last"
+                    value={getFormatedDate(statistics.surveyLast)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic title="Taken Survey" value={statistics.takenSurvey} />
+                </Col>
+                <Col span={6}>
+                  <Statistic title="Not Taken Survey" value={statistics.notTakenSurvey} />
+                </Col>
+              </Row>
             </Card>
-          )}
+          </AnimatedContainer>
         </div>
-
-        <AnimatedContainer show={isCSVDownloadReady}>
-          <SectionTitleV3 title={'Statistics'} />
-
-          <Card>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Statistic
-                  title="Survey First"
-                  value={getFormatedDate(statistics.surveyFirst)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="Survey Last"
-                  value={getFormatedDate(statistics.surveyLast)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic title="Taken Survey" value={statistics.takenSurvey} />
-              </Col>
-              <Col span={6}>
-                <Statistic title="Not Taken Survey" value={statistics.notTakenSurvey} />
-              </Col>
-            </Row>
-          </Card>
-        </AnimatedContainer>
-      </div>
-    </>
+      </PageLayout>
+    </ErrorBoundary>
   );
 };
 

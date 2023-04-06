@@ -129,7 +129,7 @@ const LessonFrame = ({
         style={{
           width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
         }}
-        className={`bg-gray-200 absolute mr-0 right-0 h-full flex flex-col items-center z-50`}>
+        className={`bg-lightest absolute mr-0 right-0 h-full flex flex-col items-center z-50`}>
         <TopMenu
           isSameStudentShared={Boolean(isSameStudentShared)}
           handleQuitViewing={handleQuitViewing}

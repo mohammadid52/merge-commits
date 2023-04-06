@@ -2,14 +2,20 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getCurriculumBasicDetails,
+  getRoomBasicDetails,
+  getUniversalLessonBasicDetails,
+  getUniversalSyllabusBasicDetails
+} from 'customGraphql/customQueries';
 
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
 import {Breadcrumb} from 'antd';
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
+import {logError} from 'graphql-functions/functions';
 import {AiOutlineHome} from 'react-icons/ai';
+import {NavLink} from 'react-router-dom';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 
 export type BreadCrumb = {
@@ -74,7 +80,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
         : '';
       if (splitUrl.indexOf('add') === -1) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
+          graphqlOperation(getUniversalLessonBasicDetails, {
             id: splitUrl.split('/')[0]
           })
         );
@@ -98,7 +104,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
       if (roomId) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getRoomBasicDetails, {
+          graphqlOperation(getRoomBasicDetails, {
             id: roomId
           })
         );
@@ -123,7 +129,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
       if (courseId) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumBasicDetails, {
+          graphqlOperation(getCurriculumBasicDetails, {
             id: courseId.split('/')[0]
           })
         );
@@ -142,19 +148,23 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
   const getUnitData = async () => {
     try {
       // To extract unit id from path name
-      const unitId = pathname.split('/units/')?.length
-        ? pathname.split('/units/')[1].replace('/edit', '')
-        : '';
+      const partOfUnitUrl = pathname.split('/units/')[1];
+      const unitId =
+        partOfUnitUrl && partOfUnitUrl.length > 0
+          ? partOfUnitUrl.replace('/edit', '')
+          : '';
 
       if (unitId) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalSyllabusBasicDetails, {
+          graphqlOperation(getUniversalSyllabusBasicDetails, {
             id: unitId
           })
         );
         setUnitData(result.data?.getUniversalSyllabus);
       }
     } catch (error) {
+      console.error(error);
+
       logError(
         error,
         {authId: state.user.authId, email: state.user.email},
@@ -214,84 +224,25 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
   const finalList = forInstitution ? breadCrumbsList : items;
 
+  const itemRender = (route: any, _: any, routes: string | any[]) => {
+    const last = routes.indexOf(route.title as string) === routes.length - 1;
+
+    return last ? (
+      <span>{route.title}</span>
+    ) : (
+      <NavLink to={route.href}>{route.title}</NavLink>
+    );
+  };
+
   return (
     <>
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
-        {/* <div className={`absolute theme-bg w-full bottom-0 z-20`}> */}
+
         <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
-          <Breadcrumb items={finalList} />
+          <Breadcrumb itemRender={itemRender} items={finalList} />
         </div>
-        {/* <div
-            className={`${
-              separateGoBackButton ? 'justify-between' : ''
-            } flex flex-row my-0 py-2`}>
-            <div
-              className={`w-auto ${
-                separateGoBackButton ? 'flex items-center' : ''
-              } pl-4 ${theme.verticalBorder[themeColor]}`}>
-              <nav className="w-full flex">
-                <ol className="list-none flex items-center justify-start">
-                  {finalList &&
-                    finalList?.length > 0 &&
-                    finalList?.map((item) => (
-                      <li
-                        className="flex items-center w-auto mr-1 md:mr-2"
-                        style={{minWidth: 'fit-content'}}
-                        key={item.title}>
-                        {!item.goBack ? (
-                          <div
-                            onClick={() =>
-                              item?.goBack === false ? () => {} : goToUrl(item?.url)
-                            }>
-                            <span
-                              className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
-                              {item.title}
-                            </span>
-                          </div>
-                        ) : (
-                          <span
-                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base text-white hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2`}
-                            onClick={() =>
-                              unsavedChanges ? toggleModal() : history.goBack()
-                            }>
-                            {item.title}
-                          </span>
-                        )}
-                        {!item.last && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className={`${'text-white'} stroke-current inline-block h-4 w-4`}>
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                          </svg>
-                        )}
-                      </li>
-                    ))}
-                </ol>
-              </nav>
-            </div>
-            <div className="absolute z-100 w-6 right-1 top-0.5">
-              <span
-                className="w-auto cursor-pointer"
-                onClick={() => setOpenWalkThroughModal(true)}>
-                <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
-              </span>
-            </div>
-          </div> */}
       </div>
-      {/* </div> */}
-      {/* <InformationalWalkThrough
-        open={openWalkThroughModal}
-        onCancel={() => setOpenWalkThroughModal(false)}
-      /> */}
     </>
   );
 };

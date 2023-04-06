@@ -8,21 +8,22 @@ import {
   NavStateTypes
 } from 'components/Community/constants.community';
 import DashboardContainer from 'components/Dashboard/DashboardContainer';
-import HeroBanner from 'components/Header/HeroBanner';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
+import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {logError, updatePageState} from '@graphql/functions';
 import {ListCommunitiesQueryVariables, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
+import CommonList from 'components/Community/CommanList';
 import 'components/Community/community.scss';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import * as mutations from 'graphql/mutations';
+import {logError, updatePageState} from 'graphql-functions/functions';
+import {createCommunity, deleteCommunity, updateCommunity} from 'graphql/mutations';
 import {
   IAnnouncementInput,
   ICheckItOutInput,
@@ -39,8 +40,8 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
-import CommonList from 'components/Community/CommanList';
-import PageWrapper from '@components/Atoms/PageWrapper';
+import {listCommunities} from '@graphql/queries';
+import PageLayout from 'layout/PageLayout';
 
 const TitleBar = ({
   selectedFilterType,
@@ -55,7 +56,7 @@ const TitleBar = ({
     title={'Community'}
     fontSize="xl"
     fontStyle="semibold"
-    extraClass="leading-6 text-gray-900"
+    extraClass="leading-6 text-darkest"
     borderBottom
     shadowOff
     withButton={
@@ -130,6 +131,7 @@ const Community = () => {
     isLoading
   } = useGraphqlQuery<ListCommunitiesQueryVariables, any[]>(
     'listCommunities',
+    listCommunities,
     payloadForCommunities,
     {
       onSuccess: (data, cb) => {
@@ -187,7 +189,7 @@ const Community = () => {
     personEmail
   });
 
-  const createCommunity = useGraphqlMutation('createCommunity', {
+  const createCommunityMt = useGraphqlMutation('createCommunity', createCommunity, {
     onCancel,
     onSuccess: (data: any) => {
       if (data) {
@@ -197,7 +199,7 @@ const Community = () => {
       }
     }
   });
-  const updateCommunity = useGraphqlMutation('updateCommunity', {
+  const updateCommunityMt = useGraphqlMutation('updateCommunity', updateCommunity, {
     onCancel,
     onSuccess: (data: ICommunityCard) => {
       let listCopy = [...list];
@@ -220,9 +222,9 @@ const Community = () => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunityMt.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunityMt.mutate({input}, successCallback);
     }
 
     try {
@@ -250,9 +252,9 @@ const Community = () => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunityMt.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunityMt.mutate({input}, successCallback);
     }
 
     try {
@@ -280,9 +282,9 @@ const Community = () => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunityMt.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunityMt.mutate({input}, successCallback);
     }
 
     try {
@@ -310,9 +312,9 @@ const Community = () => {
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunityMt.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunityMt.mutate({input}, successCallback);
     }
 
     try {
@@ -339,16 +341,14 @@ const Community = () => {
       if (fileKey) {
         await deleteImage(fileKey);
       }
-      await API.graphql(
-        graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
-      );
+      await API.graphql(graphqlOperation(deleteCommunity, {input: {id: cardId}}));
     } catch (error) {
       logError(error, {authId: personAuthID, email: personEmail}, 'Community @onDelete');
       console.error(error);
     }
   };
 
-  const changeFilter = (val: string, name: string, id: string) => {
+  const changeFilter = (val: string, option: any) => {
     if (val !== 'all') {
       const filtered = filter(list, (d: ICommunityCard) => {
         return d.cardType === val;
@@ -356,7 +356,7 @@ const Community = () => {
 
       setFilteredList([...filtered]);
     }
-    setSelectedFilterType({id: id, name: name, value: val});
+    setSelectedFilterType({id: option.id, name: val, value: val});
   };
 
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
@@ -371,43 +371,44 @@ const Community = () => {
 
   if (isStudent) {
     return (
-      <div className="w-full">
-        <div className="w-full">
-          <HeroBanner imgUrl={bannerImg} title={'Community'} />
-        </div>
-
+      <DashboardContainer
+        showTitleBanner={false}
+        bannerImg={bannerImg}
+        bannerTitle={CommunityDict[userLanguage]['TITLE']}>
         <HeaderTextBar>Here is what is happening today</HeaderTextBar>
-        <div className="px-10">
-          <TitleBar
-            selectedFilterType={selectedFilterType}
-            filterList={filterList}
-            changeFilter={changeFilter}
-          />
-          <CardsModal
-            navState={navState}
-            editMode={isCardEditMode}
-            setNavState={setNavState}
-            functions={{
-              onCheckItOutSubmit
-            }}
-            instId={instId}
-            showCardsModal={showCardsModal}
-            setShowCardsModal={setShowCardsModal}
-          />
+        <PageWrapper>
+          <div className="px-10">
+            <TitleBar
+              selectedFilterType={selectedFilterType}
+              filterList={filterList}
+              changeFilter={changeFilter}
+            />
+            <CardsModal
+              navState={navState}
+              editMode={isCardEditMode}
+              setNavState={setNavState}
+              functions={{
+                onCheckItOutSubmit
+              }}
+              instId={instId}
+              showCardsModal={showCardsModal}
+              setShowCardsModal={setShowCardsModal}
+            />
 
-          <CommonList
-            selectedFilterType={selectedFilterType}
-            filteredList={filteredList}
-            list={list}
-            onDelete={onDelete}
-            onCardEdit={onCardEdit}
-            error={error}
-            isFetched={isFetched}
-            isLoading={isLoading}
-            setShowCardsModal={setShowCardsModal}
-          />
-        </div>
-      </div>
+            <CommonList
+              selectedFilterType={selectedFilterType}
+              filteredList={filteredList}
+              list={list}
+              onDelete={onDelete}
+              onCardEdit={onCardEdit}
+              error={error}
+              isFetched={isFetched}
+              isLoading={isLoading}
+              setShowCardsModal={setShowCardsModal}
+            />
+          </div>
+        </PageWrapper>
+      </DashboardContainer>
     );
   }
 
@@ -437,29 +438,33 @@ const Community = () => {
         <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
           <BreadCrums items={breadCrumsList} />
         </div>
-        <PageWrapper>
-          <div className={`p-4 pt-0`}>
-            <TitleBar
-              selectedFilterType={selectedFilterType}
-              filterList={filterList}
-              changeFilter={changeFilter}
+        <PageLayout
+          hideGoBack
+          hideInstProfile
+          title={'Community'}
+          extra={
+            <Selector
+              width={250}
+              selectedItem={selectedFilterType.name}
+              list={filterList}
+              placeholder={'All'}
+              onChange={changeFilter}
             />
-
-            <div className="">
-              <CommonList
-                selectedFilterType={selectedFilterType}
-                filteredList={filteredList}
-                list={list}
-                onDelete={onDelete}
-                onCardEdit={onCardEdit}
-                error={error}
-                isFetched={isFetched}
-                isLoading={isLoading}
-                setShowCardsModal={setShowCardsModal}
-              />
-            </div>
+          }>
+          <div className="">
+            <CommonList
+              selectedFilterType={selectedFilterType}
+              filteredList={filteredList}
+              list={list}
+              onDelete={onDelete}
+              onCardEdit={onCardEdit}
+              error={error}
+              isFetched={isFetched}
+              isLoading={isLoading}
+              setShowCardsModal={setShowCardsModal}
+            />
           </div>
-        </PageWrapper>
+        </PageLayout>
       </DashboardContainer>
     </ErrorBoundary>
   );

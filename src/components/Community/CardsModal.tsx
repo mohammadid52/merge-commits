@@ -59,7 +59,7 @@ const Item = ({
     <div
       data-cy={content.type}
       onClick={() => setNavState?.(content.type)}
-      className={`relative  form-button rounded-lg border-0 border-gray-300  bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground}  transition-all focus-within:ring-2`}>
+      className={`relative  form-button rounded-lg border-0 border-lightest   bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground}  transition-all focus-within:ring-2`}>
       <>
         <span
           className={classNames(
@@ -75,10 +75,10 @@ const Item = ({
             <p
               className={`${
                 isCommunity ? '' : 'dark:text-white'
-              } text-sm font-medium text-gray-900 `}>
+              } text-sm font-medium text-darkest   `}>
               {content.name}
             </p>
-            <p className="text-sm text-gray-500">{content.subtitle}</p>
+            <p className="text-sm text-medium ">{content.subtitle}</p>
           </div>
         </div>
 

@@ -54,7 +54,7 @@ const StageButton = (props: StageButtonProps) => {
       return (
         <div className="flex items-center w-auto group">
           <svg
-            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+            className="flex-shrink-0 w-6 h-full text-lightest  group-hover:text-light  transition-all duration-150 "
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
             fill="currentColor"
@@ -69,7 +69,7 @@ const StageButton = (props: StageButtonProps) => {
               stageIsViewed && !stageIsClosed && !stageIsDisabled
                 ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
                 : null
-            }    ${stageIsDisabled ? null : 'text-gray-500 '}
+            }    ${stageIsDisabled ? null : 'text-medium  '}
       ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {page?.label}
           </a>
@@ -79,7 +79,7 @@ const StageButton = (props: StageButtonProps) => {
       return (
         <div className="flex items-center w-auto group">
           <svg
-            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+            className="flex-shrink-0 w-6 h-full text-lightest  group-hover:text-light  transition-all duration-150 "
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
             fill="currentColor"
@@ -91,12 +91,12 @@ const StageButton = (props: StageButtonProps) => {
           <a
             href={page?.href}
             className={`${
-              stageIsDisabled || stageIsClosed ? 'line-through text-gray-500' : null
+              stageIsDisabled || stageIsClosed ? 'line-through text-medium ' : null
             }
       
       ${stageIsClosed ? 'hover:underline' : null}
       ${stageIsViewed && stageIsClosed ? 'font-bold underline' : null}
-      ${!stageIsClosed && !stageIsDisabled ? 'text-gray-500 ' : null}
+      ${!stageIsClosed && !stageIsDisabled ? 'text-medium  ' : null}
       ${
         stageIsViewed && !stageIsClosed && !stageIsDisabled
           ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
@@ -111,7 +111,7 @@ const StageButton = (props: StageButtonProps) => {
       return (
         <div className="flex items-center w-auto group">
           <svg
-            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+            className="flex-shrink-0 w-6 h-full text-lightest  group-hover:text-light  transition-all duration-150 "
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
             fill="currentColor"
@@ -128,8 +128,8 @@ const StageButton = (props: StageButtonProps) => {
                 : null
             } ${
               stageIsDisabled || stageIsClosed
-                ? 'line-through text-gray-500'
-                : 'text-gray-500'
+                ? 'line-through text-medium '
+                : 'text-medium '
             } ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {page?.label}
           </a>

@@ -192,7 +192,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             }
           />
 
-          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
+          <div className="text-right text-light ">{fields.summary.length} of 750</div>
         </div>
       </div>
 

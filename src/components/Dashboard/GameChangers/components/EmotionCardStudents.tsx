@@ -8,6 +8,7 @@ import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import React, {lazy, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {useGameChangers} from '../context/GameChangersContext';
+import {listFeelingsArchives} from '@customGraphql/customQueries';
 const BubbleVersion = lazy(() => import('./BubbleVersion'));
 
 const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
@@ -57,6 +58,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     isSuccess
   } = useGraphqlQuery<ListFeelingsArchivesQueryVariables, FeelingsArchive[]>(
     'listFeelingsArchives',
+    listFeelingsArchives,
     {
       filter: {
         personAuthID: {eq: authId},
@@ -87,7 +89,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
 
   return listLoading ? (
     <div className="flex items-center justify-center h-32">
-      <Loader color="#fff" />
+      <Loader />
     </div>
   ) : (
     <>
