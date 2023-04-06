@@ -89,9 +89,6 @@ const cardsList = [
   }
 ];
 
-const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It's based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
-  When practiced regularly, it's possible that this technique could help some people fall asleep in a shorter period of time.`;
-
 const qaList = [
   {
     id: nanoid(24),
@@ -129,4 +126,4 @@ const qaList = [
   }
 ];
 
-export {cardsList, FSEInfoText, qaList, successSound};
+export {cardsList, qaList, successSound};

@@ -103,7 +103,7 @@ export interface ClassroomControlProps extends DashboardProps {
 const Dashboard = () => {
   const {
     zoiqFilter,
-    updateAuthState,
+
     state: {user: stateUser, currentPage, roomData, activeRoom},
     // clientKey,
     dispatch
@@ -111,7 +111,7 @@ const Dashboard = () => {
 
   const match = useRouteMatch();
   const history = useHistory();
-  const [cookies, setCookie, removeCookie] = useCookies(['auth']);
+  const [cookies, setCookie] = useCookies(['auth']);
 
   // const {notifications} = useNotifications('global');
 

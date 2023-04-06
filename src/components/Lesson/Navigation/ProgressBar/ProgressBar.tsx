@@ -30,7 +30,6 @@ const ProgressBar = ({
   currentPage,
   updatePageInLocalStorage,
   validateRequired,
-  canContinue,
   getValidatedPages
 }: IProgressBarProps) => {
   const gContext = useGlobalContext();

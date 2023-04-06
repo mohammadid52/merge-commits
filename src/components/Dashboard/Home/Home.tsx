@@ -1,10 +1,10 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
@@ -14,7 +14,6 @@ import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
-import useAuth from '@customHooks/useAuth';
 
 export interface ModifiedListProps {
   id: any;

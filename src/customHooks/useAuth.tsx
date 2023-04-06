@@ -1,8 +1,7 @@
 import {PersonStatus, Role, UserPageState} from 'API';
-import {Auth} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useCookies} from 'react-cookie';
-import {API, graphqlOperation} from 'aws-amplify';
+import {API, Auth, graphqlOperation} from 'aws-amplify';
 import {updatePersonLogoutTime} from 'customGraphql/customMutations';
 import {removeLocalStorageData} from '@utilities/localStorage';
 

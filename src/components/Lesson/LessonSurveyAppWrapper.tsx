@@ -2,13 +2,12 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonHeaderBar from '@components/Header/LessonHeaderBar';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {notification} from 'antd';
-import {Suspense, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import ComponentLoading from './Loading/ComponentLoading';
 
 interface LessonSurveyAppWrapper extends ILessonSurveyApp {
   type: 'survey' | 'lesson';

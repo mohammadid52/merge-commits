@@ -462,6 +462,14 @@
 }
 
 .carousel-cell.is-selected {
+  #first-round {
+    transform: rotate(35deg);
+    animation: round1 3s;
+  }
+  #second-round {
+    transform: rotate(90deg);
+    animation: round2 3s;
+  }
   & .inner-card,
   button {
     filter: blur(0);
@@ -551,17 +559,6 @@
 }
 #second-round {
   transform: rotate(90deg);
-}
-
-.carousel-cell.is-selected {
-  #first-round {
-    transform: rotate(35deg);
-    animation: round1 3s;
-  }
-  #second-round {
-    transform: rotate(90deg);
-    animation: round2 3s;
-  }
 }
 
 @keyframes round1 {

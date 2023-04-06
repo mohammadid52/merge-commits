@@ -12,7 +12,6 @@ import {uploadImageToS3} from 'graphql-functions/functions';
 import {isEmpty} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {MdRadioButtonUnchecked} from 'react-icons/md';

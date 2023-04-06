@@ -28,6 +28,7 @@ import {
   updateCommunity,
   updateCommunityChat
 } from '@graphql/mutations';
+import {Role} from 'API';
 
 const getType = (cardType: string) => {
   switch (cardType) {
@@ -218,7 +219,10 @@ const PostComment = ({
       personAuthID: personAuthID,
       msg: postText,
       personEmail: personEmail,
-      person: user
+      person: {
+        ...user,
+        role: user.role || Role.ST
+      }
     };
     chats.push(chatObject);
     setChats([...chats]);

@@ -9,6 +9,7 @@ import {Divider, Dropdown, Space, theme} from 'antd';
 import {ItemType} from 'rc-menu/lib/interface';
 import React from 'react';
 import UserRole from '../Admin/UserManagement/UserRole';
+import {Role} from 'API';
 const {useToken} = theme;
 
 const getLink = (href: string, label: string) => {
@@ -71,7 +72,7 @@ const DropDownMenu = () => {
             {[firstName, lastName].join(' ')}
 
             <div className="w-auto ml-2">
-              <UserRole role={role} />
+              <UserRole role={role || Role.ST} />
             </div>
           </Space>
           <Divider style={{margin: 0}} />

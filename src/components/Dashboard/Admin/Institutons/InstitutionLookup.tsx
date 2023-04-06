@@ -1,12 +1,13 @@
-import {CloseOutlined} from '@ant-design/icons';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import InstituteName from '@components/MicroComponents/InstituteName';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
 import {logError} from 'graphql-functions/functions';
 
+import useAuth from '@customHooks/useAuth';
 import {withZoiqFilter} from '@utilities/functions';
 import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
+import {Alert} from 'antd';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -16,11 +17,10 @@ import {getInstListForAdmin, getInstListForNonAdmin} from 'customGraphql/customQ
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
+import links from 'links';
 import {map, orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {Redirect, useHistory, useRouteMatch} from 'react-router-dom';
-import useAuth from '@customHooks/useAuth';
-import links from 'links';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -299,18 +299,11 @@ const InstitutionLookup: React.FC = () => {
           <div className="">
             {/* </div> */}
             {showAlert && (
-              <div
-                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                role="alert">
-                <span className="block sm:inline">
-                  {'Click on institution to see information'}
-                </span>
-                <span
-                  className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
-                  onClick={() => setShowAlert(false)}>
-                  <CloseOutlined />
-                </span>
-              </div>
+              <Alert
+                type="info"
+                message={'Click on institution to see information'}
+                closable
+              />
             )}
             {/* List / Table */}
             <Table {...tableConfig} />
