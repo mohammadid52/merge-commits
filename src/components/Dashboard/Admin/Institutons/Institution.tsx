@@ -91,8 +91,6 @@ const Institution = (props: InstitutionProps) => {
     curricula: {items: [{name: '', id: ''}]}
   });
 
-  const [isNewUpdate, setISNewUpdate] = useState(false);
-
   const match = useRouteMatch();
   const location = useLocation();
 
@@ -100,10 +98,6 @@ const Institution = (props: InstitutionProps) => {
   const {clientKey} = useGlobalContext();
 
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-
-  const toggleUpdateState = () => {
-    setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
-  };
 
   const postInfoUpdate = (data: any) => {
     setInstitutionData((prevData) => ({
@@ -134,7 +128,6 @@ const Institution = (props: InstitutionProps) => {
           setInstitutionData({...fetchInstitutionData.data.getInstitution});
         }
         setFetchingDetails(false);
-        setISNewUpdate(false);
       }
     } catch (error) {
       logError(error, {authId: authId, email: email}, 'Institution');
@@ -180,7 +173,6 @@ const Institution = (props: InstitutionProps) => {
                   loading={fetchingDetails}
                   postInfoUpdate={postInfoUpdate}
                   tabProps={props.tabProps}
-                  toggleUpdateState={toggleUpdateState}
                   updateServiceProviders={updateServiceProviders}
                 />
               </ErrorBoundary>

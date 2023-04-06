@@ -3,8 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 import useAuth from '@customHooks/useAuth';
-import {Tabs, TabsProps} from 'antd';
 import {Language} from 'API';
+import {Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
@@ -18,8 +18,8 @@ import useDictionary from 'customHooks/dictionary';
 import {languageList} from 'utilities/staticData';
 import {convertArrayIntoObj} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import {UserInfo} from '../Admin/UserManagement/User';
 import DemographicsEdit, {selectedMultiOptions} from '../Demographics/DemographicsEdit';
-import {UserInfo} from './Profile';
 
 interface UserInfoProps {
   user: UserInfo;

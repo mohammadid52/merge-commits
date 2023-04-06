@@ -25,12 +25,11 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
   const {
     title,
     subtitle,
-    extraClass,
+
     extraContainerClass,
     withButton,
     borderBottom = false,
-    fontSize = 'lg',
-    fontStyle = 'medium',
+
     shadowOff = false,
     bgColor = 'bg-white',
     backButton,

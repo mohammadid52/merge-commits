@@ -14,7 +14,7 @@ import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows, {Teacher} from './TeacherRows';
 
-export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
+const findRooms = (teacherAuthID: string, allRooms: any[]) => {
   try {
     let rooms: any[] = [];
     let roomIds: any[] = [];
@@ -43,30 +43,6 @@ export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
     return [];
   }
 };
-
-export interface ModifiedListProps {
-  id: any;
-  name: any;
-  teacherProfileImg: string;
-  bannerImage: string;
-  teacher: {
-    email: string;
-    firstName: string;
-    lastName: string;
-    image: string;
-  };
-  curricula: {
-    items: {
-      curriculum: {
-        name: string;
-        description?: string;
-        id: string;
-        summary?: string;
-        type?: string;
-      };
-    }[];
-  };
-}
 
 const HomeForTeachers = (props: ClassroomControlProps) => {
   const {homeData, handleRoomSelection, roomsLoading} = props;

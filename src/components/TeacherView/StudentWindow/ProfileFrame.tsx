@@ -230,6 +230,7 @@ const ProfileFrame = ({
         return items;
       }
     }
+    return [];
   };
 
   return (

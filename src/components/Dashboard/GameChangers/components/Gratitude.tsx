@@ -28,13 +28,14 @@ const Gratitude = () => {
   const mutationLog = useGraphqlMutation<
     {input: CreateGameChangerLogInput},
     GameChangerLog
-  >(createGameChangerLog, {
+  >('createGameChangerLog', createGameChangerLog, {
     onSuccess: () => {
       setIsCompleted(true);
     }
   });
 
   const mutation = useGraphqlMutation<{input: CreateGameChangerInput}, GameChangerLog>(
+    'createGameChanger',
     createGameChanger
   );
 

@@ -24,6 +24,7 @@ import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {getImageFromS3} from 'utilities/services';
 import Feedback from '../../Admin/UserManagement/Feedback';
+import {Role} from 'API';
 
 const FeedbacksUploads = ({
   idx,
@@ -561,7 +562,7 @@ const FeedbacksUploads = ({
                 setAttModal={setAttModal}
                 deleteModal={deleteModal}
                 uploadingAttachment={uploadingAttachment}
-                role={state.user.role}
+                role={state.user.role || Role.ST}
                 fileObject={fileObject}
                 authId={state.user.authId}
                 setDeleteModal={setDeleteModal}
