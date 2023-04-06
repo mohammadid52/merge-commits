@@ -11,7 +11,6 @@ import {languageList} from 'utilities/staticData';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import {RoomStatus} from 'API';
 import PageLayout from 'layout/PageLayout';
@@ -171,24 +170,20 @@ const UnitBuilder = ({instId, curricular}: any) => {
     switch (currentStep) {
       case 'overview':
         return (
-          <AnimatedContainer show={currentStep === 'overview'}>
-            {currentStep === 'overview' && (
-              <UnitFormComponent
-                instId={instId}
-                syllabusDetails={syllabusData}
-                postAddSyllabus={postAddSyllabus}
-                curricular={curricular}
-                setSyllabusDataParent={setSyllabusData}
-                onCancel={() => {
-                  history.push(
-                    isSuperAdmin
-                      ? `/dashboard/manage-institutions/units`
-                      : `/dashboard/manage-institutions/institution/${instId}/units`
-                  );
-                }}
-              />
-            )}
-          </AnimatedContainer>
+          <UnitFormComponent
+            instId={instId}
+            syllabusDetails={syllabusData}
+            postAddSyllabus={postAddSyllabus}
+            curricular={curricular}
+            setSyllabusDataParent={setSyllabusData}
+            onCancel={() => {
+              history.push(
+                isSuperAdmin
+                  ? `/dashboard/manage-institutions/units`
+                  : `/dashboard/manage-institutions/institution/${instId}/units`
+              );
+            }}
+          />
         );
       case 'lessons':
         return (
@@ -218,9 +213,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
         <div className="grid grid-cols-1 divide-x-0 divide-light  mb-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader animation withText="Fetching syllabus details please wait..." />
-              </div>
+              <Loader animation withText="Fetching syllabus details please wait..." />
             </div>
           ) : (
             <div className="">{currentStepComp(activeStep)}</div>

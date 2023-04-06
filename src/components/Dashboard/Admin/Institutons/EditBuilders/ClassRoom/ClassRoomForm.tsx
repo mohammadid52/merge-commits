@@ -926,6 +926,9 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     });
   };
 
+  const disabled = status === RoomStatus.INACTIVE;
+  const INACTIVE_TEXT = 'Classroom inactive';
+
   return (
     <div className="">
       {/* Body section */}
@@ -982,12 +985,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  selectedItem={type}
                   width={'100%'}
                   placeholder={'Classroom type'}
                   label={'Classroom type'}
                   labelTextClass={'text-xs'}
                   list={typeList}
+                  selectedItem={disabled ? INACTIVE_TEXT : type}
                   isRequired
                   // @ts-ignore
                   onChange={selectClassroomType}
@@ -995,15 +998,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  selectedItem={
-                    status === RoomStatus.INACTIVE
-                      ? 'Classroom inactive'
-                      : curricular.value
-                  }
+                  selectedItem={disabled ? INACTIVE_TEXT : curricular.value}
                   showSearch
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-                  disabled={loadingCurricular || status === RoomStatus.INACTIVE}
+                  disabled={loadingCurricular || disabled}
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
@@ -1011,12 +1010,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  disabled={unitsLoading || status === RoomStatus.INACTIVE}
-                  selectedItem={
-                    status === RoomStatus.INACTIVE
-                      ? 'Classroom inactive'
-                      : roomData.activeUnit.label
-                  }
+                  disabled={unitsLoading || disabled}
+                  selectedItem={disabled ? INACTIVE_TEXT : roomData.activeUnit.label}
                   showSearch
                   width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
@@ -1043,7 +1038,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     isRequired
                     selectedItem={teacher.label}
                     list={teachersList}
-                    disabled={status === RoomStatus.INACTIVE}
+                    disabled={disabled}
                     placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
                     onChange={selectTeacher}
                   />
@@ -1052,8 +1047,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   <MultipleSelector
                     label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
                     withAvatar
-                    disabledText="Classroom inactive"
-                    disabled={status === RoomStatus.INACTIVE}
+                    disabledText={INACTIVE_TEXT}
+                    disabled={disabled}
                     // @ts-ignore
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
@@ -1064,10 +1059,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 </div>
                 <div className="px-3 py-4">
                   <Selector
-                    selectedItem={roomData.teachingStyle}
                     placeholder={RoomEDITdict[userLanguage].METHOD}
                     label={RoomEDITdict[userLanguage].METHOD}
                     list={methods}
+                    disabled={disabled}
+                    selectedItem={disabled ? INACTIVE_TEXT : roomData.teachingStyle}
                     width={'100%'}
                     onChange={(value) =>
                       setRoomData({...roomData, teachingStyle: value as TeachingStyle})
@@ -1083,8 +1079,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     name="conferenceCallLink"
                     value={conferenceCallLink}
                     onChange={editInputField}
+                    disabled={disabled}
                     placeHolder={
-                      RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
+                      disabled
+                        ? INACTIVE_TEXT
+                        : RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
                     }
                   />
                 </div>
@@ -1092,9 +1091,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   <FormInput
                     label={RoomEDITdict[userLanguage].LOCATION_LABEL}
                     name="location"
+                    disabled={disabled}
                     value={roomLocation}
                     onChange={editInputField}
-                    placeHolder={RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER}
+                    placeHolder={
+                      disabled
+                        ? INACTIVE_TEXT
+                        : RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER
+                    }
                   />
                 </div>
               </div>

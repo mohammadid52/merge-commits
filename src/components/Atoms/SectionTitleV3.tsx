@@ -1,4 +1,5 @@
 import useDictionary from '@customHooks/dictionary';
+import {theme} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
@@ -39,6 +40,9 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
   const history = useHistory();
   const {CommonlyUsedDict} = useDictionary();
 
+  // take fontSize and color from antd token
+  const {token} = theme.useToken();
+
   return (
     <div
       style={{borderBottom: borderBottom ? `1px solid rgba(237, 242, 247,1)` : 'unset'}}
@@ -55,7 +59,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
       } ${extraContainerClass} w-full`}>
       <div className={`${textWidth}`}>
         {title && (
-          <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>
+          <h2 style={{color: token.colorTextHeading, fontSize: token.fontSizeLG}}>
             {title}
           </h2>
         )}

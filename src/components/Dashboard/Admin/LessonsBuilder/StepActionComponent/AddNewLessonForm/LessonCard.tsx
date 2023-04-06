@@ -49,7 +49,7 @@ const LessonCard = ({
       summary: studentSummary,
       cardImage: imagePreviewUrl,
       totalEstTime,
-      cardCaption
+      title: cardCaption
     }
   };
 

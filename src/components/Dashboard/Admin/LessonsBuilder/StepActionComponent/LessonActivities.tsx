@@ -1,6 +1,8 @@
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
+import {DragEndEvent} from '@dnd-kit/core';
+import {arrayMove} from '@dnd-kit/sortable';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 
 import {getAsset} from 'assets';
@@ -100,6 +102,32 @@ const LessonActivities = ({
 
   const {selectedPageID, getCurrentPage} = useULBContext();
 
+  const onDragEnd = ({active, over}: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      const prev = dataList;
+      const activeIndex = prev.findIndex((i) => i.id === active.id);
+      const overIndex = prev.findIndex((i) => i.id === over?.id);
+      const ids = arrayMove(prev, activeIndex, overIndex).map((i) => i.id);
+
+      // update universalDetails with new order
+      // pages are in universalDetails.lessonPlan
+      const newPages = map(ids, (id) => {
+        return pages.find((page) => page.id === id);
+      });
+
+      setUniversalLessonDetails({
+        ...universalLessonDetails,
+        lessonPlan: newPages
+      });
+
+      // update DB
+      updateLessonPageToDB({
+        id: lessonId,
+        lessonPlan: newPages
+      });
+    }
+  };
+
   const dataList = map(pages, (page: any) => ({
     id: page.id,
     onClick: () => lessonPagePreview(page.id, false),
@@ -138,6 +166,9 @@ const LessonActivities = ({
     dataList,
     config: {
       dataList: {
+        sortableConfig: {
+          onSort: onDragEnd
+        },
         loading
       }
     }

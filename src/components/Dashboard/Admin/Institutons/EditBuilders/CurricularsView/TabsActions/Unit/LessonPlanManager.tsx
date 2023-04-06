@@ -26,6 +26,8 @@ import Selector from 'atoms/Form/Selector';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getLessonType} from 'utilities/strings';
+import {DragEndEvent} from '@dnd-kit/core';
+import {arrayMove} from '@dnd-kit/sortable';
 
 interface UIMessages {
   show: boolean;
@@ -119,7 +121,7 @@ const LessonPlanManager = ({
 
       updateLessonSequence(lessonSeq);
     }
-  }, [savedLessonsList]);
+  }, []);
 
   // ~~~~~~~~~~~~~~~~~ CRUD ~~~~~~~~~~~~~~~~ //
   const createNewLesson = () => {
@@ -265,7 +267,7 @@ const LessonPlanManager = ({
         setDropdownLessonsList([...updatedList]);
       }
     }
-  }, [savedLessonsList, allLessonsList]);
+  }, [allLessonsList]);
 
   const updateLessonSequence = async (lessonsIDs: string[]) => {
     setLessonsIds([...lessonsIDs]);
@@ -365,12 +367,38 @@ const LessonPlanManager = ({
     };
   });
 
+  const updateSortedListToUI = (updatedIds: string[]) => {
+    let sorted = selectedLessonsList
+      .map((t: any) => {
+        let index = updatedIds?.indexOf(t.id);
+        return {...t, index};
+      })
+      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+    setSelectedLessonsList(sorted);
+  };
+
+  const onDragEnd = ({active, over}: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      const prev = dataList;
+      const activeIndex = prev.findIndex((i) => i.id === active.id);
+      const overIndex = prev.findIndex((i) => i.id === over?.id);
+      const ids = arrayMove(prev, activeIndex, overIndex).map((i) => i.id);
+
+      updateSortedListToUI(ids);
+      updateLessonSequence(ids);
+    }
+  };
+
   const tableConfig: ITableProps = {
     headers: [dict['NUMBER'], dict['LESSON_NAME'], dict['TYPE'], dict['MEASUREMENTS']],
     dataList,
     config: {
       dataList: {
-        loading
+        loading,
+        sortableConfig: {
+          onSort: onDragEnd
+        }
       }
     }
   };
@@ -381,23 +409,20 @@ const LessonPlanManager = ({
 
       <SectionTitleV3
         title={'Lesson Plan Manager'}
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-darkest    mb-2 lg:mb-0"
-        extraContainerClass="flex-col lg:flex-row "
-        borderBottom
         withButton={
-          <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
+          <div className="flex gap-x-4 justify-end items-center">
             <Selector
               selectedItem={selectedLesson.name}
               list={dropdownLessonsList}
               placeholder={SyllabusDict[userLanguage]['SELECT_LESSON']}
               onChange={selectLesson}
-              width="w-96"
+              width={250}
+              showSearch
+              size="middle"
             />
 
             <AddButton
-              className="ml-4 py-1"
+              // className="ml-4 py-1"
               label={'Add'}
               onClick={addNewLesson}
               disabled={!Boolean(selectedLesson.value) || addingLesson}

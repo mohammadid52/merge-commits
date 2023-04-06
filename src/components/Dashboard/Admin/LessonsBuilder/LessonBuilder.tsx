@@ -567,6 +567,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       case 'courses':
         return (
           <UnitList
+            inner
             curricular={curriculumList}
             instId={formData?.institution?.id}
             instName={formData?.institution?.label}
@@ -701,13 +702,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <div className="grid mt-4 grid-cols-1 divide-x-0 divide-light  px-2 xl:px-8">
             {loading ? (
               <div className="h-100 flex justify-center items-center">
-                <div className="w-5/10">
-                  <Loader
-                    className="text-medium "
-                    animation
-                    withText="Fetching lesson details please wait..."
-                  />
-                </div>
+                <Loader
+                  className="text-medium "
+                  withText="Fetching lesson details please wait..."
+                />
               </div>
             ) : (
               <div className="">{currentStepComp(activeStep)}</div>

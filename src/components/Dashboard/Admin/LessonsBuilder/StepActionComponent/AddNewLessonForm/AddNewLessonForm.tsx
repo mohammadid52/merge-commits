@@ -396,16 +396,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             />
           </Card>
           <Card type="inner" title="Lesson Objectives">
-            <div className="max-h-96 px-4 py-6">
-              <RichTextEditor
-                maxHeight={'max-h-96'}
-                initialValue={objectiveHtml}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
-                }
-                wrapperClass={'lesson'}
-              />
-            </div>
+            <RichTextEditor
+              maxHeight={'max-h-96'}
+              initialValue={objectiveHtml}
+              onChange={(htmlContent, plainText) =>
+                setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
+              }
+              wrapperClass={'lesson'}
+            />
           </Card>
           <Card type="inner" title="Materials">
             <MaterialsCard
@@ -415,15 +413,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             />
           </Card>
           <Card type="inner" title="Reminder & Notes">
-            <div className="max-h-96 px-4 py-6">
-              <RichTextEditor
-                initialValue={notesHtml || ''}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
-                }
-                wrapperClass={'lesson'}
-              />
-            </div>
+            <RichTextEditor
+              initialValue={notesHtml || ''}
+              onChange={(htmlContent, plainText) =>
+                setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
+              }
+              wrapperClass={'lesson'}
+            />
           </Card>
           <Card type="inner" title="Lesson Card" className="col-span-2">
             <LessonCard

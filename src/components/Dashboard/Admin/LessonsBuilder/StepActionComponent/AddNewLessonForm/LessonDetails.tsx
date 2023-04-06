@@ -256,7 +256,7 @@ const LessonDetails = ({
   const {AddNewLessonFormDict, UserEditDict} = useDictionary();
 
   return (
-    <div className="px-3">
+    <div className="">
       <UploadLessonPlanModal
         lessonPlanAttachment={lessonPlanAttachment}
         lessonId={lessonId}

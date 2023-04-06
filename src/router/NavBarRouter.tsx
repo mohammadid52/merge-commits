@@ -185,11 +185,7 @@ const NavBarRouter = (instProps: any) => {
           exact
           render={() => (
             <ErrorBoundary componentName="StaffBuilder">
-              <StaffBuilder
-                serviceProviders={institute.serviceProviders}
-                instituteId={instProps?.institute?.id}
-                instName={institute?.name}
-              />
+              <StaffBuilder instituteId={instProps?.institute?.id} />
             </ErrorBoundary>
           )}
         />

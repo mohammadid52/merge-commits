@@ -7,8 +7,9 @@ const MaterialsCard = ({purposeHtml, studentMaterials, setEditorContent}: any) =
       key: '1',
       label: `Teacher`,
       children: (
-        <div className="mt-5">
+        <div className="">
           <RichTextEditor
+            wrapperClass={'lesson'}
             initialValue={purposeHtml}
             onChange={(htmlContent, plainText) =>
               setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
@@ -21,8 +22,9 @@ const MaterialsCard = ({purposeHtml, studentMaterials, setEditorContent}: any) =
       key: '2',
       label: `Student`,
       children: (
-        <div className="mt-5">
+        <div className="">
           <RichTextEditor
+            wrapperClass={'lesson'}
             initialValue={studentMaterials}
             onChange={(htmlContent, plainText) =>
               setEditorContent(htmlContent, plainText, 'studentMaterials', '')

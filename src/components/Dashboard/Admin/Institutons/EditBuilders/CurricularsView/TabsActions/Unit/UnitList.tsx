@@ -35,7 +35,7 @@ import moment from 'moment';
 import AttachedCourses from './AttachedCourses';
 import UnitFormComponent from './UnitFormComponent';
 
-export const UnitList = ({
+const UnitList = ({
   instId,
   curricular,
   addedSyllabus,
@@ -43,7 +43,8 @@ export const UnitList = ({
   lessonType,
   lessonId,
   isFromLesson,
-  setAddedSyllabus
+  setAddedSyllabus,
+  inner
 }: any) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -172,7 +173,13 @@ export const UnitList = ({
               !addedSyllabus.find((_d: {syllabusID: any}) => _d.syllabusID === unit.id)
           );
 
-          setUnits([...filtered]);
+          // add label to the unit
+
+          const updatedList = filtered
+            ? filtered?.map((d: {name: any}) => ({...d, label: d.name}))
+            : [];
+
+          setUnits([...updatedList]);
         }
       } else {
         const updatedList = getUpdatedList(items);
@@ -529,6 +536,7 @@ export const UnitList = ({
 
   return (
     <PageLayout
+      type={inner ? 'inner' : undefined}
       title={'Unit List'}
       extra={
         <div className={`w-auto flex gap-x-4 justify-end items-center`}>
@@ -544,6 +552,9 @@ export const UnitList = ({
               <Selector
                 selectedItem={unitInput.name}
                 list={units}
+                width={300}
+                size="middle"
+                showSearch
                 placeholder="Select Unit"
                 onChange={(name: string, option: any) =>
                   setUnitInput({name, id: option.id})
@@ -552,10 +563,12 @@ export const UnitList = ({
               <Buttons
                 label={BUTTONS[userLanguage]['ADD']}
                 disabled={saving || !unitInput.id}
+                transparent={Boolean(inner)}
                 onClick={() => addLessonToSyllabusLesson(unitInput.id)}
               />
               <Buttons
                 label={BUTTONS[userLanguage]['CANCEL']}
+                transparent={Boolean(inner)}
                 onClick={() => setShowAddSection(false)}
               />
             </div>
@@ -572,12 +585,14 @@ export const UnitList = ({
           {isFromLesson && !isSuperAdmin && !showAddSection && (
             <Buttons
               label={'Add Lesson to Unit'}
+              transparent={Boolean(inner)}
               onClick={() => setShowAddSection(true)}
             />
           )}
 
           {!isSuperAdmin && (
             <AddButton
+              transparent={Boolean(inner)}
               label={UnitLookupDict[userLanguage]['NEW_UNIT']}
               onClick={isFromLesson ? () => setAddModalShow(true) : handleAdd}
             />
