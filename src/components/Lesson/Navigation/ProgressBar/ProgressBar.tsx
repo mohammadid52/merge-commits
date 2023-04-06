@@ -136,8 +136,6 @@ const ProgressBar = ({
 
   const lessonProgress = lessonState.lessonProgress;
   const handleLink = (pageNr: number) => {
-    const isNotMovingForward = pageNr < lessonProgress;
-
     // check validated pages
     const validatedPages = getValidatedPages?.();
 
@@ -157,9 +155,7 @@ const ProgressBar = ({
       indexOfFirstInvalidPage !== lessonState.currentPage
     ) {
       moveToPage(indexOfFirstInvalidPage);
-    }
-
-    if (canContinue || isNotMovingForward) {
+    } else if (canContinue) {
       moveToPage(pageNr);
     } else {
       handleRequiredNotification && handleRequiredNotification();
