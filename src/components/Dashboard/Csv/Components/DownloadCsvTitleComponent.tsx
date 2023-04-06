@@ -2,11 +2,17 @@ import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
-import {listInstitutions} from '@graphql/functions';
+import {listInstitutions} from 'graphql-functions/functions';
 
 import {insertExtraDataForClassroom, removeDuplicates} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  fetchClassStudents,
+  getCurriculumCheckpointsData,
+  getInstClassRooms,
+  listSurveys,
+  listUnits
+} from 'customGraphql/customQueries';
 import {uniqBy} from 'lodash';
 import {useEffect, useState} from 'react';
 
@@ -108,7 +114,7 @@ const DownloadCsvTitleComponent = ({
         let instCRs: any = [];
         // fetch inst classrooms.
         let classrooms: any = await API.graphql(
-          graphqlOperation(customQueries.getInstClassRooms, {
+          graphqlOperation(getInstClassRooms, {
             id: inst.id
           })
         );
@@ -141,7 +147,7 @@ const DownloadCsvTitleComponent = ({
 
   const fetchStudents = async (classId: string) => {
     let classData: any = await API.graphql(
-      graphqlOperation(customQueries.fetchClassStudents, {
+      graphqlOperation(fetchClassStudents, {
         id: classId
       })
     );
@@ -187,7 +193,7 @@ const DownloadCsvTitleComponent = ({
   const fetchUnits = async (curriculumId: string, studentsEmails: any) => {
     try {
       let curriculumUnits: any = await API.graphql(
-        graphqlOperation(customQueries.listUnits, {
+        graphqlOperation(listUnits, {
           filter: {curriculumId: {eq: curriculumId}}
         })
       );
@@ -206,7 +212,7 @@ const DownloadCsvTitleComponent = ({
       setUnits(units);
       setUnitsLoading(false);
       let curriculumData: any = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumCheckpointsData, {
+        graphqlOperation(getCurriculumCheckpointsData, {
           id: curriculumId
         })
       );
@@ -245,7 +251,7 @@ const DownloadCsvTitleComponent = ({
     setSurveysLoading(true);
     try {
       let syllabusLessons: any = await API.graphql(
-        graphqlOperation(customQueries.listSurveys, {
+        graphqlOperation(listSurveys, {
           id: unitId
         })
       );

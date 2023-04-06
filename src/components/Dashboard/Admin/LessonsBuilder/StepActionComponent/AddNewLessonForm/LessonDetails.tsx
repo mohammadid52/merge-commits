@@ -1,5 +1,5 @@
 import {RoomStatusList} from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import Buttons from 'atoms/Buttons';
 import File from 'atoms/File';
 import ULBFileUploader from 'atoms/Form/FileUploader';
@@ -21,6 +21,7 @@ import {
   periodOptions,
   targetAudienceForIconoclast
 } from 'utilities/staticData';
+import {updateUniversalLesson} from '@customGraphql/customMutations';
 
 const UploadLessonPlanModal = ({
   onClose,
@@ -60,7 +61,7 @@ const UploadLessonPlanModal = ({
     mutate,
 
     isSuccess
-  } = useGraphqlMutation('updateUniversalLesson', {
+  } = useGraphqlMutation('updateUniversalLesson', updateUniversalLesson, {
     custom: true
   });
 
@@ -160,7 +161,7 @@ const UploadLessonPlanModal = ({
                   File deleted successfully
                 </p>
               )}
-              <p className="mb-4 mt-2 text-gray-500 text-center text-sm">
+              <p className="mb-4 mt-2 text-medium  text-center text-sm">
                 ----- Or upload new file -----
               </p>
             </>
@@ -255,7 +256,7 @@ const LessonDetails = ({
   const {AddNewLessonFormDict, UserEditDict} = useDictionary();
 
   return (
-    <div className="px-3">
+    <div className="">
       <UploadLessonPlanModal
         lessonPlanAttachment={lessonPlanAttachment}
         lessonId={lessonId}

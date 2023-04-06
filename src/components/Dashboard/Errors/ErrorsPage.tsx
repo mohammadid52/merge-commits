@@ -6,7 +6,7 @@ import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {Card, Divider, Popconfirm, Radio, Tooltip} from 'antd';
 import {
   ErrorLog,
@@ -15,9 +15,9 @@ import {
   UpdateErrorLogInput
 } from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customMutations from 'customGraphql/customMutations';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {updateErrorLog} from 'customGraphql/customMutations';
+import {deleteErrorLog} from 'graphql/mutations';
+import {listErrorLogs} from 'graphql/queries';
 import {orderBy, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -97,14 +97,14 @@ const ErrorItem = ({
             }`,
             onClose: onMultipleCloseModal,
             onSave: () => {
+              onMultipleCloseModal();
               similarErrorItems.forEach((d) => {
                 updateStatus(d.id, ErrorStatus.CLOSED);
               });
-              onMultipleCloseModal();
             },
             cancelAction: () => {
-              error?.id && updateStatus(error?.id, ErrorStatus.CLOSED);
               onMultipleCloseModal();
+              error?.id && updateStatus(error?.id, ErrorStatus.CLOSED);
             }
           });
         }
@@ -143,7 +143,7 @@ const ErrorItem = ({
           <Tooltip placement="topLeft" title={error.componentName}>
             <h4 className="mb-0">{error.componentName}</h4>
           </Tooltip>
-          <p className=" text-sm text-gray-500">{error.email}</p>
+          <p className=" text-sm text-medium ">{error.email}</p>
         </div>
       }>
       <div className="absolute top-0 w-auto p-4 right-0">
@@ -155,7 +155,7 @@ const ErrorItem = ({
       </h4>
 
       <Divider />
-      <div className="absolute w-full left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
+      <div className="absolute w-full left-0  bottom-0 border-t-0 pt-1 border-lightest flex items-center justify-between px-4 py-2">
         <Buttons
           onClick={() => error?.pageUrl && history.push(error?.pageUrl)}
           variant="link"
@@ -181,7 +181,7 @@ const ErrorItem = ({
             />
           </Popconfirm>
         )}
-        <p className="mb-0 text-gray-500 font-light w-auto">
+        <p className="mb-0 text-medium  font-light w-auto">
           {moment(error.errorTime).format('lll')}
         </p>
       </div>
@@ -194,7 +194,7 @@ const deleteClosedErrors = async () => {
     let date = new Date();
     date.setDate(date.getDate() - 7);
     const res: any = await API.graphql(
-      graphqlOperation(queries.listErrorLogs, {
+      graphqlOperation(listErrorLogs, {
         limit: SEARCH_LIMIT,
 
         filter: {
@@ -207,9 +207,7 @@ const deleteClosedErrors = async () => {
 
     if (items && items.length > 0) {
       for (const x of items) {
-        await API.graphql(
-          graphqlOperation(mutations.deleteErrorLog, {input: {id: x.id}})
-        );
+        await API.graphql(graphqlOperation(deleteErrorLog, {input: {id: x.id}}));
       }
     }
   } catch (error) {
@@ -233,6 +231,7 @@ const ErrorsPage = () => {
     ErrorLog[]
   >(
     'listErrorLogs',
+    listErrorLogs,
     {
       limit: SEARCH_LIMIT,
       filter: {
@@ -280,7 +279,7 @@ const ErrorsPage = () => {
         id,
         status
       };
-      await API.graphql(graphqlOperation(customMutations.updateErrorLog, {input}));
+      await API.graphql(graphqlOperation(updateErrorLog, {input}));
     } catch (error) {
       logError(error, {email, authId}, '@updateStatus');
     }
@@ -359,7 +358,7 @@ const ErrorsPage = () => {
 
             <div className="overflow-hidden">
               {isLoading ? null : (
-                <h6 className="text-base mb-4 text-gray-800">
+                <h6 className="text-base mb-4 text-darkest   ">
                   {pendingLength} pending errors - total {data.length} errors
                 </h6>
               )}
@@ -380,7 +379,7 @@ const ErrorsPage = () => {
                     />
                   ))
                 ) : isLoading ? null : (
-                  <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                  <p className="min-h-56 flex items-center w-full justify-center text-medium ">
                     {filters !== undefined
                       ? `No errors found for status - ${filters}`
                       : 'Woahhh.. no errors.'}

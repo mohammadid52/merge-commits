@@ -14,6 +14,7 @@ import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
+import useAuth from '@customHooks/useAuth';
 
 export interface ModifiedListProps {
   id: any;
@@ -51,11 +52,9 @@ const Home = (props: ClassroomControlProps) => {
   const {state, dispatch, userLanguage, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
-  const {DashboardDict} = useDictionary();
+  const {user} = useAuth();
 
-  const user = !isEmpty(state)
-    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
-    : null;
+  const {DashboardDict} = useDictionary();
 
   useEffect(() => {
     if (state.user.role === 'ST') {
@@ -268,7 +267,7 @@ const Home = (props: ClassroomControlProps) => {
           )}
 
           {/* Classroom Section */}
-          <div className="px-3">
+          <div className="">
             <ErrorBoundary componentName="RoomTiles">
               <RoomTiles
                 refetchHomeData={refetchHomeData}
@@ -286,7 +285,7 @@ const Home = (props: ClassroomControlProps) => {
                 <div className="my-8">
                   <SectionTitleV3
                     title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
-                    extraClass="leading-6 text-gray-900"
+                    extraClass="leading-6 text-darkest"
                     fontSize="xl"
                     fontStyle="semibold"
                     extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"

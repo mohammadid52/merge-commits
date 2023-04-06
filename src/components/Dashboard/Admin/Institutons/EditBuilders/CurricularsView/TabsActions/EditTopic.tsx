@@ -10,10 +10,10 @@ import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateTopic} from 'customGraphql/customMutations';
+import {getTopicDetails} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listLearningObjectives} from 'graphql/queries';
 
 const EditTopic = () => {
   const urlParams: any = useParams();
@@ -103,9 +103,7 @@ const EditTopic = () => {
         adequite: topic.adequite,
         basic: topic.basic
       };
-      const item: any = await API.graphql(
-        graphqlOperation(customMutations.updateTopic, {input})
-      );
+      const item: any = await API.graphql(graphqlOperation(updateTopic, {input}));
       const updatedItem = item.data.updateTopic;
       if (updatedItem) {
         history.goBack();
@@ -117,9 +115,7 @@ const EditTopic = () => {
 
   const fetchTopic = async () => {
     setLoading(true);
-    let item: any = await API.graphql(
-      graphqlOperation(customQueries.getTopicDetails, {id: topicId})
-    );
+    let item: any = await API.graphql(graphqlOperation(getTopicDetails, {id: topicId}));
     item = item.data.getTopic;
     if (item.curriculumID === curricularId) {
       setTopic({
@@ -144,7 +140,7 @@ const EditTopic = () => {
   };
   const fetchLearningObjectives = async () => {
     let list: any = await API.graphql(
-      graphqlOperation(queries.listLearningObjectives, {
+      graphqlOperation(listLearningObjectives, {
         filter: {curriculumID: {eq: curricularId}}
       })
     );
@@ -183,7 +179,7 @@ const EditTopic = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {EditTopicDict[userLanguage]['heading']}
           </h3>
         </div>
@@ -204,7 +200,7 @@ const EditTopic = () => {
                 </div>
 
                 {/* <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                   {EditTopicDict[userLanguage]['selectlearning']} <span className="text-red-500">*</span>
                 </label>
                 <Selector selectedItem={topic.learning.value} placeholder={EditTopicDict[userLanguage]['learningobjective']} list={learnings} onChange={selectLearning} />
@@ -214,7 +210,7 @@ const EditTopic = () => {
               </div> */}
 
                 {/* <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                 Select Sequence
               </label>
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />

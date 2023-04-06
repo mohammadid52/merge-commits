@@ -1,10 +1,14 @@
 import Buttons from '@components/Atoms/Buttons';
-import {Modal, Result} from 'antd';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
+import {Modal, Result} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getUniversalLesson,
+  getUniversalLessonStudentData,
+  listUniversalLessonStudentDatas
+} from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useLessonControls from 'customHooks/lessonControls';
 import useAuth from 'customHooks/useAuth';
@@ -14,7 +18,6 @@ import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
 import RosterFrame from './ClassRoster/RosterFrame';
@@ -184,7 +187,7 @@ const LessonControl = () => {
     if (filterObj) {
       try {
         let studentData: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          graphqlOperation(listUniversalLessonStudentDatas, {
             ...filterObj,
             nextToken: nextToken
           })
@@ -228,7 +231,7 @@ const LessonControl = () => {
         await Promise.all(
           PAGES.map(async (page: any) => {
             let studentData: any = await API.graphql(
-              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+              graphqlOperation(getUniversalLessonStudentData, {
                 id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`
                 // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
               })
@@ -329,7 +332,7 @@ const LessonControl = () => {
     // lessonID will be undefined for testing
     try {
       const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+        graphqlOperation(getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
       const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
@@ -519,7 +522,7 @@ const LessonControl = () => {
   const {notification} = useNotifications();
 
   return (
-    <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
+    <div className={`w-full h-screen bg-lightest overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
         {/* QUICK REGISTER */}
 
@@ -529,7 +532,7 @@ const LessonControl = () => {
               notification.show
                 ? '100 translate-x-0 transform z-100'
                 : '0 translate-x-10 transform'
-            } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+            } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-darkest    duration-300 transition-all`}>
             <p className="text-white font-medium tracking-wide">{notification.title}</p>
           </div>
         )}
@@ -617,12 +620,7 @@ const LessonControl = () => {
                 className={`${
                   theme && theme.bg
                 } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
-                <Suspense
-                  fallback={
-                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                      <ComponentLoading from="LessonControl" />
-                    </div>
-                  }>
+                <Suspense>
                   <ErrorBoundary
                     authId={authId}
                     email={email}

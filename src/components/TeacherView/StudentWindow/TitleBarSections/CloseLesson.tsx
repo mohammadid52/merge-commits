@@ -1,3 +1,4 @@
+import {updateRoom} from '@customGraphql/customMutations';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
@@ -8,7 +9,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 
 const CloseLesson = ({}) => {
-  const {isLoading} = useGraphqlMutation('updateRoom');
+  const {isLoading} = useGraphqlMutation('updateRoom', updateRoom);
   const getRoomData = getLocalStorageData('room_info');
   const history = useHistory();
   const {lessonDispatch} = useGlobalContext();
@@ -100,7 +101,7 @@ const CloseLesson = ({}) => {
     <div className="w-8 flex flex-col content-between ">
       <div
         title="Close lesson/survey"
-        className={`text-gray-600 hover:iconoclast:text-500 hover:curate:text-500 cursor-pointer`}
+        className={`text-medium  hover:iconoclast:text-500 hover:curate:text-500 cursor-pointer`}
         onClick={onShowModal}>
         <AiOutlineCloseCircle size="1.5rem" />
       </div>

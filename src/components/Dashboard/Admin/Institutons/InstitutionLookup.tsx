@@ -1,11 +1,9 @@
 import {CloseOutlined} from '@ant-design/icons';
 import AddButton from '@components/Atoms/Buttons/AddButton';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import InstituteName from '@components/MicroComponents/InstituteName';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 
 import {withZoiqFilter} from '@utilities/functions';
 import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
@@ -14,12 +12,15 @@ import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import SearchInput from 'atoms/Form/SearchInput';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getInstListForAdmin, getInstListForNonAdmin} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
+import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {Redirect, useHistory, useRouteMatch} from 'react-router-dom';
+import useAuth from '@customHooks/useAuth';
+import links from 'links';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -81,11 +82,9 @@ const InstitutionLookup: React.FC = () => {
     history.push(`${match.url}/add`);
   };
 
-  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
-
   async function fetchInstListForAdmin() {
     const fetchInstitutionData: any = await API.graphql(
-      graphqlOperation(customQueries.getInstListForAdmin, {
+      graphqlOperation(getInstListForAdmin, {
         filter: withZoiqFilter({})
       })
     );
@@ -94,7 +93,7 @@ const InstitutionLookup: React.FC = () => {
 
   async function fetchInstListForNonAdmin() {
     const fetchInstitutionData: any = await API.graphql(
-      graphqlOperation(customQueries.getInstListForNonAdmin, {
+      graphqlOperation(getInstListForNonAdmin, {
         filter: {
           staffAuthID: {eq: state.user.authId},
           staffEmail: {eq: state.user.email},
@@ -257,6 +256,16 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
+  const {isSuperAdmin, isTeacher, isStudent, instId} = useAuth();
+
+  if (isStudent || isTeacher) {
+    return <Redirect to="/dashboard/home" />;
+  }
+
+  if (!isSuperAdmin && instId) {
+    return <Redirect to={links.staff(instId)} />;
+  }
+
   return (
     <div className={`w-full h-full`}>
       {/* Header section */}
@@ -267,31 +276,27 @@ const InstitutionLookup: React.FC = () => {
       />
       {/* <BreadCrums items={breadCrumsList} /> */}
 
-      <div className="flex m-auto justify-center p-8">
-        <PageWrapper>
-          <div className="px-4">
-            <SectionTitleV3
-              title={InstitutionDict[userLanguage]['TITLE']}
-              subtitle={InstitutionDict[userLanguage]['SUBTITLE']}
-              withButton={
-                <div className="flex w-auto justify-end mb-2">
-                  <SearchInput
-                    value={searchInput.value}
-                    onChange={setSearch}
-                    onKeyDown={searchUserFromList}
-                    closeAction={removeSearchAction}
-                  />
+      <div className=" w-full">
+        <PageLayout
+          title={InstitutionDict[userLanguage]['TITLE']}
+          extra={
+            <div className="flex w-auto justify-end gap-4">
+              <SearchInput
+                value={searchInput.value}
+                onChange={setSearch}
+                onKeyDown={searchUserFromList}
+                closeAction={removeSearchAction}
+              />
 
-                  {state.user.role === 'SUP' && (
-                    <AddButton
-                      label={InstitutionDict[userLanguage]['BUTTON']['Add']}
-                      onClick={addNewInstitution}
-                    />
-                  )}
-                </div>
-              }
-            />
-
+              {state.user.role === 'SUP' && (
+                <AddButton
+                  label={InstitutionDict[userLanguage]['BUTTON']['Add']}
+                  onClick={addNewInstitution}
+                />
+              )}
+            </div>
+          }>
+          <div className="">
             {/* </div> */}
             {showAlert && (
               <div
@@ -310,7 +315,7 @@ const InstitutionLookup: React.FC = () => {
             {/* List / Table */}
             <Table {...tableConfig} />
           </div>
-        </PageWrapper>
+        </PageLayout>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {listPersonLessonsData} from '@graphql/queries';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {PersonLessonsData} from 'API';
 import {map} from 'lodash';
@@ -26,6 +27,7 @@ const SurveyList = ({
 
   const {data, isLoading, isFetched} = useGraphqlQuery<any, PersonLessonsData[]>(
     'listPersonLessonsData',
+    listPersonLessonsData,
     {
       limit: SEARCH_LIMIT,
       filter: {

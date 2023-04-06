@@ -7,7 +7,6 @@ import {getImageFromS3} from '@utilities/services';
 import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
-import ImageAlternate from 'atoms/ImageAlternative';
 import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -86,7 +85,7 @@ const StudentsTiles = (props: {
         fontSize="xl"
         fontStyle="semibold"
         borderBottom
-        extraClass="leading-6  text-gray-900"
+        extraClass="leading-6  text-darkest"
         withButton={
           <div className={`flex items-center w-auto justify-end`}>
             {isTeacher && (
@@ -155,7 +154,7 @@ const StudentsTiles = (props: {
                                   : null
                               }
                               name={student.firstName + ' ' + student.lastName}
-                              size="h-20 w-20 rounded-full lg:w-24 lg:h-24 transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out"
+                              size="h-20 w-20 text-2xl rounded-full lg:w-24 lg:h-24 transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out"
                             />
 
                             <div className="space-y-2">
@@ -176,7 +175,7 @@ const StudentsTiles = (props: {
               </ul>
             ) : loading ? (
               <div className="min-h-56 flex items-center justify-center ">
-                <Loader className="w-auto text-gray-400" withText="Loading students..." />
+                <Loader withText="Loading students..." />
               </div>
             ) : (
               <Empty description={StudentDict[userLanguage].NO_STUDENT} />

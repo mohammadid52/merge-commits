@@ -1,6 +1,5 @@
 import useAuth from '@customHooks/useAuth';
 import useTheme from '@customHooks/useTheme';
-import {getInstInfo, getPerson} from '@graphql/functions';
 import {getUserInfo} from '@utilities/functions';
 import {ConfigProvider} from 'antd';
 import {getAsset} from 'assets';
@@ -9,8 +8,9 @@ import MobileOops from 'components/Error/MobileOops';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
+import {getInstInfo, getPerson} from 'graphql-functions/functions';
 import {forEach} from 'lodash';
-import React, {lazy, Suspense, useEffect} from 'react';
+import React, {Suspense, lazy, useEffect} from 'react';
 
 const AuthRoutes = lazy(() => import('components/AppRoutes/AuthRoutes'));
 const UnauthRoutes = lazy(() => import('components/AppRoutes/UnauthRoutes'));
@@ -49,14 +49,33 @@ const setupAppHeaders = async (clientKey: string) => {
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
 
-  const {authState, setAuthState, clientKey} = useGlobalContext();
+  const {authState, setAuthState, clientKey, state} = useGlobalContext();
 
   useEffect(() => {
     setupAppHeaders(clientKey);
-    checkUserAuthenticated();
   }, [clientKey]);
 
+  useEffect(() => {
+    if (state?.user?.authId === '') {
+      checkUserAuthenticated();
+    }
+  }, [state?.user?.authId]);
+
   const {setUser, removeAuthToken} = useAuth();
+
+  const setUserProfile = async (email: string, sub: string) => {
+    const userInfo = await getPerson(email, sub);
+    let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(sub) : {};
+    // // SETUP USER
+    setUser({
+      email,
+      authId: sub,
+
+      associateInstitute:
+        instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || [],
+      ...getUserInfo(userInfo)
+    });
+  };
 
   const checkUserAuthenticated = async () => {
     try {
@@ -65,20 +84,13 @@ const MainRouter: React.FC = () => {
       if (user) {
         const {email, sub} = user.attributes;
 
-        const userInfo = await getPerson(email, sub);
-
-        let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(sub) : {};
-
-        // SETUP USER
+        // // SETUP USER
         setUser({
           email,
-          authId: sub,
-
-          associateInstitute:
-            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
-            [],
-          ...getUserInfo(userInfo)
+          authId: sub
         });
+
+        setUserProfile(email, sub);
         setAuthState('loggedIn');
       } else {
         setAuthState('notLoggedIn');
@@ -92,24 +104,34 @@ const MainRouter: React.FC = () => {
 
   const theme = useTheme();
 
+  const getPrimaryPalette = () => {
+    switch (clientKey) {
+      case 'iconoclast':
+        return theme.iconoclast;
+      case 'curate':
+        return theme.curate;
+      default:
+        return theme.curate;
+    }
+  };
+
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: clientKey === 'iconoclast' ? theme.iconoclast : theme.curate
+          colorPrimary: getPrimaryPalette(),
+          lineHeight: 1.5,
+          borderRadius: 8,
+          colorBgContainer: theme.light.white,
+          colorText: theme.light.darkest
         }
       }}>
       <div
-        className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
+        className={`bg-lightest  h-screen md:max-w-full md:h-screen w-full overflow-x-hidden flex flex-col`}>
         {deviceDetected.mobile ? (
           <MobileOops userAgent={deviceDetected.device} />
         ) : (
-          <Suspense
-            fallback={
-              <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
-                <ComponentLoading from="AppMainRouter Suspense" />
-              </div>
-            }>
+          <Suspense>
             {authState === 'loading' && (
               <ComponentLoading from="AppMainRouter loading state" />
             )}

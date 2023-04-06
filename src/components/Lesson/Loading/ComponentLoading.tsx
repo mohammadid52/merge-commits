@@ -9,7 +9,7 @@ const ComponentLoading = ({}: {from?: string}) => {
   return (
     <div
       id="component-loading"
-      className="min-h-screen h-screen w-full text-gray-200  font-light flex flex-col justify-center items-center">
+      className="min-h-screen h-screen w-full text-lightest  font-light flex flex-col justify-center items-center">
       <div className="w-auto">
         <div className=" theme-card-shadow max-w-96 rounded-lg">
           <div

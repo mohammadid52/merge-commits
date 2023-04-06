@@ -4,7 +4,6 @@ import {useHistory, useRouteMatch} from 'react-router';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
@@ -16,9 +15,10 @@ import {ModelRoomFilterInput} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listRoomsDashboard} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listRoomCoTeachers} from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
@@ -33,7 +33,7 @@ interface RoomListProps {
 }
 
 const RoomsList = (props: RoomListProps) => {
-  const {instId} = props;
+  const {instId = ''} = props;
   const {
     state: {
       user: {associateInstitute}
@@ -88,7 +88,7 @@ const RoomsList = (props: RoomListProps) => {
 
   const fetchRooms = async () => {
     const assignedRoomsAsTeachers: any = await API.graphql(
-      graphqlOperation(customQueries.listRoomsDashboard, {
+      graphqlOperation(listRoomsDashboard, {
         filter: withZoiqFilter(filter, zoiqFilter)
       })
     );
@@ -98,7 +98,7 @@ const RoomsList = (props: RoomListProps) => {
 
   const fetchRoomCoTeachers = async () => {
     const assignedRoomsAsCoTeacher: any = await API.graphql(
-      graphqlOperation(queries.listRoomCoTeachers, {
+      graphqlOperation(listRoomCoTeachers, {
         filter: filter
       })
     );
@@ -125,47 +125,71 @@ const RoomsList = (props: RoomListProps) => {
   });
 
   const handleAfterFetch = () => {
-    const updatedCoTeachersList =
-      response2?.data?.map((coTeacher: any) => {
-        const {room, teacher} = coTeacher;
-        return {
-          ...coTeacher,
-          name: room?.name || '',
-          status: teacher?.status || '',
-          isCoteacher: true
-        };
-      }) || [];
+    const updatedCoTeachersList: any[] =
+      response2?.data
+        ?.map((coTeacher: any) => {
+          if (coTeacher) {
+            const {room, teacher} = coTeacher;
+            return {
+              ...coTeacher,
+              name: room?.name || '',
+              status: teacher?.status || '',
+              isCoteacher: true
+            };
+          }
+        })
+        .filter(Boolean) || [];
 
-    const merged = [...response1.data, ...updatedCoTeachersList].filter(Boolean);
+    if (
+      (response1 && response1.isSuccess && response1?.data.length > 0) ||
+      (response2 &&
+        response2.isSuccess &&
+        response2.data &&
+        updatedCoTeachersList.length > 0)
+    ) {
+      const merged = [...response1?.data, ...updatedCoTeachersList].filter(Boolean);
 
-    const updatedMerge = merged.map((room: any) => {
-      return {
-        ...room,
-        institutionId: room.institution?.id,
-        institutionName: room.institution?.name
-      };
-    });
+      const updatedMerge = merged
+        ?.map((room: any) => {
+          if (room) {
+            return {
+              ...room,
+              institutionId: room.institution?.id,
+              institutionName: room.institution?.name
+            };
+          }
+        })
+        .filter(Boolean);
 
-    const totalListPages = Math.floor(merged.length / pageCount);
+      const totalListPages = Math.floor(merged.length / pageCount);
 
-    setTotalPages(
-      totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
-    );
+      setTotalPages(
+        totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
+      );
 
-    setTotalNum(merged.length);
+      setTotalNum(merged.length);
 
-    setFirstPage(true);
-    setLastPage(!(merged.length > pageCount));
+      setFirstPage(true);
+      setLastPage(!(merged.length > pageCount));
 
-    setRoomList(updatedMerge);
-    setLoading(false);
+      setRoomList(updatedMerge);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (response1.isFetched || response2.isFetched) {
+    if (
+      (response1.isFetched && response1.isSuccess) ||
+      (response2.isFetched && response2.isSuccess)
+    ) {
       handleAfterFetch();
     }
-  }, [response1.isFetched, response2.isFetched]);
+  }, [
+    response1.isFetched,
+    response1.isSuccess,
+    response2.isFetched,
+    response2.isSuccess
+  ]);
 
   const instituteChange = (value: string) => {
     setSelectedInstitution({value});
@@ -260,7 +284,7 @@ const RoomsList = (props: RoomListProps) => {
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
         className="w-auto  cursor-pointer">
-        <Highlighted text={item.name} highlight={searchInput.value} />
+        <Highlighted text={item?.name} highlight={searchInput.value} />
       </div>
     ),
     institutionName: (
@@ -272,10 +296,10 @@ const RoomsList = (props: RoomListProps) => {
               `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
             );
         }}>
-        <Highlighted text={item.institutionName} highlight={searchInput.value} />
+        <Highlighted text={item?.institutionName} highlight={searchInput.value} />
       </div>
     ),
-    teacher: `${item.teacher?.firstName || ''} ${item.teacher?.lastName || ''}`,
+    teacher: `${item?.teacher?.firstName || ''} ${item?.teacher?.lastName || ''}`,
     course: (
       <div
         className="w-auto"
@@ -318,46 +342,36 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   return (
-    <div className="flex m-auto justify-center p-4 pt-0">
-      <div className="w-full">
-        <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
-          <SectionTitleV3
-            title={InstitueRomms[userLanguage]['TITLE']}
-            fontSize="xl"
-            fontStyle="semibold"
-            extraClass="leading-6 text-gray-900"
-            borderBottom
-            shadowOff
-            withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center`}>
-                {(isSuperAdmin || isAdmin || isBuilder) && (
-                  <InsitutionSelector
-                    selectedInstitution={selectedInstitution?.label}
-                    onChange={instituteChange}
-                  />
-                )}
-                <SearchInput
-                  dataCy="classroom-search-input"
-                  value={searchInput.value}
-                  onChange={setSearch}
-                  disabled={loading}
-                  onKeyDown={searchRoom}
-                  closeAction={() => {
-                    removeSearchAction();
-                  }}
-                />
-
-                {(!isSuperAdmin || !isAdmin || !isBuilder) && (
-                  <AddButton
-                    label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
-                    onClick={createNewRoom}
-                  />
-                )}
-              </div>
-            }
+    <PageLayout
+      extra={
+        <div className={`w-auto flex gap-x-4 justify-end items-center`}>
+          {(isSuperAdmin || isAdmin || isBuilder) && (
+            <InsitutionSelector
+              selectedInstitution={selectedInstitution?.label}
+              onChange={instituteChange}
+            />
+          )}
+          <SearchInput
+            dataCy="classroom-search-input"
+            value={searchInput.value}
+            onChange={setSearch}
+            disabled={loading}
+            onKeyDown={searchRoom}
+            closeAction={() => {
+              removeSearchAction();
+            }}
           />
-        </div>
 
+          {(!isSuperAdmin || !isAdmin || !isBuilder) && (
+            <AddButton
+              label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
+              onClick={createNewRoom}
+            />
+          )}
+        </div>
+      }
+      title={InstitueRomms[userLanguage]['TITLE']}>
+      <div className="w-full">
         <Filters
           loading={loading}
           resetPagination={resetPagination}
@@ -380,7 +394,7 @@ const RoomsList = (props: RoomListProps) => {
           </p>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

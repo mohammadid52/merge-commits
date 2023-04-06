@@ -1,13 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {Card} from 'antd';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import RichTextEditor from 'atoms/RichTextEditor';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {updateUniversalLesson} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createUniversalLesson} from 'graphql/mutations';
 import React, {useState} from 'react';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
@@ -259,7 +259,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           };
 
           const result: any = await API.graphql(
-            graphqlOperation(mutations.createUniversalLesson, {input})
+            graphqlOperation(createUniversalLesson, {input})
           );
           const newLesson = result.data.createUniversalLesson;
           postLessonCreation(newLesson?.id, 'add');
@@ -290,7 +290,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             targetAudience: formData.targetAudience || null
           };
           const results: any = await API.graphql(
-            graphqlOperation(customMutations.updateUniversalLesson, {
+            graphqlOperation(updateUniversalLesson, {
               input: input
             })
           );
@@ -351,17 +351,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   };
 
   return (
-    <div className="shadow-5 overflow-hidden mb-4 mt-4 lg:mt-0 bg-gray-200">
-      {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+    <div className="">
+      {/* <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-darkest">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
         </h3>
       </div> */}
 
-      <div className="">
-        <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
+      <div className="mt-4">
+        <div className=" lg:grid lg:grid-cols-2 gap-6 ">
           <Card
             title={'Lesson Details'}
+            type="inner"
             extra={
               <Buttons
                 label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
@@ -394,37 +395,33 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               validation={validation}
             />
           </Card>
-          <Card title="Lesson Objectives">
-            <div className="max-h-96 px-4 py-6">
-              <RichTextEditor
-                maxHeight={'max-h-96'}
-                initialValue={objectiveHtml}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
-                }
-                wrapperClass={'lesson'}
-              />
-            </div>
+          <Card type="inner" title="Lesson Objectives">
+            <RichTextEditor
+              maxHeight={'max-h-96'}
+              initialValue={objectiveHtml}
+              onChange={(htmlContent, plainText) =>
+                setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
+              }
+              wrapperClass={'lesson'}
+            />
           </Card>
-          <Card title="Materials">
+          <Card type="inner" title="Materials">
             <MaterialsCard
               purposeHtml={purposeHtml}
               studentMaterials={formData.studentMaterials}
               setEditorContent={setEditorContent}
             />
           </Card>
-          <Card title="Reminder & Notes">
-            <div className="max-h-96 px-4 py-6">
-              <RichTextEditor
-                initialValue={notesHtml || ''}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
-                }
-                wrapperClass={'lesson'}
-              />
-            </div>
+          <Card type="inner" title="Reminder & Notes">
+            <RichTextEditor
+              initialValue={notesHtml || ''}
+              onChange={(htmlContent, plainText) =>
+                setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
+              }
+              wrapperClass={'lesson'}
+            />
           </Card>
-          <Card title="Lesson Card" className="col-span-2">
+          <Card type="inner" title="Lesson Card" className="col-span-2">
             <LessonCard
               cardCaption={formData?.imageCaption || ''}
               studentSummary={studentSummary}
@@ -462,16 +459,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       </div>
       {/* Image cropper */}
 
-      <ProfileCropModal
-        upImg={imageData}
-        open={showCropper}
-        cardLayout
-        customCropProps={{x: 25, y: 25, width: 384, height: 180}}
-        locked={false}
-        imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
-        saveCroppedImage={(img: string) => saveCroppedImage(img)}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          upImg={imageData}
+          open={showCropper}
+          cardLayout
+          customCropProps={{x: 25, y: 25, width: 384, height: 180}}
+          locked={false}
+          imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
     </div>
   );
 };

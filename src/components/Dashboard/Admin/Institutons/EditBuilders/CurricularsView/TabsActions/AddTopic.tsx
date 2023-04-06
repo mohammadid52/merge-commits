@@ -1,10 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
+import {createTopic, updateTopic} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {getCSequences} from 'graphql/queries';
 import {useEffect, useState} from 'react';
 interface AddTopicProps {
   curricularId: string;
@@ -88,36 +89,42 @@ const AddTopic = (props: AddTopicProps) => {
         curriculumID: curricularId,
         learningObjectiveID: topicData.learningObjectiveID
       };
-      if (topicData?.id) {
-        const item: any = await API.graphql(
-          graphqlOperation(customMutations.updateTopic, {
-            input: {...input, id: topicData.id}
-          })
-        );
-        const updatedItem = item.data.updateTopic;
-        if (updatedItem) {
-          postMutation(updatedItem);
+      try {
+        if (topicData?.id) {
+          const item: any = await API.graphql(
+            graphqlOperation(updateTopic, {
+              input: {...input, id: topicData.id}
+            })
+          );
+          const updatedItem = item.data.updateTopic;
+          if (updatedItem) {
+            postMutation(updatedItem);
+            messageApi.success('Topic updated successfully');
+          } else {
+            setLoading(false);
+          }
         } else {
-          setLoading(false);
+          const item: any = await API.graphql(graphqlOperation(createTopic, {input}));
+          const addedItem = item.data.createTopic;
+          if (addedItem) {
+            postMutation(addedItem);
+            messageApi.success('Topic added successfully');
+          } else {
+            setLoading(false);
+          }
         }
-      } else {
-        const item: any = await API.graphql(
-          graphqlOperation(customMutations.createTopic, {input})
-        );
-        const addedItem = item.data.createTopic;
-        if (addedItem) {
-          postMutation(addedItem);
-        } else {
-          setLoading(false);
-        }
+      } catch (error) {
+        messageApi.error("Couldn't add topic");
+        console.error(error);
       }
     }
     console.error('Could not add topic');
+    messageApi.error("Couldn't add topic");
   };
 
   const fetchTopicsSequence = async (leraningID: string) => {
     let seq: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `t_${leraningID}`})
+      graphqlOperation(getCSequences, {id: `t_${leraningID}`})
     );
     seq = seq?.data?.getCSequences?.sequence || [];
     setTopicIds(seq);
@@ -130,84 +137,85 @@ const AddTopic = (props: AddTopicProps) => {
   }, [learning.id]);
 
   const {distinguished, excelled, adequite, basic} = evalution;
+  const [messageApi, contextHolder] = message.useMessage();
 
   return (
-    <div className="lg:min-w-132">
-      <div className="w-full m-auto">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="px-3 py-4 col-span-2">
-            <FormInput
-              value={name}
-              id="name"
-              onChange={onInputChange}
-              name="name"
-              label={AddTopicDict[userLanguage]['topicname']}
-              isRequired
-              maxLength={30}
-              showCharacterUsage
-            />
-            {validation.name && <p className="text-red-600">{validation.name}</p>}
-          </div>
+    <div className="">
+      {contextHolder}
+      <div className="w-full grid grid-cols-2 gap-4">
+        <div className="col-span-2">
+          <FormInput
+            value={name}
+            id="name"
+            onChange={onInputChange}
+            name="name"
+            label={AddTopicDict[userLanguage]['topicname']}
+            isRequired
+            maxLength={30}
+            error={validation.name}
+            showCharacterUsage
+          />
+        </div>
 
-          <div className="px-3 py-4">
-            <FormInput
-              textarea
-              rows={5}
-              id="description"
-              value={description}
-              onChange={onInputChange}
-              name="description"
-              label={AddTopicDict[userLanguage]['description']}
-            />
-          </div>
+        <div className="">
+          <FormInput
+            textarea
+            rows={5}
+            id="description"
+            value={description}
+            onChange={onInputChange}
+            name="description"
+            label={AddTopicDict[userLanguage]['description']}
+          />
+        </div>
 
-          <div className="px-3 py-4">
-            <FormInput
-              textarea
-              rows={5}
-              id="distinguished"
-              value={distinguished}
-              onChange={onInputChange}
-              name="distinguished"
-              label="Distinguished"
-            />
-          </div>
-          <div className="px-3 py-4">
-            <FormInput
-              id="excelled"
-              value={excelled}
-              textarea
-              rows={5}
-              onChange={onInputChange}
-              name="excelled"
-              label="Excelled"
-            />
-          </div>
-          <div className="px-3 py-4">
-            <FormInput
-              textarea
-              rows={5}
-              id="adequite"
-              value={adequite}
-              onChange={onInputChange}
-              name="adequite"
-              label="Adequate"
-            />
-          </div>
-          <div className="px-3 py-4">
-            <FormInput
-              id="basic"
-              textarea
-              rows={5}
-              value={basic}
-              onChange={onInputChange}
-              name="basic"
-              label="Basic"
-            />
-          </div>
+        <div className="">
+          <FormInput
+            textarea
+            rows={5}
+            id="distinguished"
+            value={distinguished}
+            onChange={onInputChange}
+            name="distinguished"
+            label="Distinguished"
+          />
+        </div>
+        <div className="">
+          <FormInput
+            id="excelled"
+            value={excelled}
+            textarea
+            rows={5}
+            onChange={onInputChange}
+            name="excelled"
+            label="Excelled"
+          />
+        </div>
+        <div className="">
+          <FormInput
+            textarea
+            rows={5}
+            id="adequite"
+            value={adequite}
+            onChange={onInputChange}
+            name="adequite"
+            label="Adequate"
+          />
+        </div>
+        <div className="">
+          <FormInput
+            id="basic"
+            textarea
+            rows={5}
+            value={basic}
+            onChange={onInputChange}
+            name="basic"
+            label="Basic"
+          />
         </div>
       </div>
-      <div className="flex my-8 justify-center">
+
+      <div className="flex my-8 gap-4 justify-center">
         <Buttons
           label={AddTopicDict[userLanguage]['button']['cancel']}
           onClick={onCancel}

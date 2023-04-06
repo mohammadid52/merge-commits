@@ -16,7 +16,7 @@ const Label = ({
   return (
     <label
       className={` ${
-        dark ? 'text-white' : 'text-gray-700'
+        dark ? 'text-white' : 'text-dark  '
       }  block text-xs font-semibold leading-5 ${className} ${
         disabled ? 'opacity-80' : ''
       }`}>

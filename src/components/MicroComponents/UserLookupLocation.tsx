@@ -3,7 +3,7 @@ import {formatPageName} from '@utilities/functions';
 import {Descriptions, Popover as AntdPopover} from 'antd';
 import {GetPersonLocationQueryVariables, PersonStatus, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customQueries from 'customGraphql/customQueries';
+import {getPersonLocation} from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -48,7 +48,7 @@ const LocationInfo = ({
     try {
       setIsLoading(true);
       const personLocation: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonLocation, {
+        graphqlOperation(getPersonLocation, {
           personAuthID: authId,
           personEmail: email
         } as GetPersonLocationQueryVariables)
@@ -148,7 +148,7 @@ const LocationInfo = ({
         {loggedOut ? (
           <span className="flex flex-col">
             <span>Logged Out</span>
-            <span className="text-gray-600 text-xs">
+            <span className="text-medium  text-xs">
               (since {moment(lastPageStateUpdate).format('ll')})
             </span>
           </span>
@@ -159,7 +159,7 @@ const LocationInfo = ({
       </AntdPopover>
 
       {_lastPageStateUpdate !== null && !loggedOut && (
-        <span className="text-gray-600 text-xs">
+        <span className="text-medium  text-xs">
           (since {moment(lastPageStateUpdate).format('ll')})
         </span>
       )}
@@ -210,7 +210,7 @@ const UserLookupLocation = ({
           {item.lastLoggedOut || item.lastLoggedIn ? (
             <>
               <span>Logged Out</span>
-              <span className="text-gray-600 text-xs">
+              <span className="text-medium  text-xs">
                 (since {moment(item?.lastLoggedOut || item?.lastLoggedIn).format('ll')})
               </span>
             </>

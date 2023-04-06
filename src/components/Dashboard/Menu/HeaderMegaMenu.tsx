@@ -1,13 +1,12 @@
-import {useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import Tabs, {ITabElements} from 'atoms/Tabs';
+import {Menu, MenuProps} from 'antd';
 
 const HeaderMegaMenu = () => {
-  const history = useHistory();
   const {
     userLanguage,
     state: {user}
@@ -28,156 +27,86 @@ const HeaderMegaMenu = () => {
     {
       label: TABS['INSTITUTION_MANAGER'],
       key: 'institution',
-      type: 'dropdown',
+      // icon: <HiOutlineOfficeBuilding />,
+
       children: [
         {
           label: TABS['GENERAL_INFORMATION'],
           key: 'general_information',
           redirectionUrl:
-            user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`,
-          active: location.pathname.indexOf(`${baseUrl}/edit`) > -1
+            user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`
         },
         {
           label: TABS['STAFF'],
           key: 'staff',
-          redirectionUrl: `${baseUrl}/staff`,
-          active: location.pathname.indexOf('staff') > -1
+          redirectionUrl: `${baseUrl}/staff`
         },
         (user.role === 'SUP' || user.role === 'ADM') && {
           label: TABS['USER_REGISTRY'],
           key: 'user_registry',
-          redirectionUrl: `${baseUrl}/manage-users`,
-          active: location.pathname.indexOf('manage-users') > -1
+          redirectionUrl: `${baseUrl}/manage-users`
         },
         (user.role === 'ADM' || user.role === 'FLW' || user.role === 'TR') && {
           label: TABS['REGISTER_NEW_USER'],
           key: 'register',
-          redirectionUrl: `${baseUrl}/register-user`,
-          active: location.pathname.indexOf('register-user') > -1
+          redirectionUrl: `${baseUrl}/register-user`
         }
       ].filter(Boolean)
     },
     {
       label: TABS['COURSE_MANAGER'],
       key: 'course',
-      type: 'dropdown',
+      // icon: <MdOutlineLibraryBooks />,
       children: [
         {
           label: TABS['COURSES'],
-          key: 'course',
-          redirectionUrl: `${baseUrl}/courses`,
-          active: location.pathname.indexOf('course') > -1,
-          children: [
-            {
-              label: (
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`${baseUrl}/course-builder`}>
-                  + {TABS['ADD_NEW_COURSE']}
-                </a>
-              ),
-              key: 'new-course-add'
-              // redirectionUrl: `${baseUrl}/course-builder`
-            }
-          ]
+          key: 'course-list',
+          redirectionUrl: `${baseUrl}/courses`
         },
         {
           label: TABS['UNITS'],
-          key: 'unit',
-          redirectionUrl: `${baseUrl}/units`,
-          active: location.pathname.indexOf('units') > -1,
-          children: [
-            {
-              label: (
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`${baseUrl}/units/add`}>
-                  + {TABS['ADD_NEW_UNIT']}
-                </a>
-              ),
-              key: 'new-unit-add'
-              // redirectionUrl: `${baseUrl}/units/add`
-            }
-          ]
+          key: 'unit-list',
+          redirectionUrl: `${baseUrl}/units`
         },
         {
           label: TABS['LESSONS'],
-          key: 'lessons',
-          redirectionUrl: `${baseUrl}/lessons`,
-          active: location.pathname.indexOf('lessons') > -1,
-          children: [
-            {
-              label: (
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`${baseUrl}/lessons/add`}>
-                  + {TABS['ADD_NEW_LESSON']}
-                </a>
-              ),
-              key: 'new-lesson-add'
-              // redirectionUrl: `${baseUrl}/lessons/add`
-            }
-          ]
+          key: 'lessons-list',
+          redirectionUrl: `${baseUrl}/lessons`
         },
         {
           label: TABS['GAME_CHANGERS'],
           key: 'game-changers',
-          redirectionUrl: `/dashboard/game-changers`,
-          active: location.pathname.indexOf('game-changers') > -1
+          redirectionUrl: `/dashboard/game-changers`
         }
       ]
     },
     user.role !== 'BLD' && {
       label: TABS['CLASS_MANAGER'],
       key: 'class',
+      // icon: <SiGoogleclassroom />,
       type: 'dropdown',
       children: [
-        // { user.role !== 'BLD' &&
-        //   label: TABS['CLASSES'],
-        //   key: 'class',
-        //   redirectionUrl: `${baseUrl}/class`,
-        //   active: location.pathname.indexOf('class') > -1,
-        // },
         {
           label: TABS['CLASSROOMS'],
           key: 'class_room',
-          redirectionUrl: `${baseUrl}/class-rooms`,
-          active: location.pathname.indexOf('room') > -1,
-          children: [
-            {
-              label: (
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`${baseUrl}/room-creation`}>
-                  + {TABS['ADD_NEW_ROOM']}
-                </a>
-              ),
-              key: 'new-room-add'
-              // redirectionUrl: `${baseUrl}/room-creation`
-            }
-          ]
+          redirectionUrl: `${baseUrl}/class-rooms`
         },
         (user.role === 'FLW' || user.role === 'TR') && {
           label: TABS['STUDENT_ROASTER'],
           key: 'roaster',
-          redirectionUrl: `${baseUrl}/students`,
-          active: location.pathname.indexOf('room') > -1
+          redirectionUrl: `${baseUrl}/students`
         },
         (user.role === 'FLW' || user.role === 'TR') && {
           label: TABS['LIVE_CLASS_ROOM'],
           key: 'live_classroom',
-          redirectionUrl: `/dashboard/home`,
-          active: location.pathname.indexOf('room') > -1
+          redirectionUrl: `/dashboard/home`
         }
       ].filter(Boolean)
     },
     user.role !== 'BLD' && {
       label: TABS['COMMUNITY_MANAGER'],
       key: 'community',
+      // icon: <TbBuildingCommunity />,
       type: 'dropdown',
       children: [
         {
@@ -190,7 +119,7 @@ const HeaderMegaMenu = () => {
         {
           key: 'front_page',
           redirectionUrl: `/dashboard/community/front`,
-          active: location.pathname.indexOf('community') > -1,
+
           label: CommunityDict[userLanguage]['TABS']['FRONT_PAGE']
         }
       ]
@@ -199,6 +128,7 @@ const HeaderMegaMenu = () => {
       label: TABS['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
       type: 'dropdown',
+      // icon: <MdOutlineAnalytics />,
       children: [
         {
           key: 'download_csv',
@@ -210,15 +140,9 @@ const HeaderMegaMenu = () => {
         {
           key: 'upload_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics/upload-csv`,
-          active: location.pathname.indexOf('research-and-analytics') > -1,
+
           label: TABS['UPLOAD_CSV']
         }
-        // {
-        //   key: 'analytics_dashboard',
-        //   redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
-        //   active: location.pathname.indexOf('research-and-analytics') > -1,
-        //   label: TABS['UPLOAD_TO_ATHENA'],
-        // },
       ]
     }
   ].filter(Boolean);
@@ -228,28 +152,22 @@ const HeaderMegaMenu = () => {
     {
       label: TABS['HOME'],
       key: 'dashboard',
-      redirectionUrl: `${baseUrl}/dashboard/home`,
-      active:
-        location.pathname.indexOf('home') > -1 ||
-        location.pathname.indexOf('classroom') > -1
+      redirectionUrl: `${baseUrl}/dashboard/home`
     },
     {
       label: TABS['GAME_CHANGERS'],
       key: 'game-changers',
-      redirectionUrl: `${baseUrl}/dashboard/game-changers`,
-      active: location.pathname.indexOf('game-changers') > -1
+      redirectionUrl: `${baseUrl}/dashboard/game-changers`
     },
     {
       label: TABS['COMMUNITY'],
       key: 'community',
-      redirectionUrl: `${baseUrl}/dashboard/community/front`,
-      active: location.pathname.indexOf('community') > -1
+      redirectionUrl: `${baseUrl}/dashboard/community/front`
     },
     {
       label: TABS['NOTEBOOK'],
       key: 'notebook',
-      redirectionUrl: `${baseUrl}/dashboard/anthology`,
-      active: location.pathname.indexOf('anthology') > -1
+      redirectionUrl: `${baseUrl}/dashboard/anthology`
     }
   ];
 
@@ -257,35 +175,59 @@ const HeaderMegaMenu = () => {
   const getMenuByRole = (role: string) =>
     role === 'ST' ? headerMenusForStudent : headerMenusForInstitution;
 
-  const [currentTab, setCurrentTab] = useState(
-    headerMenusForStudent?.find((d) => d.active)?.label || headerMenusForStudent[0]?.label
-  );
+  const mappedTabs = !user?.role
+    ? []
+    : getMenuByRole(user?.role).map((tab: any) => {
+        if (tab?.children?.length > 0) {
+          tab.children = tab.children.map((child: any) => {
+            if (child?.redirectionUrl) {
+              child.label = <Link to={child.redirectionUrl}>{child.label}</Link>;
+            }
+            return child;
+          });
+        } else if (tab?.redirectionUrl) {
+          tab.label = <Link to={tab.redirectionUrl}>{tab.label}</Link>;
+        }
+        return tab;
+      });
 
-  const updateTab = ({redirectionUrl, label}: typeof headerMenusForStudent[0]) => {
-    setCurrentTab(label);
-    if (redirectionUrl) {
-      history.push(redirectionUrl);
-    }
+  const [current, setCurrent] = useState('staff');
+
+  const onClick: MenuProps['onClick'] = (e) => {
+    setCurrent(e.key);
   };
 
-  const mappedTabs = getMenuByRole(user?.role).map((tab: any) => {
-    if (tab?.children?.length > 0) {
-      tab.children = tab.children.map((child: any) => {
-        if (child?.redirectionUrl) {
-          child.label = <a href={child.redirectionUrl}>{child.label}</a>;
-        }
-        return child;
-      });
+  useEffect(() => {
+    // find the object with the current path from the tabs
+    // set the current tab to the key of that object
+
+    let childKey = '';
+
+    if (mappedTabs.length === 0) return;
+    const currentTab = mappedTabs.find((tab) => {
+      if (tab?.children?.length > 0) {
+        return tab.children.find((child: {key: string; redirectionUrl: string}) => {
+          if (child?.redirectionUrl === location.pathname) {
+            childKey = child.key;
+          }
+          return child?.redirectionUrl === location.pathname;
+        });
+      }
+      return tab?.redirectionUrl === location.pathname;
+    });
+
+    if (currentTab) {
+      setCurrent(childKey || currentTab.key);
     }
-    return tab;
-  });
+  }, [mappedTabs]);
 
   return (
-    <Tabs
-      currentTab={currentTab}
-      tabsData={mappedTabs as ITabElements[]}
-      updateTab={updateTab}
-      tabWithNumbers
+    <Menu
+      className="w-full justify-center"
+      onClick={onClick}
+      selectedKeys={[current]}
+      mode="horizontal"
+      items={mappedTabs}
     />
   );
 };

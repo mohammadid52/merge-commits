@@ -85,8 +85,8 @@ const ULBFileUploader = ({
           )
         ) : (
           <div className="py-4">
-            <FaCloudUploadAlt size="50" className="text-gray-400" />
-            <p className="text-center mt-2 text-gray-400">
+            <FaCloudUploadAlt size="50" className="text-light " />
+            <p className="text-center mt-2 text-light ">
               {replaceAll(
                 UniversalBuilderDict[userLanguage]['FORMS']['FILE_UPLOAD_TEXT'],
                 {label}

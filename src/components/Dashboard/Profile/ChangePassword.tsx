@@ -13,7 +13,7 @@ import ErrorNote from '../Admin/UserManagement/ErrorNote';
 
 import {UserPageState} from 'API';
 import FormInput from 'atoms/Form/FormInput';
-import * as customMutations from 'customGraphql/customMutations';
+import {updatePersonLogoutTime} from 'customGraphql/customMutations';
 
 const ChangePassword = () => {
   const [oldPassToggle, setOldPassToggle] = useState(false);
@@ -64,7 +64,7 @@ const ChangePassword = () => {
         lastPageStateUpdate: time,
         pageState: UserPageState.NOT_LOGGED_IN
       };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
+      API.graphql(graphqlOperation(updatePersonLogoutTime, {input}));
       await Auth.signOut();
       updateAuthState(false);
       history.push('/forgot-password');
@@ -178,14 +178,14 @@ const ChangePassword = () => {
 
   return (
     <div className="h-full w-full md:px-4 pt-4">
-      <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
-        <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
+      <div className="h-auto bg-white border-l-0 border-lightest mb-4">
+        <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+          <h3 className="text-lg leading-6 font-medium text-darkest">
             {dictionary['CHANGE_PASSWORD']['TITLE']}
           </h3>
         </div>
 
-        <div className="h-full px-4 py-5 sm:px-6 text-gray-800">
+        <div className="h-full px-4 py-5 sm:px-6 text-darkest   ">
           <div className="text-center text-sm">
             {dictionary['CHANGE_PASSWORD']['INFO']}
           </div>
@@ -195,7 +195,7 @@ const ChangePassword = () => {
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setOldPassToggle(!oldPassToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
+                    className="text-medium  cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
                       <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
@@ -204,7 +204,7 @@ const ChangePassword = () => {
                   </div>
                 </div>
                 <div className="absolute left-1 w-auto mr-2">
-                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
+                  <div className="text-medium  transform translate-y-1/2 mt-1">
                     <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
@@ -229,7 +229,7 @@ const ChangePassword = () => {
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
+                    className="text-medium  cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
                       <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
@@ -238,7 +238,7 @@ const ChangePassword = () => {
                   </div>
                 </div>
                 <div className="w-auto absolute left-1 mr-2">
-                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
+                  <div className="text-medium  transform translate-y-1/2 mt-1">
                     <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
@@ -263,7 +263,7 @@ const ChangePassword = () => {
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassMatchToggle(!passMatchToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
+                    className="text-medium  cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passMatchToggle ? (
                       <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
@@ -272,7 +272,7 @@ const ChangePassword = () => {
                   </div>
                 </div>
                 <div className="w-auto absolute left-1">
-                  <div className="text-gray-500 transform translate-y-1/2 mt-1">
+                  <div className="text-medium  transform translate-y-1/2 mt-1">
                     <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
@@ -293,7 +293,7 @@ const ChangePassword = () => {
             </div>
           </div>
 
-          <div className="w-auto text-sm text-center text-gray-600 ">
+          <div className="w-auto text-sm text-center text-medium  ">
             <p className={`hover:text-blue-500 cursor-pointer`} onClick={toggleModal}>
               {dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}
             </p>

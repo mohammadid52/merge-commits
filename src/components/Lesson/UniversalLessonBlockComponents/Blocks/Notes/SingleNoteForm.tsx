@@ -31,13 +31,13 @@ const SingleNote = ({
           <div className="w-auto">
             <label
               htmlFor={'bgColor'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select background color
             </label>
             <button
               onClick={() => setColorPicker(!colorPicker)}
-              className={`border-0 focus:outline-none hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 focus:ring-2 border-gray-300 rounded-full shadow-sm flex items-center justify-start  h-10 px-3`}>
-              <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+              className={`border-0 focus:outline-none hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 focus:ring-2 border-lightest  rounded-full shadow-sm flex items-center justify-start  h-10 px-3`}>
+              <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
                 {singleNoteData.bgColor?.split('-')[0]}{' '}
               </span>
 
@@ -69,7 +69,7 @@ const SingleNote = ({
           <div className="w-auto">
             <label
               htmlFor={'size'}
-              className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+              className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
               Select size
             </label>
             <Selector

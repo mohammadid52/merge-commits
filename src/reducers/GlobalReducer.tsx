@@ -235,12 +235,10 @@ export const globalReducer = (state: any, action: GlobalActions) => {
         ...state,
         lessonPage: {
           theme: action.payload.theme,
-          themeTextColor:
-            action.payload.theme === 'light' ? 'text-dark-gray' : 'text-white',
-          themeBackgroundColor:
-            action.payload.theme === 'light' ? 'bg-white' : 'bg-dark-gray',
+          themeTextColor: action.payload.theme === 'light' ? 'text-dark' : 'text-white',
+          themeBackgroundColor: action.payload.theme === 'light' ? 'bg-white' : 'bg-dark',
           themeSecBackgroundColor:
-            action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700'
+            action.payload.theme === 'light' ? 'bg-white' : 'bg-dark  '
         }
       };
 

@@ -2,7 +2,7 @@ import FormInput from '@components/Atoms/Form/FormInput';
 import Modal from '@components/Atoms/Modal';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {addNewDictionary, logError} from '@graphql/functions';
+import {addNewDictionary, logError} from 'graphql-functions/functions';
 import {
   CreateDicitionaryInput,
   Dicitionary,
@@ -13,6 +13,7 @@ import {isEmpty, update} from 'lodash';
 import {useEffect, useState} from 'react';
 
 import {v4 as uuidV4} from 'uuid';
+import {updateDicitionary} from '@graphql/mutations';
 
 interface FormType {
   translation?: TranslationInput[] | any[];
@@ -66,7 +67,7 @@ const DictionaryMutationModal = ({
 
   const [formData, setFormData] = useState<FormType>(INITIAL_DATA);
 
-  const _updateDictionary = useGraphqlMutation('updateDicitionary', {
+  const _updateDictionary = useGraphqlMutation('updateDicitionary', updateDicitionary, {
     onSuccess: onSuccessMutation
   });
 

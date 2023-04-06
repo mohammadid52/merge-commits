@@ -16,7 +16,7 @@ export interface ListBottomBar {
 }
 
 const usePagination = (data: any[], totalResults: number) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(Number(getQuery('page')) || 1);
   const [totalPages, setTotalPages] = useState(0);
 
   const [lastPage, setLastPage] = useState(false);

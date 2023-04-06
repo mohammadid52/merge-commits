@@ -1008,5 +1008,9 @@ input CreateClassStudentInput {
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
+<<<<<<< HEAD
 
 //change
+=======
+//loader1
+>>>>>>> cb4563bcd98acff9def8da5fe7675a14e4729a0e

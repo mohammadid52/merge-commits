@@ -1,8 +1,8 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {graphqlOperation} from 'aws-amplify';
-import * as customQueries from 'customGraphql/customQueries';
+import {graphqlOperation, API} from 'aws-amplify';
+import {getUserProfile, listQuestionDatas} from 'customGraphql/customQueries';
 import {getUniqItems} from 'utilities/strings';
-import {API} from 'aws-amplify';
+
 import {sortBy} from 'lodash';
 import Loader from 'atoms/Loader';
 
@@ -23,12 +23,10 @@ const ProfileFrameDemographics = ({
 
   const [profileUser, setProfileUser] = useState<any>();
 
-  async function getUserProfile(id: string) {
+  async function getUserProfileFn(id: string) {
     setLoading(true);
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUserProfile, {id: id})
-      );
+      const result: any = await API.graphql(graphqlOperation(getUserProfile, {id: id}));
       const userData = result.data.userById.items.pop();
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
@@ -169,7 +167,7 @@ const ProfileFrameDemographics = ({
 
   useEffect(() => {
     if (studentID) {
-      getUserProfile(studentID);
+      getUserProfileFn(studentID);
     }
   }, [studentID]);
 
@@ -201,7 +199,7 @@ const ProfileFrameDemographics = ({
       ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -237,9 +235,9 @@ const ProfileFrameDemographics = ({
   // ##################################################################### //
 
   const checkpoints =
-    currentTab === 'Demographics'
+    currentTab === '1'
       ? demographicCheckpoints
-      : currentTab === 'Private'
+      : currentTab === '2'
       ? privateCheckpoints
       : [];
 
@@ -248,8 +246,8 @@ const ProfileFrameDemographics = ({
   } else if (!loading && checkpoints.length === 0) {
     return (
       <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-        <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+        <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+          <h3 className="text-lg leading-6 font-medium text-darkest   uppercase">
             No checkpoints found
           </h3>
         </div>
@@ -261,8 +259,8 @@ const ProfileFrameDemographics = ({
         {checkpoints.map((checkpoint: any) => (
           <Fragment key={`checkpoint_${checkpoint.id}`}>
             <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+              <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
+                <h3 className="text-lg leading-6 font-medium text-darkest   uppercase">
                   {checkpoint.title}
                 </h3>
               </div>
@@ -270,10 +268,10 @@ const ProfileFrameDemographics = ({
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
                   {checkpoint.questions?.items.map((item: any) => (
                     <div key={item.question.id} className="sm:col-span-1 p-2">
-                      <dt className="text-sm leading-5 font-medium text-gray-500">
+                      <dt className="text-sm leading-5 font-medium text-medium ">
                         {item.question.question}
                       </dt>
-                      <dd className="mt-1 text-sm leading-5 text-gray-900">
+                      <dd className="mt-1 text-sm leading-5 text-darkest">
                         {item.question.type !== 'link' ? (
                           getQuestionResponse(checkpoint.id, item.question.id) || '--'
                         ) : (

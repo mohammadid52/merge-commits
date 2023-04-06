@@ -24,10 +24,10 @@ export const FormLabel = ({
   label = '',
   required = false
 }: {
-  index: string;
-  numbered: boolean;
+  index?: string;
+  numbered?: boolean;
   label: string;
-  required: boolean;
+  required?: boolean;
 }) => {
   const gContext = useGlobalContext();
   const gState = gContext.state;
@@ -80,7 +80,7 @@ export const FormBlock = ({
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}}
   } = useGlobalContext();
   const themePlaceholderColor =
-    lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
+    lessonPageTheme === 'light' ? 'placeholder-darkest   ' : 'text-light ';
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 
@@ -140,7 +140,7 @@ export const FormBlock = ({
           disabled={mode === 'building'}
           pattern="https://.*"
           className={`w-full py-2 px-4 mt-2 rounded-xl ${themePlaceholderColor} ${
-            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            lessonPageTheme === 'light' ? 'bg-light' : 'bg-darker-gray'
           }`}
           name="url"
           type="text"
@@ -251,7 +251,7 @@ export const FormBlock = ({
         return (
           <div
             key={id}
-            className={`border-0 border-gray-700 ${
+            className={`border-0 border-dark   ${
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
                 : 'border-t-none rounded-t-none'

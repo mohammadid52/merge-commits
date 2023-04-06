@@ -203,7 +203,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                     currentComponentSelected ? '' : ''
                   } transition-all duration-300 cursor-pointer`}>
                   {currentComponentSelected ? (
-                    <IoLocationSharp className="text-2xl text-gray-400" />
+                    <IoLocationSharp className="text-2xl text-light " />
                   ) : (
                     <div className="w-auto p-2 2xl:p-3 rounded-full border-2 border-green-300 bg-green-500 hover:bg-green-300 bg-opacity-50"></div>
                   )}
@@ -237,7 +237,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                       p.pageContentID === pageContentID &&
                       p.partContentID === partContentID
                   ) ? (
-                    <IoLocationSharp className="text-2xl text-gray-400" />
+                    <IoLocationSharp className="text-2xl text-light " />
                   ) : (
                     <div className="w-auto p-2 2xl:p-3 rounded-full border-2 border-green-300 bg-green-500 hover:bg-green-300 bg-opacity-50"></div>
                   )}
@@ -260,7 +260,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                     currentBlockSelected ? '' : ''
                   } transition-all duration-300 cursor-pointer`}>
                   {currentBlockSelected ? (
-                    <IoLocationSharp className="text-2xl text-gray-400" />
+                    <IoLocationSharp className="text-2xl text-light " />
                   ) : (
                     <div className="w-auto p-2 2xl:p-3 rounded-full border-2 border-green-300 bg-green-500 hover:bg-green-300 bg-opacity-50"></div>
                   )}

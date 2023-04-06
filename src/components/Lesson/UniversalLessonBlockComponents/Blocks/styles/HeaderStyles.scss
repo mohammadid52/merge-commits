@@ -92,39 +92,39 @@
 }
 
 // ------------- GRAY -------------
-.animated-border-gray-100::after {
+.animated-border-lightest ::after {
   background-color: #f3f4f6;
 }
 
-.animated-border-gray-200::after {
+.animated-border-light::after {
   background-color: #e5e7eb;
 }
 
-.animated-border-gray-300::after {
+.animated-border-lightest ::after {
   background-color: #d1d5db;
 }
 
-.animated-border-gray-400::after {
+.animated-border-light ::after {
   background-color: #9ca3af;
 }
 
-.animated-border-gray-500::after {
+.animated-border-medium ::after {
   background-color: #6b7280;
 }
 
-.animated-border-gray-600::after {
+.animated-border-medium ::after {
   background-color: #4b5563;
 }
 
-.animated-border-gray-700::after {
+.animated-border-dark ::after {
   background-color: #374151;
 }
 
-.animated-border-gray-800::after {
+.animated-border-darkest ::after {
   background-color: #1f2937;
 }
 
-.animated-border-gray-900::after {
+.animated-border-darkest::after {
   background-color: #111827;
 }
 

@@ -1,3 +1,4 @@
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import FormInput from 'atoms/Form/FormInput';
@@ -76,14 +77,14 @@ const WrittenContentTab = (props: ITabViewProps) => {
       <>
         <div className={`flex mb-2 justify-between items-center`}>
           {Boolean(lessonName) ? (
-            <p className={`w-auto text-right text-xs text-gray-500`}>
+            <p className={`w-auto text-right text-xs text-medium `}>
               Lesson Name: {/* @ts-ignore */}
               {contentObj?.lessonName || contentObj?.lesson?.title || 'N/A'}
             </p>
           ) : (
             <div className="w-auto" />
           )}
-          <p className={`w-auto text-right text-xs text-gray-500`}>
+          <p className={`w-auto text-right text-xs text-medium `}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
           </p>
         </div>
@@ -92,10 +93,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
             viewEditMode?.dataID === createTemplate.syllabusLessonID && (
               <div
                 style={{height: '0.05rem'}}
-                className={'mx-auto px-8 border-t-0 my-2 border-gray-200'}
+                className={'mx-auto px-8 border-t-0 my-2 border-light'}
               />
             )}
-          <div className="border-gray-200">
+          <div className="border-light">
             <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
               {organized?.header?.input
                 ? organized?.header.input === '[]'
@@ -109,7 +110,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   {map(filtered, (note, idx) => (
                     <div className="mb-4">
                       {idx !== 0 && (
-                        <div className="my-4 border-b-0 border-gray-300 border-dashed" />
+                        <div className="my-4 border-b-0 border-lightest  border-dashed" />
                       )}
                       <div
                         key={note.domID}
@@ -356,13 +357,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
         })
       ) : (
         <>
-          <div className="p-12 flex flex-center items-center">
-            <p className="text-center text-lg text-gray-500">
-              {subSection === 'Work'
+          <Empty
+            description={
+              subSection === 'Work'
                 ? 'No writing exercises are in your notebook for your course yet.'
-                : `No content for ${subSection} section`}
-            </p>
-          </div>
+                : `No content for ${subSection} section`
+            }
+          />
         </>
       )}
     </>

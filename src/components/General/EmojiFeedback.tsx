@@ -1,8 +1,10 @@
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {useNotifications} from '@contexts/NotificationContext';
+import {updateLastSubmissionDate} from '@customGraphql/customMutations';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {createPersonSentiments} from '@graphql/mutations';
 import '@style/general/EmojiFeedback.scss';
 import {CreatePersonSentimentsInput, UpdatePersonInput} from 'API';
 import Modal from 'atoms/Modal';
@@ -276,14 +278,15 @@ const EmojiFeedback = () => {
 
   const {setNotification} = useNotifications();
 
-  const createPersonSentiments = useGraphqlMutation<
+  const createPersonSentimentsMt = useGraphqlMutation<
     {input: CreatePersonSentimentsInput},
     any
-  >('createPersonSentiments', {
+  >('createPersonSentiments', createPersonSentiments, {
     custom: true
   });
-  const updateLastSubmissionDate = useGraphqlMutation<{input: UpdatePersonInput}, any>(
+  const updateLastSubmissionDateMt = useGraphqlMutation<{input: UpdatePersonInput}, any>(
     'updateLastSubmissionDate',
+    updateLastSubmissionDate,
     {
       custom: true
     }
@@ -306,9 +309,9 @@ const EmojiFeedback = () => {
       };
 
       setUser({lastEmotionSubmission: date});
-      await createPersonSentiments.mutate({input: payload});
+      await createPersonSentimentsMt.mutate({input: payload});
 
-      await updateLastSubmissionDate.mutate({
+      await updateLastSubmissionDateMt.mutate({
         input: {authId: authId, email: email, lastEmotionSubmission: date}
       });
 
@@ -323,7 +326,7 @@ const EmojiFeedback = () => {
       console.error(error);
 
       if (error.errors[0].errorType === 'DynamoDB:DynamoDbException') {
-        await updateLastSubmissionDate.mutate({
+        await updateLastSubmissionDateMt.mutate({
           input: {authId: authId, email: email, lastEmotionSubmission: date}
         });
       }
@@ -354,6 +357,7 @@ const EmojiFeedback = () => {
       open={showSentimentModal}
       title={'How are you today?'}
       scrollHidden
+      width={600}
       intenseOpacity
       modalCloseId="sentiment-modal-close"
       closeAction={onCancel}

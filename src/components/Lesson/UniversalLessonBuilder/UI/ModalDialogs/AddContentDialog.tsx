@@ -1,5 +1,6 @@
 import {DIVIDER, EMOTIONS, FORM_TYPES} from '@UlbUI/common/constants';
 import {classNames} from '@UlbUI/FormElements/TextInput';
+import {Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
 import {useOverlayContext} from 'contexts/OverlayContext';
@@ -24,7 +25,6 @@ import {IoDocumentAttachOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
@@ -38,13 +38,6 @@ const AddContentDialog = ({
   isSurvey = false,
   setCurrentHelpStep = () => {}
 }: AddContentDialog) => {
-  const tabs = [
-    {name: 'Text Content', current: true},
-    {name: 'Media', current: false},
-    {name: 'User Interaction', current: false},
-    {name: 'Game Changers', current: false}
-  ];
-
   const {
     selectedComponent,
     setShowingPin,
@@ -238,9 +231,6 @@ const AddContentDialog = ({
     }
   ].filter(Boolean);
 
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
-  const [onTextTab, onMediaTab, onUIContentTab, onGameChangersTab] = helpers;
-
   const onCustomPositionClick = (e: any) => {
     e.stopPropagation();
     if (!addContentModal.show) {
@@ -295,7 +285,7 @@ const AddContentDialog = ({
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
         } ${
           isDisabled ? 'opacity-60 pointer-events-none' : 'pointer-events-auto'
-        } form-button rounded-lg border-0 border-gray-300  bg-dark-blue p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
+        } form-button rounded-lg border-0 border-lightest   bg-dark-blue p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
         <>
@@ -315,7 +305,7 @@ const AddContentDialog = ({
                   <p className="text-xs mb-0 2xl:text-sm font-medium text-white">
                     {content.name}
                   </p>
-                  <p className="text-xs mb-0 2xl:text-sm text-gray-500 truncate">
+                  <p className="text-xs mb-0 2xl:text-sm text-medium  truncate">
                     {content.subtitle}
                   </p>
                 </div>
@@ -331,7 +321,7 @@ const AddContentDialog = ({
         </>
         <>
           {onOptions && (
-            <div className="px-2 dark:text-gray-500 flex  w-full flex-col gap-2">
+            <div className="px-2 dark:text-medium  flex  w-full flex-col gap-2">
               <Buttons
                 onClick={onCustomPositionClick}
                 variant="primary"
@@ -348,7 +338,7 @@ const AddContentDialog = ({
             </div>
           )}
           {onReplace && (
-            <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
+            <div className="px-2 dark:text-medium  flex  flex-col gap-2">
               <Buttons
                 onClick={handleReplace}
                 transparent
@@ -370,53 +360,57 @@ const AddContentDialog = ({
     );
   };
 
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: `Text Content`,
+      children: (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-1  px-2 my-4">
+          {textContent.map((content, idx) => (
+            <Item key={idx} content={content} />
+          ))}
+        </div>
+      )
+    },
+    {
+      key: '2',
+      label: `Media`,
+      children: (
+        <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+          {mediaContent.map((content, idx) => (
+            <Item key={idx} content={content} />
+          ))}
+        </div>
+      )
+    },
+    {
+      key: '3',
+      label: `User Interaction`,
+      children: (
+        <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+          {userInterfaceContent.map((content, idx) => (
+            <Item key={idx} content={content} />
+          ))}
+        </div>
+      )
+    },
+    {
+      key: '4',
+      label: `Game Changers`,
+      children: (
+        <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
+          {cardsList.map((content, idx) => (
+            <Item key={idx} content={content} />
+          ))}
+        </div>
+      )
+    }
+  ];
+
   return (
     <>
-      {!activeContentItem && <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />}
-      <AnimatedContainer
-        show={onTextTab && isEmpty(activeContentItem)}
-        animationType="translateY">
-        {onTextTab && isEmpty(activeContentItem) && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-1  px-2 my-4">
-            {textContent.map((content, idx) => (
-              <Item key={idx} content={content} />
-            ))}
-          </div>
-        )}
-      </AnimatedContainer>
-      <AnimatedContainer
-        show={onMediaTab && isEmpty(activeContentItem)}
-        animationType="translateY">
-        {onMediaTab && isEmpty(activeContentItem) && (
-          <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
-            {mediaContent.map((content, idx) => (
-              <Item key={idx} content={content} />
-            ))}
-          </div>
-        )}
-      </AnimatedContainer>
-      <AnimatedContainer
-        show={onUIContentTab && isEmpty(activeContentItem)}
-        animationType="translateY">
-        {onUIContentTab && isEmpty(activeContentItem) && (
-          <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
-            {userInterfaceContent.map((content, idx) => (
-              <Item key={idx} content={content} />
-            ))}
-          </div>
-        )}
-      </AnimatedContainer>
-      <AnimatedContainer
-        show={onGameChangersTab && isEmpty(activeContentItem)}
-        animationType="translateY">
-        {onGameChangersTab && isEmpty(activeContentItem) && (
-          <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">
-            {cardsList.map((content, idx) => (
-              <Item key={idx} content={content} />
-            ))}
-          </div>
-        )}
-      </AnimatedContainer>
+      {!activeContentItem && <Tabs items={items} />}
+
       <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
         {!isEmpty(activeContentItem) && (
           <>

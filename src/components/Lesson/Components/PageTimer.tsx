@@ -21,11 +21,15 @@ const PageTimer = ({startTime}: {startTime: any}) => {
     (t: any) => t?.currentPage === currentPage
   )?.remainingTime;
 
-  const startFromThisTime = existingTimer || startTime;
+  const startFromThisTime =
+    existingTimer !== null && existingTimer !== undefined && !isNaN(existingTimer)
+      ? existingTimer
+      : startTime;
 
-  const [timeRemaining, setTimeRemaining] = useState(startFromThisTime);
+  const [timeRemaining, setTimeRemaining] = useState(10);
 
   const updateTimerToLessonState = (updatedTime: number) => {
+    setTimeRemaining(updatedTime);
     lessonDispatch({
       type: 'UPDATE_TIMER_FOR_PAGE',
       payload: {
@@ -36,18 +40,8 @@ const PageTimer = ({startTime}: {startTime: any}) => {
   };
 
   useEffect(() => {
-    setTimeRemaining(startFromThisTime);
     updateTimerToLessonState(startFromThisTime);
-    // animateTimer();
   }, [currentPage]);
-
-  // const animateTimer = () => {
-  //   gsap.from('.page_timer', {
-  //     x: 100,
-  //     opacity: 0,
-  //     duration: 0.5
-  //   });
-  // };
 
   useEffect(() => {
     if (timeRemaining === 0) return;

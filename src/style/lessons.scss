@@ -191,8 +191,8 @@
   &.gray-input {
     margin: 0 !important;
     input {
-      background-color: $gray-700 !important;
-      border: 2px solid $gray-600;
+      background-color: $dark !important;
+      border: 2px solid $medium;
     }
   }
 
@@ -202,7 +202,7 @@
     color: $lesson-form-block-color;
     border-color: $lesson-form-block-border;
     &::placeholder {
-      color: $gray-500;
+      color: $medium;
     }
   }
 

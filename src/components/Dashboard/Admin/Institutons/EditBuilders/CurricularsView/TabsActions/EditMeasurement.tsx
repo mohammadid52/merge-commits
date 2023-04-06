@@ -10,8 +10,8 @@ import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateRubric} from 'customGraphql/customMutations';
+import {getRubric} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 
 const EditMeasurement = () => {
@@ -63,9 +63,7 @@ const EditMeasurement = () => {
 
   const fetchMeasurement = async () => {
     setLoading(true);
-    let item: any = await API.graphql(
-      graphqlOperation(customQueries.getRubric, {id: measurementId})
-    );
+    let item: any = await API.graphql(graphqlOperation(getRubric, {id: measurementId}));
     item = item.data.getRubric;
     if (item?.curriculumID === curricularId) {
       setMeasurement({
@@ -114,9 +112,7 @@ const EditMeasurement = () => {
         topicID: measurement.topic.id,
         curriculumID: curricularId
       };
-      const item: any = await API.graphql(
-        graphqlOperation(customMutations.updateRubric, {input})
-      );
+      const item: any = await API.graphql(graphqlOperation(updateRubric, {input}));
       const updatedItem = item.data.updateRubric;
       if (updatedItem) {
         history.goBack();
@@ -151,7 +147,7 @@ const EditMeasurement = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {EditMeasurementDict[userLanguage]['heading']}
           </h3>
         </div>
@@ -171,13 +167,13 @@ const EditMeasurement = () => {
                 </div>
                 {/* <div className="px-3 py-4">
                     <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                       Select Sequence
                     </label>
                     <Selector selectedItem={measurement.topic.value} placeholder="topic" list={topics} onChange={selectTopic} />
                   </div>
                     <div>
-                      <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                      <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                         {EditMeasurementDict[userLanguage]['seltopic']}
                     </label>
                       <Selector selectedItem={measurement.topic.value} placeholder={EditMeasurementDict[userLanguage]['topic']} list={topics} onChange={selectTopic} />

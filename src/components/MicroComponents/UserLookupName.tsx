@@ -25,13 +25,13 @@ const UserLookupName = ({
         <div className="ml-2">
           <div
             data-cy={`${item.id}`}
-            className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900">
+            className="hover:text-medium  cursor-pointer text-sm leading-5 font-medium text-darkest">
             <Highlighted
               text={item.name.split(' ').join('').length > 0 ? item.name : '--'}
               highlight={searchTerm}
             />
           </div>
-          <div className="text-sm leading-5 text-gray-500">
+          <div className="text-sm leading-5 text-medium ">
             <Highlighted text={item.email} highlight={searchTerm} />
           </div>
         </div>

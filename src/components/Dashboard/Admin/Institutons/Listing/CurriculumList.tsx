@@ -8,20 +8,20 @@ import SearchInput from 'atoms/Form/SearchInput';
 import {API, graphqlOperation} from 'aws-amplify';
 import Filters, {SortType} from 'components/Atoms/Filters';
 import Highlighted from 'components/Atoms/Highlighted';
-import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
 
 import CourseUnits from 'components/MicroComponents/CourseUnits';
 import ModalPopUp from 'components/Molecules/ModalPopUp';
 import Table, {ITableProps} from 'components/Molecules/Table';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listCurriculumsForSuperAdmin} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
 import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
-import {logError} from 'graphql/functions';
-import * as mutations from 'graphql/mutations';
+import {logError} from 'graphql-functions/functions';
+import {deleteCurriculum} from 'graphql/mutations';
+import PageLayout from 'layout/PageLayout';
 import {isEmpty, map, orderBy} from 'lodash';
 import moment from 'moment';
 import {useEffect, useState} from 'react';
@@ -99,12 +99,10 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const [totalNum, setTotalNum] = useState(0);
 
-  const {} = useQuery({
+  useQuery({
     queryKey: ['curriculumList'],
     queryFn: () => fetchCurriculums(),
     onSuccess: (data) => {
-      console.log(data);
-
       const updatedList: ICurricular[] = data
         ?.map((item: ICurricular) => {
           if (item) {
@@ -148,9 +146,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   const fetchCurriculums = async () => {
     try {
       setLoading(true);
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
-      );
+      const list: any = await API.graphql(graphqlOperation(listCurriculumsForSuperAdmin));
 
       return list.data?.listCurricula?.items;
     } catch (error) {
@@ -176,7 +172,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     setDeleting(true);
     try {
       await API.graphql(
-        graphqlOperation(mutations.deleteCurriculum, {
+        graphqlOperation(deleteCurriculum, {
           input: {id: item.id}
         })
       );
@@ -390,42 +386,34 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
-    <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col w-full">
-        <SectionTitleV3
-          title={InstitueCurriculum[userLanguage]['TITLE']}
-          fontSize="xl"
-          fontStyle="semibold"
-          extraClass="leading-6 text-gray-900"
-          borderBottom
-          shadowOff
-          withButton={
-            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
-              {isSuperAdmin && (
-                <InsitutionSelector
-                  selectedInstitution={selectedInstitution?.label}
-                  onChange={instituteChange}
-                />
-              )}
-              <SearchInput
-                dataCy="curriculum-search-input"
-                value={searchInput.value}
-                onChange={setSearch}
-                disabled={loading}
-                onKeyDown={searchRoom}
-                closeAction={removeSearchAction}
+    <>
+      <PageLayout
+        extra={
+          <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+            {isSuperAdmin && (
+              <InsitutionSelector
+                selectedInstitution={selectedInstitution?.label}
+                onChange={instituteChange}
               />
+            )}
+            <SearchInput
+              dataCy="curriculum-search-input"
+              value={searchInput.value}
+              onChange={setSearch}
+              disabled={loading}
+              onKeyDown={searchRoom}
+              closeAction={removeSearchAction}
+            />
 
-              {!isSuperAdmin && (
-                <AddButton
-                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                  onClick={createNewCurricular}
-                />
-              )}
-            </div>
-          }
-        />
-
+            {!isSuperAdmin && (
+              <AddButton
+                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
+                onClick={createNewCurricular}
+              />
+            )}
+          </div>
+        }
+        title={InstitueCurriculum[userLanguage]['TITLE']}>
         <Filters
           loading={loading}
           list={courseList}
@@ -441,17 +429,17 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         />
 
         <Table {...tableConfig} />
+      </PageLayout>
 
-        <ModalPopUp
-          open={deleteModal.show}
-          closeAction={handleToggleDelete}
-          saveAction={deleting ? () => {} : deleteModal.action}
-          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-          cancelLabel="CANCEL"
-          message={deleteModal.message}
-        />
-      </div>
-    </div>
+      <ModalPopUp
+        open={deleteModal.show}
+        closeAction={handleToggleDelete}
+        saveAction={deleting ? () => {} : deleteModal.action}
+        saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+        cancelLabel="CANCEL"
+        message={deleteModal.message}
+      />
+    </>
   );
 };
 

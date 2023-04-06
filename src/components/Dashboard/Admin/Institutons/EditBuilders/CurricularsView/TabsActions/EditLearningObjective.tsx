@@ -11,8 +11,8 @@ import {useHistory, useParams} from 'react-router';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {updateLearningObjective} from 'graphql/mutations';
+import {getLearningObjective} from 'graphql/queries';
 
 const EditLearningObjective = () => {
   const urlParams: any = useParams();
@@ -74,7 +74,7 @@ const EditLearningObjective = () => {
       description: learning.description
     };
     const item: any = await API.graphql(
-      graphqlOperation(mutations.updateLearningObjective, {input})
+      graphqlOperation(updateLearningObjective, {input})
     );
     const updatedItem = item?.data?.updateLearningObjective;
     if (updatedItem) {
@@ -88,7 +88,7 @@ const EditLearningObjective = () => {
     console.log('In here for query');
     setLoading(true);
     let item: any = await API.graphql(
-      graphqlOperation(queries.getLearningObjective, {id: learningId})
+      graphqlOperation(getLearningObjective, {id: learningId})
     );
     item = item.data.getLearningObjective;
     if (item.curriculumID === curricularId) {
@@ -128,7 +128,7 @@ const EditLearningObjective = () => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
             {EditLearningObjectiveDict[userLanguage]['heading']}
           </h3>
         </div>
@@ -150,7 +150,7 @@ const EditLearningObjective = () => {
                   ) : null}
                 </div>
                 {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-m font-medium leading-5 text-dark   mb-1">
                 Select Sequence
               </label>
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />

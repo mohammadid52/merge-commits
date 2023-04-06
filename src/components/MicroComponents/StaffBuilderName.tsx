@@ -22,7 +22,7 @@ const StaffBuilderName = ({
         <div className=" text-sm leading-5 font-medium ">
           <Highlighted text={item?.name} highlight={searchTerm} />
         </div>
-        <div className="text-sm leading-5 text-gray-500">
+        <div className="text-sm leading-5 text-medium ">
           <Highlighted text={item.email} highlight={searchTerm} />
         </div>
       </div>

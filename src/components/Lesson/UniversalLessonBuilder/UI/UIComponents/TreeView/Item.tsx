@@ -7,7 +7,7 @@ export const Item = ({
 }: React.PropsWithChildren<
   React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>
 >) => (
-  <li className={`cursor-pointer ${dark ? 'text-gray-900' : ''}`} {...rest}>
+  <li className={`cursor-pointer ${dark ? 'text-darkest' : ''}`} {...rest}>
     {children}
   </li>
 );

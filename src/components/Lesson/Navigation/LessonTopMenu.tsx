@@ -33,7 +33,8 @@ const LessonTopMenu = ({
   canContinue,
   handleForward,
   pageStateUpdated,
-  validateRequired
+  validateRequired,
+  getValidatedPages
 }: LessonHeaderBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -61,6 +62,7 @@ const LessonTopMenu = ({
 
             {pageStateUpdated && (
               <ProgressBar
+                getValidatedPages={getValidatedPages}
                 handleHome={() => handlePopup?.(false)}
                 handleRequiredNotification={handleRequiredNotification}
                 pages={pages}
@@ -77,18 +79,14 @@ const LessonTopMenu = ({
 
             <Button
               className={
-                canContinue
-                  ? 'bg-sea-green cursor-pointer'
-                  : 'bg-dark-gray cursor-default'
+                canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark cursor-default'
               }
               onClick={() => handleForward?.(false)}>
               <AiOutlineArrowLeft size={'1.5rem'} className="text-white" />
             </Button>
             <Button
               className={
-                canContinue
-                  ? 'bg-sea-green cursor-pointer'
-                  : 'bg-dark-gray cursor-default'
+                canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark cursor-default'
               }
               onClick={() => handleForward?.()}>
               <AiOutlineArrowRight size={'1.5rem'} className="text-white" />

@@ -2,8 +2,11 @@ import {useQuery} from '@customHooks/urlParam';
 import {CreateUniversalArchiveDataInput, PartInput, TeachingStyle} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  createUniversalArchiveData,
+  createUniversalSurveyStudentData
+} from 'graphql/mutations';
+import {listUniversalSurveyStudentData} from 'graphql/queries';
 
 import {
   PagePart,
@@ -199,6 +202,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
           exerciseData
         }
       });
+
       setStudentDataInitialized(true);
     }
   };
@@ -276,7 +280,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
       };
 
       const newSurveyData: any = await API.graphql(
-        graphqlOperation(mutations.createUniversalSurveyStudentData, {
+        graphqlOperation(createUniversalSurveyStudentData, {
           input
         })
       );
@@ -305,7 +309,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
     setLessonDataLoaded(false);
     try {
       let surveyData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSurveyStudentData, {
+        graphqlOperation(listUniversalSurveyStudentData, {
           ...filterObj,
           nextToken: nextToken,
           limit: SEARCH_LIMIT
@@ -374,7 +378,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
             user.authId,
             user.email
           );
-          if (createNewRecords) {
+          if (createNewRecords && createNewRecords?.length > 0) {
             const newRecords = await Promise.all(createNewRecords);
 
             if (newRecords?.length > 0) {
@@ -470,7 +474,7 @@ const SurveyApp = (props: ILessonSurveyApp) => {
       let returnedData: any;
 
       newStudentData = await API.graphql(
-        graphqlOperation(mutations.createUniversalArchiveData, {
+        graphqlOperation(createUniversalArchiveData, {
           input
         })
       );

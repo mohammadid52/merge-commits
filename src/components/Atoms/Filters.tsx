@@ -73,11 +73,7 @@ const Filters = ({
   return (
     <ErrorBoundary componentName="Filters">
       <div className="flex items-center justify-start gap-4">
-        <Radio.Group
-          disabled={loading}
-          onChange={handleModeChange}
-          value={mode}
-          style={{marginTop: 8, marginBottom: 8}}>
+        <Radio.Group disabled={loading} onChange={handleModeChange} value={mode}>
           {filter.map((filterName) => (
             <Radio.Button key={filterName} value={filterName}>
               {filterName}

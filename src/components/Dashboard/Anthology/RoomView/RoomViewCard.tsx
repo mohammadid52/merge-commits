@@ -20,16 +20,20 @@ interface IRoomViewCardProps {
   bannerImage?: string;
   type?: string;
   name?: string;
+  studentImage?: string | null;
+  isTeacher?: boolean;
 }
 
 const RoomViewCard = ({
   handleSectionSelect,
   roomID = '',
   mainSection,
+  isTeacher,
   sectionRoomID,
   sectionTitle,
   curriculumName,
   bannerImage,
+  studentImage,
   type = '',
   name
 }: IRoomViewCardProps) => {
@@ -73,10 +77,10 @@ const RoomViewCard = ({
             <div className="absolute flex items-end md:items-center  h-full w-full mb-4 md:mb-0 md:max-w-48 px-2 z-50 ">
               {/* OVERLAY LABEL */}
               <div className="border-2 border-white">
-                <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-80 flex-1 border-0 border-gray-900 p-2">
+                <div className="flex flex-col md:h-1/2 lg:h-2/3 justify-center text-center bg-white bg-opacity-80 flex-1 border-0 border-darkest   p-2">
                   <h1 className="text-sm font-medium theme-text:600">{type}</h1>
                   {(name || curriculumName) && (
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-darkest">
                       {name && <span className="">{name}</span>}
                       {curriculumName && <span className="">{curriculumName}</span>}
                     </p>
@@ -95,16 +99,22 @@ const RoomViewCard = ({
             ) : (
               roomID === 'private' && (
                 <div
-                  className={`h-full w-full relative profile justify-center items-center content-center  bg-gray-800 flex border-gray-400 z-40`}>
+                  className={`h-full w-full relative profile justify-center items-center content-center  bg-darkest    flex border-light  z-40`}>
                   <IoKeyOutline
                     className="absolute z-100 w-auto h-auto top-1 right-1 fill-current text-white"
                     size={32}
                   />
-                  <img
-                    className="h-full  w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
-                    src={getImageFromS3(image) as string}
-                    alt={image ? 'notebook cover' : 'default notebook cover'}
-                  />
+                  {(studentImage || image) && (
+                    <img
+                      className="h-full  w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
+                      src={
+                        getImageFromS3(
+                          studentImage && isTeacher ? studentImage : image
+                        ) as string
+                      }
+                      alt={'notebook cover'}
+                    />
+                  )}
                 </div>
               )
             )}
@@ -122,7 +132,7 @@ const RoomViewCard = ({
       )}
       {/* BACK PAGE */}
       <div
-        className={`absolute h-72  z-40 top-0 md:h-56 lg:h-60  lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
+        className={`absolute h-72  z-40 top-0 md:h-56 lg:h-60  lg:w-40 flex flex-row rounded-r-lg bg-lightest transition-all transform origin-left ease-in-out duration-250 
       ${
         noneSelected
           ? 'shadow-lg scale-90'

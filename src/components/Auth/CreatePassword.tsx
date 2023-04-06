@@ -2,7 +2,12 @@ import Buttons from '@components/Atoms/Buttons';
 import FormInput from '@components/Atoms/Form/FormInput';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
-import {getInstInfo, getPerson, signIn, updateLoginTime} from '@graphql/functions';
+import {
+  getInstInfo,
+  getPerson,
+  signIn,
+  updateLoginTime
+} from 'graphql-functions/functions';
 import {getUserInfo} from '@utilities/functions';
 import {Auth} from 'aws-amplify';
 import {useFormik} from 'formik';

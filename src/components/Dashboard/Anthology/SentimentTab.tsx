@@ -8,8 +8,12 @@ import FormInput from 'atoms/Form/FormInput';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createPersonSentiments,
+  updateLastSubmissionDate,
+  updatePersonSentiments
+} from 'customGraphql/customMutations';
+import {listPersonSentimentss} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {findIndex, isEmpty, update} from 'lodash';
 import moment from 'moment';
@@ -67,12 +71,12 @@ const EditBackstory = ({
 
         if (fromDashboard) {
           await API.graphql(
-            graphqlOperation(customMutations.createPersonSentiments, {
+            graphqlOperation(createPersonSentiments, {
               input: payload
             })
           );
           await API.graphql(
-            graphqlOperation(customMutations.updateLastSubmissionDate, {
+            graphqlOperation(updateLastSubmissionDate, {
               input: {
                 authId: data.personAuthID,
                 email: data.personEmail,
@@ -83,7 +87,7 @@ const EditBackstory = ({
           onSuccess && onSuccess();
         } else {
           await API.graphql(
-            graphqlOperation(customMutations.updatePersonSentiments, {
+            graphqlOperation(updatePersonSentiments, {
               input: payload
             })
           );
@@ -129,11 +133,7 @@ const EditBackstory = ({
             dataCy="backstory-button"
             disabled={saving}
             label={
-              !saving ? (
-                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
-              ) : (
-                <Loader className="text-white" />
-              )
+              !saving ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVE'] : <Loader />
             }
             onClick={updateBackstory}
           />
@@ -188,7 +188,7 @@ const SentimentTab = ({
       };
 
       const res: any = await API.graphql(
-        graphqlOperation(customQueries.listPersonSentimentss, payload)
+        graphqlOperation(listPersonSentimentss, payload)
       );
 
       const temp = res.data.listPersonSentiments?.items.map((record: any) => ({
@@ -281,7 +281,7 @@ const SentimentTab = ({
           <span
             className={`${
               goBack ? 'w-auto' : ''
-            } mt-2 block text-xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl`}>
+            } mt-2 block text-xl text-center leading-8 font-extrabold tracking-tight text-darkest   sm:text-3xl`}>
             {General[userLanguage]['SENTIMENT']['TITLE']}
           </span>
           {!goBack ? (
@@ -307,13 +307,13 @@ const SentimentTab = ({
           appear
           show={loadingSentiments}>
           <div className="flex h-96 items-center justify-center text-center">
-            <Loader className="text-gray-500 text-lg" />
+            <Loader />
           </div>
         </Transition>
 
         {studentSentiments.length === 0 && !loadingSentiments && (
           <div className="flex h-96 items-center justify-center text-center">
-            <p className="text-gray-500 text-lg">
+            <p className="text-medium  text-lg">
               {General[userLanguage]['SENTIMENT']['NO_DATA']}
             </p>
           </div>
@@ -332,23 +332,23 @@ const SentimentTab = ({
           <div className="flex flex-col">
             <div className="">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="overflow-hidden border-2 border-gray-200 sm:rounded-lg">
-                  <table className="sentiment-table-view min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <div className="overflow-hidden border-2 border-lightest sm:rounded-lg">
+                  <table className="sentiment-table-view min-w-full divide-y divide-light">
+                    <thead className="bg-lightest">
                       <tr>
                         <th
                           scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          className="px-6 py-3 text-left text-xs font-medium text-medium  uppercase tracking-wider">
                           Check-in
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          className="px-6 py-3 text-left text-xs font-medium text-medium  uppercase tracking-wider">
                           Backstory
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          className="px-6 py-3 text-left text-xs font-medium text-medium  uppercase tracking-wider">
                           Date
                         </th>
 
@@ -361,8 +361,8 @@ const SentimentTab = ({
                       {studentSentiments.map((sentiment, sentimentIdx) => (
                         <tr
                           key={sentimentIdx}
-                          className={sentimentIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-6 py-4 whitespace-nowrap capitalize flex items-center text-sm font-medium text-gray-900">
+                          className={sentimentIdx % 2 === 0 ? 'bg-white' : 'bg-lightest'}>
+                          <td className="px-6 py-4 whitespace-nowrap capitalize flex items-center text-sm font-medium text-darkest">
                             <p className="w-auto">
                               {getEmojiName(sentiment?.responseText || 'okay')}
                             </p>
@@ -372,10 +372,10 @@ const SentimentTab = ({
                               className="ml-2 h-7 w-7 transform hover:scale-110 transition-all duration-100 cursor-pointer"
                             />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-medium ">
                             {sentiment.backstory || '-'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-medium ">
                             {moment(sentiment.date).format('ll')}
                           </td>
 
@@ -444,11 +444,11 @@ const SentimentTab = ({
                   className="h-32 w-32 transform hover:scale-110 transition-all duration-100 cursor-pointer"
                 />
               ) : (
-                <p className=" text-gray-700 h-32 w-1/2 text-center flex items-center">
+                <p className=" text-dark   h-32 w-1/2 text-center flex items-center">
                   {'No response'}
                 </p>
               )}
-              <span className="w-auto text-gray-500 text-sm">
+              <span className="w-auto text-medium  text-sm">
                 {moment(sentiment.date).format('ll')}
               </span>
             </li>

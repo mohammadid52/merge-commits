@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -293,7 +293,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 fontStyle="semibold"
                 extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
                 borderBottom
-                extraClass="leading-6 text-gray-900"
+                extraClass="leading-6 text-darkest"
               />
               <TeacherRows
                 loading={Boolean(roomsLoading)}

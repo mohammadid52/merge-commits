@@ -1,45 +1,47 @@
-import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
+import Loader from '@components/Atoms/Loader';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from '@graphql/functions';
-import {useQuery} from '@tanstack/react-query';
-import {withZoiqFilter} from '@utilities/functions';
+import {reorderSyllabus, withZoiqFilter} from '@utilities/functions';
 import {UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
-import Community from 'components/Community/Community';
-import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
-// import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
-import Csv from 'components/Dashboard/Csv/Csv';
+import {logError, updatePageState} from 'graphql-functions/functions';
+
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
-import 'components/Dashboard/GameChangers/styles/Flickity.scss';
-import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
+
 import Home from 'components/Dashboard/Home/Home';
 import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
-// import LessonPlanHome from "components/Dashboard/LessonPlanner/LessonPlanHome";
+
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import EmojiFeedback from 'components/General/EmojiFeedback';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
+import {
+  getCurriculumForClasses,
+  getDashboardData,
+  getDashboardDataForCoTeachers,
+  getDashboardDataForTeachers,
+  getUniversalSyllabus,
+  listRoomCurriculums,
+  listRooms
+} from 'customGraphql/customQueries';
+
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
-
-const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
-const UploadLogsPage = lazy(() => import('components/Dashboard/Csv/UploadLogsPage'));
-
-const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
-const Anthology = lazy(() => import('components/Dashboard/Anthology/Anthology'));
-const Profile = lazy(() => import('components/Dashboard/Profile/Profile'));
-// const TestCases = lazy(() => import('components/Dashboard/TestCases/TestCases'));
-const Registration = lazy(
-  () => import('components/Dashboard/Admin/UserManagement/Registration')
+// Routes
+const Classroom = lazy(() => import('dashboard/Classroom/Classroom'));
+const UploadLogsPage = lazy(() => import('dashboard/Csv/UploadLogsPage'));
+const GameChangers = lazy(() => import('dashboard/GameChangers/GameChangers'));
+const Anthology = lazy(() => import('dashboard/Anthology/Anthology'));
+const Profile = lazy(() => import('dashboard/Profile/Profile'));
+const Registration = lazy(() => import('dashboard/Admin/UserManagement/Registration'));
+const ErrorsPage = lazy(() => import('dashboard/Errors/ErrorsPage'));
+const DictionaryPage = lazy(() => import('dashboard/Dictionary/DictionaryPage'));
+const Community = lazy(() => import('components/Community/Community'));
+const InstitutionsHome = lazy(
+  () => import('dashboard/Admin/Institutons/InstitutionsHome')
 );
-const ErrorsPage = lazy(() => import('components/Dashboard/Errors/ErrorsPage'));
-const DictionaryPage = lazy(
-  () => import('components/Dashboard/Dictionary/DictionaryPage')
-);
+const Csv = lazy(() => import('dashboard/Csv/Csv'));
 
 const conditionalRender = (children: JSX.Element, condition: boolean) => {
   if (condition) {
@@ -47,46 +49,6 @@ const conditionalRender = (children: JSX.Element, condition: boolean) => {
   } else {
     return <Redirect to={`/dashboard/home`} />;
   }
-};
-
-export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
-  const filteredSyllabusArray = syllabusArray.filter((d) => d.unit !== null);
-
-  let getSyllabusInSequence =
-    sequenceArray && sequenceArray.length > 0
-      ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
-          return [
-            ...acc,
-            filteredSyllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
-          ];
-        }, [])
-      : filteredSyllabusArray;
-
-  let mapSyllabusToSequence =
-    sequenceArray && sequenceArray.length > 0
-      ? getSyllabusInSequence
-          ?.map((syllabus: any) => {
-            return {
-              ...syllabus,
-              ...syllabus.unit,
-              lessons: {
-                ...syllabus?.unit?.lessons,
-                items:
-                  syllabus?.unit.lessons?.items?.length > 0
-                    ? syllabus?.unit.lessons.items
-                        .map((t: any) => {
-                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                          return {...t, index};
-                        })
-                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-                    : []
-              }
-            };
-          })
-          .map(({unit, ...rest}: any) => rest)
-      : getSyllabusInSequence;
-
-  return mapSyllabusToSequence;
 };
 
 type userObject = {
@@ -160,7 +122,12 @@ const Dashboard = () => {
   const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
 
   useEffect(() => {
-    if (!isPageUpdatedOnPersonTable && stateUser.role === 'ST') {
+    if (
+      stateUser &&
+      stateUser.authId !== '' &&
+      !isPageUpdatedOnPersonTable &&
+      stateUser.role === 'ST'
+    ) {
       updatePageState(
         UserPageState.DASHBOARD,
         {
@@ -181,7 +148,7 @@ const Dashboard = () => {
 
       setIsPageUpdatedOnPersonTable(true);
     }
-  }, [isPageUpdatedOnPersonTable, stateUser.role]);
+  }, [isPageUpdatedOnPersonTable, stateUser]);
 
   useEffect(() => {
     if (currentPage === 'homepage') {
@@ -222,51 +189,57 @@ const Dashboard = () => {
     );
   };
 
-  useQuery({
-    queryKey: ['user'],
-    queryFn: getUser,
-    enabled: !stateUser?.firstName,
-    onSuccess(data) {
-      setUser(data);
-    }
-  });
+  // useQuery({
+  //   queryKey: ['user'],
+  //   enabled: Boolean(stateUser && stateUser.email.length && stateUser.authId.length),
+  //   queryFn: getUser,
+  //   onSuccess(data) {
+  //     setUser(data);
+  //   }
+  // });
 
-  async function getUser() {
-    const userEmail = stateUser?.email ? stateUser?.email : cookies.auth?.email;
-    const userAuthId = stateUser?.authId ? stateUser?.authId : cookies.auth?.authId;
-    try {
-      const queryObj = {
-        name: 'queries.getPerson',
-        valueObj: {email: userEmail, authId: userAuthId}
-      };
+  // async function getUser() {
+  //   const userEmail = stateUser?.email ? stateUser?.email : cookies.auth?.email;
+  //   const userAuthId = stateUser?.authId ? stateUser?.authId : cookies.auth?.authId;
+  //   try {
+  //     const queryObj = {
+  //       name: 'queries.getPerson',
+  //       valueObj: {email: userEmail, authId: userAuthId}
+  //     };
 
-      const user: any = await API.graphql(
-        graphqlOperation(queries.getPerson, queryObj.valueObj)
-      );
-      return user.data.getPerson;
-    } catch (error) {
-      console.log('Removing cookies - Something went wrong');
-      if (!userEmail && !userAuthId) {
-        removeCookie('auth', {path: '/'});
-        dispatch({type: 'CLEANUP'});
-        sessionStorage.removeItem('accessToken');
-        updateAuthState(false);
-      }
-      logError(error, {authId: userAuthId, email: userEmail}, 'Dashboard @getUser');
-      console.error('Dashboard - getUser(): ', error);
-    }
-  }
+  //     if (userEmail && userAuthId) {
+  //       const user: any = await API.graphql(
+  //         graphqlOperation(getPerson, queryObj.valueObj)
+  //       );
+  //       return user.data.getPerson;
+  //     }
+  //   } catch (error) {
+  //     console.log('Removing cookies - Something went wrong');
+  //     if (!userEmail && !userAuthId) {
+  //       removeCookie('auth', {path: '/'});
+  //       dispatch({type: 'CLEANUP'});
+  //       sessionStorage.removeItem('accessToken');
+  //       updateAuthState(false);
+  //     }
+  //     logError(error, {authId: userAuthId, email: userEmail}, 'Dashboard @getUser');
+  //     console.error('Dashboard - getUser(): ', error);
+  //   }
+  // }
 
   useEffect(() => {
-    if (!stateUser?.firstName) {
-      // do nothing
-    } else {
-      setUserData({
-        role: stateUser?.role,
-        image: stateUser?.image
-      });
+    if (stateUser.authId !== '') {
+      if (!stateUser?.firstName) {
+        // do nothing
+      } else {
+        if (stateUser?.role) {
+          setUserData({
+            role: stateUser?.role,
+            image: stateUser?.image
+          });
+        }
+      }
     }
-  }, [stateUser?.role]);
+  }, [stateUser?.role, stateUser.authId]);
 
   // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
 
@@ -302,18 +275,18 @@ const Dashboard = () => {
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
    ******************************************/
 
-  const getDashboardData = async (authId: string, email: string) => {
+  const getDashboardDataFn = async (authId: string, email: string) => {
     try {
       setRoomsLoading(true);
       const queryObj = {
-        name: 'customQueries.getDashboardData',
+        name: 'getDashboardData',
         valueObj: {
           authId: authId,
           email: email
         }
       };
       const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+        graphqlOperation(getDashboardData, queryObj.valueObj)
       );
 
       // @ts-ignore
@@ -337,16 +310,16 @@ const Dashboard = () => {
     }
   };
 
-  const getDashboardDataForTeachers = async (teacherAuthID: string) => {
+  const getDashboardDataForTeachersFn = async (teacherAuthID: string) => {
     setRoomsLoading(true);
     try {
       const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForTeachers, {
+        graphqlOperation(getDashboardDataForTeachers, {
           filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        graphqlOperation(getDashboardDataForCoTeachers, {
           filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
@@ -384,16 +357,22 @@ const Dashboard = () => {
     const authId = stateUser?.authId;
     const email = stateUser?.email;
 
+    if (stateUser.authId === '') return;
+
     if (stateUser?.role === 'ST') {
-      getDashboardData(authId, email);
+      if (!authId || !email) return;
+      getDashboardDataFn(authId, email);
     } else {
-      getDashboardDataForTeachers(authId);
+      if (!authId) return;
+      getDashboardDataForTeachersFn(authId);
     }
   };
 
   useEffect(() => {
-    refetchHomeData();
-  }, [stateUser?.role]);
+    if (stateUser.authId !== '') {
+      refetchHomeData();
+    }
+  }, [stateUser?.role, stateUser.authId]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -430,6 +409,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    if (stateUser.authId === '') return;
     const studentRoomsList = getRoomsFromClassList();
     // console.log('studentRoomsList - ', studentRoomsList);
     setLocalStorageData('room_list', studentRoomsList);
@@ -455,17 +435,17 @@ const Dashboard = () => {
   const listRoomTeacher = async (teacherAuthID: string) => {
     try {
       const queryObj = {
-        name: 'customQueries.listRooms',
+        name: 'listRooms',
         valueObj: {
           filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
         }
       };
 
       const classIdFromRoomsFetch: any = await API.graphql(
-        graphqlOperation(customQueries.listRooms, queryObj.valueObj)
+        graphqlOperation(listRooms, queryObj.valueObj)
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        graphqlOperation(getDashboardDataForCoTeachers, {
           filter: {teacherAuthID: {eq: teacherAuthID}}
         })
       );
@@ -510,13 +490,13 @@ const Dashboard = () => {
   /**********************************
    * 3. LIST CURRICULUMS BY ROOM ID *
    **********************************/
-  const listRoomCurriculums = async () => {
+  const listRoomCurriculumsFn = async () => {
     // removeLocalStorageData('curriculum_id');
     if (roomData.rooms.length > 0) {
       try {
         // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
         const roomCurriculumsFetch = await API.graphql(
-          graphqlOperation(customQueries.listRoomCurriculums, {
+          graphqlOperation(listRoomCurriculums, {
             filter: {
               roomID: {eq: activeRoom}
             }
@@ -546,7 +526,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (activeRoom && activeRoom !== '') {
-      listRoomCurriculums();
+      listRoomCurriculumsFn();
     }
   }, [activeRoom]);
 
@@ -579,7 +559,7 @@ const Dashboard = () => {
     try {
       // ~~~~~~~~~~~~~~ CURRICULUM ~~~~~~~~~~~~~ //
       let getCurriculum = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumForClasses, {
+        graphqlOperation(getCurriculumForClasses, {
           id: curriculumIds
         })
       );
@@ -642,7 +622,7 @@ const Dashboard = () => {
     try {
       setLessonLoading(true);
       const syllabusLessonFetch = await API.graphql(
-        graphqlOperation(customQueries.getUniversalSyllabus, {
+        graphqlOperation(getUniversalSyllabus, {
           id: syllabusID
         })
       );
@@ -736,7 +716,7 @@ const Dashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="relative h-screen flex overflow-hidden container_background ">
+      <div className="relative h-screen flex overflow-hidden bg-lightest  ">
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 
@@ -749,18 +729,13 @@ const Dashboard = () => {
           {/*<FloatingSideMenu />*/}
           {/* {!isGameChangers && <Noticebar notifications={notifications} />} */}
 
-          <Suspense
-            fallback={
-              <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading from="Dashboard 1" />
-              </div>
-            }>
+          <Suspense>
             <Switch>
               <Route
                 path={`${match.url}`}
                 exact
                 render={() => {
-                  if (userData && userData.role !== '') {
+                  if (userData && userData.role !== null) {
                     if (userData.role === 'FLW' || userData.role === 'TR') {
                       return <Redirect to={`${match.url}/home`} />;
                     } else if (userData.role === 'ST') {
@@ -778,7 +753,7 @@ const Dashboard = () => {
                   } else
                     return (
                       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <ComponentLoading from="Dashbaord 2" />
+                        <Loader />
                       </div>
                     );
                 }}
@@ -984,7 +959,7 @@ const Dashboard = () => {
         </div>
         {/* </ResizablePanels> */}
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-900"></div>
+      <div className="w-full flex justify-center items-center bg-darkest"></div>
     </>
   );
 };

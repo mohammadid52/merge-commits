@@ -3,12 +3,12 @@ import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {v4 as uuidv4} from 'uuid';
 
-import * as customMutations from 'customGraphql/customMutations';
+import {updateInstitution, createInstitution} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {statesList} from 'utilities/staticData';
 
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
-import {uploadImageToS3} from '@graphql/functions';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
@@ -179,14 +179,14 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             id: instituteData.id
           };
           const result: any = await API.graphql(
-            graphqlOperation(customMutations.updateInstitution, {
+            graphqlOperation(updateInstitution, {
               input: payload
             })
           );
           postMutation(result.data?.updateInstitution);
         } else {
           await API.graphql(
-            graphqlOperation(customMutations.createInstitution, {
+            graphqlOperation(createInstitution, {
               input: payload
             })
           );
@@ -246,6 +246,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   } = instituteData;
 
   const formDict = InstitutionBuilderDict[userLanguage]['FORM'];
+
+  //
 
   return (
     <div className="">
@@ -365,7 +367,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     name="isZoiq"
                     dataCy="isZoiq"
                     label={'ZOIQ'}
-                    className="group:hover:bg-gray-500"
+                    className="group:hover:bg-medium "
                     value={instituteData.isZoiq}
                     onChange={(e) => {
                       setInstituteData({
@@ -406,13 +408,14 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           </form>
 
           {/* Image cropper */}
-
-          <ProfileCropModal
-            open={showCropper}
-            upImg={upImage || ''}
-            saveCroppedImage={(img: string) => saveCroppedImage(img)}
-            closeAction={toggleCropper}
-          />
+          {showCropper && (
+            <ProfileCropModal
+              open={showCropper}
+              upImg={upImage || ''}
+              saveCroppedImage={(img: string) => saveCroppedImage(img)}
+              closeAction={toggleCropper}
+            />
+          )}
         </div>
       </div>
     </div>

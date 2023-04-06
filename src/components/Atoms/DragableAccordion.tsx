@@ -37,7 +37,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
   };
 
   return (
-    <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl">
+    <div className="bg-white mx-auto  border-0 border-lightest rounded-xl">
       <DragDropContext onDragEnd={onItemDrag}>
         <Droppable droppableId="droppable">
           {(provided) => (
@@ -56,7 +56,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                   ) => (
                     <Fragment key={item.id}>
                       <li
-                        className={`relative border-b-0 border-gray-200 ${
+                        className={`relative border-b-0 border-lightest ${
                           selectedItem === item.id ? 'rounded-lg' : ''
                         }`}>
                         <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -88,13 +88,13 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                                         {item.title}{' '}
                                         {item.scope === 'private' && (
                                           <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto bg-gray-100 text-gray-800`}>
+                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto bg-lightest  text-darkest   `}>
                                             private
                                           </span>
                                         )}
                                       </span>
                                       <br />
-                                      <span className="text-sm leading-6 text-gray-500">
+                                      <span className="text-sm leading-6 text-medium ">
                                         {item.subtitle ? item.subtitle : ''}
                                       </span>
                                     </div>

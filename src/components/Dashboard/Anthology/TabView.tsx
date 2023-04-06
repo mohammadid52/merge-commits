@@ -6,9 +6,9 @@ import useDictionary from 'customHooks/dictionary';
 import Buttons from 'atoms/Buttons';
 
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {Tabs, TabsProps} from 'antd';
 import {getAsset} from 'assets';
 import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
-import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
 import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
 import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
 import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
@@ -72,7 +72,7 @@ const TabView = ({
   subSection,
   setSubSection,
   tab,
-  setTab,
+
   createTemplate,
   currentContentObj,
   allStudentData,
@@ -163,24 +163,23 @@ const TabView = ({
   );
   // ~~~~~~~~~~~~~~~~~ TABS ~~~~~~~~~~~~~~~~ //
 
-  const CLASS_TABS = [
+  const CLASS_TABS: TabsProps['items'] = [
     {
-      index: 0,
-      title: anthologyDict[userLanguage].TABS.B,
-      id: 'Work',
-      content: WrittenContent
+      key: '1',
+      label: anthologyDict[userLanguage].TABS.B,
+      children: WrittenContent,
+      id: 'Work'
     },
     {
-      index: 1,
-      title: anthologyDict[userLanguage].TABS.C,
-      id: 'Notes',
-      content: WrittenContent
+      key: '2',
+      label: anthologyDict[userLanguage].TABS.C,
+      children: WrittenContent,
+      id: 'Notes'
     },
     {
-      index: 2,
-      title: anthologyDict[userLanguage].TABS.D,
-      id: 'Uploads',
-      content: (
+      key: '3',
+      label: anthologyDict[userLanguage].TABS.D,
+      children: (
         <UploadsTab
           personAuthID={state?.user?.authId}
           personEmail={state?.user?.email}
@@ -192,27 +191,32 @@ const TabView = ({
           mainSection={mainSection}
           subSection={subSection}
         />
-      )
+      ),
+      id: 'Uploads'
     }
   ];
 
-  const JOURNAL_TABS = [
+  const JOURNAL_TABS: TabsProps['items'] = [
     {
-      index: 0,
-      title: 'Check-In',
+      key: '1',
+      label: 'Check-In',
       id: 'checkIn',
-      content: <SentimentTab />
+      children: <SentimentTab />
     },
     {
-      index: 1,
-      title: anthologyDict[userLanguage].TABS.A,
+      key: '2',
+      label: anthologyDict[userLanguage].TABS.A,
       id: 'Journal',
-      content: WrittenContent
+      children: WrittenContent
     }
   ];
 
-  const handleTabSelect = (index: number, tabSubSection: string) => {
-    setTab(index);
+  const items = mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS;
+
+  const handleTabSelect = (activeKey: string) => {
+    // get id of tab by activeKey
+    const tabSubSection = items.find((item) => item.key === activeKey)?.id;
+    // setTab(index);
     setSubSection(tabSubSection);
   };
 
@@ -233,9 +237,9 @@ const TabView = ({
       {subSection !== 'none' && (
         <div className="w-auto" id="anthology_tabs">
           <div
-            className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
+            className={`w-full h-14 leading-6 text-darkest   flex flex-row justify-between items-center`}>
             <div
-              className={`relative border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+              className={`relative border-b-0 border-lightest shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
               <IoIosJournal
                 style={{color: stringToHslColor(sectionRoomID)}}
                 className=" my-auto mr-2 w-auto h-auto fill-current"
@@ -243,7 +247,7 @@ const TabView = ({
               />
 
               <h2
-                className={`text-sm mb-0 md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
+                className={`text-sm mb-0 md:text-lg 2xl:text-xl font-semibold leading-6 text-darkest`}>
                 {getTitle()}
               </h2>
             </div>
@@ -261,13 +265,12 @@ const TabView = ({
             </AnimatedContainer>
           </div>
           <div
-            className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
-            <AnthologyUnderlinedTabs
-              hideTooltip
-              activeTab={tab}
-              mainSection={mainSection}
-              tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
-              handleTabSelect={handleTabSelect}
+            className={`w-full min-h-48 p-4 overflow-hidden bg-white rounded-b-lg mb-12`}>
+            <Tabs
+              animated
+              defaultActiveKey="1"
+              onChange={handleTabSelect}
+              items={items}
             />
           </div>
         </div>
