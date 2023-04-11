@@ -176,6 +176,7 @@ const Lesson = () => {
   const validateRequired = (pageIdx: number) => {
     if (PAGES) {
       const thisPageData = lessonState?.studentData || [];
+
       const thisPageRequired = lessonState?.requiredInputs[pageIdx] || [];
 
       if (thisPageData && thisPageData.length > 0) {
@@ -451,7 +452,7 @@ const Lesson = () => {
       }
       logError(error, {authId, email}, 'Lesson @createPersonLocation', error.toString());
 
-      console.log('createPersonLocation failed', error, newLocation);
+      console.error('createPersonLocation failed', error, newLocation);
     } finally {
       setCreated(true);
     }

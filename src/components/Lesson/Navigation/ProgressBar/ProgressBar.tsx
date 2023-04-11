@@ -151,7 +151,9 @@ const ProgressBar = ({
     if (
       indexOfFirstInvalidPage &&
       indexOfFirstInvalidPage !== -1 &&
-      indexOfFirstInvalidPage !== lessonState.currentPage
+      indexOfFirstInvalidPage !== lessonState.currentPage &&
+      // if page number is less than the index of the first invalid page then we can continue
+      pageNr >= indexOfFirstInvalidPage
     ) {
       moveToPage(indexOfFirstInvalidPage);
     } else if (canContinue) {

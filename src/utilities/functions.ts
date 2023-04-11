@@ -306,6 +306,7 @@ export const scrollUp = (type = 'lesson', customId?: string) => {
     lesson: 'lesson-app-container',
     survey: 'survey-app-container'
   } as any;
+
   const container = document.getElementById(customId || domID[type]);
 
   if (container) {

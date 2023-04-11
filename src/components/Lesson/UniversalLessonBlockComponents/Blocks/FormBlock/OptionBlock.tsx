@@ -99,6 +99,7 @@ const OptionBlock = (props: IOptionProps) => {
       let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
       const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
+
       const onChange = (e: any) => {
         const {id} = e.target;
         if (isInLesson) {

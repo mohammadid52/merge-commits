@@ -46,7 +46,7 @@ const CoreUniversalLesson = ({
   const history = useHistory();
   const match = useRouteMatch();
 
-  const lessonType = lessonState.lessonData?.lessonType;
+  const lessonType = lessonState.lessonData?.type;
 
   const goNext = () => {
     scrollUp(lessonType);
