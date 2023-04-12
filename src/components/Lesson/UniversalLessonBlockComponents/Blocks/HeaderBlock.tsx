@@ -20,7 +20,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
         dangerouslySetInnerHTML={{
           __html: inputValue.value
         }}
-        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center  mt-4 mb-2"`}></h1>
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center  mt-4 mb-2`}></h1>
     );
   };
 

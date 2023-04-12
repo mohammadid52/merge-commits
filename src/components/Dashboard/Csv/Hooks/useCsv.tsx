@@ -173,7 +173,7 @@ const useCsv = ({
                       // get the answer index from the options array
 
                       if (responseValue) {
-                        const answerIndex = surveyQuestionOptions[
+                        const answerIndex: number = surveyQuestionOptions[
                           singleAnswer.domID
                         ].findIndex((option: any) => option.id === singleAnswer.input[0]);
 
