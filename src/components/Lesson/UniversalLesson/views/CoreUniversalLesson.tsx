@@ -49,12 +49,13 @@ const CoreUniversalLesson = ({
   const lessonType = lessonState.lessonData?.type;
 
   const goNext = () => {
-    scrollUp(lessonType);
     history.push(`${match.url}/${currentPage + 1}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
       payload: currentPage + 1
     });
+
+    scrollUp(lessonType);
   };
 
   const handleForward = (forward = true) => {
@@ -83,12 +84,13 @@ const CoreUniversalLesson = ({
   };
 
   const goBack = () => {
-    scrollUp(lessonType);
     history.push(`${match.url}/${currentPage - 1}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
       payload: currentPage - 1
     });
+
+    scrollUp(lessonType);
   };
 
   return (

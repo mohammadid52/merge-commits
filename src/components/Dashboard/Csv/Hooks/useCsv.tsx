@@ -171,7 +171,7 @@ const useCsv = ({
                       universalSurveyStudentID = answerArray.id; // * <== but here-
 
                       // get the answer index from the options array
-
+                      // if responseValue is true, then use the label (numerical), else use the text
                       if (responseValue) {
                         const answerIndex: number = surveyQuestionOptions[
                           singleAnswer.domID

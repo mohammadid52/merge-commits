@@ -140,7 +140,7 @@ const Csv = () => {
       let sanitizedQuestions = questionsListdata.flat(2).filter(Boolean).flat();
 
       if (sanitizedQuestions) {
-        sanitizedQuestions = sanitizedQuestions.map((item: any) => ({
+        sanitizedQuestions = sanitizedQuestions.map((item: unknown) => ({
           question: item
         }));
       }

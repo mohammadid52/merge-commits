@@ -310,6 +310,8 @@ export const scrollUp = (type = 'lesson', customId?: string) => {
   const container = document.getElementById(customId || domID[type]);
 
   if (container) {
-    container.scrollTo({top: 0, behavior: 'smooth'});
+    setTimeout(() => {
+      container.scrollTo({top: 0, behavior: 'smooth'});
+    }, 100);
   }
 };
