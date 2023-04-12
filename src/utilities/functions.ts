@@ -4,6 +4,7 @@ import {isEmpty} from 'lodash';
 import {allowedAuthIds} from 'state/GlobalState';
 import {getImageFromS3Static} from './services';
 import {getClientKey} from './strings';
+import {gsap} from 'gsap';
 
 export const formatPageName = (pageState: UserPageState) => {
   switch (pageState) {
@@ -310,7 +311,15 @@ export const scrollUp = (type = 'lesson', customId?: string) => {
   const container = document.getElementById(customId || domID[type]);
 
   if (container) {
+    // add gsap animation - page transition
+    gsap.fromTo(
+      '.lesson-page-container',
+      {duration: 0.5, y: -10, scale: 0.97, opacity: 0, ease: 'power2.out'},
+      {opacity: 1, y: 0, scale: 1}
+    );
+
     setTimeout(() => {
+      // scroll to top
       container.scrollTo({top: 0, behavior: 'smooth'});
     }, 100);
   }

@@ -85,6 +85,7 @@ const CoreUniversalLesson = ({
 
   const goBack = () => {
     history.push(`${match.url}/${currentPage - 1}`);
+
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
       payload: currentPage - 1
