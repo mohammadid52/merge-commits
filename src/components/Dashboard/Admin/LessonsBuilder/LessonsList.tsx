@@ -2,7 +2,6 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
@@ -15,10 +14,11 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import * as customQueries from 'customGraphql/customQueries';
+import {listUniversalLessons} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as mutations from 'graphql/mutations';
+import {deleteUniversalLesson} from 'graphql/mutations';
+import PageLayout from 'layout/PageLayout';
 import {find, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useState} from 'react';
@@ -127,7 +127,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
         };
       }
       const fetchUList: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessons, condition)
+        graphqlOperation(listUniversalLessons, condition)
       );
       if (!fetchUList) {
         throw new Error('fail!');
@@ -287,7 +287,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     try {
       console.log('deleting...');
       await API.graphql(
-        graphqlOperation(mutations.deleteUniversalLesson, {
+        graphqlOperation(deleteUniversalLesson, {
           input: {id: item.id}
         })
       );
@@ -425,99 +425,86 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     }
   };
 
-  {
-    return (
-      <ErrorBoundary componentName="LessonsList">
+  return (
+    <ErrorBoundary componentName="LessonsList">
+      <CloneLesson
+        open={showCloneModal.show}
+        setShowCloneModal={setShowCloneModal}
+        getCloneLessonDetails={getCloneLessonDetails}
+      />
+
+      {!isInInstitution && <BreadCrums items={breadCrumsList} />}
+      <PageLayout
+        title={LessonsListDict[userLanguage][isInInstitution ? 'HEADING' : 'TITLE']}
+        extra={
+          <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+            {isSuperAdmin && (
+              <InsitutionSelector
+                selectedInstitution={selectedInstitution?.label}
+                onChange={instituteChange}
+              />
+            )}
+            {!isInInstitution && (
+              <>
+                <Selector
+                  placeholder={LessonsListDict[userLanguage]['SORTBY']}
+                  list={sortByList}
+                  selectedItem={sortingType.name}
+                  onChange={setSortingValue}
+                />
+                <button
+                  className={`w-28 bg-lightest  mr-4 p-3 border-light   border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+                  onClick={toggleSortDimention}>
+                  {sortingType.asc ? (
+                    <AiOutlineArrowUp className="theme-text" size="1.5rem" />
+                  ) : (
+                    <AiOutlineArrowDown className="theme-text" size="1.5rem" />
+                  )}
+                </button>
+              </>
+            )}
+            <SearchInput
+              value={searchInput.value}
+              onChange={setSearch}
+              disabled={status !== 'done'}
+              onKeyDown={searchLesson}
+              closeAction={removeSearchAction}
+            />
+
+            {!isSuperAdmin && (
+              <AddButton
+                label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
+                onClick={buildLesson}
+              />
+            )}
+            {params.get('from') ? (
+              <Buttons
+                label="Go back"
+                onClick={() => history.goBack()}
+                Icon={IoArrowUndoCircleOutline}
+              />
+            ) : null}
+          </div>
+        }>
         <div className={`w-full h-full`}>
-          <CloneLesson
-            open={showCloneModal.show}
-            setShowCloneModal={setShowCloneModal}
-            getCloneLessonDetails={getCloneLessonDetails}
+          {/* Header section */}
+
+          <Filters
+            loading={status !== 'done'}
+            list={currentList}
+            resetPagination={resetPagination}
+            updateFilter={updateFilter}
+            filters={filters}
+            showingCount={{
+              currentPage,
+              lastPage: allAsProps.lastPage,
+              totalResults: allAsProps.totalResults,
+              pageCount: allAsProps.pageCount
+            }}
           />
 
-          {/* Header section */}
-          {!isInInstitution && <BreadCrums items={breadCrumsList} />}
-          <div
-            className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
-              isInInstitution ? 'lg:items-center px-8' : ''
-            }`}>
-            <SectionTitleV3
-              title={LessonsListDict[userLanguage][isInInstitution ? 'HEADING' : 'TITLE']}
-              fontSize="xl"
-              fontStyle="semibold"
-              extraClass="leading-6 text-gray-900"
-              borderBottom
-              shadowOff
-              withButton={
-                <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
-                  {isSuperAdmin && (
-                    <InsitutionSelector
-                      selectedInstitution={selectedInstitution?.label}
-                      onChange={instituteChange}
-                    />
-                  )}
-                  {!isInInstitution && (
-                    <>
-                      <Selector
-                        placeholder={LessonsListDict[userLanguage]['SORTBY']}
-                        list={sortByList}
-                        selectedItem={sortingType.name}
-                        onChange={setSortingValue}
-                      />
-                      <button
-                        className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-                        onClick={toggleSortDimention}>
-                        {sortingType.asc ? (
-                          <AiOutlineArrowUp className="theme-text" size="1.5rem" />
-                        ) : (
-                          <AiOutlineArrowDown className="theme-text" size="1.5rem" />
-                        )}
-                      </button>
-                    </>
-                  )}
-                  <SearchInput
-                    value={searchInput.value}
-                    onChange={setSearch}
-                    disabled={status !== 'done'}
-                    onKeyDown={searchLesson}
-                    closeAction={removeSearchAction}
-                  />
-
-                  {!isSuperAdmin && (
-                    <AddButton
-                      label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
-                      onClick={buildLesson}
-                    />
-                  )}
-                  {params.get('from') ? (
-                    <Buttons
-                      label="Go back"
-                      onClick={() => history.goBack()}
-                      Icon={IoArrowUndoCircleOutline}
-                    />
-                  ) : null}
-                </div>
-              }
-            />
-          </div>
-          <div className="px-8">
-            <Filters
-              loading={status !== 'done'}
-              list={currentList}
-              resetPagination={resetPagination}
-              updateFilter={updateFilter}
-              filters={filters}
-              showingCount={{
-                currentPage,
-                lastPage: allAsProps.lastPage,
-                totalResults: allAsProps.totalResults,
-                pageCount: allAsProps.pageCount
-              }}
-            />
-          </div>
-
           {/* List / Table */}
-          <div className={`px-8`}>
+          <div className={``}>
             <Table {...tableConfig} />
 
             <ModalPopUp
@@ -532,9 +519,9 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
           {/* Pagination And Counter */}
         </div>
-      </ErrorBoundary>
-    );
-  }
+      </PageLayout>
+    </ErrorBoundary>
+  );
 };
 
 export default LessonsList;

@@ -60,9 +60,11 @@ const ModalPopUp = (props: ModalProps) => {
       showFooter={false}
       closeAction={closeAction}>
       <div className={` text-center my-8`}>
-        <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
+        <p className="my-4 px-6 text-darkest    text-lg font-medium leading-8">
+          {message}
+        </p>
         {smallText && (
-          <p className="my-4 px-6 text-gray-700 text-xs font-medium leading-8">
+          <p className="my-4 px-6 text-dark   text-xs font-medium leading-8">
             {smallText}
           </p>
         )}

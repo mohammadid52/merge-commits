@@ -175,7 +175,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                   ) : (
                     <div
                       style={{minHeight: '60px'}}
-                      className="flex w-auto items-center justify-center text-lg text-gray-600">
+                      className="flex w-auto items-center justify-center text-lg text-medium ">
                       {/* Add this to dictionary */}
                       <h1 className={`w-auto text-center`}>This block has no content</h1>
                     </div>

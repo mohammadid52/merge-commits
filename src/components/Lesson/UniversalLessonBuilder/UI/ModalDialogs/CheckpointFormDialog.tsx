@@ -9,8 +9,8 @@ import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {createQuestion} from 'graphql/mutations';
+import {listQuestions} from 'graphql/queries';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {isObject, map} from 'lodash';
 import {Fragment, useCallback, useEffect, useState} from 'react';
@@ -152,7 +152,7 @@ const CreateQuestion = ({
             language: item.language.value,
             options: filteredOptions(item.options)
           };
-          await API.graphql(graphqlOperation(mutations.createQuestion, {input}));
+          await API.graphql(graphqlOperation(createQuestion, {input}));
         })
       );
       setValidation({
@@ -310,7 +310,7 @@ const CreateQuestion = ({
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+            <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
               {AddNewQuestionDict[userLanguage]['SELECTTYPE']}{' '}
               <span className="text-red-500">*</span>
             </label>
@@ -323,7 +323,7 @@ const CreateQuestion = ({
             {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
           </div>
           <div>
-            <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+            <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
               {AddNewQuestionDict[userLanguage]['SELECTLANGUAGE']}
             </label>
             <Selector
@@ -339,8 +339,8 @@ const CreateQuestion = ({
 
         {(type.value === 'selectOne' || type.value === 'selectMany') && (
           <div className="p-6">
-            <div className="p-6 border-gray-400  border-0 border-dashed">
-              <p className="text-m font-medium leading-5 text-gray-700 mb-1">
+            <div className="p-6 border-light   border-0 border-dashed">
+              <p className="text-m font-medium leading-5 text-dark   mb-1">
                 {AddNewQuestionDict[userLanguage]['ADDOPTION']}{' '}
               </p>
 
@@ -365,7 +365,7 @@ const CreateQuestion = ({
                           onClick={() => onOptionAdd(index)}
                           className={`text-center w-20 transition-all duration-200 ${getColor(
                             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                          )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                          )} text-xs font-semibold text-light  border-lightest px-2 py-1 cursor-pointer rounded  border-2 hover:text-medium `}>
                           Add
                         </button>
                       </div>
@@ -486,9 +486,7 @@ const ExistingQuestionList = ({
   const fetchQuestionsList = useCallback(async () => {
     try {
       setLoading(true);
-      const fetchQuestionsData: any = await API.graphql(
-        graphqlOperation(queries.listQuestions)
-      );
+      const fetchQuestionsData: any = await API.graphql(graphqlOperation(listQuestions));
       if (!fetchQuestionsData) {
         setError(true);
         throw new Error('fail!');
@@ -519,7 +517,7 @@ const ExistingQuestionList = ({
     <Fragment>
       <div className="p-4">
         <div className="flex justify-between my-4">
-          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14">
+          <p className="text-sm font-medium text-medium  flex items-center w-2/4 px-14">
             {selectedQuestionIds?.length} {QuestionLookupDict[userLanguage]['QUESELECT']}
           </p>
           <SearchInput
@@ -531,17 +529,17 @@ const ExistingQuestionList = ({
         </div>
         <div className="max-w-256">
           <Fragment>
-            <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-              <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-light">
+              <div className="w-1.5/10 px-6 py-3 bg-lightest text-center text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{QuestionLookupDict[userLanguage]['SELECTION']}</span>
               </div>
-              <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{QuestionLookupDict[userLanguage]['QUESTION']}</span>
               </div>
-              <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{QuestionLookupDict[userLanguage]['TYPE']}</span>
               </div>
-              <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-1.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
                 <span>{QuestionLookupDict[userLanguage]['LANGUAGE']}</span>
               </div>
             </div>
@@ -558,7 +556,7 @@ const ExistingQuestionList = ({
                         questionsList.map((item) => (
                           <div
                             key={item.id}
-                            className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                            className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-light">
                             <div className="flex w-1.5/10 items-center px-6 py-3 text-left text-s leading-4">
                               <span>
                                 <CheckBox
@@ -582,7 +580,7 @@ const ExistingQuestionList = ({
                         ))
                       ) : (
                         <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                          <p className="mt-2 text-center text-lg text-gray-500">
+                          <p className="mt-2 text-center text-lg text-medium ">
                             {QuestionLookupDict[userLanguage]['QUEEMPTY']}
                           </p>
                         </div>
@@ -597,8 +595,8 @@ const ExistingQuestionList = ({
               ) : (
                 <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
                   <div className="w-5/10">
-                    <Loader color="rgba(107, 114, 128, 1)" />
-                    <p className="mt-2 text-center text-lg text-gray-500">
+                    <Loader />
+                    <p className="mt-2 text-center text-lg text-medium ">
                       {QuestionLookupDict[userLanguage]['FETCHING']}
                     </p>
                   </div>
@@ -736,22 +734,22 @@ const QuestionLookup = ({
             className={`${
               numbered
                 ? 'border-indigo-500 text-white bg-indigo-400'
-                : 'border-gray-300 text-dark'
-            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+                : 'border-lightest  text-dark'
+            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-medium  rounded-md  transition-all duration-300 mr-4`}>
             {numbered ? 'Numbered' : 'Unnumbered'}
           </button>
         </div>
       )}
       {checkpQuestions.length > 0 ? (
         <>
-          <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
-            <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-light">
+            <div className="w-.5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               <span>{AddNewCheckPointDict[userLanguage]['NO']}</span>
             </div>
-            <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-5/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               <span>{AddNewCheckPointDict[userLanguage]['QUESTION']}</span>
             </div>
-            <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-2/10 px-8 py-3 bg-lightest text-left text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
               <span>{AddNewCheckPointDict[userLanguage]['TYPE']}</span>
             </div>
           </div>
@@ -769,13 +767,13 @@ const QuestionLookup = ({
                         <div
                           key={item.id}
                           ref={provided.innerRef}
-                          className={`${snapshot.isDragging ? 'bg-gray-100' : ''}`}
+                          className={`${snapshot.isDragging ? 'bg-lightest ' : ''}`}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}>
                           <Fragment key={item.id}>
                             <div
                               key={item.id}
-                              className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200
+                              className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-light
                                 `}>
                               <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                 {' '}
@@ -802,7 +800,7 @@ const QuestionLookup = ({
         </>
       ) : (
         <div className="py-6 text-center mx-auto flex justify-center items-center w-full">
-          <p className="text-center text-lg text-gray-500">
+          <p className="text-center text-lg text-medium ">
             {AddNewCheckPointDict[userLanguage]['NOQUESTION']}
           </p>
         </div>

@@ -127,7 +127,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
                     src={upImg}
                     className={
                       imageClassName ||
-                      'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
+                      'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-light  shadow-elem-light mx-auto'
                     }
                   />
                   {/* <DummyContent /> */}

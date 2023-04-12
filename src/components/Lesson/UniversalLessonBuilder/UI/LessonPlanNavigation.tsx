@@ -133,20 +133,20 @@ const LessonPlanNavigation = ({
           <nav
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`border-gray-200 flex overflow-x-auto overflow-y-hidden`}
+            className={`border-lightest flex overflow-x-auto overflow-y-hidden`}
             aria-label="Breadcrumb">
             <ol
               key={nanoid(4)}
               className="max-w-screen-xl mb-0 w-full mx-auto px-4 flex space-x-4 items-center sm:px-6 lg:px-8">
               <li className="flex w-auto">
-                <a href="#" className="text-gray-600">
+                <a href="#" className="text-medium ">
                   <HomeOutlined />
 
                   <span className="sr-only">Home</span>
                 </a>
               </li>
               {fetchingLessonDetails ? (
-                <p className="text-gray-600 mb-0 ml-4 hover:text-gray-700 font-light">
+                <p className="text-medium  mb-0 ml-4 hover:text-dark   font-light">
                   Loading...
                 </p>
               ) : (
@@ -160,14 +160,14 @@ const LessonPlanNavigation = ({
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <div className="flex items-center w-auto group">
-                          <span className="text-gray-500">/</span>
+                          <span className="text-medium ">/</span>
 
                           <a
                             href={page.href}
                             className={` ${
                               selectedPageID === page.id
                                 ? 'border-b- theme-border:400 theme-text hover:theme-text:600'
-                                : 'text-gray-500 hover:text-gray-600'
+                                : 'text-medium  hover:text-medium '
                             }   ml-4 cursor-pointer w-auto text-sm 2xl:text-base font-light transition-transform duration-150`}>
                             {page.label}
                           </a>

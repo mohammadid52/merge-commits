@@ -2,11 +2,15 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  getCurriculum,
+  listCurriculumUnitss,
+  getInstitutionBasicInfo
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
+import PageLayout from 'layout/PageLayout';
 import {useEffect, useState} from 'react';
-import {BsArrowLeft} from 'react-icons/bs';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
 import CheckpointList from '../../TabsListing/CheckpointList';
 import CourseFormComponent from './CourseFormComponent';
@@ -33,9 +37,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {state, userLanguage} = useGlobalContext();
-  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary();
-  const isSuperAdmin: any = state.user.role === 'SUP';
+  const {userLanguage} = useGlobalContext();
+  const {CourseBuilderDict} = useDictionary();
+
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedSyllabusList, setSavedSyllabusList] = useState<any[]>([]);
@@ -79,11 +83,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       setFetchingDetails(true);
       try {
         const [curriculumResult, curriculumUnits]: any = await Promise.all([
+          await API.graphql(graphqlOperation(getCurriculum, {id: courseId})),
           await API.graphql(
-            graphqlOperation(customQueries.getCurriculum, {id: courseId})
-          ),
-          await API.graphql(
-            graphqlOperation(customQueries.listCurriculumUnitss, {
+            graphqlOperation(listCurriculumUnitss, {
               filter: {curriculumId: {eq: courseId}}
             })
           )
@@ -125,7 +127,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
 
   const getBasicInstitutionInfo = async (instituteId: any) => {
     const result: any = await API.graphql(
-      graphqlOperation(customQueries.getInstitutionBasicInfo, {
+      graphqlOperation(getInstitutionBasicInfo, {
         id: instituteId
       })
     );
@@ -207,50 +209,24 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
-          {courseData?.name}
-        </h3>
-        <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
-          onClick={() =>
-            history.push(
-              isSuperAdmin
-                ? `/dashboard/manage-institutions/courses`
-                : `/dashboard/manage-institutions/institution/${instId}/courses`
-            )
-          }>
-          <span className="w-auto mr-2">
-            <BsArrowLeft />
-          </span>
-          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
-        </div>
-      </div>
-
+    <PageLayout title={courseData?.name}>
       <div className="w-full m-auto">
         <StepComponent
           steps={steps}
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-light mt-4">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader
-                  animation
-                  withText="Fetching course details please wait..."
-                  className="text-gray-500"
-                />
-              </div>
+              <Loader animation withText="Fetching course details please wait..." />
             </div>
           ) : (
             <div className="">{currentStepComp(activeStep)}</div>
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

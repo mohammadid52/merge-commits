@@ -2,16 +2,16 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {getInstitution, getRoom} from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
 
 import {getLocalStorageData} from '@utilities/localStorage';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {listStaff, listCurricula} from 'graphql/queries';
+import PageLayout from 'layout/PageLayout';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {BsArrowLeft} from 'react-icons/bs';
 import {getFilterORArray} from 'utilities/strings';
 import EditClass from '../EditClass';
 import ClassRoomForm, {fetchSingleCoTeacher} from './ClassRoomForm';
@@ -31,8 +31,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {state, userLanguage} = useGlobalContext();
-  const isSuperAdmin: boolean = state.user.role === 'SUP';
+  const {userLanguage} = useGlobalContext();
+
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
 
@@ -45,7 +45,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     isError: false
   });
 
-  const {CommonlyUsedDict, LessonEditDict, RoomEDITdict} = useDictionary();
+  const {LessonEditDict, RoomEDITdict} = useDictionary();
 
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -67,7 +67,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getInstituteInfo = async (instId: string) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitution, {
+        graphqlOperation(getInstitution, {
           id: instId
         })
       );
@@ -92,7 +92,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -116,7 +116,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
+        graphqlOperation(listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -156,9 +156,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
-          const result: any = await API.graphql(
-            graphqlOperation(customQueries.getRoom, {id: roomId})
-          );
+          const result: any = await API.graphql(graphqlOperation(getRoom, {id: roomId}));
 
           let savedData = result.data.getRoom;
           if (!savedData) {
@@ -310,58 +308,35 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   };
 
   return (
-    <div className="">
-      <div className="px-8 py-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
-          {roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}
-        </h3>
-        <div
-          className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
-          onClick={() =>
-            history.push(
-              isSuperAdmin
-                ? `/dashboard/manage-institutions/class-rooms`
-                : `/dashboard/manage-institutions/institution/${state.user.associateInstitute[0].institution.id}/class-rooms`
-            )
-          }>
-          <span className="w-auto mr-2">
-            <BsArrowLeft />
-          </span>
-          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
-        </div>
-      </div>
-
-      {/* Body section */}
-      <div className="">
-        <div className="w-full m-auto">
-          <StepComponent
-            steps={steps}
-            activeStep={activeStep}
-            handleTabSwitch={handleTabSwitch}
-          />
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 mt-8 lg:mt-0">
-            {/* <div className="border-0 lg:border-t-none border-gray-200"> */}
-            {currentStepComp(activeStep)}
-            {/* </div> */}
-          </div>
-        </div>
-        {messages.show ? (
-          <div className="py-2 m-auto text-center">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages?.message ? messages.message : ''}
-            </p>
-          </div>
-        ) : null}
-
-        <ModalPopUp
-          open={warnModal.show}
-          closeAction={toggleModal}
-          saveAction={onModalSave}
-          saveLabel="Yes"
-          message={warnModal.message}
+    <PageLayout title={roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}>
+      <div className="w-full m-auto">
+        <StepComponent
+          steps={steps}
+          activeStep={activeStep}
+          handleTabSwitch={handleTabSwitch}
         />
+        <div className="grid grid-cols-1 divide-x-0 divide-light">
+          {/* <div className="border-0 lg:border-t-none border-light"> */}
+          {currentStepComp(activeStep)}
+          {/* </div> */}
+        </div>
       </div>
-    </div>
+      {messages.show ? (
+        <div className="py-2 m-auto text-center">
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+            {messages?.message ? messages.message : ''}
+          </p>
+        </div>
+      ) : null}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={toggleModal}
+        saveAction={onModalSave}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
+    </PageLayout>
   );
 };
 

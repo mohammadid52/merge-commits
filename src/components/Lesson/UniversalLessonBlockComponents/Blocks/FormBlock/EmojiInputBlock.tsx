@@ -37,7 +37,8 @@ const EmojiInput = ({
     }
   };
 
-  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  const themePlaceholderColor =
+    lessonPageTheme === 'light' ? 'placeholder-darkest   ' : '';
 
   /**
    * Task:
@@ -78,7 +79,7 @@ const EmojiInput = ({
           id={inputID}
           disabled={false}
           className={`w-full py-2 px-4 ${themeTextColor} ${themePlaceholderColor} rounded-xl ${
-            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            lessonPageTheme === 'light' ? 'bg-light' : 'bg-darker-gray'
           }`}
           name="emoji"
           type="text"

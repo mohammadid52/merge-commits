@@ -4,6 +4,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import {listUploadLogs} from '@customGraphql/customQueries';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {ListUploadLogsQueryVariables, UploadLogs} from 'API';
 import {orderBy} from 'lodash';
@@ -22,6 +23,7 @@ const UploadLogsPage = () => {
     UploadLogs[]
   >(
     'listUploadLogs',
+    listUploadLogs,
     {limit: SEARCH_LIMIT},
     {
       custom: true,

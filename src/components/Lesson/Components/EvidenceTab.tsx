@@ -1,15 +1,13 @@
 import Loader from '@components/Atoms/Loader';
-import useUpdateEffect from '@customHooks/useUpdateEffect';
 import {Transition} from '@headlessui/react';
 import {API, graphqlOperation} from 'aws-amplify';
-import {useState} from 'react';
+import {listCurriculumsForLessons, listTopics} from 'customGraphql/customQueries';
+import {getCSequences, listLearningObjectives, listRubrics} from 'graphql/queries';
+import {useEffect, useState} from 'react';
 import {AiFillCheckCircle} from 'react-icons/ai';
 import {getSelectedCurriculum} from '../UniversalLesson/views/CoreUniversalLesson/LessonModule';
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
 
 const EvidenceTab = ({
-  curTab,
   currentLesson,
 
   setSelectedMeasurements,
@@ -21,20 +19,18 @@ const EvidenceTab = ({
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useUpdateEffect(() => {
-    if (curTab === 'Evidences') {
-      if (selectedCurriculumList.length === 0) {
-        fetchCurriculum();
-      }
+  useEffect(() => {
+    if (selectedCurriculumList.length === 0) {
+      fetchCurriculum();
     }
-  }, [curTab]);
+  }, [selectedCurriculumList.length]);
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
 
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
-      graphqlOperation(queries.listRubrics, {
+      graphqlOperation(listRubrics, {
         filter: {
           curriculumID: {eq: curricularId}
         }
@@ -46,17 +42,15 @@ const EvidenceTab = ({
     setSelectedMeasurements(rubricList);
     const [results, learningObjectiveSeqResult, topics]: any = await Promise.all([
       await API.graphql(
-        graphqlOperation(queries.listLearningObjectives, {
+        graphqlOperation(listLearningObjectives, {
           filter: {
             curriculumID: {eq: curricularId}
           }
         })
       ),
+      await API.graphql(graphqlOperation(getCSequences, {id: `l_${curricularId}`})),
       await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      ),
-      await API.graphql(
-        graphqlOperation(customQueries.listTopics, {
+        graphqlOperation(listTopics, {
           filter: {
             curriculumID: {eq: curricularId}
           }
@@ -113,7 +107,7 @@ const EvidenceTab = ({
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForLessons, {
+        graphqlOperation(listCurriculumsForLessons, {
           filter: {
             institutionID: {eq: currentLesson.institutionID}
           }
@@ -185,12 +179,12 @@ const EvidenceTab = ({
         <div className="flex items-center justify-center min-h-32">
           <Loader
             withText="Loading Evidences..."
-            className="text-gray-500 flex-col text-lg"
+            className="text-medium  flex-col text-lg"
           />
         </div>
       ) : checkedEvidence.length === 0 ? (
         <div className="flex text-center items-center justify-center min-h-32">
-          <p className="text-gray-400 w-auto font-medium text-lg leading-3">
+          <p className="text-light  w-auto font-medium text-lg leading-3">
             No Evidences Listed
           </p>
         </div>
@@ -207,9 +201,9 @@ const EvidenceTab = ({
           {checkedEvidence.map((evidence: any) => (
             <div
               key={evidence.id}
-              className="flex items-center w-auto col-span-1 border-0 border-gray-200 dark:border-gray-700 px-4 p-2 rounded-lg justify-start">
+              className="flex items-center w-auto col-span-1 border-0 border-lightest dark:border-dark   px-4 p-2 rounded-lg justify-start">
               <AiFillCheckCircle className="mr-2 w-auto text-green-500" />
-              <p className="text-gray-900 dark:text-white  w-auto">{evidence.name}</p>
+              <p className="text-darkest   dark:text-white  w-auto">{evidence.name}</p>
             </div>
           ))}
         </Transition>

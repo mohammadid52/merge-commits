@@ -1,19 +1,20 @@
-import {API, graphqlOperation} from 'aws-amplify';
 import Loader from '@components/Atoms/Loader';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
 import DroppableMedia from '@components/Molecules/DroppableMedia';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
-import {uploadImageToS3} from '@graphql/functions';
 import {getImageFromS3} from '@utilities/services';
 import {formatPhoneNumber} from '@utilities/strings';
-import * as customMutations from 'customGraphql/customMutations';
+import {API, graphqlOperation} from 'aws-amplify';
+import {updateInstitution} from 'customGraphql/customMutations';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {isEmpty} from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
+import {useEffect, useRef, useState} from 'react';
+import {AiOutlineCheckCircle} from 'react-icons/ai';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
+import {MdRadioButtonUnchecked} from 'react-icons/md';
 
 const InstitutionProfile = ({institute}: {institute: any}) => {
   // Add image handler
@@ -68,9 +69,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
       id: institute?.id,
       image: key
     };
-    await API.graphql(
-      graphqlOperation(customMutations.updateInstitution, {input: input})
-    );
+    await API.graphql(graphqlOperation(updateInstitution, {input: input}));
     await getUrl();
     toggleCropper();
     setImageLoading(false);
@@ -79,34 +78,34 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
   const handleImageClick = () => mediaRef?.current?.click();
 
   const imageClass =
-    'profile w-10 h-10 hover:theme-border rounded-full border-0 flex flex-shrink-0 border-gray-400 customShadow cursor-pointer';
+    'profile w-10 h-10 hover:theme-border rounded-full border-0 flex flex-shrink-0 border-light  customShadow cursor-pointer';
 
   return (
     <>
-      <ProfileCropModal
-        open={showCropper}
-        upImg={upImage || ''}
-        saveCroppedImage={(img: string) => saveCroppedImage(img)}
-        closeAction={toggleCropper}
-      />
+      {showCropper && (
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
 
       <div
         className={`${
-          isPageBuilder
-            ? 'hidden'
-            : 'hidden xl:flex justify-between absolute bottom-0.5 right-0 left-0 mx-8 w-auto '
+          isPageBuilder ? 'hidden' : 'hidden xl:flex justify-between w-auto '
         }`}
         onClick={() => {}}>
         {isEmpty(institute.name) && (
           <div className="w-full animate-pulse mt-2 flex justify-between">
-            <div className="h-6 bg-gray-400 rounded w-5/10 mb-2 mr-2"></div>
-            <div className="h-6 bg-gray-400 rounded w-5/10 mb-2 ml-2"></div>
+            <div className="h-6 bg-light  rounded w-5/10 mb-2 mr-2"></div>
+            <div className="h-6 bg-light  rounded w-5/10 mb-2 ml-2"></div>
           </div>
         )}
 
         {!isEmpty(institute.name) && (
           <>
-            <div className="my-5 text-gray-600 w-auto px-4 mr-2 flex lg:items-center items-start justify-center 2xl:mr-4">
+            <div className=" text-medium  w-auto mr-2 flex lg:items-center items-start justify-center 2xl:mr-4">
               <div className="flex w-auto ">
                 <span className="w-auto mr-2 mt-0.5">
                   <BsEnvelope className="w-4 h-4" />
@@ -128,12 +127,12 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
                 </div>
               )}
               <span className="mx-4 w-auto">|</span>
-              <div className="flex w-auto  items-center">
-                <span className="w-auto mr-2">
+              <div className="flex w-auto justify-center items-center">
+                <span className="flex w-auto justify-center items-center mr-2">
                   {isServiceProvider ? (
-                    <BiCheckboxChecked className="w-4 h-4" />
+                    <MdRadioButtonUnchecked className="w-4 h-4" />
                   ) : (
-                    <BiCheckbox className="w-4 h-4" />
+                    <AiOutlineCheckCircle className="w-4 h-4" />
                   )}
                 </span>
                 <span className="w-auto">
@@ -145,7 +144,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
               {imageLoading ? (
                 <div
                   className={`w-10 h-10  flex items-center rounded-full shadow-lg right-2 bottom-0 p-3`}>
-                  <Loader className="text-gray-400" />
+                  <Loader />
                 </div>
               ) : institute?.image ? (
                 imageUrl ? (
@@ -182,9 +181,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
                 </div>
               )}
 
-              <div className="text-base cursor-pointer hover:underline hover:theme-text  flex text-gray-600">
-                <p className="w-auto">{institute?.name || '--'}</p>
-              </div>
+              <p className="w-auto text-medium">{institute?.name || '--'}</p>
             </div>
           </>
         )}

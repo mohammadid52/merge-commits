@@ -8,7 +8,7 @@ import {Storage} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import * as mutations from 'graphql/mutations';
+import {createPersonFiles} from 'graphql/mutations';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
@@ -193,11 +193,11 @@ const File = ({
                 </div>
                 <Transition
                   style={{bottom: '1.5rem'}}
-                  className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
+                  className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-lightest min-h-32 min-w-140 p-4"
                   show={showMenu}>
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File preview</dt>
+                      <dt className="text-sm font-medium text-medium ">File preview</dt>
                       <img
                         onClick={onImageClick}
                         src={imageUrl}
@@ -206,14 +206,14 @@ const File = ({
                       />
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File name</dt>
-                      <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
+                      <dt className="text-sm font-medium text-medium ">File name</dt>
+                      <dd className="mt-1 text-sm break-all text-dark   font-medium">
                         {removeExtension(_fileName)}
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">Size</dt>
-                      <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                      <dt className="text-sm font-medium text-medium ">Size</dt>
+                      <dd className="mt-1 flex items-center justify-between  text-sm text-dark   font-medium">
                         <p className="w-auto">{getSizeInBytes(file?.size)}</p>
                       </dd>
                     </div>
@@ -385,7 +385,7 @@ const AttachmentBlock = ({
         roomID: roomInfo?.id
       };
 
-      await API.graphql(graphqlOperation(mutations.createPersonFiles, {input: payload}));
+      await API.graphql(graphqlOperation(createPersonFiles, {input: payload}));
       onSuccess && onSuccess(filesUploading.map((file: any) => file.fileKey));
 
       resetAll();
@@ -499,7 +499,7 @@ const AttachmentBlock = ({
         closeAction={closeAction}
         closeOnBackdrop={false}>
         <div className="px-6 min-w-256 min-h-72">
-          <h4 className="text-lg text-gray-600 font-medium">{value}</h4>
+          <h4 className="text-lg text-medium  font-medium">{value}</h4>
           <div
             {...getRootProps()}
             className={`border-${
@@ -589,9 +589,9 @@ const AttachmentBlock = ({
             tabIndex={-1}
             onClick={isInLesson ? () => setShowModal(true) : noop}
             className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
+              lessonPageTheme === 'light' ? 'border-medium ' : 'border-white'
             } flex items-center justify-center ${
-              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              lessonPageTheme === 'light' ? 'bg-light' : 'bg-darker-gray'
             } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
             {isUploaded ? 'Update' : 'Upload'} Attachments

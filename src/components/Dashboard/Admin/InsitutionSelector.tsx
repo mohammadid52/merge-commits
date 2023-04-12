@@ -5,7 +5,7 @@ import {uniqBy} from 'lodash';
 import React from 'react';
 import {withZoiqFilter} from '@utilities/functions';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from 'customGraphql/customQueries';
+import {listInstitutionOptions} from 'customGraphql/customQueries';
 import useAuth from '@customHooks/useAuth';
 
 interface InsitutionSelectorProps {
@@ -21,7 +21,7 @@ const InsitutionSelector = ({selectedInstitution, onChange}: InsitutionSelectorP
   const fetchInstitutions = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions, {
+        graphqlOperation(listInstitutionOptions, {
           filter: withZoiqFilter({})
         })
       );
@@ -54,6 +54,7 @@ const InsitutionSelector = ({selectedInstitution, onChange}: InsitutionSelectorP
   return (
     <Selector
       width={300}
+      size="middle"
       showSearch
       placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
       list={institutionList}

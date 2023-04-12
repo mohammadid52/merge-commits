@@ -10,6 +10,7 @@ interface ISelectProps {
   getCheckValue: (id: string) => boolean;
   shouldBeVertical: boolean;
   value: any;
+  selectedValue?: string;
 }
 
 interface IOptionProps extends IFormBlockProps {
@@ -36,20 +37,28 @@ const SelectMany = ({
   );
 };
 
-const SelectOne = ({onChange, getCheckValue, shouldBeVertical, value}: ISelectProps) => {
+const SelectOne = ({
+  onChange,
+  selectedValue,
+  getCheckValue,
+  shouldBeVertical,
+  value
+}: ISelectProps) => {
   return (
-    <Radio.Group className="">
+    <Radio.Group className="" value={selectedValue}>
       <Space direction={shouldBeVertical ? 'vertical' : 'horizontal'} className="w-full">
         {value.map((item: {text: any; id: any}) => {
           const {text, id} = item;
+
           return (
             <Radio
-              className="text-lg"
-              key={id}
-              id={id}
-              onChange={onChange}
+              value={id}
               checked={getCheckValue(id)}
-              value={id}>
+              defaultChecked={getCheckValue(id)}
+              className="text-lg"
+              onChange={onChange}
+              key={id}
+              id={id}>
               {text}
             </Radio>
           );
@@ -90,6 +99,7 @@ const OptionBlock = (props: IOptionProps) => {
       let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
       const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
+
       const onChange = (e: any) => {
         const {id} = e.target;
         if (isInLesson) {
@@ -115,6 +125,7 @@ const OptionBlock = (props: IOptionProps) => {
             />
           ) : (
             <SelectOne
+              selectedValue={studentDataValue[0]}
               onChange={isStudent && isInLesson ? onChange : () => {}}
               key={`question_${id}`}
               getCheckValue={getCheckValue}

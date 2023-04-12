@@ -9,7 +9,7 @@ import Selector from 'atoms/Form/Selector';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {createQuestion} from 'graphql/mutations';
 import {languageList} from '@utilities/staticData';
 
 interface AddQuestionProps {
@@ -221,7 +221,7 @@ const AddQuestion = (props: AddQuestionProps) => {
           options: questOptions ? filteredOptions(questOptions) : []
         };
         const results: any = await API.graphql(
-          graphqlOperation(mutations.createQuestion, {input: input})
+          graphqlOperation(createQuestion, {input: input})
         );
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {
@@ -271,7 +271,7 @@ const AddQuestion = (props: AddQuestionProps) => {
   return (
     <Fragment>
       <div className="w-8/10 m-auto">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+        <h3 className="text-lg leading-6 font-medium text-darkest   text-center pb-8 ">
           {addQuestionDict[userLanguage]['heading']}
         </h3>
       </div>
@@ -308,7 +308,7 @@ const AddQuestion = (props: AddQuestionProps) => {
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                 {addQuestionDict[userLanguage]['selecttype']}{' '}
                 <span className="text-red-500">*</span>
               </label>
@@ -322,7 +322,7 @@ const AddQuestion = (props: AddQuestionProps) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
                 {addQuestionDict[userLanguage]['selectlang']}
               </label>
               <Selector
@@ -338,8 +338,8 @@ const AddQuestion = (props: AddQuestionProps) => {
 
           {(type.value === 'selectOne' || type.value === 'selectMany') && (
             <div className="p-6">
-              <div className="p-6 border-gray-400  border-0 border-dashed">
-                <p className="text-m font-medium leading-5 text-gray-700 mb-1">
+              <div className="p-6 border-light   border-0 border-dashed">
+                <p className="text-m font-medium leading-5 text-dark   mb-1">
                   {addQuestionDict[userLanguage]['addOption']}:{' '}
                 </p>
 

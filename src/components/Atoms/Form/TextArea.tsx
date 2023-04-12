@@ -1,5 +1,5 @@
-import { useGlobalContext } from "contexts/GlobalContext";
-import { Fragment } from "react";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {Fragment} from 'react';
 
 interface TextAreaProps {
   error?: string;
@@ -29,28 +29,25 @@ const TextArea = (props: TextAreaProps) => {
     maxLength,
     placeHolder,
     showCharacterUsage,
-    dataCy,
+    dataCy
   } = props;
-  const { theme } = useGlobalContext();
+  const {theme} = useGlobalContext();
   const otherInputProps: any = {};
   if (maxLength) {
     otherInputProps.maxLength = maxLength;
   }
   return (
     <Fragment>
-      <label
-        htmlFor={id}
-        className="block text-xs font-semibold leading-5 text-gray-700"
-      >
-        {label} <span className="text-red-500"> {isRequired ? "*" : null}</span>
+      <label htmlFor={id} className="block text-xs font-semibold leading-5 text-dark  ">
+        {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
       </label>
       <textarea
         data-cy={dataCy}
         id={id}
         name={name}
         onChange={(e: any) => onChange?.(e)}
-        className={`mt-1 block w-full sm:text-sm rounded-xl sm:leading-5  border-0 border-gray-300 py-2 px-3  shadow-sm ${theme.outlineNone}`}
-        value={value ? value : ""}
+        className={`mt-1 block w-full sm:text-sm rounded-xl sm:leading-5  border-0 border-lightest  py-2 px-3  shadow-sm ${theme.outlineNone}`}
+        value={value ? value : ''}
         placeholder={placeHolder}
         rows={rows ? rows : 5}
         {...otherInputProps}
@@ -58,7 +55,7 @@ const TextArea = (props: TextAreaProps) => {
       <div className="flex">
         <p className="text-red-500 text-xs">{error}</p>
         {showCharacterUsage ? (
-          <div className="text-right text-gray-400">
+          <div className="text-right text-light ">
             {value?.length || 0} of {maxLength}
           </div>
         ) : null}

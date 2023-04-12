@@ -18,6 +18,7 @@ import {useRouteMatch} from 'react-router';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {SelectedEmotion, useGameChangers} from '../context/GameChangersContext';
 import Button from './Button';
+import {createFeelingsArchive} from '@graphql/mutations';
 const Emotion = ({
   selectedEmotion,
   removeEmotion,
@@ -87,7 +88,7 @@ const SelectedEmotionsContainer = () => {
   const {mutate, isLoading} = useGraphqlMutation<
     CreateFeelingsArchiveMutationVariables,
     FeelingsArchive
-  >('createFeelingsArchive');
+  >('createFeelingsArchive', createFeelingsArchive);
 
   const onSave = () => {
     try {
@@ -149,7 +150,7 @@ const SelectedEmotionsContainer = () => {
                 disabled={isLoading}
                 className={`${'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'} inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
                 onClick={onSave}>
-                {isLoading ? <Loader color="#fff" /> : 'Yes, Save It!'}
+                {isLoading ? <Loader /> : 'Yes, Save It!'}
               </button>
             </p>
 
@@ -158,7 +159,7 @@ const SelectedEmotionsContainer = () => {
               <button
                 disabled={isLoading}
                 type="button"
-                className={`text-gray-500 hover:text-white w-full inline-flex justify-center  rounded-md px-4 py-2 text-base leading-6 font-medium transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                className={`text-medium  hover:text-white w-full inline-flex justify-center  rounded-md px-4 py-2 text-base leading-6 font-medium transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
                 onClick={() => setVisible(false)}>
                 No, Don't Save It
               </button>
@@ -168,7 +169,7 @@ const SelectedEmotionsContainer = () => {
       </ThemeModal>
       {!showFinalStep && (
         <div className="flex flex-col select-none justify-center 2xl:mt-4 gap-y-4 items-center w-auto">
-          <div className="p-2 px-3 emoji-cart-container transition-all  border-0 w-auto  border-gray-800 rounded-md flex flex-row gap-x-4">
+          <div className="p-2 px-3 emoji-cart-container transition-all  border-0 w-auto  border-darkest    rounded-md flex flex-row gap-x-4">
             {selectedEmotions.map((selectedEmotion, idx) => {
               return (
                 <Emotion

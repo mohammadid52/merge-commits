@@ -1,14 +1,20 @@
-// import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {formatPageName} from 'utilities/functions';
-import {API, graphqlOperation} from 'aws-amplify';
+import {API, graphqlOperation, Auth, Storage} from 'aws-amplify';
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
-import {Auth, Storage} from 'aws-amplify';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+
+import {createErrorLog, updatePersonLoginTime} from 'customGraphql/customMutations';
+import {
+  getAssignedInstitutionToStaff,
+  getDashboardDataForCoTeachers,
+  getInstitutionsList,
+  listCurricula,
+  listDicitionaries,
+  listRooms
+} from 'customGraphql/customQueries';
+import {createDicitionary, updatePersonLessonsData} from 'graphql/mutations';
+import {getPerson as getPersonAPI} from 'graphql/queries';
 import {isEmpty} from 'lodash';
 import {allowedAuthIds} from 'state/GlobalState';
 import {v4 as uuidV4} from 'uuid';
@@ -107,7 +113,7 @@ export const updatePageState = async (
         pageState: pageState,
         lastPageStateUpdate: new Date().toISOString()
       };
-      await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
+      await API.graphql(graphqlOperation(updatePersonLoginTime, {input}));
       onSuccessCallback && onSuccessCallback();
     } catch (error) {
       logError(error, {authId: auth.authId, email: auth.email}, 'updatePageState');
@@ -122,7 +128,6 @@ export const logError = async (
   componentName: string,
   additionalInfo?: any
 ) => {
-  // if (!location.origin.includes('localhost')) {
   try {
     const input: CreateErrorLogInput = {
       authID: auth.authId,
@@ -133,7 +138,7 @@ export const logError = async (
       pageUrl: location.href,
       componentName: componentName
     };
-    await API.graphql(graphqlOperation(customMutations.createErrorLog, {input}));
+    await API.graphql(graphqlOperation(createErrorLog, {input}));
   } catch (error) {
     console.error(
       'error logging error.. this is kind of ironic -> ',
@@ -158,7 +163,7 @@ export const addNewDictionary = async (formData: CreateDicitionaryInput) => {
       translation: isEmpty(formData.translation) ? [] : formData.translation
     };
 
-    await API.graphql(graphqlOperation(mutations.createDicitionary, {input}));
+    await API.graphql(graphqlOperation(createDicitionary, {input}));
   } catch (error) {
     console.error(error);
     logError(
@@ -166,13 +171,12 @@ export const addNewDictionary = async (formData: CreateDicitionaryInput) => {
       {authId: formData.authID, email: formData.email},
       'functions @addNewDictionary'
     );
-  } finally {
   }
 };
 
 export const getDictionaries = async () => {
   try {
-    const res: any = await API.graphql(graphqlOperation(queries.listDicitionaries));
+    const res: any = await API.graphql(graphqlOperation(listDicitionaries));
 
     const data = res.data.listDicitionaries.items;
     if (data && data.length > 0) {
@@ -184,7 +188,6 @@ export const getDictionaries = async () => {
   } catch (error) {
     console.error(error);
     return [];
-  } finally {
   }
 };
 
@@ -198,7 +201,7 @@ export const checkUniqRoomName = async (
 ): Promise<boolean> => {
   try {
     const list: any = await API.graphql(
-      graphqlOperation(queries.listRooms, {
+      graphqlOperation(listRooms, {
         filter: withZoiqFilter(
           {institutionID: {eq: instituteId}, name: {eq: roomName}},
           zoiqFilter(authId)
@@ -214,9 +217,8 @@ export const checkUniqRoomName = async (
 
 export const listInstitutions = async (authId: string, email: string) => {
   try {
-    // setInstitutionsLoading(true);
     let institutions: any = await API.graphql(
-      graphqlOperation(customQueries.getInstitutionsList, {
+      graphqlOperation(getInstitutionsList, {
         filter: withZoiqFilter({}, zoiqFilter(authId))
       })
     );
@@ -232,15 +234,13 @@ export const listInstitutions = async (authId: string, email: string) => {
   } catch (error) {
     logError(error, {authId, email}, 'functions @listInstitutions');
     console.error('🚀 ~ file: Csv.tsx ~ line 122 ~ listInstitutions ~ error', error);
-  } finally {
-    // setInstitutionsLoading(false);
   }
 };
 
 export const getInstitutionList = async (authId: string, email: string) => {
   try {
     const list: any = await API.graphql(
-      graphqlOperation(queries.listInstitutions, {filter: withZoiqFilter({})})
+      graphqlOperation(listInstitutions, {filter: withZoiqFilter({})})
     );
     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
@@ -259,11 +259,13 @@ export const getInstitutionList = async (authId: string, email: string) => {
 };
 
 export async function getPerson(email: string, authId: string) {
-  let userInfo: any = await API.graphql(
-    graphqlOperation(queries.getPerson, {email, authId})
-  );
-  userInfo = userInfo.data.getPerson;
-  return userInfo;
+  if (email && authId) {
+    let userInfo: any = await API.graphql(
+      graphqlOperation(getPersonAPI, {email, authId})
+    );
+    userInfo = userInfo.data.getPerson;
+    return userInfo;
+  }
 }
 
 export async function getInstInfo(authId: string) {
@@ -271,7 +273,7 @@ export async function getInstInfo(authId: string) {
     let instInfo: any = {};
 
     instInfo = await API.graphql(
-      graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+      graphqlOperation(getAssignedInstitutionToStaff, {
         filter: {staffAuthID: {eq: authId}}
       })
     );
@@ -293,7 +295,7 @@ export async function updateLoginTime(id: string, authId: string, email: string)
       lastPageStateUpdate: time,
       pageState: UserPageState.LOGGED_IN
     };
-    await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
+    await API.graphql(graphqlOperation(updatePersonLoginTime, {input}));
   } catch (error) {
     console.error(error);
   }
@@ -318,7 +320,7 @@ export async function signIn(
 export const checkUniqCurricularName = async (instId: string, name: string) => {
   try {
     const list: any = await API.graphql(
-      graphqlOperation(queries.listCurricula, {
+      graphqlOperation(listCurricula, {
         filter: {
           institutionID: {eq: instId},
           name: {eq: name}
@@ -335,7 +337,7 @@ export const checkUniqCurricularName = async (instId: string, name: string) => {
 const getDashboardData = async (authId: string, email: string) => {
   try {
     const dashboardDataFetch: any = await API.graphql(
-      graphqlOperation(customQueries.getDashboardData, {
+      graphqlOperation(getDashboardData, {
         authId: authId,
         email: email
       })
@@ -362,12 +364,12 @@ const getDashboardData = async (authId: string, email: string) => {
 const getDashboardDataForTeachers = async (authId: string, email: string) => {
   try {
     const dashboardDataFetch: any = await API.graphql(
-      graphqlOperation(customQueries.getDashboardDataForTeachers, {
+      graphqlOperation(getDashboardDataForTeachers, {
         filter: {teacherAuthID: {eq: authId}}
       })
     );
     const assignedRoomsAsCoTeacher: any = await API.graphql(
-      graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+      graphqlOperation(getDashboardDataForCoTeachers, {
         filter: {teacherAuthID: {eq: authId}}
       })
     );
@@ -405,7 +407,7 @@ export const handleLessonMutationRating = async (
 ) => {
   try {
     await API.graphql(
-      graphqlOperation(mutations.updatePersonLessonsData, {
+      graphqlOperation(updatePersonLessonsData, {
         input: {
           id,
           lessonID: lessonID,

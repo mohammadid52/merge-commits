@@ -1,22 +1,32 @@
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from '@graphql/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createPersonLessonsData,
+  createPersonLocation,
+  deletePersonLocation,
+  updatePersonLessonsData,
+  updatePersonLocation
+} from 'customGraphql/customMutations';
+import {
+  getPersonLessonsData,
+  getPersonLocation,
+  getUniversalLesson,
+  lessonsByType
+} from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import useNotifications from 'customHooks/notifications';
+import {logError, updatePageState} from 'graphql-functions/functions';
 import {isEmpty, update} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
-import {SEARCH_LIMIT} from './constants';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
+import {SEARCH_LIMIT} from './constants';
 
 export interface ILessonSurveyApp {
   pageStateUpdated: boolean;
@@ -32,6 +42,10 @@ export interface ILessonSurveyApp {
   getLessonCurrentPage: () => Promise<number>;
   handleMutationOnPageChange: () => Promise<void>;
   resetViewAndShare?: () => void;
+  getValidatedPages?: () => {
+    page: number;
+    isValid: boolean;
+  }[];
 }
 
 const Lesson = () => {
@@ -41,8 +55,8 @@ const Lesson = () => {
 
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
-  const {notifications} = useNotifications('lesson');
-  const {notifications: inputNotifications} = useNotifications('input');
+  // const {notifications} = useNotifications('lesson');
+  // const {notifications: inputNotifications} = useNotifications('input');
 
   const urlParams: any = useParams();
 
@@ -54,7 +68,7 @@ const Lesson = () => {
   const getSyllabusLesson = async (lessonID?: string) => {
     try {
       const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+        graphqlOperation(getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
       setPageTitle(response?.title);
@@ -162,6 +176,7 @@ const Lesson = () => {
   const validateRequired = (pageIdx: number) => {
     if (PAGES) {
       const thisPageData = lessonState?.studentData || [];
+
       const thisPageRequired = lessonState?.requiredInputs[pageIdx] || [];
 
       if (thisPageData && thisPageData.length > 0) {
@@ -182,6 +197,33 @@ const Lesson = () => {
       }
     } else {
       return false;
+    }
+  };
+
+  // create an object for all pages and setisvalid to false for each page if there are required fields
+
+  const getValidatedPages = () => {
+    if (PAGES) {
+      let allPageValidations: any = [];
+      PAGES.forEach((_: any, idx: number) => {
+        const isValid = validateRequired(idx);
+
+        // if previous index was invalid set current to invalid
+        if (idx > 0) {
+          const previousPageValidation = allPageValidations[idx - 1];
+          if (!previousPageValidation.isValid) {
+            allPageValidations.push({page: idx, isValid: false});
+          }
+        }
+        // don't push if page number already exists in allPageValidations
+        if (allPageValidations[idx]) {
+          return;
+        }
+
+        allPageValidations.push({page: idx, isValid: isValid});
+      });
+
+      return allPageValidations;
     }
   };
 
@@ -259,7 +301,7 @@ const Lesson = () => {
         if (personLessonData !== null && personLessonData !== undefined) {
           if (personLessonData) {
             const getLessonRatingDetails: any = await API.graphql(
-              graphqlOperation(customQueries.getPersonLessonsData, {
+              graphqlOperation(getPersonLessonsData, {
                 // @ts-ignore
                 id: personLessonData?.id || ''
               })
@@ -315,7 +357,7 @@ const Lesson = () => {
         lessonProgress: lessonState.lessonProgress
       };
       setPersonLocationObj(pageChangeLocation);
-      updatePersonLocation(pageChangeLocation);
+      updatePersonLocationFn(pageChangeLocation);
       setLocalStorageData('person_location', pageChangeLocation);
       //@ts-ignore
     }
@@ -325,25 +367,25 @@ const Lesson = () => {
 
   const initializeLocation = async () => {
     if (!getted) {
-      const getLocation = await getPersonLocation();
+      const getLocation = await getPersonLocationFn();
 
       if (getLocation === undefined || getLocation === null) {
-        await createPersonLocation();
+        await createPersonLocationFn();
       } else {
         if (getLocation.lessonID === lessonID) {
-          await updatePersonLocation(getLocation);
+          await updatePersonLocationFn(getLocation);
         } else {
           await leaveRoomLocation(authId, email);
-          await createPersonLocation();
+          await createPersonLocationFn();
         }
       }
     }
   };
 
-  const getPersonLocation = async () => {
+  const getPersonLocationFn = async () => {
     try {
       const getUserLocation: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonLocation, {
+        graphqlOperation(getPersonLocation, {
           personEmail: email,
           personAuthID: authId
         })
@@ -377,7 +419,7 @@ const Lesson = () => {
     }
   }, [isPageUpdatedOnPersonTable]);
 
-  const createPersonLocation = async () => {
+  const createPersonLocationFn = async () => {
     const {lessonID} = urlParams;
 
     const currentPageLocation = await getLessonCurrentPage();
@@ -392,7 +434,7 @@ const Lesson = () => {
     };
     try {
       const newUserLocation: any = await API.graphql(
-        graphqlOperation(customMutations.createPersonLocation, {
+        graphqlOperation(createPersonLocation, {
           input: newLocation
         })
       );
@@ -405,10 +447,12 @@ const Lesson = () => {
       setPersonLocationObj(newLocationObj);
       setLocalStorageData('person_location', newLocationObj);
     } catch (error) {
+      if (error.errorType === 'DynamoDB:ConditionalCheckFailedException') {
+        return;
+      }
       logError(error, {authId, email}, 'Lesson @createPersonLocation', error.toString());
 
-      console.log('createPersonLocation failed', error, newLocation);
-      // console.error('createPersonLocation - ', e);
+      console.error('createPersonLocation failed', error, newLocation);
     } finally {
       setCreated(true);
     }
@@ -416,7 +460,7 @@ const Lesson = () => {
 
   // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
 
-  const updatePersonLocation = async (updatedLocationObj: any) => {
+  const updatePersonLocationFn = async (updatedLocationObj: any) => {
     const currentPageLocation = await getLessonCurrentPage();
     const locationUpdateProps = {
       id: updatedLocationObj.id,
@@ -431,7 +475,7 @@ const Lesson = () => {
 
     try {
       await API.graphql(
-        graphqlOperation(customMutations.updatePersonLocation, {
+        graphqlOperation(updatePersonLocation, {
           input: locationUpdateProps
         })
       );
@@ -441,7 +485,7 @@ const Lesson = () => {
     } catch (e) {
       if (e.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
         console.log('no existing person location object found.. creating new... ');
-        createPersonLocation();
+        createPersonLocationFn();
       } else {
         logError(e, {authId, email}, 'Lesson @updatePersonLocation', e.toString());
         console.error('updatePersonLocation - ', e, locationUpdateProps);
@@ -452,7 +496,7 @@ const Lesson = () => {
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
       await API.graphql(
-        graphqlOperation(customMutations.deletePersonLocation, {
+        graphqlOperation(deletePersonLocation, {
           input: {
             personEmail: inputEmail,
             personAuthID: inputAuthId
@@ -543,9 +587,9 @@ const Lesson = () => {
     id: personLessonData?.id || ''
   };
 
-  const createPersonLessonsData = async () => {
+  const createPersonLessonsDataFn = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(customMutations.createPersonLessonsData, {
+      graphqlOperation(createPersonLessonsData, {
         input: createPersonLessonPayload
       })
     );
@@ -556,7 +600,7 @@ const Lesson = () => {
     try {
       setPersonLoading(true);
       const lessonPersonData: any = await API.graphql(
-        graphqlOperation(customQueries.lessonsByType, {
+        graphqlOperation(lessonsByType, {
           filter: {
             roomId: {eq: getRoomData.id},
             studentAuthID: {eq: authId},
@@ -572,7 +616,7 @@ const Lesson = () => {
       if (_personLessonData) {
         setPersonLessonData(_personLessonData);
       } else {
-        await createPersonLessonsData();
+        await createPersonLessonsDataFn();
       }
     } catch (e) {
       logError(e, {authId, email}, 'Lesson @fetchLessonPersonData', e.toString());
@@ -590,7 +634,7 @@ const Lesson = () => {
           fetchLessonPersonData();
         } else if (personLessonData) {
           await API.graphql(
-            graphqlOperation(customMutations.updatePersonLessonsData, {
+            graphqlOperation(updatePersonLessonsData, {
               input: updatePersonLessonPayload
             })
           );
@@ -601,7 +645,7 @@ const Lesson = () => {
           };
 
           if (updatedLocationObj?.id) {
-            updatePersonLocation(updatedLocationObj);
+            updatePersonLocationFn(updatedLocationObj);
 
             setLocalStorageData('person_location', updatedLocationObj);
           } else {
@@ -636,12 +680,10 @@ const Lesson = () => {
     updatePageInLocalStorage,
     leaveRoomLocation,
     getLessonCurrentPage,
-
+    getValidatedPages,
     handleMutationOnPageChange
   };
 
-  // const _inputNotifications = inputNotifications || [];
-  // const _notifications = notifications || [];
   return (
     <>
       {/* <Noticebar notifications={[..._inputNotifications, ..._notifications]} /> */}

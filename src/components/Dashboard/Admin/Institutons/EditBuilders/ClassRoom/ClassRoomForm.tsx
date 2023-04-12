@@ -3,35 +3,50 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutation from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import {
+  _updateRoom,
+  createRoom,
+  createClass,
+  createRoomCoTeachers
+} from 'customGraphql/customMutations';
+import {
+  getCurriculumUniversalSyllabusSequence,
+  getRoom,
+  GetInstitutionDetails,
+  getRoomCoTeachers,
+  getUnitsOnly
+} from 'customGraphql/customQueries';
+import {
+  updateRoomCurriculum,
+  createRoomCurriculum,
+  updateRoom,
+  deleteRoomCoTeachers
+} from 'graphql/mutations';
+import {listStaff, listCurricula} from 'graphql/queries';
 
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
 import CheckBox from '@components/Atoms/Form/CheckBox';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
 import useAuth from '@customHooks/useAuth';
 
 import {useQuery} from '@customHooks/urlParam';
-import {checkUniqRoomName, listInstitutions, logError} from '@graphql/functions';
 import {methods, statusList, typeList} from '@utilities/staticData';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {checkUniqRoomName, listInstitutions, logError} from 'graphql-functions/functions';
+import PageLayout from 'layout/PageLayout';
 import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
-    graphqlOperation(customQueries.getRoomCoTeachers, {id: roomId})
+    graphqlOperation(getRoomCoTeachers, {id: roomId})
   );
   return result.data.getRoomCoTeachers;
 };
@@ -55,7 +70,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const fetchUnits = async (curriculaId: string) => {
     try {
       let getCurriculum: any = await API.graphql(
-        graphqlOperation(customQueries.getUnitsOnly, {
+        graphqlOperation(getUnitsOnly, {
           id: curriculaId
         })
       );
@@ -276,7 +291,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       if (instId) {
         const list: any = await API.graphql(
-          graphqlOperation(customQueries.GetInstitutionDetails, {
+          graphqlOperation(GetInstitutionDetails, {
             id: instId
           })
         );
@@ -303,7 +318,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const getTeachersList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listStaff, {
+        graphqlOperation(listStaff, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -382,7 +397,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     try {
       setLoadingCurricular(true);
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
+        graphqlOperation(listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
@@ -468,7 +483,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutation.updateRoomCurriculum, {
+          graphqlOperation(updateRoomCurriculum, {
             input: curricularInput
           })
         );
@@ -506,7 +521,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         };
 
         await API.graphql(
-          graphqlOperation(mutation.createRoomCurriculum, {
+          graphqlOperation(createRoomCurriculum, {
             input: curricularInput
           })
         );
@@ -539,7 +554,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const getFirstSyllabus = async (curriculumID: string) => {
     if (curriculumID) {
       const syllabusCSequenceFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
+        graphqlOperation(getCurriculumUniversalSyllabusSequence, {
           id: `${curriculumID}`
         })
       );
@@ -583,7 +598,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             teachingStyle: roomData.teachingStyle
           };
           const newRoom: any = await API.graphql(
-            graphqlOperation(customMutations._updateRoom, {input: input})
+            graphqlOperation(_updateRoom, {input: input})
           );
           const curriculaId = newRoom.data.updateRoom.curricula.items[0]?.id;
           await saveRoomTeachers(roomData.id);
@@ -624,7 +639,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           };
 
           const newRoom: any = await API.graphql(
-            graphqlOperation(customMutations.createRoom, {input: input})
+            graphqlOperation(createRoom, {input: input})
           );
           const roomId = newRoom.data.createRoom.id;
           const classInput = {
@@ -633,10 +648,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             roomId
           };
           const newClass: any = await API.graphql(
-            graphqlOperation(customMutations.createClass, {input: classInput})
+            graphqlOperation(createClass, {input: classInput})
           );
           await API.graphql(
-            graphqlOperation(mutation.updateRoom, {
+            graphqlOperation(updateRoom, {
               input: {
                 id: roomId,
                 classID: newClass.data.createClass.id
@@ -703,7 +718,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       await Promise.all(
         newItems.map(async (teacher) => {
           await API.graphql(
-            graphqlOperation(customMutations.createRoomCoTeachers, {
+            graphqlOperation(createRoomCoTeachers, {
               input: teacher
             })
           );
@@ -717,9 +732,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           const input = {
             id: id
           };
-          await API.graphql(
-            graphqlOperation(mutation.deleteRoomCoTeachers, {input: input})
-          );
+          await API.graphql(graphqlOperation(deleteRoomCoTeachers, {input: input}));
         })
       );
     }
@@ -743,9 +756,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
-          const result: any = await API.graphql(
-            graphqlOperation(customQueries.getRoom, {id: roomId})
-          );
+          const result: any = await API.graphql(graphqlOperation(getRoom, {id: roomId}));
 
           let savedData = result.data.getRoom;
 
@@ -915,23 +926,24 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     });
   };
 
+  const disabled = status === RoomStatus.INACTIVE;
+  const INACTIVE_TEXT = 'Classroom inactive';
+
   return (
     <div className="">
       {/* Body section */}
-      <PageWrapper defaultClass="px-4">
+      <PageLayout
+        type="inner"
+        title={
+          <div className="flex py-2 flex-col">
+            <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
+            <span className="text-medium  w-auto font-normal text-sm">
+              {moment(roomData.createdAt).format('ll')}
+            </span>
+          </div>
+        }>
         <div className="w-full m-auto">
           <div className="">
-            <SectionTitleV3
-              title={
-                <div className="flex flex-col">
-                  <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
-                  <span className="text-gray-500 w-auto font-normal mt-2 text-sm">
-                    {moment(roomData.createdAt).format('ll')}
-                  </span>
-                </div>
-              }
-            />
-
             <div className="grid grid-cols-3">
               <div className="px-3 py-4">
                 <Selector
@@ -973,12 +985,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  selectedItem={type}
                   width={'100%'}
                   placeholder={'Classroom type'}
                   label={'Classroom type'}
                   labelTextClass={'text-xs'}
                   list={typeList}
+                  selectedItem={disabled ? INACTIVE_TEXT : type}
                   isRequired
                   // @ts-ignore
                   onChange={selectClassroomType}
@@ -986,15 +998,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  selectedItem={
-                    status === RoomStatus.INACTIVE
-                      ? 'Classroom inactive'
-                      : curricular.value
-                  }
+                  selectedItem={disabled ? INACTIVE_TEXT : curricular.value}
                   showSearch
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-                  disabled={loadingCurricular || status === RoomStatus.INACTIVE}
+                  disabled={loadingCurricular || disabled}
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
@@ -1002,12 +1010,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  disabled={unitsLoading || status === RoomStatus.INACTIVE}
-                  selectedItem={
-                    status === RoomStatus.INACTIVE
-                      ? 'Classroom inactive'
-                      : roomData.activeUnit.label
-                  }
+                  disabled={unitsLoading || disabled}
+                  selectedItem={disabled ? INACTIVE_TEXT : roomData.activeUnit.label}
                   showSearch
                   width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
@@ -1034,7 +1038,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     isRequired
                     selectedItem={teacher.label}
                     list={teachersList}
-                    disabled={status === RoomStatus.INACTIVE}
+                    disabled={disabled}
                     placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
                     onChange={selectTeacher}
                   />
@@ -1043,8 +1047,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   <MultipleSelector
                     label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
                     withAvatar
-                    disabledText="Classroom inactive"
-                    disabled={status === RoomStatus.INACTIVE}
+                    disabledText={INACTIVE_TEXT}
+                    disabled={disabled}
                     // @ts-ignore
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
@@ -1055,10 +1059,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 </div>
                 <div className="px-3 py-4">
                   <Selector
-                    selectedItem={roomData.teachingStyle}
                     placeholder={RoomEDITdict[userLanguage].METHOD}
                     label={RoomEDITdict[userLanguage].METHOD}
                     list={methods}
+                    disabled={disabled}
+                    selectedItem={disabled ? INACTIVE_TEXT : roomData.teachingStyle}
                     width={'100%'}
                     onChange={(value) =>
                       setRoomData({...roomData, teachingStyle: value as TeachingStyle})
@@ -1074,8 +1079,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     name="conferenceCallLink"
                     value={conferenceCallLink}
                     onChange={editInputField}
+                    disabled={disabled}
                     placeHolder={
-                      RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
+                      disabled
+                        ? INACTIVE_TEXT
+                        : RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
                     }
                   />
                 </div>
@@ -1083,9 +1091,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   <FormInput
                     label={RoomEDITdict[userLanguage].LOCATION_LABEL}
                     name="location"
+                    disabled={disabled}
                     value={roomLocation}
                     onChange={editInputField}
-                    placeHolder={RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER}
+                    placeHolder={
+                      disabled
+                        ? INACTIVE_TEXT
+                        : RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER
+                    }
                   />
                 </div>
               </div>
@@ -1093,7 +1106,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 <CheckBox
                   dataCy="isZoiq"
                   label={'ZOIQ'}
-                  className="group:hover:bg-gray-500"
+                  className="group:hover:bg-medium "
                   value={roomData.isZoiq}
                   onChange={(e) => setRoomData({...roomData, isZoiq: e.target.checked})}
                   name="isZoiq"
@@ -1124,7 +1137,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
         <AnimatedContainer show={status === RoomStatus.INACTIVE}>
           {status === RoomStatus.INACTIVE && (
-            <p className="text-gray-500 text-sm text-center">
+            <p className="text-medium  text-sm text-center">
               This classroom is inactive and not available in the classroom
             </p>
           )}
@@ -1137,7 +1150,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           saveLabel="Yes"
           message={warnModal.message}
         />
-      </PageWrapper>
+      </PageLayout>
     </div>
   );
 };

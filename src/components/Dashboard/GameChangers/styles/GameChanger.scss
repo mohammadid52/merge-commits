@@ -194,15 +194,6 @@
   }
 }
 
-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
-}
-
 .background {
   position: fixed;
   width: 100%;
@@ -471,6 +462,14 @@ icon {
 }
 
 .carousel-cell.is-selected {
+  #first-round {
+    transform: rotate(35deg);
+    animation: round1 3s;
+  }
+  #second-round {
+    transform: rotate(90deg);
+    animation: round2 3s;
+  }
   & .inner-card,
   button {
     filter: blur(0);
@@ -560,17 +559,6 @@ icon {
 }
 #second-round {
   transform: rotate(90deg);
-}
-
-.carousel-cell.is-selected {
-  #first-round {
-    transform: rotate(35deg);
-    animation: round1 3s;
-  }
-  #second-round {
-    transform: rotate(90deg);
-    animation: round2 3s;
-  }
 }
 
 @keyframes round1 {

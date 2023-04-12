@@ -133,7 +133,7 @@ const Forgot = () => {
             label={'Submit'}
           />
           <NavLink to="/login">
-            <p className="w-auto text-gray-600 hover:underline cursor-pointer text-right mt-2">
+            <p className="w-auto text-medium  hover:underline cursor-pointer text-right mt-2">
               return to login
             </p>
           </NavLink>

@@ -1,3 +1,4 @@
+import {ILessonSurveyApp} from '@components/Lesson/Lesson';
 import {useQuery} from '@customHooks/urlParam';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {scrollUp} from '@utilities/functions';
@@ -19,6 +20,7 @@ interface IProgressBarProps {
   studentData?: any[];
   requiredInputs?: any[];
   canContinue?: boolean;
+  getValidatedPages: ILessonSurveyApp['getValidatedPages'];
 }
 
 const ProgressBar = ({
@@ -28,7 +30,7 @@ const ProgressBar = ({
   currentPage,
   updatePageInLocalStorage,
   validateRequired,
-  canContinue
+  getValidatedPages
 }: IProgressBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -119,20 +121,43 @@ const ProgressBar = ({
   const history = useHistory();
   const match = useRouteMatch();
 
+  const moveToPage = (pageNr: number) => {
+    scrollUp(lessonType);
+    const sId = params.get('sId');
+    const sEmail = params.get('sId');
+
+    const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+    history.push(`${match.url}/${pageNr}${dynamicQuery}`);
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+
+    updatePageInLocalStorage?.(pageNr);
+  };
+
   const lessonProgress = lessonState.lessonProgress;
   const handleLink = (pageNr: number) => {
-    const isNotMovingForward = pageNr < lessonProgress;
-    if (canContinue || isNotMovingForward) {
-      scrollUp(lessonType);
-      const sId = params.get('sId');
-      const sEmail = params.get('sId');
+    // check validated pages
+    const validatedPages = getValidatedPages?.();
 
-      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
-      history.push(`${match.url}/${pageNr}${dynamicQuery}`);
+    const indexOfFirstInvalidPage = validatedPages?.findIndex(
+      (item: {isValid: boolean}) => item.isValid === false
+    );
 
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+    // if the page number in validated pages is true then we can continue
+    const canContinue =
+      validatedPages?.[pageNr].isValid === true || indexOfFirstInvalidPage === pageNr;
 
-      updatePageInLocalStorage?.(pageNr);
+    // check the index of isValid false in validated pages and if the current page is that index then do nothing else
+
+    if (
+      indexOfFirstInvalidPage &&
+      indexOfFirstInvalidPage !== -1 &&
+      indexOfFirstInvalidPage !== lessonState.currentPage &&
+      // if page number is less than the index of the first invalid page then we can continue
+      pageNr >= indexOfFirstInvalidPage
+    ) {
+      moveToPage(indexOfFirstInvalidPage);
+    } else if (canContinue) {
+      moveToPage(pageNr);
     } else {
       handleRequiredNotification && handleRequiredNotification();
     }
@@ -150,11 +175,11 @@ const ProgressBar = ({
             <span
               onClick={() => (isExitBtn ? handleHome?.() : handleLink(route.index))}
               className={`${isExitBtn ? '!text-red-500' : ''} ${
-                another ? '!text-gray-600' : ''
-              } ${!active ? '!text-gray-500' : 'theme-text:400'} ${
+                another ? '!text-medium ' : ''
+              } ${!active ? '!text-medium ' : 'theme-text:400'} ${
                 route.disabled
-                  ? '!text-gray-600 pointer-events-none cursor-not-allowed'
-                  : '!text-gray-500 cursor-pointer'
+                  ? '!text-medium  pointer-events-none cursor-not-allowed'
+                  : '!text-medium  cursor-pointer'
               }`}>
               {route.title}
             </span>

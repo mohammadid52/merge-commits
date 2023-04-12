@@ -216,7 +216,7 @@ const WritingExerciseModal = (props: WEProps) => {
           <div className="flex items-center">
             <label
               htmlFor={'title'}
-              className={`text-gray-700 w-auto mr-3 block text-xs font-semibold leading-5 `}>
+              className={`text-dark   w-auto mr-3 block text-xs font-semibold leading-5 `}>
               {'Title'}
             </label>
 
@@ -228,7 +228,7 @@ const WritingExerciseModal = (props: WEProps) => {
                 checked={enable.title}
                 onChange={() => setEnable({...enable, title: !enable.title})}
                 type="checkbox"
-                className="pointer-events-auto  h-4 w-4 text-indigo-600 border-gray-500 rounded"
+                className="pointer-events-auto  h-4 w-4 text-indigo-600 border-medium  rounded"
               />
             </div>
           </div>
@@ -248,7 +248,7 @@ const WritingExerciseModal = (props: WEProps) => {
               <div className="mb-2" key={`linestarter_${idx}`}>
                 <label
                   htmlFor={'Link'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                  className="mb-2 block text-xs font-semibold leading-5 text-dark  ">
                   Line-starter {idx + 1}:
                 </label>
                 <div className="mb-2 relative">
@@ -277,7 +277,7 @@ const WritingExerciseModal = (props: WEProps) => {
             <span className=" w-auto">Show Linestarter</span>
             <Toggle
               enabledColor="bg-blue-600"
-              disabledColor="bg-gray-300"
+              disabledColor="bg-lightest "
               setEnabled={() => setEnable({...enable, lineStarter: !enable.lineStarter})}
               enabled={enable.lineStarter}
             />

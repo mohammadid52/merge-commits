@@ -1,5 +1,5 @@
 import {GlobalContext} from '@contexts/GlobalContext';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import React from 'react';
 
 /**

@@ -28,16 +28,6 @@ export const formatPageName = (pageState: UserPageState) => {
   }
 };
 
-export const goBackBreadCrumb = (list: any[], history: any) => {
-  const lastSecondIdx = list.length - 2;
-  const url = list[lastSecondIdx]?.url;
-  if (url) {
-    history.push(url);
-  } else {
-    history.goBack();
-  }
-};
-
 export const doResize = (textbox: any) => {
   const maxrows = 50;
   const txt = textbox.value;
@@ -316,9 +306,12 @@ export const scrollUp = (type = 'lesson', customId?: string) => {
     lesson: 'lesson-app-container',
     survey: 'survey-app-container'
   } as any;
+
   const container = document.getElementById(customId || domID[type]);
 
   if (container) {
-    container.scrollTo({top: 0, behavior: 'smooth'});
+    setTimeout(() => {
+      container.scrollTo({top: 0, behavior: 'smooth'});
+    }, 100);
   }
 };

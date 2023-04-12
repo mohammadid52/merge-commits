@@ -4,7 +4,7 @@ import PageLoader from 'components/Lesson/UniversalLessonBuilder/views/CoreBuild
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUniversalLesson} from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
 import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
@@ -146,7 +146,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const getLessonById = async (lessonId: string) => {
     try {
       const res: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonId})
+        graphqlOperation(getUniversalLesson, {id: lessonId})
       );
       return res.data.getUniversalLesson;
     } catch (error) {

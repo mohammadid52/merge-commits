@@ -82,6 +82,7 @@ const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
         // @ts-ignore
         onChange={onChange}
         placement={placement}
+        // @ts-ignore
         options={uniqBy(sortedList, uniqKey)}
       />
     </div>

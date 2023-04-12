@@ -1,52 +1,31 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import Placeholder from '@components/Atoms/Placeholder';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import UserProfileImage from '@components/Molecules/UserProfileImage';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {Language, PersonStatus, Role, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updatePerson} from 'customGraphql/customMutations';
+import {getPersonData, listQuestionDatas} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import {updatePageState, uploadImageToS3} from 'graphql/functions';
-import DroppableMedia from 'molecules/DroppableMedia';
-import React, {Fragment, lazy, useEffect, useState} from 'react';
-import {FaEdit, FaPlus} from 'react-icons/fa';
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import {updatePageState, uploadImageToS3} from 'graphql-functions/functions';
+import PageLayout from 'layout/PageLayout';
+import React, {lazy, useEffect, useState} from 'react';
+import {FaEdit} from 'react-icons/fa';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import {UserInfo} from '../Admin/UserManagement/User';
+import UserInformation from '../Admin/UserManagement/UserInformation';
 
 const AboutMe = lazy(() => import('dashboard/Profile/AboutMe'));
 const ChangePasscode = lazy(() => import('dashboard/Profile/ChangePasscode'));
 const ChangePassword = lazy(() => import('dashboard/Profile/ChangePassword'));
 const ProfileCropModal = lazy(() => import('dashboard/Profile/ProfileCropModal'));
 const ProfileEdit = lazy(() => import('dashboard/Profile/ProfileEdit'));
-const ProfileInfo = lazy(() => import('dashboard/Profile/ProfileInfo'));
-
-export interface UserInfo {
-  authId: string;
-  courses?: string;
-  createdAt: string;
-  email: string;
-
-  firstName: string;
-  id: string;
-  image?: string;
-  institution?: string;
-  language: string;
-  lastName: string;
-  preferredName?: string;
-  role: string;
-  status: string;
-
-  updatedAt: string;
-}
 
 const Profile = () => {
   const [person, setPerson] = useState<UserInfo>({
@@ -55,7 +34,8 @@ const Profile = () => {
     createdAt: '',
     email: '',
     firstName: '',
-
+    classes: null,
+    rooms: [],
     image: '',
     language: Language.EN,
     lastName: '',
@@ -68,7 +48,7 @@ const Profile = () => {
   const {state, userLanguage, clientKey, dispatch} = useGlobalContext();
   const {dashboardProfileDict, BreadcrumsTitles} = useDictionary();
   const match = useRouteMatch();
-  const history = useHistory();
+
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const [status, setStatus] = useState('');
@@ -159,7 +139,7 @@ const Profile = () => {
     };
     try {
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
+        graphqlOperation(updatePerson, {input: input})
       );
       setPerson({
         ...person,
@@ -189,7 +169,7 @@ const Profile = () => {
       ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -198,7 +178,7 @@ const Profile = () => {
   async function getUser() {
     try {
       const results: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonData, {
+        graphqlOperation(getPersonData, {
           email: state.user.email,
           authId: state.user.authId
         })
@@ -296,6 +276,8 @@ const Profile = () => {
 
   const mediaRef = React.useRef<any>(null);
 
+  // check if url has staff keyword
+
   if (status !== 'done') {
     return <LessonLoading />;
   } else {
@@ -307,152 +289,105 @@ const Profile = () => {
             bannerImage={profileBanner1}
             title={'Profile'}
           />
-          <PageWrapper>
-            <div className={`p-4 pt-0`}>
-              {/* <BreadCrums items={breadCrumsList} /> */}
+          <PageLayout
+            hideInstProfile
+            extra={
+              currentPath !== 'edit' &&
+              currentPath !== 'password' && (
+                <div className="w-auto">
+                  <Buttons
+                    dataCy="edit-profile-button"
+                    label="Edit"
+                    url={`${match.url}/edit`}
+                    Icon={FaEdit}
+                    tooltip="Edit Profile"
+                  />
+                </div>
+              )
+            }
+            title={dashboardProfileDict[userLanguage]['TITLE']}>
+            {/* <BreadCrums items={breadCrumsList} /> */}
 
-              <SectionTitleV3
-                withButton={
-                  currentPath !== 'edit' &&
-                  currentPath !== 'password' && (
-                    <div className="w-auto">
-                      <Buttons
-                        dataCy="edit-profile-button"
-                        label="Edit"
-                        onClick={() => history.push(`${match.url}/edit`)}
-                        Icon={FaEdit}
-                      />
-                    </div>
-                  )
-                }
-                title={dashboardProfileDict[userLanguage]['TITLE']}
-                subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
-              />
+            <div className={``}>
+              <div className=" flex flex-col lg:flex-row">
+                <UserProfileImage
+                  imageUrl={imageUrl}
+                  image={person.image}
+                  mediaRef={mediaRef}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
+                  toggleCropper={toggleCropper}
+                  imageLoading={imageLoading}
+                  name={`${
+                    person.preferredName ? person.preferredName : person.firstName
+                  } ${person.lastName}`}
+                />
 
-              <div className={``}>
-                <div className="h-9/10 flex flex-col lg:flex-row">
-                  <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
-                    <div className="relative">
-                      {person.image ? (
-                        <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                          {!imageLoading ? (
-                            <Fragment>
-                              <DroppableMedia
-                                setImage={(img: any, file: any) => {
-                                  setUpImage(img);
-                                  setFileObj(file);
-                                }}
-                                toggleCropper={toggleCropper}
-                                mediaRef={mediaRef}>
-                                <Placeholder
-                                  size="w-20 h-20 md:w-40 md:h-40"
-                                  image={imageUrl}
-                                />
-                              </DroppableMedia>
-                            </Fragment>
-                          ) : (
-                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                              <Loader />
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <label
-                          className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
-                          {!imageLoading ? (
-                            <FaPlus color="#4a5568" size={'3rem'} />
-                          ) : (
-                            <Loader />
-                          )}
-                          <DroppableMedia
-                            mediaRef={mediaRef}
-                            setImage={(img: any, file: any) => {
-                              setUpImage(img);
-                              setFileObj(file);
-                            }}
-                            toggleCropper={toggleCropper}>
-                            <div />
-                          </DroppableMedia>
-                        </label>
+                <div className="relative w-full">
+                  <Switch>
+                    <Route
+                      exact
+                      path={`${match.url}/`}
+                      render={() => (
+                        <ErrorBoundary componentName="ProfileInfo">
+                          <UserInformation
+                            user={person}
+                            isProfile
+                            checkpoints={stdCheckpoints}
+                            questionData={questionData}
+                          />
+                        </ErrorBoundary>
                       )}
-                    </div>
-                    <p className="text-gray-600 my-2">
-                      {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
-                    </p>
-                    <div
-                      className={`text-sm md:text-xl font-bold text-gray-900 mt-2 md:mt-4 w-52`}>
-                      {`${
-                        person.preferredName ? person.preferredName : person.firstName
-                      } ${person.lastName}`}
-                    </div>
-                  </div>
+                    />
+                    <Route path={`${match.url}/about`} render={() => <AboutMe />} />
+                    <Route
+                      path={`${match.url}/edit`}
+                      render={() => (
+                        <ErrorBoundary componentName="ProfileEdit">
+                          <ProfileEdit
+                            user={person}
+                            status={status}
+                            setStatus={setStatus}
+                            getUser={getUser}
+                            stdCheckpoints={stdCheckpoints}
+                            questionData={questionData}
+                          />
+                        </ErrorBoundary>
+                      )}
+                    />
 
-                  <div className="relative w-full">
-                    {/* TODO : Need to convert this into tabs instead of buttons. 
-                    Currently we have only single tab so hiding this.
-                */}
+                    <Route
+                      path={`${match.url}/password`}
+                      render={() => (
+                        <ErrorBoundary componentName="ChangePassword">
+                          <ChangePassword />
+                        </ErrorBoundary>
+                      )}
+                    />
+                    <Route
+                      path={`${match.url}/passcode`}
+                      render={() => (
+                        <ErrorBoundary componentName="ChangePassword">
+                          <ChangePasscode />
+                        </ErrorBoundary>
+                      )}
+                    />
+                  </Switch>
 
-                    <Switch>
-                      <Route
-                        exact
-                        path={`${match.url}/`}
-                        render={() => (
-                          <ErrorBoundary componentName="ProfileInfo">
-                            <ProfileInfo
-                              user={person}
-                              status={status}
-                              stdCheckpoints={stdCheckpoints}
-                              questionData={questionData}
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-                      <Route path={`${match.url}/about`} render={() => <AboutMe />} />
-                      <Route
-                        path={`${match.url}/edit`}
-                        render={() => (
-                          <ErrorBoundary componentName="ProfileEdit">
-                            <ProfileEdit
-                              user={person}
-                              status={status}
-                              setStatus={setStatus}
-                              getUser={getUser}
-                              stdCheckpoints={stdCheckpoints}
-                              questionData={questionData}
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-
-                      <Route
-                        path={`${match.url}/password`}
-                        render={() => (
-                          <ErrorBoundary componentName="ChangePassword">
-                            <ChangePassword />
-                          </ErrorBoundary>
-                        )}
-                      />
-                      <Route
-                        path={`${match.url}/passcode`}
-                        render={() => (
-                          <ErrorBoundary componentName="ChangePassword">
-                            <ChangePasscode />
-                          </ErrorBoundary>
-                        )}
-                      />
-                    </Switch>
-
+                  {showCropper && (
                     <ProfileCropModal
                       open={showCropper}
                       upImg={upImage || ''}
                       saveCroppedImage={(img: string) => saveCroppedImage(img)}
                       closeAction={toggleCropper}
                     />
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
-          </PageWrapper>
+          </PageLayout>
         </div>
       </ErrorBoundary>
     );

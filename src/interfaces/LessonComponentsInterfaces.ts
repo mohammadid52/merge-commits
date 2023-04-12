@@ -1,3 +1,4 @@
+import {ILessonSurveyApp} from '@components/Lesson/Lesson';
 import {PersonLessonsData} from 'API';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import React, {SetStateAction} from 'react';
@@ -28,10 +29,9 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   canContinue?: boolean;
   validateRequired?: (pageIdx: number) => boolean;
   updatePageInLocalStorage?: (pageIdx: number) => void;
-
   personLessonData?: PersonLessonsData | null;
-
   handleForward?: (back?: boolean) => void;
   getLessonCompletedValue?: () => any;
   createJournalData?: (onSuccess?: () => void) => any;
+  getValidatedPages: ILessonSurveyApp['getValidatedPages'];
 }

@@ -1,74 +1,24 @@
-import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {getUniversalLessonBasicDetails} from 'customGraphql/customQueries';
+import {logError} from 'graphql-functions/functions';
 import React, {lazy, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 import NavBarRouter from 'router/NavBarRouter';
-const CurricularBuilder = lazy(
-  () => import('dashboard/Admin/Institutons/Builders/CurricularBuilder')
-);
+
 const InstitutionBuilder = lazy(
   () =>
     import('dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder')
 );
-const CurricularView = lazy(
-  () => import('dashboard/Admin/Institutons/EditBuilders/CurricularsView/CurricularView')
-);
-const AddProfileCheckpoint = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint'
-    )
-);
-const EditLearningObjective = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditLearningObjective'
-    )
-);
-const EditMeasurement = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditMeasurement'
-    )
-);
-const EditProfileCheckpoint = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint'
-    )
-);
-const EditTopic = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditTopic'
-    )
-);
-const ProfileCheckpointlookup = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup'
-    )
-);
-const UnitBuilder = lazy(
-  () =>
-    import(
-      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder'
-    )
-);
+
 const Institution = lazy(() => import('dashboard/Admin/Institutons/Institution'));
 // Instituttion
 const InstitutionLookup = lazy(
   () => import('dashboard/Admin/Institutons/InstitutionLookup')
-);
-const InstitutionProfile = lazy(
-  () => import('dashboard/Admin/Institutons/InstitutionProfile')
 );
 
 const InstitutionsHome: React.FC = () => {
@@ -106,7 +56,7 @@ const InstitutionsHome: React.FC = () => {
       const splitted = splitUrl.split('/');
       if (splitUrl.indexOf('add') === -1 && splitted.length > 0) {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
+          graphqlOperation(getUniversalLessonBasicDetails, {
             id: splitted[0]
           })
         );
@@ -157,14 +107,14 @@ const InstitutionsHome: React.FC = () => {
             </ErrorBoundary>
           )} // Create New institution.
         />
-        <Route
+        {/* <Route
           path={`${match.url}/institution/curricular-creation`}
           render={() => (
             <ErrorBoundary componentName="CurricularBuilder">
               <CurricularBuilder />
             </ErrorBoundary>
           )} // Create new curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/institution/:institutionId`}
           render={() => (
@@ -173,15 +123,15 @@ const InstitutionsHome: React.FC = () => {
             </ErrorBoundary>
           )} // Institution info page
         />
-        <Route
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/edit/:id`}
           render={() => (
             <ErrorBoundary componentName="EditLearningObjective">
               <EditLearningObjective />
             </ErrorBoundary>
           )} // Edit curricular topic
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/curricular/:curricularId/topic/edit/:id`}
           render={() => (
             <ErrorBoundary componentName="EditTopic">
@@ -196,8 +146,8 @@ const InstitutionsHome: React.FC = () => {
               <EditMeasurement />
             </ErrorBoundary>
           )} // Edit curricular measurement
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/edit`}
           render={() => (
             <ErrorBoundary componentName="UnitBuilder">
@@ -220,35 +170,33 @@ const InstitutionsHome: React.FC = () => {
               <EditProfileCheckpoint />
             </ErrorBoundary>
           )} // Edit curricular Checkpoint
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/checkpoint/addPrevious`}
           render={() => (
             <ErrorBoundary componentName="ProfileCheckpointlookup">
               <ProfileCheckpointlookup />
             </ErrorBoundary>
           )} // Add existing Checkpoint to curricular
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/:institutionId/curricular`}
           render={() => (
             <ErrorBoundary componentName="CurricularView">
               <CurricularView tabProps={tabProps} />
             </ErrorBoundary>
           )} // Curricular information view.
-        />
+        /> */}
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
           <ErrorBoundary componentName="InstitutionProfile">
             <div className="">
               <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
-              <div className="">
-                {/* <PageWrapper> */}
-                <PageWrapper>
-                  <NavBarRouter institute={institute} />
-                  {/* </PageWrapper> */}
-                  <InstitutionProfile institute={institute} />
-                </PageWrapper>
-              </div>
+
+              {/* <PageWrapper> */}
+
+              <NavBarRouter institute={institute} />
+              {/* </PageWrapper> */}
+              {/* <InstitutionProfile institute={institute} /> */}
             </div>
           </ErrorBoundary>
         )}

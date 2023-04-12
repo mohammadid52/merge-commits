@@ -1,5 +1,4 @@
 import {Select} from 'antd';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {
   Options,
@@ -23,10 +22,6 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
   const {id = '', linestarters, sendTextToEditor} = props;
-
-  const {
-    state: {lessonPage: {themeTextColor = ''} = {}}
-  } = useGlobalContext();
 
   const {setDataValue} = useStudentDataValue();
 
@@ -65,7 +60,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     //       <select
     //         value={selectedLS.text}
     //         onChange={onLineSelect}
-    //         className={`iconoclast:bg-500 curate:bg-500  cursor-pointer block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-2xl`}
+    //         className={`iconoclast:bg-500 curate:bg-500  cursor-pointer block w-full pl-3 pr-10 py-2 text-base border-lightest  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-2xl`}
     //       >
     //         <option value={""} disabled>
     //           Select a line starter
@@ -84,8 +79,8 @@ const WritingBlock = (props: WritingBlockProps) => {
     //     onClick={onAddClick}
     //     tabIndex={0}
     //     role="button"
-    //     className="w-auto p-3 bg-gray-200 dark:bg-indigo-400  rounded-md">
-    //     <AiOutlinePlus className="dark:text-white text-gray-600" />
+    //     className="w-auto p-3 bg-lightest dark:bg-indigo-400  rounded-md">
+    //     <AiOutlinePlus className="dark:text-white text-medium " />
     //   </div> */}
     // </div>
   );

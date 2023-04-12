@@ -15,8 +15,8 @@ const RosterRowEmpty: React.FC<RosterRowEmptyProps> = ({
   // ##################################################################### //
 
   return (
-    <div draggable={false} className={`w-full px-4 flex h-10 border-t-0 border-gray-400`}>
-      <span className="w-full text-gray-500 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ...">
+    <div draggable={false} className={`w-full px-4 flex h-10 border-t-0 border-light `}>
+      <span className="w-full text-medium  overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ...">
         {message ? message : `Empty roster row...`}
       </span>
     </div>

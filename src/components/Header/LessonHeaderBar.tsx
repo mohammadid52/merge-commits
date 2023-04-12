@@ -3,8 +3,9 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {Result} from 'antd';
+import {updatePersonLessonsData} from '@graphql/mutations';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
+import {Result} from 'antd';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
@@ -26,6 +27,7 @@ const LessonHeaderBar = ({
   canContinue,
   setPersonLessonData,
   validateRequired,
+  getValidatedPages,
   updatePageInLocalStorage
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
@@ -40,7 +42,7 @@ const LessonHeaderBar = ({
   const match = useRouteMatch();
 
   // don't remove this line or we are screwed
-  useStudentTimer();
+  const timer = useStudentTimer();
   const isLesson = lessonState?.lessonData.type === 'lesson';
 
   // ##################################################################### //
@@ -65,7 +67,7 @@ const LessonHeaderBar = ({
       input: UpdatePersonLessonsDataInput;
     },
     UniversalLessonStudentData
-  >('updatePersonLessonsData');
+  >('updatePersonLessonsData', updatePersonLessonsData);
 
   const {isStudent} = useAuth();
 
@@ -283,7 +285,7 @@ const LessonHeaderBar = ({
       <div
         style={{zIndex: 3000}}
         className={` relative center w-full 
-        h-.7/10 text-gray-200 shadow-2xl  
+        h-.7/10 text-lightest shadow-2xl  
         ${theme.toolbar.bg} `}>
         {/* LEAVE POPUP */}
 
@@ -341,6 +343,7 @@ const LessonHeaderBar = ({
         </Modal>
 
         <LessonTopMenu
+          getValidatedPages={getValidatedPages}
           overlay={overlay}
           pageStateUpdated={pageStateUpdated}
           setOverlay={setOverlay}

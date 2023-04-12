@@ -47,7 +47,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
 
           {/* RIGHT */}
           <div className="relative w-full h-full flex flex-row justify-between items-center ">
-            <div className="h-8 align-middle text-sm font-semibold text-gray-600 leading-8 ">
+            <div className="h-8 align-middle text-sm font-semibold text-medium  leading-8 ">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
             </div>
             {/* RIGHT - FULLSCREEN BUTTON */}

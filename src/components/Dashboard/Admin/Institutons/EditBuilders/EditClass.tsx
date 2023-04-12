@@ -8,7 +8,8 @@ import {PlusCircleOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Selector from '@components/Atoms/Form/Selector';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Placeholder from '@components/Atoms/Placeholder';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import StudentName from '@components/MicroComponents/StudentName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import Table, {ITableProps} from '@components/Molecules/Table';
@@ -21,18 +22,24 @@ import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  createClassStudent,
+  createClassroomGroupStudents
+} from 'customGraphql/customMutations';
+import {
+  listClassStudentsForRoom,
+  fetchPersons,
+  listClassroomGroupssOptions
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
-import * as mutations from 'graphql/mutations';
+import {updateClass} from 'graphql/mutations';
+import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
-import Placeholder from '@components/Atoms/Placeholder';
-import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface EditClassProps {
   instId: string;
@@ -120,7 +127,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     let combined: any[];
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listClassStudentsForRoom, {
+        graphqlOperation(listClassStudentsForRoom, {
           limit: SEARCH_LIMIT,
           ...filter,
           nextToken: nextToken
@@ -144,7 +151,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     try {
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
-        graphqlOperation(customQueries.fetchPersons, {
+        graphqlOperation(fetchPersons, {
           limit: SEARCH_LIMIT,
           filter: {
             role: {eq: Role.ST},
@@ -243,7 +250,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const getClassRoomGroups = async (roomId: string) => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listClassroomGroupssOptions, {
+        graphqlOperation(listClassroomGroupssOptions, {
           filter: {
             classRoomID: {eq: roomId},
             groupType: {eq: 'Proficiency'}
@@ -299,12 +306,12 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         status: PersonStatus.ACTIVE
       };
       let newStudent: any = await API.graphql(
-        graphqlOperation(customMutations.createClassStudent, {input: input})
+        graphqlOperation(createClassStudent, {input: input})
       );
       newStudent = newStudent.data.createClassStudent;
       if (newMember.group?.id) {
         await API.graphql(
-          graphqlOperation(customMutations.createClassroomGroupStudents, {
+          graphqlOperation(createClassroomGroupStudents, {
             input: {
               classRoomGroupID: newMember.group?.id,
               studentEmail: selected.email,
@@ -392,7 +399,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           name: classData.name,
           institutionID: classData.institute.id
         };
-        await API.graphql(graphqlOperation(mutations.updateClass, {input: input}));
+        await API.graphql(graphqlOperation(updateClass, {input: input}));
         toggleUpdateState?.();
         setMessages({
           show: true,
@@ -574,14 +581,10 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         </div>
       </Modal>
 
-      <SectionTitleV3
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-gray-900"
-        borderBottom
-        shadowOff
+      <PageLayout
+        type="inner"
         title={roomData.name}
-        withButton={
+        extra={
           <div className={`w-auto flex gap-x-4 justify-end items-center`}>
             <Selector
               width={400}
@@ -593,6 +596,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               list={addDisablePropertyToAlreadySelectedStudents()}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
               onChange={onStudentSelect}
+              size="middle"
               dropdownRender={(menu) => {
                 return (
                   <>
@@ -611,17 +615,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               }}
             />
           </div>
-        }
-      />
+        }>
+        <Filters
+          loading={loading}
+          list={classStudents}
+          updateFilter={updateFilter}
+          filters={filters}
+        />
 
-      <Filters
-        loading={loading}
-        list={classStudents}
-        updateFilter={updateFilter}
-        filters={filters}
-      />
-
-      {
         <div className="">
           {addMessage?.message && (
             <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
@@ -702,7 +703,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
             </Fragment>
           ) : null}
         </div>
-      }
+      </PageLayout>
     </div>
   );
 };

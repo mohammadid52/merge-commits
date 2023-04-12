@@ -11,7 +11,7 @@ import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {RoomStatus} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
+import {updateUniversalSyllabus, createUniversalSyllabus} from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
 import AttachedCourses from './AttachedCourses';
@@ -137,7 +137,7 @@ const UnitFormComponent = ({
         };
         if (syllabusDetails?.id) {
           const res: any = await API.graphql(
-            graphqlOperation(mutations.updateUniversalSyllabus, {
+            graphqlOperation(updateUniversalSyllabus, {
               input: {...input, id: syllabusDetails?.id}
             })
           );
@@ -169,7 +169,7 @@ const UnitFormComponent = ({
           setIsLoading(false);
         } else {
           const newSyllabus: any = await API.graphql(
-            graphqlOperation(mutations.createUniversalSyllabus, {input})
+            graphqlOperation(createUniversalSyllabus, {input})
           );
           const newItem = newSyllabus.data.createUniversalSyllabus;
 

@@ -669,6 +669,7 @@ interface InstitutionBuilderDictCommon {
   INFOA: string;
   INFO: string;
   TITLE: string;
+  EDIT_TITLE: string;
   SUBTITLE: string;
   FORM: {
     TITLE: string;

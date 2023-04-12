@@ -12,8 +12,8 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {Tree} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/TreeView/Tree';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {updateUniversalLesson} from 'customGraphql/customMutations';
+import {listUniversalLessons} from 'customGraphql/customQueries';
 
 import map from 'lodash/map';
 import {useState} from 'react';
@@ -69,7 +69,7 @@ const CopyCloneSlideOver = ({
         };
 
         const res: any = await API.graphql(
-          graphqlOperation(customMutations.updateUniversalLesson, {
+          graphqlOperation(updateUniversalLesson, {
             input
           })
         );
@@ -148,7 +148,7 @@ const CopyCloneSlideOver = ({
         };
 
         const fetchUList: any = await API.graphql(
-          graphqlOperation(customQueries.listUniversalLessons, {
+          graphqlOperation(listUniversalLessons, {
             filter: filter
           })
         );
@@ -203,17 +203,17 @@ const CopyCloneSlideOver = ({
       <div className="h-full flex items-center justify-center">
         {searchStatus === 'none' ? (
           <span className="flex items-center justify-center flex-col">
-            <FiBook className="h-40 w-40 text-gray-400" />
-            <p className="w-auto block text-gray-400 text-lg">Search lessons</p>
+            <FiBook className="h-40 w-40 text-light " />
+            <p className="w-auto block text-light  text-lg">Search lessons</p>
           </span>
         ) : searchStatus === 'searching' ? (
           <div className="w-auto flex items-center flex-col justify-center">
             <img
               src={'https://image.flaticon.com/icons/png/512/639/639375.png'}
               alt="searching"
-              className="h-32 w-32 mb-6 rotateSearchIcon text-gray-400"
+              className="h-32 w-32 mb-6 rotateSearchIcon text-light "
             />
-            <p className="w-auto block text-gray-400 text-base">
+            <p className="w-auto block text-light  text-base">
               Searching lessons from books...
             </p>
           </div>
@@ -254,10 +254,10 @@ const CopyCloneSlideOver = ({
               leaveTo="opacity-0">
               <div className="my-4">
                 <label
-                  className={`mb-1 text-gray-700 block text-xs font-semibold leading-5 `}>
+                  className={`mb-1 text-dark   block text-xs font-semibold leading-5 `}>
                   Select action :
                 </label>
-                <div className="border-0 p-4  flex items-center justify-around px-6 border-gray-200 rounded-md">
+                <div className="border-0 p-4  flex items-center justify-around px-6 border-lightest rounded-md">
                   <Tooltip
                     placement="bottom"
                     text="Only copy styles of selected page with blank data">

@@ -7,8 +7,14 @@ import Modal from 'atoms/Modal';
 import {API, graphqlOperation} from 'aws-amplify';
 import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import EmojiPicker from 'emoji-picker-react';
-import {deleteImageFromS3, uploadImageToS3} from 'graphql/functions';
-import * as mutations from 'graphql/mutations';
+import {deleteImageFromS3, uploadImageToS3} from 'graphql-functions/functions';
+import {
+  createAnthologyComment,
+  deleteAnthologyComment,
+  updateAnthologyComment,
+  updateUniversalJournalData,
+  updateUniversalLessonStudentData
+} from 'graphql/mutations';
 import {find, findIndex} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useRef, useState} from 'react';
@@ -19,6 +25,7 @@ import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {getImageFromS3} from 'utilities/services';
 import Feedback from '../../Admin/UserManagement/Feedback';
+import {Role} from 'API';
 
 const Feedbacks = ({
   showComments,
@@ -182,7 +189,7 @@ const Feedbacks = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalLessonStudentData, {
+        graphqlOperation(updateUniversalLessonStudentData, {
           input: {
             id: selectStudentDataRecord.id,
             exerciseData: newExerciseFeedback.exerciseData
@@ -210,7 +217,7 @@ const Feedbacks = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {
+        graphqlOperation(updateUniversalJournalData, {
           input: {
             id: item.id,
             feedbacks: newFeedBackIds
@@ -230,7 +237,7 @@ const Feedbacks = ({
   const updateCommentFromDB = async (commentObj: any) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.updateAnthologyComment, {
+        graphqlOperation(updateAnthologyComment, {
           input: {
             id: commentObj.id,
             text: commentObj.comment,
@@ -265,7 +272,7 @@ const Feedbacks = ({
             }
           : input;
       const results: any = await API.graphql(
-        graphqlOperation(mutations.createAnthologyComment, {
+        graphqlOperation(createAnthologyComment, {
           input: finalInput
         })
       );
@@ -289,9 +296,7 @@ const Feedbacks = ({
 
   const deleteCommentFromDatabase = async (id: string, item: any) => {
     try {
-      await API.graphql(
-        graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
-      );
+      await API.graphql(graphqlOperation(deleteAnthologyComment, {input: {id}}));
 
       let newFeedbacks =
         item.feedbacks.length > 0
@@ -469,7 +474,7 @@ const Feedbacks = ({
 
   const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
   const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
-  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded-full cursor-pointer transition-all duration-150 hover:text-white text-gray-500  ${
+  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded-full cursor-pointer transition-all duration-150 hover:text-white text-medium   ${
     themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
   }`;
 
@@ -511,7 +516,7 @@ const Feedbacks = ({
                 cols={125}
                 rows={1}
                 placeholder="Edit Feedback"
-                className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded-xl"
+                className="text-sm w-96 p-2 px-4 pt-3 text-dark   border-0 border-lightest rounded-xl"
                 value={editCommentInput}
                 onChange={(e) => setEditCommentInput(e.target.value)}
               />
@@ -566,8 +571,8 @@ const Feedbacks = ({
           {loadingComments ? (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
-                <Loader color="rgba(107, 114, 128, 1)" />
-                <p className="my-2 text-center text-lg text-gray-500">
+                <Loader />
+                <p className="my-2 text-center text-lg text-medium ">
                   Loading Comments...
                   {/* @Mohammad: Add this to dict */}
                 </p>
@@ -582,7 +587,7 @@ const Feedbacks = ({
                     setAttModal={setAttModal}
                     deleteModal={deleteModal}
                     uploadingAttachment={uploadingAttachment}
-                    role={state.user.role}
+                    role={state.user.role || Role.ST}
                     fileObject={fileObject}
                     authId={state.user.authId}
                     setDeleteModal={setDeleteModal}
@@ -597,22 +602,22 @@ const Feedbacks = ({
           ) : (
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
-                <p className="mt-2 text-center text-lg text-gray-500">
+                <p className="mt-2 text-center text-lg text-medium ">
                   Be the first to give feedback
                   {/* @Mohammad: Add this to dict */}
                 </p>
               </div>
             </div>
           )}
-          <div className="comment-box w-auto flex flex-col border-0 border-gray-200 h-auto rounded-xl mt-4">
+          <div className="comment-box w-auto flex flex-col border-0 border-lightest h-auto rounded-xl mt-4">
             <div
               style={{minHeight: '2.5rem'}}
-              className="flex comment-box__inner flex-col border-b-0 border-gray-200">
+              className="flex comment-box__inner flex-col border-b-0 border-light">
               <textarea
                 onKeyUp={(e) => doResize(e.target)}
                 style={{resize: 'none'}}
                 placeholder="Add Feedback"
-                className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 rounded-full text-gray-700"
+                className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 rounded-full text-dark  "
                 rows={1}
                 cols={125}
                 value={comment}
@@ -621,52 +626,52 @@ const Feedbacks = ({
               {/* ------------------------- Preview Section Start -------------------------------- */}
               <div className={`${fileObject.name ? 'block px-4 py-2' : 'hidden'}`}>
                 {isImage && (
-                  <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                  <div className="h-auto w-80 p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
                     <img
                       style={{objectFit: 'cover'}}
                       id="output_image"
                       className="h-16 w-16 mr-2 rounded-lg"
                     />
-                    <p className="truncate w-auto font-light text-gray-600">
+                    <p className="truncate w-auto font-light text-medium ">
                       {fileObject?.name}
                     </p>
                     <span
                       onClick={() => setFileObject({})}
                       className={
-                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-medium  '
                       }>
                       <MdCancel />
                     </span>
                   </div>
                 )}
                 {isVideo && (
-                  <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                  <div className="h-auto w-80 p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
                     <video id="output_video" className="h-20 mr-2 w-20 rounded-lg">
                       <source type={fileObject.type} />
                       Your browser does not support the video tag.
                     </video>
-                    <p className="truncate w-auto font-light text-gray-600">
+                    <p className="truncate w-auto font-light text-medium ">
                       {fileObject?.name}
                     </p>
                     <span
                       onClick={() => setFileObject({})}
                       className={
-                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-medium  '
                       }>
                       <MdCancel />
                     </span>
                   </div>
                 )}
                 {!isVideo && !isImage && (
-                  <div className="h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-                    <p className="truncate w-auto font-light text-gray-600">
+                  <div className="h-12 w-80 p-2 text-medium  border-0 border-lightest  hover:border-light  max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                    <p className="truncate w-auto font-light text-medium ">
                       {fileObject?.name}
                     </p>
 
                     <span
                       onClick={() => setFileObject({})}
                       className={
-                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-medium  '
                       }>
                       <MdCancel />
                     </span>

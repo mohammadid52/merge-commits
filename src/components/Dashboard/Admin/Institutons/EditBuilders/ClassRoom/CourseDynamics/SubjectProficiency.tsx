@@ -2,8 +2,11 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
+import {
+  deleteClassroomGroups,
+  deleteClassroomGroupStudents
+} from 'customGraphql/customMutations';
+import {listClassroomGroupss} from 'customGraphql/customQueries';
 
 import AddButton from 'atoms/Buttons/AddButton';
 import Loader from 'atoms/Loader';
@@ -47,7 +50,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listClassroomGroupss, {
+        graphqlOperation(listClassroomGroupss, {
           filter: {
             classRoomID: {eq: roomData?.id},
             groupType: {eq: 'Proficiency'}
@@ -95,7 +98,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
     const onDrop = async () => {
       setDeleting(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.deleteClassroomGroups, {
+        graphqlOperation(deleteClassroomGroups, {
           input: {id: group?.id}
         })
       );
@@ -104,7 +107,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
           group.classroomGroupsStudents?.items?.map(
             async (student: any) =>
               await API.graphql(
-                graphqlOperation(customMutations.deleteClassroomGroupStudents, {
+                graphqlOperation(deleteClassroomGroupStudents, {
                   input: {id: student.id}
                 })
               )
@@ -150,7 +153,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
+              <Loader />
             </div>
           </div>
         ) : classRoomGroups?.length ? (

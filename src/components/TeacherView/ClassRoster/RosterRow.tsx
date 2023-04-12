@@ -152,7 +152,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   };
 
   const activeHoverClass = 'hover:font-semibold cursor-pointer';
-  const inactiveTextClass = 'text-gray-600 text-opacity-20';
+  const inactiveTextClass = 'text-medium  text-opacity-20';
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
@@ -241,7 +241,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
           className={`w-full px-4 flex py-2 transition-all duration-300 items-center ${
             active && activeHoverClass
           }  ${!active && inactiveTextClass} ${
-            number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
+            number % 2 === 0 ? 'bg-lightest bg-opacity-50' : ''
           } ${
             studentIsViewed()
               ? `theme-card-shadow border-l-4 iconoclast:border-500 curate:border-500 bg-opacity-50 iconoclast:bg-200 curate:bg-200`
@@ -265,7 +265,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               id={`${personAuthID}`}
               draggable={false}
               title={`${preferredName ? preferredName : firstName} ${lastName}`}
-              className={`text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate  ${
+              className={`text-medium  overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate  ${
                 active && activeHoverClass
               } `}>
               {preferredName ? preferredName : firstName} {lastName}{' '}
@@ -280,7 +280,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
             {hot && (
               <div
                 draggable={false}
-                className={`flex justify-start items-center pointer-events-none overflow-hidden text-gray-600 text-xs text-left ${
+                className={`flex justify-start items-center pointer-events-none overflow-hidden text-medium  text-xs text-left ${
                   active && activeHoverClass
                 }`}>
                 <div
@@ -337,7 +337,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               <DotMenu
                 extraContent={
                   !hot && (
-                    <div className="border-t-0 border-gray-500 mt-1 pt-1 text-sm capitalize text-gray-600 text-center">
+                    <div className="border-t-0 border-medium  mt-1 pt-1 text-sm capitalize text-medium  text-center">
                       {formatPageName(localPageState.pageState) || '--'}
                     </div>
                   )

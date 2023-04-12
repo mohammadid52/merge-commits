@@ -1,9 +1,9 @@
 import Buttons from '@components/Atoms/Buttons';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { getTodayDate } from '@utilities/functions';
-import { Form, Switch, Tooltip } from 'antd';
-import { CSVLink } from 'react-csv';
-import { BsDownload } from 'react-icons/bs';
+import {PDFDownloadLink} from '@react-pdf/renderer';
+import {getTodayDate} from '@utilities/functions';
+import {Form, Switch, Tooltip} from 'antd';
+import {CSVLink} from 'react-csv';
+import {BsDownload} from 'react-icons/bs';
 import SurveyPDF from '../SurveyPDF';
 
 interface DownloadCsvButtonsInterface {
@@ -93,12 +93,12 @@ const DownloadCsvButtons = ({
             disabled
               ? DISABLED_TEXT
               : responseValue
-              ? 'Show responses as values'
-              : 'Show responses as texts'
+              ? 'Numeric responses'
+              : 'Text responses'
           }>
           <Form.Item
             style={{margin: 0}}
-            label={'Values As Responses'}
+            label={'Numeric Download'}
             valuePropName="checked">
             <Switch
               checked={responseValue}

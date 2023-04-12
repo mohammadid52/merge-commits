@@ -1,7 +1,7 @@
 import Placeholder from '@components/Atoms/Placeholder';
 import Tooltip from '@components/Atoms/Tooltip';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {logError} from 'graphql-functions/functions';
 import {getImageFromS3Static} from '@utilities/services';
 import {orderBy} from 'lodash';
 import React from 'react';
@@ -66,7 +66,7 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
                   </div>
                   <h4
                     onClick={() => redirectToCourse(curricula.id)}
-                    className="text-gray-700 cursor-pointer hover:underline hover:theme-text:400 text-sm">
+                    className="text-dark   cursor-pointer hover:underline hover:theme-text:400 text-sm">
                     {curricula.name}
                   </h4>
                 </li>
@@ -76,7 +76,7 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
           return <div key={'key'} className="w-auto hidden" />;
         })
       ) : (
-        <p className="text-gray-600 text-xs">no attached course found</p>
+        <p className="text-medium  text-xs">no attached course found</p>
       )}
     </ul>
   );

@@ -10,9 +10,9 @@ import AddLearningObjective from 'components/Dashboard/Admin/Institutons/EditBui
 import AddMeasurement from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddMeasurement';
 import AddTopic from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddTopic';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {listCurricula, listRubrics, listTopics} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import {getCSequences, listLearningObjectives} from 'graphql/queries';
 import React, {useEffect, useState} from 'react';
 import {IoIosAdd} from 'react-icons/io';
 import AddEvidence from './AddEvidence';
@@ -123,7 +123,7 @@ const LearningEvidence = ({
 
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
-      graphqlOperation(customQueries.listRubrics, {
+      graphqlOperation(listRubrics, {
         filter: {
           curriculumID: {eq: curricularId}
         }
@@ -133,17 +133,15 @@ const LearningEvidence = ({
 
     const [results, _, topics]: any = await Promise.all([
       await API.graphql(
-        graphqlOperation(queries.listLearningObjectives, {
+        graphqlOperation(listLearningObjectives, {
           filter: {
             curriculumID: {eq: curricularId}
           }
         })
       ),
+      await API.graphql(graphqlOperation(getCSequences, {id: `l_${curricularId}`})),
       await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      ),
-      await API.graphql(
-        graphqlOperation(customQueries.listTopics, {
+        graphqlOperation(listTopics, {
           filter: {
             curriculumID: {eq: curricularId}
           }
@@ -191,7 +189,7 @@ const LearningEvidence = ({
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurricula, {
+        graphqlOperation(listCurricula, {
           filter: {
             institutionID: {eq: institutionId}
           }
@@ -382,7 +380,7 @@ const LearningEvidence = ({
   return (
     <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-2 xl:px-8 bg-gray-100 border-0 border-gray-200">
+        <PageWrapper defaultClass="px-2 xl:px-8 bg-lightest  border-0 border-light">
           <SectionTitleV3
             withButton={
               Boolean(learnings?.length) && (
@@ -435,7 +433,7 @@ const LearningEvidence = ({
             </>
           ) : (
             <div className="py-12 my-6 text-center">
-              <p className="text-gray-600 font-medium">
+              <p className="text-medium  font-medium">
                 {AddNewLessonFormDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}
               </p>
             </div>
