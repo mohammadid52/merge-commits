@@ -83,6 +83,7 @@ const useCsv = ({
       let surveyDates: any = [];
       // creating an array of question Ids and creating a object to store all question options.
       let surveyQuestionOptions: any = {};
+
       let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
         qids.push(ques.question.id);
         surveyQuestionOptions[ques.question.id] = ques.question.options;
@@ -168,9 +169,28 @@ const useCsv = ({
                       surveyDates.push(answerArray.updatedAt); // * <== but here
                       hasTakenSurvey = true; // * <== but here
                       universalSurveyStudentID = answerArray.id; // * <== but here-
-                      studentAnswers[singleAnswer.domID] = cleanString(
-                        selectedOption[0][label]
-                      );
+
+                      // get the answer index from the options array
+
+                      if (responseValue) {
+                        const answerIndex = surveyQuestionOptions[
+                          singleAnswer.domID
+                        ].findIndex((option: any) => option.id === singleAnswer.input[0]);
+
+                        if (answerIndex === -1) {
+                          studentAnswers[singleAnswer.domID] = cleanString(
+                            selectedOption[0]['text']
+                          );
+                        } else {
+                          studentAnswers[singleAnswer.domID] = (
+                            answerIndex + 1
+                          ).toString();
+                        }
+                      } else {
+                        studentAnswers[singleAnswer.domID] = cleanString(
+                          selectedOption[0]['text']
+                        );
+                      }
                     } else {
                       studentAnswers[singleAnswer.domID] = '';
                     }
