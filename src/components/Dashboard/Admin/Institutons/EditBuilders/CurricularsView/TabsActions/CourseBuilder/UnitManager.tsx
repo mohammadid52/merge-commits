@@ -279,8 +279,7 @@ const UnitManager = ({
       const result: any = await API.graphql(
         graphqlOperation(listRooms, {
           filter: {
-            activeSyllabus: {eq: unitId},
-            status: {eq: RoomStatus.ACTIVE}
+            activeSyllabus: {eq: unitId}
           }
         })
       );
