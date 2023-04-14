@@ -11,10 +11,14 @@ import {logError} from 'graphql-functions/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
 import {orderBy, truncate} from 'lodash';
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import DictionaryMutationModal from './DictionaryMutationModal';
 import {listDicitionaries} from '@customGraphql/customQueries';
 import {deleteDicitionary} from '@graphql/mutations';
+import PageLayout from 'layout/PageLayout';
+
+import * as dictionaries from 'dictionary/dictionary.iconoclast';
+import {Card, Col, Divider, List, Row} from 'antd';
 
 const DictionaryPage = () => {
   const {
@@ -63,76 +67,41 @@ const DictionaryPage = () => {
       console.error(error);
     }
   };
+  const dictionary = Object.entries(dictionaries);
 
-  const dataList: any[] = data.map((dict, idx) => ({
+  const getValues = useCallback((index: number, lang: 'EN' | 'ES') => {
+    return Object.values(dictionary[index][1][lang]);
+  }, []);
+
+  const onlyKeys = dictionary.map((dict) => {
+    const obj = dict[1];
+    return {name: dict[0], keys: Object.keys(obj.EN)};
+  });
+
+  const dataList: any[] = onlyKeys.map((dict, idx) => ({
     no: idx + 1,
-    englishPhrase: <div className="">{dict.englishPhrase}</div>,
-    englishDefinition: (
-      <div className="">{truncate(dict.englishDefinition || '', {length: 200})}</div>
-    ),
-
-    languageTranslation: (
-      <div className="">
-        <ol>
-          {dict?.translation?.length === 0 ? (
-            <li>N/A</li>
-          ) : (
-            dict?.translation?.map((translation) => {
-              return (
-                <li key={translation?.id}>
-                  <div className="font-medium text-medium ">
-                    In {translation?.translateLanguage || '--'}:
-                  </div>
-                  <p>{translation?.languageTranslation || '--'}</p>
-                </li>
-              );
-            })
-          )}
-        </ol>
-      </div>
-    ),
-    languageDefinition: (
-      <div className="">
-        <ol>
-          {dict?.translation?.length === 0 ? (
-            <li>N/A</li>
-          ) : (
-            dict?.translation?.map((translation) => {
-              return (
-                <li key={translation?.id}>
-                  <div className="font-medium text-medium ">
-                    In {translation?.translateLanguage || '--'}:
-                  </div>
-                  <p>{translation?.languageDefinition || '--'}</p>
-                </li>
-              );
-            })
-          )}
-        </ol>
-      </div>
-    ),
-    actions: (
-      <CommonActionsBtns
-        button1Action={() => {
-          setShowModal(true);
-          setEditDictionary(dict);
-        }}
-        button2Action={() => {
-          onDelete(dict.id);
-        }}
-      />
+    parent: dict.name,
+    value: (
+      // antd list
+      <List bordered={false}>
+        {dict.keys.map((key, idx) => (
+          <List.Item>
+            {key}:{' '}
+            {typeof getValues(idx, 'EN') === 'object'
+              ? JSON.stringify(getValues(idx, 'EN'))
+              : getValues(idx, 'EN')}
+            -{' '}
+            {typeof getValues(idx, 'ES') === 'object'
+              ? JSON.stringify(getValues(idx, 'ES'))
+              : getValues(idx, 'ES')}
+          </List.Item>
+        ))}
+      </List>
     )
   }));
 
   const tableConfig: ITableProps = {
-    headers: [
-      'No',
-      'English Phrase',
-      'English Definition',
-      'Language Translation',
-      'Language Definition',
-      'Actions'
-    ],
+    headers: ['No', 'Parent', 'Value'],
     dataList,
     config: {
       dataList: {
@@ -141,14 +110,25 @@ const DictionaryPage = () => {
     }
   };
 
+  console.log(onlyKeys);
+
   const onSuccessMutation = () => {
     refetch();
   };
 
+  // make the dictionary object into an array
+
+  // split this into 4 columns
+
+  console.log();
+
+  const getInnerValues = useCallback((index: number) => {
+    return Object.entries(dictionary[index][1].EN);
+  }, []);
+
   return (
-    <div className="p-4 pt-8">
-      <PageWrapper wrapClass="px-8">
-        <SectionTitleV3
+    <PageLayout title="Dictionary">
+      {/* <SectionTitleV3
           title={'Glossary'}
           fontSize="xl"
           fontStyle="semibold"
@@ -166,18 +146,17 @@ const DictionaryPage = () => {
               />
             </div>
           }
-        />
+        /> */}
 
-        <Table {...tableConfig} />
+      <Table {...tableConfig} />
 
-        <DictionaryMutationModal
+      {/* <DictionaryMutationModal
           open={showModal}
           onSuccessMutation={onSuccessMutation}
           dictionary={editDictionary}
           closeAction={closeAction}
-        />
-      </PageWrapper>
-    </div>
+        /> */}
+    </PageLayout>
   );
 };
 

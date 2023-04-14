@@ -1,5 +1,5 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {Table, TableProps} from 'antd';
+import {Alert, Table, TableProps} from 'antd';
 import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
 import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
@@ -74,7 +74,10 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
       : undefined,
     onRow: (data: any) => ({
       onClick: () => {
-        data?.onClick?.();
+        !isSortable && data?.onClick?.();
+      },
+      onDoubleClick: () => {
+        isSortable && data?.onClick?.();
       }
     }),
     className: 'universal-table mt-2 overflow-x-auto',
@@ -112,6 +115,15 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
 
   return (
     <ErrorBoundary componentName="Table">
+      {isSortable && (
+        <Alert
+          message="Double click on a row to view"
+          type="info"
+          showIcon
+          className="mt-2"
+          closable
+        />
+      )}
       {isSortable ? (
         // @ts-ignore
         <SortTable onDragEnd={dataListConfig?.sortableConfig?.onSort} {...tableProps} />

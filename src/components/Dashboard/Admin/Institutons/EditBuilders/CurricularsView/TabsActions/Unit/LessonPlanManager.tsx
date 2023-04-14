@@ -345,7 +345,9 @@ const LessonPlanManager = ({
     return {
       no: idx + 1,
       id: item.id,
-      onClick: () => gotoLessonBuilder(lessonObj.id, lessonObj.type),
+      onClick: () => {
+        gotoLessonBuilder(lessonObj.id, lessonObj.type);
+      },
       lessonName: <div className="cursor-pointer">{lessonObj.title || '--'}</div>,
       type: lessonObj.type || '--',
       measurements:

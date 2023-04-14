@@ -1842,6 +1842,15 @@ $translation-fab-width: 50px;
   }
 }
 
+.ant-steps {
+  // reset the weird color of the arrow
+  & .ant-steps-item {
+    &::after {
+      background-color: transparent !important;
+    }
+  }
+}
+
 .ant-steps-item-title {
   font-weight: 500;
 }

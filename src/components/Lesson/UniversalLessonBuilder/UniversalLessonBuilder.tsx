@@ -27,6 +27,7 @@ import LessonPlanNavigation from './UI/LessonPlanNavigation';
 import NewLessonPlanSO from './UI/SlideOvers/NewLessonPlanSO';
 import PageBuilderSlideOver from './UI/SlideOvers/PageBuilderSlideOver';
 import Toolbar from './UI/UIComponents/Toolbar';
+import PageLayout from 'layout/PageLayout';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -434,7 +435,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
      *
      */
 
-    <>
+    <PageLayout title="Lesson Builder">
       <NewLessonPlanSO
         instId={instId}
         pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
@@ -525,7 +526,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
           </Content>
         </Layout>
       </Layout>
-    </>
+    </PageLayout>
   );
 };
 

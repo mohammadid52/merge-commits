@@ -287,11 +287,13 @@ const OverlayHeaderTitle = ({
         </div>
       )}
 
-      <h4
-        id="page_builder_overlay--header-title"
-        className=" text-white font-medium tracking-wide text-lg 2xl:text-xl text-center">
-        {title}
-      </h4>
+      {title && (
+        <h4
+          id="page_builder_overlay--header-title"
+          className=" text-white font-medium tracking-wide text-lg 2xl:text-xl text-center">
+          {title}
+        </h4>
+      )}
     </div>
   );
 };

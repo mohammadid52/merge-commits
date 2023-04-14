@@ -9,7 +9,7 @@ import {
 import {CSS} from '@dnd-kit/utilities';
 import {Table} from 'antd';
 import type {TableProps} from 'antd/es/table';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 export interface SortTableProps extends TableProps<any> {
   onDragEnd: (event: DragEndEvent) => void;

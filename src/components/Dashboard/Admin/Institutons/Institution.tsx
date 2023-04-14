@@ -162,7 +162,6 @@ const Institution = (props: InstitutionProps) => {
         forInstitution
       />
       <div className="">
-        {/* <PageWrapper> */}
         <Switch>
           <Route
             path={`${match.url}/`}
@@ -179,7 +178,6 @@ const Institution = (props: InstitutionProps) => {
             )}
           />
         </Switch>
-        {/* </PageWrapper> */}
       </div>
     </div>
   );
