@@ -13,7 +13,8 @@ const Filters = ({
   filters,
   customFilters,
   resetPagination,
-  loading
+  loading,
+  list
 }: {
   loading: boolean;
   updateFilter: any;
@@ -21,12 +22,6 @@ const Filters = ({
   list?: any[];
   customFilters?: string[];
   resetPagination?: () => void;
-  showingCount?: {
-    totalResults: number;
-    currentPage: number;
-    lastPage: boolean;
-    pageCount: number;
-  } | null;
 }) => {
   const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
   const filter = customFilters ? customFilters : defaultFilterMapping;
@@ -37,6 +32,7 @@ const Filters = ({
     const newMode = e.target.value;
     setMode(newMode);
     updateFilter(newMode);
+
     resetPagination?.();
 
     // setQuery('filter', newMode);
@@ -64,14 +60,11 @@ const Filters = ({
 
   // set default filter to ACTIVE on useEffect
 
-  // useEffect(() => {
-  //   if (!mode && !loading && !customFilters) {
-  //     setTimeout(() => {
-  //       updateFilter('ACTIVE');
-  //       setMode('ACTIVE');
-  //     }, 100);
-  //   }
-  // }, [loading]);
+  useEffect(() => {
+    if (!loading && !customFilters && list && list?.length > 0) {
+      handleModeChange({target: {value: 'ACTIVE'}} as RadioChangeEvent);
+    }
+  }, [loading, list]);
 
   const onClearFilter = () => {
     updateFilter(filters);

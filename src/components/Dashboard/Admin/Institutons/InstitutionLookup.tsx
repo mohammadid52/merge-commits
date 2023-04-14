@@ -43,6 +43,11 @@ const InstitutionLookup: React.FC = () => {
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
 
+  const [searchInput, setSearchInput] = useState({
+    value: '',
+    isActive: false
+  });
+
   const {
     currentList,
     allAsProps,
@@ -55,10 +60,6 @@ const InstitutionLookup: React.FC = () => {
     pageCount
   } = usePagination(institutionsData || [], totalInstNum || 0);
 
-  const [searchInput, setSearchInput] = useState({
-    value: '',
-    isActive: false
-  });
   const [sortingType] = useState({
     value: '',
     name: '',

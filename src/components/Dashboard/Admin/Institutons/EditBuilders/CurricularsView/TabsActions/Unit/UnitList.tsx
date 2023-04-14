@@ -72,6 +72,18 @@ const UnitList = ({
   const [totalNum, setTotalNum] = useState(0);
 
   const {
+    searchInput,
+    setSearch,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    removeSearchAction,
+    searchAndFilter,
+    setSearchInput
+  } = useSearch([...(units || [])], ['name', 'institutionName']);
+
+  const [filteredList, setFilteredList] = useState([...units]);
+
+  const {
     pageCount,
     setFirstPage,
     setLastPage,
@@ -81,7 +93,7 @@ const UnitList = ({
     setCurrentList,
     getIndex,
     resetPagination
-  } = usePagination(units, loading ? 0 : totalNum);
+  } = usePagination(units, searchInput.isActive ? filteredList.length : totalNum);
 
   useEffect(() => {
     fetchSyllabusList();
@@ -283,18 +295,6 @@ const UnitList = ({
         : `${baseUrl}/institution/${institutionId}/lessons/${lessonId}`
     );
   };
-
-  const {
-    searchInput,
-    setSearch,
-    checkSearchQueryFromUrl,
-    filterBySearchQuery,
-    removeSearchAction,
-    searchAndFilter,
-    setSearchInput
-  } = useSearch([...(units || [])], ['name', 'institutionName']);
-
-  const [filteredList, setFilteredList] = useState([...units]);
 
   useEffect(() => {
     if (!loading && units?.length > 0) {
@@ -597,16 +597,6 @@ const UnitList = ({
           list={units}
           updateFilter={updateFilter}
           resetPagination={resetPagination}
-          showingCount={
-            isFromLesson
-              ? null
-              : {
-                  currentPage: allAsProps.currentPage,
-                  lastPage: allAsProps.lastPage,
-                  totalResults: allAsProps.totalResults,
-                  pageCount: allAsProps.pageCount
-                }
-          }
           filters={filters}
         />
 

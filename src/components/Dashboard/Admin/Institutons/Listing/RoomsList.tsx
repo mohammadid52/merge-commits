@@ -207,6 +207,8 @@ const RoomsList = (props: RoomListProps) => {
     setSearchInput
   } = useSearch([...roomList], ['name', 'institutionName']);
 
+  const [filteredList, setFilteredList] = useState([...roomList]);
+
   const {
     pageCount,
     setFirstPage,
@@ -216,9 +218,10 @@ const RoomsList = (props: RoomListProps) => {
     allAsProps,
     resetPagination,
     getIndex
-  } = usePagination(roomList, loading ? 0 : totalNum);
-
-  const [filteredList, setFilteredList] = useState([...roomList]);
+  } = usePagination(
+    roomList,
+    loading ? 0 : searchInput.isActive ? filteredList.length : totalNum
+  );
 
   useEffect(() => {
     if (!loading && roomList.length > 0) {
@@ -374,16 +377,10 @@ const RoomsList = (props: RoomListProps) => {
       <div className="w-full">
         <Filters
           loading={loading}
-          resetPagination={resetPagination}
           list={roomList}
+          resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
-          showingCount={{
-            currentPage: allAsProps.currentPage,
-            lastPage: allAsProps.lastPage,
-            totalResults: allAsProps.totalResults,
-            pageCount: allAsProps.pageCount
-          }}
         />
 
         <Table {...tableConfig} />

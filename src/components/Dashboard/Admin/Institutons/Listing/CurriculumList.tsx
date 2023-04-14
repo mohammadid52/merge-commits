@@ -226,17 +226,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   };
 
   const {
-    pageCount,
-    setFirstPage,
-    setLastPage,
-    setTotalPages,
-    currentList,
-    allAsProps,
-    resetPagination,
-    setCurrentList
-  } = usePagination(courseList, loading ? 0 : totalNum);
-
-  const {
     searchInput,
     setSearch,
     checkSearchQueryFromUrl,
@@ -247,6 +236,17 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   } = useSearch([...(courseList || [])], ['name', 'institutionName']);
 
   const [filteredList, setFilteredList] = useState([...courseList]);
+
+  const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+    currentList,
+    allAsProps,
+    resetPagination,
+    setCurrentList
+  } = usePagination(courseList, searchInput.isActive ? filteredList.length : totalNum);
 
   useEffect(() => {
     if (!loading && currentList?.length > 0) {
@@ -278,6 +278,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
+    if (courseList.length === 0) return;
+
     if (filterName === filters) {
       setSearchInput({...searchInput, isActive: false});
       setFilters(null);
@@ -285,6 +287,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     } else {
       setSearchInput({...searchInput, isActive: true});
       const filtered = courseList.filter((_d: any) => filterName === _d.status);
+
       setFilteredList(filtered);
       setFilters(filterName);
       setSelectedInstitution({});
@@ -416,16 +419,10 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         title={InstitueCurriculum[userLanguage]['TITLE']}>
         <Filters
           loading={loading}
-          list={courseList}
           resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
-          showingCount={{
-            currentPage: allAsProps.currentPage,
-            lastPage: allAsProps.lastPage,
-            totalResults: allAsProps.totalResults,
-            pageCount: allAsProps.pageCount
-          }}
+          list={courseList}
         />
 
         <Table {...tableConfig} />

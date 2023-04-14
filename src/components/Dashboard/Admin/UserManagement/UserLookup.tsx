@@ -73,6 +73,18 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const [totalUserNum, setTotalUserNum] = useState(0);
 
   const {
+    filterBySearchQuery,
+    searchInput,
+    setSearchInput,
+    checkSearchQueryFromUrl,
+    removeSearchAction,
+    setSearch,
+    searchAndFilter
+  } = useSearch(totalUserList, ['name', 'email'], 'firstName');
+
+  const [filteredList, setFilteredList] = useState<any[]>([]);
+
+  const {
     currentList,
     setCurrentList,
     allAsProps,
@@ -80,7 +92,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     resetPagination,
     currentPage,
     getIndex
-  } = usePagination(totalUserList || [], loading ? 0 : totalUserList.length);
+  } = usePagination(
+    totalUserList || [],
+    searchInput.isActive ? filteredList.length : totalUserList.length
+  );
 
   // ...End.
 
@@ -130,16 +145,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     resetPagination();
     removeSearchAction();
   };
-
-  const {
-    filterBySearchQuery,
-    searchInput,
-    setSearchInput,
-    checkSearchQueryFromUrl,
-    removeSearchAction,
-    setSearch,
-    searchAndFilter
-  } = useSearch(totalUserList, ['name', 'email'], 'firstName');
 
   const getStudentsList = (data: any) => {
     let list: any[] = [];
@@ -452,8 +457,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [filters, setFilters] = useState<any>();
 
-  const [filteredList, setFilteredList] = useState<any[]>([]);
-
   const finalList = searchInput.isActive ? filteredList : currentList;
 
   const dict = UserLookupDict[userLanguage];
@@ -598,17 +601,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       <div className="flex flex-col ">
         <Filters
           loading={loading}
-          list={currentList}
           resetPagination={resetPagination}
           updateFilter={updateFilter}
+          list={totalUserList}
           filters={filters}
           customFilters={['ADMIN', 'BUILDER', 'FELLOW', 'STUDENT']}
-          showingCount={{
-            currentPage,
-            lastPage: allAsProps.lastPage,
-            totalResults: allAsProps.totalResults,
-            pageCount: allAsProps.pageCount
-          }}
         />
 
         <Table {...tableConfig} />
