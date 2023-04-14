@@ -6,19 +6,17 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import {
-  updateCurriculumSyllabusSequence,
-  deleteCurriculumUnits
+  deleteCurriculumUnits,
+  updateCurriculumSyllabusSequence
 } from 'customGraphql/customMutations';
 import {listUniversalSyllabusOptions} from 'customGraphql/customQueries';
 import {createCurriculumUnits} from 'graphql/mutations';
 
 import Buttons from '@components/Atoms/Buttons';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 
 import {RoomStatus} from 'API';
 import {message} from 'antd';
-import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
@@ -51,6 +49,8 @@ const UnitManager = ({
     value: ''
   });
 
+  const isInactive = courseData?.status === RoomStatus.INACTIVE;
+
   const [unsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -70,20 +70,6 @@ const UnitManager = ({
       updateSyllabusSequence(syllabusSeq);
     }
   }, [savedSyllabusList]);
-
-  // ~~~~~~~~~~~~ FUnCTIONALITY ~~~~~~~~~~~~ //
-  const createNewUnit = () => {
-    if (unsavedChanges) {
-      setWarnModal({
-        ...warnModal,
-        lessonPlan: true,
-        show: !warnModal.show,
-        lessonEdit: false
-      });
-      return;
-    }
-    history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/add`);
-  };
 
   const handleSelectSyllabus = (value: string, option: any) => {
     setSelectedSyllabus({id: option.id, name: value, value: option.value});
@@ -158,7 +144,9 @@ const UnitManager = ({
   }, [savedSyllabusList]);
 
   useEffect(() => {
-    fetchSyllabusList();
+    if (!isInactive) {
+      fetchSyllabusList();
+    }
   }, [institutionId]);
 
   const fetchSyllabusList = async () => {
@@ -292,7 +280,17 @@ const UnitManager = ({
     }
   };
 
-  const isInactive = courseData?.status === RoomStatus.INACTIVE;
+  const getWithDisabledList = () => {
+    if (!isInactive) {
+      return allSyllabusList.map((item: any) => {
+        return {
+          ...item,
+          disabled: syllabusIds.includes(item.id)
+        };
+      });
+    }
+    return [];
+  };
 
   return (
     <PageLayout
@@ -307,7 +305,7 @@ const UnitManager = ({
         <div className=" w-full flex gap-x-4 justify-end items-center">
           <Selector
             selectedItem={isInactive ? 'Course inactive' : selectedSyllabus.value}
-            list={allSyllabusList}
+            list={getWithDisabledList()}
             placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
             onChange={handleSelectSyllabus}
             width={300}
@@ -316,19 +314,10 @@ const UnitManager = ({
             disabled={isInactive}
           />
 
-          <AnimatedContainer className="w-auto" show={Boolean(selectedSyllabus.id)}>
-            {Boolean(selectedSyllabus.id) && (
-              <Buttons
-                label={BUTTONS[userLanguage]['ADD']}
-                onClick={addNewSyllabusToCourse}
-              />
-            )}
-          </AnimatedContainer>
-
-          <AddButton
-            disabled={isInactive}
-            label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
-            onClick={createNewUnit}
+          <Buttons
+            disabled={!Boolean(selectedSyllabus.id)}
+            label={BUTTONS[userLanguage]['ADD']}
+            onClick={addNewSyllabusToCourse}
           />
         </div>
       }>

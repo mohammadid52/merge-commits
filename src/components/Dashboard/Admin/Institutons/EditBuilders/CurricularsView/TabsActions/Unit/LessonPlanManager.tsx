@@ -123,13 +123,6 @@ const LessonPlanManager = ({
     }
   }, []);
 
-  // ~~~~~~~~~~~~~~~~~ CRUD ~~~~~~~~~~~~~~~~ //
-  const createNewLesson = () => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/lessons/add`
-    );
-  };
-
   const selectLesson = (value: string, option: any) => {
     setSelectedLesson({id: option.id, name: value, value});
   };
@@ -225,14 +218,7 @@ const LessonPlanManager = ({
       });
 
     const filteredDropDownList = lessonsDetails
-      .filter(
-        (item) =>
-          !Boolean(
-            updatedTableList.find(
-              (lesson) => lesson.lesson && lesson.lesson.id === item.id
-            )
-          ) && Boolean(item.lessonPlan)
-      )
+      .filter((item) => Boolean(item.lessonPlan))
       .map((item: {id: string; title: string; type: string; targetAudience: string}) => ({
         id: item.id,
         name: `${item.title} - ${item.targetAudience || 'All'}`,
@@ -405,6 +391,17 @@ const LessonPlanManager = ({
     }
   };
 
+  const getWithDisabledList = () => {
+    return dropdownLessonsList.map((item: any) => {
+      return {
+        ...item,
+        disabled: savedLessonsList.find(
+          (lesson: {lesson: {id: any}}) => lesson.lesson && lesson.lesson.id === item.id
+        )
+      };
+    });
+  };
+
   return (
     <div className="">
       {/* *************** SECTION HEADER ************ */}
@@ -415,7 +412,7 @@ const LessonPlanManager = ({
           <div className="flex gap-x-4 justify-end items-center">
             <Selector
               selectedItem={selectedLesson.name}
-              list={dropdownLessonsList}
+              list={getWithDisabledList()}
               placeholder={SyllabusDict[userLanguage]['SELECT_LESSON']}
               onChange={selectLesson}
               width={250}
@@ -429,16 +426,6 @@ const LessonPlanManager = ({
               onClick={addNewLesson}
               disabled={!Boolean(selectedLesson.value) || addingLesson}
             />
-
-            {!isSuperAdmin && (
-              <div className="w-auto">
-                <AddButton
-                  transparent
-                  label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
-                  onClick={createNewLesson}
-                />
-              </div>
-            )}
           </div>
         }
         shadowOff

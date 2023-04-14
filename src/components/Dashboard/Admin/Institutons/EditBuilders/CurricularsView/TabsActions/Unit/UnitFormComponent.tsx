@@ -11,10 +11,20 @@ import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {RoomStatus} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {updateUniversalSyllabus, createUniversalSyllabus} from 'graphql/mutations';
+import {
+  updateUniversalSyllabus,
+  createUniversalSyllabus,
+  deleteUniversalSyllabus
+} from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
 import AttachedCourses from './AttachedCourses';
+import {Popconfirm, Space} from 'antd';
+import {logError} from 'graphql-functions/functions';
+import useAuth from '@customHooks/useAuth';
+import {listUniversalLessonsOptions} from '@customGraphql/customQueries';
+import {getUniversalSyllabus} from '@customGraphql/customQueries';
+import {orderBy} from 'lodash';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -232,6 +242,75 @@ const UnitFormComponent = ({
     }
   };
 
+  const {authId, email} = useAuth();
+
+  const onUnitDelete = async () => {
+    try {
+      await API.graphql(
+        graphqlOperation(deleteUniversalSyllabus, {
+          input: {id: syllabusDetails?.id}
+        })
+      );
+    } catch (error) {
+      console.error(error);
+
+      logError(
+        error,
+        {
+          authId,
+          email
+        },
+        'UnitFormComponent @onDeleteCourse'
+      );
+    }
+  };
+
+  const [unitDeletable, setUnitDeletable] = useState(false);
+
+  // check if deletable or not
+  // check connected lessons to this unit
+
+  const checkDeletable = async () => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(getUniversalSyllabus, {
+          id: syllabusDetails?.id
+        })
+      );
+      const lesson = res.data.getUniversalSyllabus;
+
+      const lessonList = [...lesson.lessons?.items];
+
+      const attachedCourses = curricular?.items?.filter((item: any) => {
+        if (item?.universalSyllabus) {
+          return item?.universalSyllabus?.items?.find(
+            (item: any) => item?.unit?.id === syllabusDetails.id
+          );
+        }
+      });
+
+      if (lessonList.length > 0 || attachedCourses?.length > 0) {
+        setUnitDeletable(false);
+      } else {
+        setUnitDeletable(true);
+      }
+    } catch (error) {
+      console.error(error);
+      logError(
+        error,
+        {
+          authId,
+          email
+        },
+        'UnitFormComponent @checkDeletable'
+      );
+    }
+  };
+
+  useEffect(() => {
+    checkDeletable();
+  }, [curricular, syllabusDetails?.id]);
+
   const {
     name,
     languages,
@@ -245,7 +324,7 @@ const UnitFormComponent = ({
 
   return (
     <>
-      <div className={`overflow-hidden mb-4 p-6`}>
+      <div className={``}>
         <div className="m-auto">
           <div className="py-4  grid gap-8 grid-cols-2">
             <div className="col-span-2">
@@ -356,13 +435,36 @@ const UnitFormComponent = ({
           </div>
         ) : null}
 
-        <div className="flex gap-4 my-8 justify-end">
-          <Buttons label="Cancel" onClick={onCancel} transparent />
-          <Buttons
-            label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
-            onClick={saveSyllabusDetails}
-            disabled={loading ? true : false}
-          />
+        <div className="flex justify-between">
+          <div className="">
+            <Popconfirm
+              onConfirm={() => {
+                onUnitDelete();
+              }}
+              okText="Yes"
+              cancelText="No"
+              okType="danger"
+              title="Are you sure you want to delete this unit?">
+              <Buttons
+                tooltip={
+                  unitDeletable
+                    ? ''
+                    : 'Cannot delete unit with lessons or attached courses'
+                }
+                disabled={!unitDeletable}
+                label="Delete course"
+                redBtn
+              />
+            </Popconfirm>
+          </div>
+          <Space>
+            <Buttons label="Cancel" onClick={onCancel} transparent />
+            <Buttons
+              label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
+              onClick={saveSyllabusDetails}
+              disabled={loading ? true : false}
+            />
+          </Space>
         </div>
       </div>
 

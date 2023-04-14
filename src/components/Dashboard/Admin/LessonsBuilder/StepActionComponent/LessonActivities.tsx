@@ -4,6 +4,7 @@ import useAuth from '@customHooks/useAuth';
 import {DragEndEvent} from '@dnd-kit/core';
 import {arrayMove} from '@dnd-kit/sortable';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {Empty} from 'antd';
 
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
@@ -201,90 +202,18 @@ const LessonActivities = ({
         </div>
 
         {pages.length === 0 ? (
-          <Fragment>
-            <div className="text-center text-lg text-medium  font-medium">
-              <p>You don't have any pages</p>
-            </div>
-            <div className="flex justify-center my-4">
-              <Buttons
-                label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
-                onClick={addNewLessonPlan}
-              />
-            </div>
-          </Fragment>
+          <Empty description="You don't have any pages">
+            <Buttons
+              label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
+              onClick={addNewLessonPlan}
+            />
+          </Empty>
         ) : (
           <Fragment>
             <Table {...tableConfig} />
           </Fragment>
         )}
         <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`} />
-        {loading ? (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
-            <div className="items-center flex justify-center flex-col">
-              <Loader />
-              <p className="mt-2 text-center text-lg text-medium ">Loading Activities</p>
-            </div>
-          </div>
-        ) : pages.length > 0 ? (
-          <div className="mt-8">
-            <div className="flex justify-between">
-              <p className="w-auto  font-semibold text-lg flex items-center">
-                {
-                  LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
-                    'HEADING'
-                  ]
-                }
-              </p>
-
-              <span className="w-auto inline-flex items-center">
-                <Buttons
-                  disabled={true}
-                  label={
-                    LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
-                      'ADD_NEW_ACTIVITY'
-                    ]
-                  }
-                />
-              </span>
-            </div>
-            <div className="w-full flex justify-between border-b-0 border-lightest mt-8">
-              <div className="w-3/10 px-4 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
-                <span>{dict['ACTIVITY_LABEL']}</span>
-              </div>
-              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
-                <span>{dict['ACTIVITY_NAME']}</span>
-              </div>
-              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
-                <span>{dict['INTERACTION_TYPE']}</span>
-              </div>
-              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
-                <span>{dict['INSTRUCTION']}</span>
-              </div>
-              <div className="w-3/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
-                <span>{dict['ESTIMATED_TIME']}</span>
-              </div>
-              <div className="w-2/10 px-8 py-3 bg-lightest text-xs leading-4 font-medium text-medium  uppercase tracking-wider">
-                <span>{dict['ACTION']}</span>
-              </div>
-            </div>
-            <div className="text-center p-5">
-              You don't have any homework activities yet.
-            </div>
-            <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto"></div>
-          </div>
-        ) : (
-          <Fragment>
-            <div className="text-center text-lg text-medium  font-medium">
-              <p>You don't have any pages</p>
-            </div>
-            <div className="flex justify-center my-4">
-              <Buttons
-                label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
-                onClick={addNewLessonPlan}
-              />
-            </div>
-          </Fragment>
-        )}
 
         <ModalPopUp
           open={showDeleteModal}

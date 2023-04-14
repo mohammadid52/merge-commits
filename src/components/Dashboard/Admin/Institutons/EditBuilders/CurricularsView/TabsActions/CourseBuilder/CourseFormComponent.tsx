@@ -4,7 +4,7 @@ import ModalPopUp from '@components/Molecules/ModalPopUp';
 import useAuth from '@customHooks/useAuth';
 import {ClassroomType, RoomStatus} from 'API';
 import {CourseSchema} from 'Schema';
-import {message} from 'antd';
+import {Popconfirm, Space, message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
@@ -12,11 +12,15 @@ import Selector from 'atoms/Form/Selector';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {createCurriculum} from 'customGraphql/customMutations';
-import {listPersons} from 'customGraphql/customQueries';
+import {listPersons, listRoomCurriculums, listUnits} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useFormik} from 'formik';
-import {checkUniqCurricularName, uploadImageToS3} from 'graphql-functions/functions';
-import {updateCurriculum} from 'graphql/mutations';
+import {
+  checkUniqCurricularName,
+  logError,
+  uploadImageToS3
+} from 'graphql-functions/functions';
+import {deleteCurriculum, updateCurriculum} from 'graphql/mutations';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
@@ -43,6 +47,8 @@ export const RoomStatusList = [
 interface CourseBuilderProps {
   courseId: string;
   courseData: any;
+  savedSyllabusList?: any[];
+
   setCourseData: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -59,7 +65,8 @@ interface ICourseForm {
 const CourseFormComponent = ({
   courseId,
   courseData,
-  setCourseData
+  setCourseData,
+  savedSyllabusList = []
 }: CourseBuilderProps) => {
   const initialData: ICourseForm = {
     name: '',
@@ -320,6 +327,78 @@ const CourseFormComponent = ({
     }
   };
 
+  const [courseDeletable, setCourseDeletable] = useState(false);
+
+  const onDeleteCourse = async () => {
+    try {
+      await API.graphql(
+        graphqlOperation(deleteCurriculum, {
+          input: {id: courseId}
+        })
+      );
+    } catch (error) {
+      messageApi.error('Error deleting course. Please try again later.');
+    }
+  };
+
+  const {authId, email} = useAuth();
+
+  // check if deletable or not
+  // check connected units to this course
+
+  const [informationForDeletable, setInformationForDeletable] = useState('');
+
+  const checkDeletable = async () => {
+    try {
+      const attachedClassrooms: any = await API.graphql(
+        graphqlOperation(listRoomCurriculums, {
+          filter: {
+            curriculumID: {
+              eq: courseId
+            }
+          }
+        })
+      );
+
+      const savedClassroomList = attachedClassrooms.data.listRoomCurricula.items;
+
+      if (savedSyllabusList?.length > 0 || savedClassroomList?.length > 0) {
+        setCourseDeletable(false);
+
+        if (savedSyllabusList.length > 0) {
+          setInformationForDeletable(
+            `This course has ${savedSyllabusList.length} syllabus attached to it.`
+          );
+        }
+        if (savedClassroomList.length > 0) {
+          const nameOfListOfClassrooms = savedClassroomList.map(
+            (item: any) => item?.curriculum?.name
+          );
+          setInformationForDeletable(
+            `This course has ${savedClassroomList.length} classrooms attached to it.
+            List of classrooms: ${nameOfListOfClassrooms.join(',')}
+            `
+          );
+        }
+      } else {
+        setCourseDeletable(true);
+      }
+    } catch (error) {
+      logError(
+        error,
+        {
+          authId,
+          email
+        },
+        'CurricularBuilder @checkDeletable'
+      );
+    }
+  };
+
+  useEffect(() => {
+    checkDeletable();
+  }, []);
+
   const {
     name,
     description,
@@ -448,14 +527,6 @@ const CourseFormComponent = ({
         </div>
       </div>
 
-      {/* {messages.show ? (
-        <div className="py-2 m-auto text-center">
-          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-            {messages.message ? messages.message : ''}
-          </p>
-        </div>
-      ) : null} */}
-
       <ModalPopUp
         open={warnModal.show}
         closeAction={closeModal}
@@ -464,24 +535,41 @@ const CourseFormComponent = ({
         message={warnModal.message}
       />
 
-      <div className="flex my-8 gap-4 justify-end">
-        <Buttons label={'Cancel'} transparent url={goBackUrl} disabled={loading} />
-        <Buttons
-          label={
-            CurricularBuilderdict[userLanguage]['BUTTON'][loading ? 'SAVING' : 'SAVE']
-          }
-          type="submit"
-          disabled={loading}
-        />
-        {/* <button
-          onClick={() => handleToggleDelete(courseData.name, courseData)}
-          disabled={checkIfRemovable()}
-          className={`${
-            checkIfRemovable() ? 'text-red-500' : 'pointer-events-none text-medium '
-          }  w-auto ml-12 hover:underline text-sm uppercase`}>
-          Delete course
-        </button> */}
+      <div className="flex justify-between">
+        <div className="">
+          <Popconfirm
+            onConfirm={() => {
+              onDeleteCourse();
+            }}
+            okText="Yes"
+            cancelText="No"
+            okType="danger"
+            title="Are you sure you want to delete this course?">
+            <Buttons
+              tooltip={
+                courseDeletable
+                  ? ''
+                  : informationForDeletable ||
+                    'Cannot delete course with attached units or the course is live'
+              }
+              disabled={!courseDeletable}
+              label="Delete course"
+              redBtn
+            />
+          </Popconfirm>
+        </div>
+        <Space>
+          <Buttons label={'Cancel'} transparent url={goBackUrl} disabled={loading} />
+          <Buttons
+            label={
+              CurricularBuilderdict[userLanguage]['BUTTON'][loading ? 'SAVING' : 'SAVE']
+            }
+            type="submit"
+            disabled={loading}
+          />
+        </Space>
       </div>
+
       {/* Image cropper */}
 
       {showCropper && (
