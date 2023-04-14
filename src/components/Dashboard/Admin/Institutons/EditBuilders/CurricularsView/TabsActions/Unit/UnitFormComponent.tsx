@@ -452,7 +452,7 @@ const UnitFormComponent = ({
                     : 'Cannot delete unit with lessons or attached courses'
                 }
                 disabled={!unitDeletable}
-                label="Delete course"
+                label="Delete unit"
                 redBtn
               />
             </Popconfirm>
