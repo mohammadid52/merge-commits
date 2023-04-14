@@ -53,7 +53,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
       // style={{borderRadius: 999}}
       type={transparent ? 'default' : variant}
       disabled={disabled}
-      icon={Icon ? <Icon /> : undefined}
+      icon={Icon ? <Icon className={label === undefined ? '!mr-0' : ''} /> : undefined}
       onClick={onClick}>
       {label}
       {insideElement}

@@ -28,11 +28,11 @@ const DropDownMenu = () => {
       key: TABS['EDIT_PROFILE'],
       href: '/dashboard/profile'
     },
-    !isStudent && {
-      label: getLink('/dashboard/dictionary', TABS['DICTIONARY']),
-      key: TABS['DICTIONARY'],
-      href: '/dashboard/dictionary'
-    },
+    // !isStudent && {
+    //   label: getLink('/dashboard/dictionary', TABS['DICTIONARY']),
+    //   key: TABS['DICTIONARY'],
+    //   href: '/dashboard/dictionary'
+    // },
 
     checkIfAdmin() && {
       label: 'Admin links',
