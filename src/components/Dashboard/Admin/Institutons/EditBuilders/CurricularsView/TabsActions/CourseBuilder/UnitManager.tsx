@@ -21,6 +21,9 @@ import Selector from 'atoms/Form/Selector';
 import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
+import {DragEndEvent} from '@dnd-kit/core';
+import {arrayMove} from '@dnd-kit/sortable';
 
 const UnitManager = ({
   courseId,
@@ -120,9 +123,10 @@ const UnitManager = ({
     }));
 
     filteredList = filteredList
-
       .map((t: any) => {
         let index = syllabusIds?.indexOf(t.unitId);
+        console.log(syllabusIds, t.unitId, index);
+
         return {...t, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
@@ -138,10 +142,14 @@ const UnitManager = ({
   }, [savedSyllabusList]);
 
   useEffect(() => {
-    if (Array.isArray(savedSyllabusList) && savedSyllabusList.length) {
+    if (
+      Array.isArray(savedSyllabusList) &&
+      savedSyllabusList.length &&
+      syllabusIds.length
+    ) {
       updateListAndDropdown();
     }
-  }, [savedSyllabusList]);
+  }, [savedSyllabusList, syllabusIds]);
 
   useEffect(() => {
     if (!isInactive) {
@@ -171,15 +179,21 @@ const UnitManager = ({
   };
 
   const updateSyllabusSequence = async (syllabusIDs: string[]) => {
-    setSyllabusIds(syllabusIDs);
-    await API.graphql(
-      graphqlOperation(updateCurriculumSyllabusSequence, {
-        input: {
-          id: courseId,
-          universalSyllabusSeq: syllabusIDs
-        }
-      })
-    );
+    try {
+      setSyllabusIds(syllabusIDs);
+      await API.graphql(
+        graphqlOperation(updateCurriculumSyllabusSequence, {
+          input: {
+            id: courseId,
+            universalSyllabusSeq: syllabusIDs
+          }
+        })
+      );
+
+      console.log('test3');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // ~~~~~ CHECK IF UNIT CAN BE DELETED ~~~~ //
@@ -259,23 +273,49 @@ const UnitManager = ({
     no: idx + 1,
     id: item.id,
     onClick: () => goToUnitBuilder(item.unitId, item.type),
-    unitName: item?.name
-    // actions: (
-    //   <CommonActionsBtns
-    //     button1Label="View"
-    //     isDeletable={checkIfRemovable(item, courseData)}
-    //     button1Action={() => goToUnitBuilder(item.unitId, item.type)}
-    //     button2Action={() => handleToggleDelete(item.name, item)}
-    //   />
-    // )
+    unitName: item?.name,
+    actions: (
+      <CommonActionsBtns
+        isDeletable={false}
+        button2Action={() => handleToggleDelete(item.name, item)}
+      />
+    )
   }));
 
+  const updateSortedListToUI = (updatedIds: string[]) => {
+    let sorted = selectedSyllabusList
+      .map((t: any) => {
+        let index = updatedIds?.indexOf(t.id);
+        return {...t, index};
+      })
+      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+    setSelectedSyllabusList(sorted);
+  };
+
+  const onDragEnd = async ({active, over}: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      const prev = dataList;
+      const activeIndex = prev.findIndex((i) => i.id === active.id);
+      const overIndex = prev.findIndex((i) => i.id === over?.id);
+      const ids = arrayMove(prev, activeIndex, overIndex).map((i) => i.id);
+
+      updateSortedListToUI(ids);
+      console.log('test1');
+
+      await updateSyllabusSequence(ids);
+    }
+  };
+
   const tableConfig: ITableProps = {
-    headers: [dict['NUMBER'], dict['UNIT_NAME']],
+    headers: [dict['NUMBER'], dict['UNIT_NAME'], dict.ACTION],
     dataList,
     config: {
       dataList: {
-        loading
+        loading,
+        sortableConfig: {
+          onSort: onDragEnd
+        }
       }
     }
   };

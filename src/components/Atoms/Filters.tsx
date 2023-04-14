@@ -39,28 +39,39 @@ const Filters = ({
     updateFilter(newMode);
     resetPagination?.();
 
-    setQuery('filter', newMode);
-    removeQuery('search');
+    // setQuery('filter', newMode);
+    // removeQuery('search');
   };
 
-  // check filter on load in useEffect
+  // // check filter on load in useEffect
 
-  const filtersFromUrl = getQuery('filter');
+  // const filtersFromUrl = getQuery('filter');
 
-  useEffect(() => {
-    if (filtersFromUrl && !loading) {
-      updateFilter(filtersFromUrl.toUpperCase());
-      setMode(filtersFromUrl.toString());
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if (filtersFromUrl && !loading) {
+  //     updateFilter(filtersFromUrl.toUpperCase());
+  //     setMode(filtersFromUrl.toString());
+  //   }
+  // }, [loading]);
 
-  // Remove mode if not filters in url
-  useEffect(() => {
-    if (!filtersFromUrl) {
-      updateFilter(filters);
-      setMode(null);
-    }
-  }, [filtersFromUrl]);
+  // // Remove mode if not filters in url
+  // useEffect(() => {
+  //   if (!filtersFromUrl) {
+  //     updateFilter(filters);
+  //     setMode(null);
+  //   }
+  // }, [filtersFromUrl]);
+
+  // set default filter to ACTIVE on useEffect
+
+  // useEffect(() => {
+  //   if (!mode && !loading && !customFilters) {
+  //     setTimeout(() => {
+  //       updateFilter('ACTIVE');
+  //       setMode('ACTIVE');
+  //     }, 100);
+  //   }
+  // }, [loading]);
 
   const onClearFilter = () => {
     updateFilter(filters);
