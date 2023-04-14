@@ -1,10 +1,11 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
+import {removeQuery, setQuery} from '@utilities/urls';
 import {Alert, Table, TableProps} from 'antd';
 import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
-import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
-import {removeQuery, setQuery} from '@utilities/urls';
 import SortTable, {SortTableProps} from './SortTable';
+import Buttons from '@components/Atoms/Buttons';
 
 interface IDataListItem {
   [key: string]: any;
@@ -80,6 +81,7 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
         isSortable && data?.onClick?.();
       }
     }),
+
     className: 'universal-table mt-2 overflow-x-auto',
     loading: config.dataList?.loading,
 

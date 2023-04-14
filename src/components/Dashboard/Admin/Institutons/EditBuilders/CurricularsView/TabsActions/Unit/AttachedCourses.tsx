@@ -83,7 +83,7 @@ const CourseItem = ({
               size="small"
               disabled={!courseDeletable || isChecking}
               redBtn
-              onClick={() => onDeleteCourse(curricula.id)}
+              onClick={() => curricula.id && onDeleteCourse(curricula.id)}
               transparent
               label={isChecking ? 'Checking attached units' : 'Delete course'}
             />
@@ -151,7 +151,9 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
   const attachedCourses: any[] = getAttachedCourses();
 
   useEffect(() => {
-    setLocalCopyOfCourses(attachedCourses);
+    if (attachedCourses.length > 0) {
+      setLocalCopyOfCourses(attachedCourses);
+    }
   }, [attachedCourses]);
 
   const onSuccessDelete = useCallback((id: string) => {

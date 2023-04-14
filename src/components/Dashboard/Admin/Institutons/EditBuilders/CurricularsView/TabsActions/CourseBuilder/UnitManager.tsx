@@ -238,12 +238,12 @@ const UnitManager = ({
       setSavedSyllabusList((prevList: any) =>
         prevList.filter((syllabus: any) => syllabus.id !== item.id)
       );
-      setDeleting(false);
       closeLessonAction();
     } catch (e) {
       console.error('Problem deleting Unit from UnitManager - ', e);
+      messageApi.error('Problem deleting Unit from UnitManager');
     } finally {
-      setDeleteModal({show: false, message: '', action: () => {}});
+      setDeleting(false);
     }
   };
 
@@ -296,10 +296,15 @@ const UnitManager = ({
     id: item.id,
     onClick: () => goToUnitBuilder(item.unitId, item.type),
     unitName: item?.name,
+
     actions: (
       <CommonActionsBtns
-        checkIfDeletable={() => checkIfDeletable(item.unitId)}
-        button2Action={() => handleToggleDelete(item.name, item)}
+        checkIfDeletable={() => item.unitId && checkIfDeletable(item.unitId)}
+        button2Action={(e) => {
+          console.log(e);
+
+          handleDelete(item);
+        }}
       />
     )
   }));

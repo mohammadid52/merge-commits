@@ -25,7 +25,7 @@ const CommonActionsBtns = ({
         setIsDeletable(res);
       });
     }
-  }, [checkIfDeletable]);
+  }, []);
 
   return (
     <div className="flex items-center w-auto gap-x-4">
@@ -34,11 +34,18 @@ const CommonActionsBtns = ({
       )}
       {button2Action && (
         <Buttons
-          label={button2Label}
           redBtn
-          tooltip="There are attached lessons to this unit. Please delete them first."
+          tooltip={
+            isDeletable
+              ? ''
+              : 'There are attached lessons to this unit. Please delete them first.'
+          }
           disabled={!isDeletable}
-          onClick={button2Action}
+          insideElement={
+            <a href="#" onMouseUp={button2Action}>
+              {button2Label}
+            </a>
+          }
           transparent
           size="small"
         />
