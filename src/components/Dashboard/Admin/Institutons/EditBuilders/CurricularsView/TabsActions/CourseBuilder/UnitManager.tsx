@@ -9,7 +9,10 @@ import {
   deleteCurriculumUnits,
   updateCurriculumSyllabusSequence
 } from 'customGraphql/customMutations';
-import {listUniversalSyllabusOptions} from 'customGraphql/customQueries';
+import {
+  getUniversalSyllabus,
+  listUniversalSyllabusOptions
+} from 'customGraphql/customQueries';
 import {createCurriculumUnits} from 'graphql/mutations';
 
 import Buttons from '@components/Atoms/Buttons';
@@ -125,7 +128,6 @@ const UnitManager = ({
     filteredList = filteredList
       .map((t: any) => {
         let index = syllabusIds?.indexOf(t.unitId);
-        console.log(syllabusIds, t.unitId, index);
 
         return {...t, index};
       })
@@ -189,8 +191,6 @@ const UnitManager = ({
           }
         })
       );
-
-      console.log('test3');
     } catch (error) {
       console.error(error);
     }
@@ -269,6 +269,28 @@ const UnitManager = ({
   //
   const dict = CourseBuilderDict[userLanguage]['TABLE_HEADS'];
 
+  const checkIfDeletable = async (unitId: string) => {
+    try {
+      // check if there are attached lessons
+      const result: any = await API.graphql(
+        graphqlOperation(getUniversalSyllabus, {
+          id: unitId
+        })
+      );
+
+      const lessons = result.data.getUniversalSyllabus?.lessons?.items;
+
+      if (lessons?.length > 0) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error(error);
+
+      return false;
+    }
+  };
+
   const dataList = map(selectedSyllabusList, (item, idx) => ({
     no: idx + 1,
     id: item.id,
@@ -276,7 +298,7 @@ const UnitManager = ({
     unitName: item?.name,
     actions: (
       <CommonActionsBtns
-        isDeletable={false}
+        checkIfDeletable={() => checkIfDeletable(item.unitId)}
         button2Action={() => handleToggleDelete(item.name, item)}
       />
     )
@@ -301,7 +323,6 @@ const UnitManager = ({
       const ids = arrayMove(prev, activeIndex, overIndex).map((i) => i.id);
 
       updateSortedListToUI(ids);
-      console.log('test1');
 
       await updateSyllabusSequence(ids);
     }
