@@ -5,7 +5,6 @@ import {Alert, Table, TableProps} from 'antd';
 import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
 import SortTable, {SortTableProps} from './SortTable';
-import Buttons from '@components/Atoms/Buttons';
 
 interface IDataListItem {
   [key: string]: any;

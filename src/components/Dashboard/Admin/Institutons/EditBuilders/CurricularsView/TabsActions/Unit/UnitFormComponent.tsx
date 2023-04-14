@@ -8,23 +8,21 @@ import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Label from '@components/Atoms/Form/Label';
 import Selector from '@components/Atoms/Form/Selector';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {getUniversalSyllabus} from '@customGraphql/customQueries';
+import useAuth from '@customHooks/useAuth';
 import {RoomStatus} from 'API';
+import {Popconfirm, Space} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {logError} from 'graphql-functions/functions';
 import {
-  updateUniversalSyllabus,
   createUniversalSyllabus,
-  deleteUniversalSyllabus
+  deleteUniversalSyllabus,
+  updateUniversalSyllabus
 } from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
 import AttachedCourses from './AttachedCourses';
-import {Popconfirm, Space} from 'antd';
-import {logError} from 'graphql-functions/functions';
-import useAuth from '@customHooks/useAuth';
-import {listUniversalLessonsOptions} from '@customGraphql/customQueries';
-import {getUniversalSyllabus} from '@customGraphql/customQueries';
-import {orderBy} from 'lodash';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;

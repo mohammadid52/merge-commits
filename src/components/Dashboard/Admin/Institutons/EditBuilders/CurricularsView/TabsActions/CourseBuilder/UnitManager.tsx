@@ -11,6 +11,7 @@ import {
 } from 'customGraphql/customMutations';
 import {
   getUniversalSyllabus,
+  listRooms,
   listUniversalSyllabusOptions
 } from 'customGraphql/customQueries';
 import {createCurriculumUnits} from 'graphql/mutations';
@@ -272,17 +273,26 @@ const UnitManager = ({
   const checkIfDeletable = async (unitId: string) => {
     try {
       // check if there are attached lessons
+
+      // list rooms that have this course
+
       const result: any = await API.graphql(
-        graphqlOperation(getUniversalSyllabus, {
-          id: unitId
+        graphqlOperation(listRooms, {
+          filter: {
+            activeSyllabus: {eq: unitId},
+            status: {eq: RoomStatus.ACTIVE}
+          }
         })
       );
 
-      const lessons = result.data.getUniversalSyllabus?.lessons?.items;
+      const rooms = result?.data?.listRooms?.items;
 
-      if (lessons?.length > 0) {
+      // check if this unit is attached to any of the rooms
+
+      if (rooms && rooms.length > 0) {
         return false;
       }
+
       return true;
     } catch (error) {
       console.error(error);
@@ -299,10 +309,9 @@ const UnitManager = ({
 
     actions: (
       <CommonActionsBtns
+        button2Label="Remove from Course"
         checkIfDeletable={() => item.unitId && checkIfDeletable(item.unitId)}
         button2Action={(e) => {
-          console.log(e);
-
           handleDelete(item);
         }}
       />

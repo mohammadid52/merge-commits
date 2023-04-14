@@ -35,11 +35,7 @@ const CommonActionsBtns = ({
       {button2Action && (
         <Buttons
           redBtn
-          tooltip={
-            isDeletable
-              ? ''
-              : 'There are attached lessons to this unit. Please delete them first.'
-          }
+          tooltip={isDeletable ? '' : 'This unit is active in course'}
           disabled={!isDeletable}
           insideElement={
             <a href="#" onMouseUp={button2Action}>
