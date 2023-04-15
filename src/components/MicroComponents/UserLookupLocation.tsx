@@ -26,7 +26,9 @@ const LoggedOut = ({date}: {date: string}) => {
   return (
     <span className="flex flex-col">
       <span>Logged Out</span>
-      <span className="text-medium  text-xs">(since {moment(date).format('ll')})</span>
+      {date && (
+        <span className="text-medium  text-xs">(since {moment(date).format('ll')})</span>
+      )}
     </span>
   );
 };

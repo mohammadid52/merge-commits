@@ -3845,3 +3845,34 @@ export const listDicitionaries = /* GraphQL */ `
     }
   }
 `;
+
+export const listRoomCurriculaOnlyRoomID = /* GraphQL */ `
+  query ListRoomCurricula(
+    $filter: ModelRoomCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRoomCurricula(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        roomID
+        curriculumID
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listRoomsOnlyName = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        isZoiq
+        institutionID
+        name
+      }
+      nextToken
+    }
+  }
+`;

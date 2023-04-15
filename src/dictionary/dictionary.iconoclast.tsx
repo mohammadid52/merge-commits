@@ -1372,6 +1372,7 @@ const InstitueCurriculum: InstituteCurriculumInterface = {
     COURSE_TYPE: 'Course Type',
     UNITS: 'Course Units',
     ACTION: 'Actions',
+    ROOMS: 'Rooms',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
@@ -1383,6 +1384,7 @@ const InstitueCurriculum: InstituteCurriculumInterface = {
     BUTTON: {
       ADD: 'Nuevo Curso'
     },
+    ROOMS: 'Rooms',
     NO: 'No.',
     NAME: 'Nombre del Curso',
     INSTITUTION_NAME: 'Nombre de la Institución',

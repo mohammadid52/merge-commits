@@ -1234,7 +1234,7 @@ export const _updateRoom = /* GraphQL */ `
         type
         firstName
         preferredName
-        lastNam
+        lastName
         inactiveStatusDate
         image
         language

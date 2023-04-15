@@ -738,6 +738,7 @@ interface InstituteCurriculumCommon {
   NO: string;
   NAME: string;
   INSTITUTION_NAME: string;
+  ROOMS: string;
   COURSE_TYPE: string;
   UNITS: string;
   ACTION: string;
