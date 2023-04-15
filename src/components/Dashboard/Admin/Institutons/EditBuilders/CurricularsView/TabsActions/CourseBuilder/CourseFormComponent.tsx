@@ -1,10 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
+import {AttachedRooms} from '@components/Dashboard/Admin/Institutons/Listing/CurriculumList';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import useAuth from '@customHooks/useAuth';
 import {ClassroomType, RoomStatus} from 'API';
 import {CourseSchema} from 'Schema';
-import {Popconfirm, Space, message} from 'antd';
+import {Divider, Popconfirm, Space, message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
@@ -418,7 +419,7 @@ const CourseFormComponent = ({
       {contextHolder}
       <div className="m-auto">
         <div className="flex flex-col">
-          <div className="  grid gap-4 grid-cols-2 lg:grid-cols-3 py-4">
+          <div className="  grid gap-8 grid-cols-2 lg:grid-cols-3 py-4">
             <UploadImageBtn
               className=""
               label="Curriculum Image"
@@ -526,6 +527,18 @@ const CourseFormComponent = ({
           </div>
         </div>
       </div>
+
+      {courseId && (
+        <>
+          <div className="max-w-56">
+            <AttachedRooms
+              header={<h4 className="text-lg font-bold">Attached Rooms</h4>}
+              curriculumID={courseId}
+            />
+          </div>
+          <Divider />
+        </>
+      )}
 
       <ModalPopUp
         open={warnModal.show}

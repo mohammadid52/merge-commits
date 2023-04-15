@@ -1742,6 +1742,12 @@ $translation-fab-width: 50px;
   font-weight: 500 !important;
   color: #eee !important;
 }
+.universal-table {
+  // .ant-table-tbody .dant-table-cell {
+  //   display: flex;
+  //   justify-content: flex-start;
+  // }
+}
 
 .iconoclast .universal-table th,
 .iconoclast .universal-table thead .ant-table-row-expand-icon-cell {

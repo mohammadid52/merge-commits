@@ -28,12 +28,18 @@ import {deleteCurriculum} from 'graphql/mutations';
 import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import moment from 'moment';
-import {useEffect, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
 
-const Rooms = ({curriculumID}: {curriculumID: string}) => {
+export const AttachedRooms = ({
+  curriculumID,
+  header
+}: {
+  header?: ReactNode;
+  curriculumID: string;
+}) => {
   const [roomList, setRoomList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -88,8 +94,6 @@ const Rooms = ({curriculumID}: {curriculumID: string}) => {
 
   const history = useHistory();
   const redirectToRoom = (room: any) => {
-    console.log('ddfndkfnnd');
-
     history.push(
       `/dashboard/manage-institutions/institution/${room?.institutionID}/room-edit/${room.id}`
     );
@@ -98,6 +102,7 @@ const Rooms = ({curriculumID}: {curriculumID: string}) => {
   return (
     <List
       size="small"
+      header={header}
       loading={loading}
       className="table-list"
       dataSource={roomList?.filter(Boolean)}
@@ -431,7 +436,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       </div>
     ),
     courseType: item.type || '-',
-    rooms: <Rooms curriculumID={item.id} />,
+    rooms: <AttachedRooms curriculumID={item.id} />,
     courseUnits: (
       <CourseUnits
         courseName={item.name}
