@@ -72,7 +72,7 @@ const SurveyCompletedGraph = () => {
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
-        <Report
+        {/* <Report
           description={
             <>
               After analyzing the completed surveys, it is evident that{' '}
@@ -91,7 +91,7 @@ const SurveyCompletedGraph = () => {
                 }}></span>
             </>
           }
-        />
+        /> */}
       </div>
     );
   }

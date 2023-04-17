@@ -62,11 +62,11 @@ const StudentActiveGraph = () => {
 
     const data = [
       {
-        label: 'Active',
+        label: 'Active Students',
         value: activeStudents.length
       },
       {
-        label: 'Inactive',
+        label: 'Inactive Students',
         value: inactiveStudents.length
       }
     ];
@@ -79,7 +79,7 @@ const StudentActiveGraph = () => {
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
-        <Report
+        {/* <Report
           description={
             <>
               Out of the total <strong>{students.length}</strong> students in the school,
@@ -88,7 +88,7 @@ const StudentActiveGraph = () => {
               category of <strong>inactive</strong> students
             </>
           }
-        />
+        /> */}
       </div>
     );
   }

@@ -43,7 +43,6 @@ const WritingExerciseGraph = () => {
 
   if (writingExcercises && writingExcercises?.length > 0) {
     // group writing exercises array by studentEmail and count the number of writing exercises
-    console.log(writingExcercises);
 
     const grouped: any[] = writingExcercises.reduce((acc: any[], we) => {
       const name = we?.lesson.title;
@@ -75,7 +74,7 @@ const WritingExerciseGraph = () => {
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
-        <Report
+        {/* <Report
           description={
             <>
               After calculating all the metrics, it was found that{' '}
@@ -94,7 +93,7 @@ const WritingExerciseGraph = () => {
                 }}></span>
             </>
           }
-        />
+        /> */}
       </div>
     );
   }

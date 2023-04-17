@@ -1,42 +1,51 @@
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
 import useAuth from '@customHooks/useAuth';
-import {Card, Col, Row} from 'antd';
+import {Col, Row, theme} from 'antd';
 import {general, graphs} from 'assets';
 import PageLayout from 'layout/PageLayout';
 import {useState} from 'react';
-import {NavLink, Redirect, useRouteMatch} from 'react-router-dom';
+import {Redirect, useRouteMatch} from 'react-router-dom';
 import GraphRouter from 'router/GraphRouter';
-import {theme} from 'antd';
+import AttachedCoursesGraph from './AttachedCoursesGraph';
+import InstitutionLocationGraph from './InstitutionLocationGraph';
+import StudentActiveGraph from './StudentActiveGraph';
+import SurveyCompletedGraph from './SurveyCompletedGraph';
+import WritingExerciseGraph from './WritingExerciseGraph';
 
 const listOfGraphs = [
   {
     title: 'Active Students',
     description: 'Active and Inactive students',
     image: graphs.pie,
-    link: '/students'
+    link: '/students',
+    component: <StudentActiveGraph />
   },
   {
     title: 'Surveys',
     description: 'Number of surveys completed',
     image: graphs.pie,
-    link: '/surveys'
+    link: '/surveys',
+    component: <SurveyCompletedGraph />
   },
   {
     title: 'Courses',
     description: 'Courses attached to classrooms',
     image: graphs.pie,
-    link: '/courses'
+    link: '/courses',
+    component: <AttachedCoursesGraph />
   },
   {
     title: 'Writing Exercises',
     description: 'Number of writing exercises',
     image: graphs.pie,
-    link: '/writing-exercises'
+    link: '/writing-exercises',
+    component: <WritingExerciseGraph />
   },
   {
     title: 'Institutions',
     description: 'Institutions locations',
     image: graphs.map,
+    component: <InstitutionLocationGraph />,
     link: '/institutions'
   }
 ];
@@ -73,8 +82,12 @@ const GraphIndex = () => {
       <PageLayout title="Graphs" hideInstProfile>
         <Row gutter={[16, 24]}>
           {listOfGraphs.map((graph) => (
-            <Col key={graph.title} className="gutter-row" span={6}>
-              <NavLink
+            <Col
+              key={graph.title}
+              className="gutter-row"
+              span={graph.link === '/institutions' ? 24 : 12}>
+              {graph.component}
+              {/* <NavLink
                 to={`${match.url}${graph.link}`}
                 onClick={() => onSelectGraph(graph.title)}>
                 <Card
@@ -92,7 +105,7 @@ const GraphIndex = () => {
                   }>
                   <Card.Meta title={graph.title} description={graph.description} />
                 </Card>
-              </NavLink>
+              </NavLink> */}
             </Col>
           ))}
         </Row>

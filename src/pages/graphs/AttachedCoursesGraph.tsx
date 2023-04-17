@@ -96,7 +96,7 @@ const AttachedCoursesGraph = () => {
       <div className="">
         <Pie {...pieGraphConfig} />
 
-        <Report
+        {/* <Report
           description={
             <>
               Based on the analysis of courses attached to rooms, it was found that{' '}
@@ -115,7 +115,7 @@ const AttachedCoursesGraph = () => {
                 }}></span>
             </>
           }
-        />
+        /> */}
       </div>
     );
   }

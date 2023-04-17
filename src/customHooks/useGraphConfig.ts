@@ -11,7 +11,7 @@ const useGraphConfig = <T>({
     data,
     angleField: 'value',
     colorField: 'label',
-    radius: 1,
+    radius: 0.6,
     label: {
       type: 'inner',
       offset: '-30%',
@@ -29,7 +29,7 @@ const useGraphConfig = <T>({
     ],
     legend: {
       position: 'right',
-      offsetX: -200,
+      offsetX: -100,
       title: {
         text: legendTitle,
         spacing: 8,
