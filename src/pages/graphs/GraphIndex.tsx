@@ -46,14 +46,14 @@ const listOfGraphs = [
     image: graphs.map,
     component: <InstitutionLocationGraph />,
     link: '/institutions'
-  },
-  {
-    title: 'Completed vs In Progress Surveys/Lessons',
-    description: 'shows the stacked graph of completed vs in progress surveys/lessons',
-    image: graphs.map,
-    component: <CompletedIncompletedSurveysGraph />,
-    link: '/completed-incompleted-surveys'
   }
+  // {
+  //   title: 'Completed vs In Progress Surveys/Lessons',
+  //   description: 'shows the stacked graph of completed vs in progress surveys/lessons',
+  //   image: graphs.map,
+  //   component: <CompletedIncompletedSurveysGraph />,
+  //   link: '/completed-incompleted-surveys'
+  // }
 ];
 
 const GraphIndex = () => {
