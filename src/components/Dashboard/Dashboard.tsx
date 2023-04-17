@@ -745,11 +745,9 @@ const Dashboard = () => {
                     } else {
                       return !stateUser?.associateInstitute?.length ||
                         stateUser?.associateInstitute?.length > 1 ? (
-                        <Redirect to={`${match.url}/manage-institutions`} />
+                        <Redirect to={`${match.url}/graphs`} />
                       ) : (
-                        <Redirect
-                          to={`${match.url}/manage-institutions/institution/${stateUser?.associateInstitute[0].institution.id}/staff`}
-                        />
+                        <Redirect to={`${match.url}/home`} />
                       );
                     }
                   } else

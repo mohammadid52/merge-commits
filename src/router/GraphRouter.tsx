@@ -19,7 +19,7 @@ const GraphRouter = () => {
       case path.includes('/courses'):
         return 'Courses Attached to Classrooms';
       case path.includes('/institutions'):
-        return 'Institutions By Type';
+        return 'Institutions Locations';
       case path.includes('/writing-exercises'):
         return 'Writing Exercises';
       default:

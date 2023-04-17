@@ -33,7 +33,7 @@ const listOfGraphs = [
   },
   {
     title: 'Institutions',
-    description: 'Institutions by type',
+    description: 'Institutions locations',
     image: graphs.map,
     link: '/institutions'
   }
