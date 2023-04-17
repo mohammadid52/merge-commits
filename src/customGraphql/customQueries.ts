@@ -672,6 +672,7 @@ export const listPersons = /* GraphQL */ `
         type
         firstName
         isZoiq
+        status
         preferredName
         lastName
         image
@@ -3534,6 +3535,33 @@ export const lessonsByType = /* GraphQL */ `
     }
   }
 `;
+export const listPersonLessonsDataForGraph = /* GraphQL */ `
+  query ListPersonLessonsData(
+    $id: ID
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonLessonsData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        lessonType
+        lesson {
+          title
+        }
+        isCompleted
+      }
+      nextToken
+    }
+  }
+`;
 
 export const getPersonLessonsData = /* GraphQL */ `
   query GetPersonLessonsData($id: ID!) {
@@ -3663,14 +3691,33 @@ export const listCurricula = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
-        signedOff
-        signedOffSteps {
-          authID
-          date
-          step
-        }
+
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listCurriculaForGraphs = /* GraphQL */ `
+  query ListCurricula(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurricula(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
       }
       nextToken
     }
@@ -3802,7 +3849,7 @@ export const listCurriculaForLesson = /* GraphQL */ `
           }
         }
         syllabiHistory
-        signedOff
+
         status
         createdAt
         updatedAt
@@ -3871,6 +3918,56 @@ export const listRoomsOnlyName = /* GraphQL */ `
         isZoiq
         institutionID
         name
+      }
+      nextToken
+    }
+  }
+`;
+export const listRoomsForGraphs = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        isZoiq
+        institutionID
+        name
+        status
+        curricula {
+          items {
+            curriculum {
+              status
+              name
+            }
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listInstitutionsForGraphs = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        image
+        phone
+        website
+        name
+        zip
       }
       nextToken
     }

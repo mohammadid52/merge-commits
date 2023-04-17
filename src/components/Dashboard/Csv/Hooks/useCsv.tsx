@@ -120,8 +120,6 @@ const useCsv = ({
         ...surveyQuestionHeaders
       ]);
 
-      const label = responseValue ? 'label' : 'text';
-
       let data = students.map((stu: any) => {
         let surveyAnswerDates: any = [];
         let studentAnswers: any = {};

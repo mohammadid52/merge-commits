@@ -5,6 +5,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import {Menu, MenuProps} from 'antd';
+import useAuth from '@customHooks/useAuth';
 
 const HeaderMegaMenu = () => {
   const {
@@ -22,6 +23,8 @@ const HeaderMegaMenu = () => {
 
   const TABS = Institute_info[userLanguage]['TABS'];
 
+  const {isBuilder, isAdmin} = useAuth();
+
   // ~~~~~~~~~~~~~ MENU SUP/ADM ~~~~~~~~~~~~ //
   const headerMenusForInstitution = [
     {
@@ -30,6 +33,11 @@ const HeaderMegaMenu = () => {
       // icon: <HiOutlineOfficeBuilding />,
 
       children: [
+        (isBuilder || isAdmin) && {
+          label: TABS['DASHBOARD'],
+          key: 'dashboard',
+          redirectionUrl: '/dashboard/graphs'
+        },
         {
           label: TABS['GENERAL_INFORMATION'],
           key: 'general_information',

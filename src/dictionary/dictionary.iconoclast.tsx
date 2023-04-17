@@ -987,6 +987,7 @@ const Institute_info: InstitutionInfoInterface = {
     WEBSITE: 'Visit Their Website',
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
+      DASHBOARD: 'Dashboard',
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff Manager',
       USER_REGISTRY: 'User Registry',
@@ -1033,6 +1034,7 @@ const Institute_info: InstitutionInfoInterface = {
     WEBSITE: 'Visitar Su Sitio Web',
     SERVICE_PROVIDER: 'Proveedor de Servicios',
     TABS: {
+      DASHBOARD: 'Tablero',
       SERVICE_PROVIDER: 'Proveedores de Servicios',
       STAFF: 'Administrador de Personal',
       CLASS_MANAGER: 'Constructor de Salones de Clases',

@@ -24,6 +24,7 @@ import {
   listRooms
 } from 'customGraphql/customQueries';
 
+import GraphIndex from 'pages/graphs/GraphIndex';
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
@@ -110,6 +111,7 @@ const Dashboard = () => {
   } = useGlobalContext();
 
   const match = useRouteMatch();
+
   const history = useHistory();
   const [cookies, setCookie] = useCookies(['auth']);
 
@@ -946,6 +948,15 @@ const Dashboard = () => {
                   </ErrorBoundary>
                 )}
               />
+              <Route
+                path={`${match.url}/graphs`}
+                render={() => (
+                  <ErrorBoundary componentName="GraphIndex">
+                    <GraphIndex />
+                  </ErrorBoundary>
+                )}
+              />
+
               {/* <Route
                 path={`${match.url}/question-bank`}
                 render={() => (

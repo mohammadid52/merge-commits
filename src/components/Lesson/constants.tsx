@@ -9,3 +9,4 @@ export const UPLOAD_KEYS = {
 };
 
 export const SEARCH_LIMIT = 2000;
+export const GOOGLE_API_KEY = 'AIzaSyA_cb62X5CYjPPNZL5qCYt7UwO0qJqCKy8';

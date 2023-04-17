@@ -90,7 +90,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     allAsProps,
     setTotalPages,
     resetPagination,
-    currentPage,
+
     getIndex
   } = usePagination(
     totalUserList || [],

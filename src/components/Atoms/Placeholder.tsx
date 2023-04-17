@@ -24,6 +24,7 @@ const Placeholder = ({
     // if image includes "https" don't use s3
     const shouldUseS3 = !image.includes('https');
     const finalImage = shouldUseS3 ? (getImageFromS3(image) as string) : image;
+    console.log('🚀 ~ file: Placeholder.tsx:27 ~ finalImage:', finalImage);
 
     const imageClass = 'rounded-full w-full h-full  customShadow bg-medium ';
     return (

@@ -575,6 +575,7 @@ interface InstitutionInfoCommon {
   WEBSITE: string;
   SERVICE_PROVIDER: string;
   TABS: {
+    DASHBOARD: string;
     SERVICE_PROVIDER: string;
     STAFF: string;
     USER_REGISTRY: string;
