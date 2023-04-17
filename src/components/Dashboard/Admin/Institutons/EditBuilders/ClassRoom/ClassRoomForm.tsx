@@ -584,12 +584,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             activeSyllabus: roomData?.activeUnit?.id,
             institutionID: roomData.institute.id,
             classID: roomData.classRoom.id,
-            teacherAuthID: teachersList.find(
-              (item: any) => item.id === roomData.teacher.id
-            ).authId,
-            teacherEmail: teachersList.find(
-              (item: any) => item.id === roomData.teacher.id
-            ).email,
+            teacherAuthID: teachersList
+              ? teachersList?.find((item: any) => item?.id === roomData?.teacher?.id)
+                  ?.authId
+              : '',
+            teacherEmail: teachersList
+              ? teachersList?.find((item: any) => item?.id === roomData?.teacher?.id)
+                  ?.email
+              : '',
             name: roomData.name,
             maxPersons: roomData.maxPersons,
             type: roomData.type || ClassroomType.ONLINE,
