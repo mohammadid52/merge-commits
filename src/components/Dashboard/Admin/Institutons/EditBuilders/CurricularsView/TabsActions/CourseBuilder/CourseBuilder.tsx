@@ -171,6 +171,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         return (
           <CourseFormComponent
             setCourseData={setCourseData}
+            savedSyllabusList={savedSyllabusList}
             courseId={courseId}
             courseData={courseData}
           />

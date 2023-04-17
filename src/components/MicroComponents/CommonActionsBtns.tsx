@@ -1,4 +1,5 @@
-import React from 'react';
+import Buttons from '@components/Atoms/Buttons';
+import React, {useEffect, useState} from 'react';
 
 interface ICommonActionBtns {
   button1Label?: string;
@@ -6,6 +7,7 @@ interface ICommonActionBtns {
   button1Action?: (e: any) => void;
   button2Action?: (e: any) => void;
   isDeletable?: boolean;
+  checkIfDeletable?: () => Promise<boolean>;
 }
 
 const CommonActionsBtns = ({
@@ -13,27 +15,36 @@ const CommonActionsBtns = ({
   button2Label = 'Delete',
   button1Action,
   button2Action,
-  isDeletable = true
+  checkIfDeletable
 }: ICommonActionBtns) => {
+  const [isDeletable, setIsDeletable] = useState(false);
+
+  useEffect(() => {
+    if (typeof checkIfDeletable === 'function') {
+      checkIfDeletable().then((res) => {
+        setIsDeletable(res);
+      });
+    }
+  }, []);
+
   return (
     <div className="flex items-center w-auto gap-x-4">
       {button1Action && (
-        <div
-          onClick={button1Action}
-          className="w-auto theme-text cursor-pointer hover:underline hover:theme-text:500">
-          {button1Label}
-        </div>
+        <Buttons label={button1Label} onClick={button1Action} transparent size="small" />
       )}
       {button2Action && (
-        <div
-          onClick={button2Action}
-          className={` ${
-            isDeletable
-              ? 'text-red-500 cursor-pointer hover:text-red-600 hover:underline pointer-events-all'
-              : 'cursor-not-allowed text-red-300 pointer-events-none'
-          } w-auto`}>
-          {button2Label}
-        </div>
+        <Buttons
+          redBtn
+          tooltip={isDeletable ? '' : 'This unit is active in course'}
+          disabled={!isDeletable}
+          insideElement={
+            <a href="#" onMouseUp={button2Action}>
+              {button2Label}
+            </a>
+          }
+          transparent
+          size="small"
+        />
       )}
     </div>
   );

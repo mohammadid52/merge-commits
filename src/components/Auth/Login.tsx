@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 
-import AuthCard from 'components/Auth/AuthCard';
 import CreatePassword from 'components/Auth/CreatePassword';
 import LoginInner from 'components/Auth/LoginInner';
 
@@ -16,20 +15,16 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [newUser, setNewUser] = useState(false);
 
-  const [subtitle, setSubtitle] = useState('Welcome to our app');
-
   return (
-    <AuthCard
-      isSuccess={isLoginSuccess}
-      message={message}
-      subtitle={createPassword ? '' : subtitle}>
+    <>
       {!createPassword ? (
         <>
           <LoginInner
             setEmail={setEmail}
             setMessage={setMessage}
             setNewUser={setNewUser}
-            setSubtitle={setSubtitle}
+            message={message}
+            isLoginSuccess={isLoginSuccess}
             setIsLoginSuccess={setIsLoginSuccess}
             setCreatePassword={setCreatePassword}
           />
@@ -37,6 +32,8 @@ const Login = () => {
       ) : (
         <>
           <CreatePassword
+            message={message}
+            isLoginSuccess={isLoginSuccess}
             setIsLoginSuccess={setIsLoginSuccess}
             newUser={newUser}
             email={email}
@@ -44,7 +41,7 @@ const Login = () => {
           />
         </>
       )}
-    </AuthCard>
+    </>
   );
 };
 

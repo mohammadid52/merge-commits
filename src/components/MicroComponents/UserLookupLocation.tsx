@@ -12,6 +12,7 @@ type LocationInfoType = {
   idx: number;
   authId: string;
   showLocationInfo: boolean;
+  item?: any;
 
   pageState: UserPageState;
   lastPageStateUpdate: string;
@@ -21,8 +22,20 @@ type LocationInfoType = {
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+const LoggedOut = ({date}: {date: string}) => {
+  return (
+    <span className="flex flex-col">
+      <span>Logged Out</span>
+      {date && (
+        <span className="text-medium  text-xs">(since {moment(date).format('ll')})</span>
+      )}
+    </span>
+  );
+};
+
 const LocationInfo = ({
   authId,
+
   createdAt,
 
   showLocationInfo,
@@ -146,12 +159,7 @@ const LocationInfo = ({
           )
         }>
         {loggedOut ? (
-          <span className="flex flex-col">
-            <span>Logged Out</span>
-            <span className="text-medium  text-xs">
-              (since {moment(lastPageStateUpdate).format('ll')})
-            </span>
-          </span>
+          <LoggedOut date={lastPageStateUpdate} />
         ) : (
           formatPageName(localPageState.pageState) ||
           `Created on ${moment(createdAt).format('lll')}`
@@ -159,7 +167,7 @@ const LocationInfo = ({
       </AntdPopover>
 
       {_lastPageStateUpdate !== null && !loggedOut && (
-        <span className="text-medium  text-xs">
+        <span className="text-medium  block text-xs">
           (since {moment(lastPageStateUpdate).format('ll')})
         </span>
       )}
@@ -204,16 +212,12 @@ const UserLookupLocation = ({
           setShowLocationInfo={setShowLocationInfo}
           showLocationInfo={showLocationInfo}
           pageState={item.pageState}
+          item={item}
         />
       ) : (
         <span className="flex flex-col">
           {item.lastLoggedOut || item.lastLoggedIn ? (
-            <>
-              <span>Logged Out</span>
-              <span className="text-medium  text-xs">
-                (since {moment(item?.lastLoggedOut || item?.lastLoggedIn).format('ll')})
-              </span>
-            </>
+            <LoggedOut date={item?.lastLoggedOut || item?.lastLoggedIn} />
           ) : (
             <span className="">
               Created On {moment(item?.createdAt || item?.createAt).format('ll')}

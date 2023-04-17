@@ -239,7 +239,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
 
-        <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
+        <div className={`px-2 md:px-4 pt-8 lg:px-8 mb-[-1rem]`}>
           <Breadcrumb itemRender={itemRender} items={finalList} />
         </div>
       </div>

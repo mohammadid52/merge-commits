@@ -12,7 +12,7 @@ interface DashboardContainerProps {
   showTitleBanner?: boolean;
   bannerTitle: string;
   bannerImg: string;
-  children: any;
+  children: React.ReactNode;
   label?: string;
   courseName?: string;
   institutionId?: string;

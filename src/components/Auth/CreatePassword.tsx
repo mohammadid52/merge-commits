@@ -15,17 +15,22 @@ import React, {useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {AiOutlineLock} from 'react-icons/ai';
 import {CreatePasswordSchema} from 'Schema';
+import AuthCard from './AuthCard';
 
 const CreatePassword = ({
   setIsLoginSuccess,
   setMessage,
   email,
-  newUser
+  newUser,
+  isLoginSuccess,
+  message
 }: {
   email: any;
   newUser: any;
   setIsLoginSuccess: any;
   setMessage: any;
+  isLoginSuccess: boolean;
+  message: any;
 }) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const {updateAuthState} = useGlobalContext();
@@ -85,28 +90,30 @@ const CreatePassword = ({
   });
 
   return (
-    <form onSubmit={handleSubmit} className="">
-      <FormInput
-        name="password"
-        Icon={AiOutlineLock}
-        className="mb-4"
-        placeHolder="Enter new password"
-        type="password"
-        onChange={handleChange}
-        error={errors.password}
-        value={values.password}
-        id="password"
-      />
-
-      <div className="relative flex mt-2 flex-col justify-center items-center">
-        <Buttons
-          disabled={isToggled}
-          type="submit"
-          loading={isToggled}
-          label={isToggled ? 'Loading' : 'Set Password'}
+    <AuthCard subtitle="" isSuccess={isLoginSuccess} message={message}>
+      <form onSubmit={handleSubmit} className="">
+        <FormInput
+          name="password"
+          Icon={AiOutlineLock}
+          className="mb-4"
+          placeHolder="Enter new password"
+          type="password"
+          onChange={handleChange}
+          error={errors.password}
+          value={values.password}
+          id="password"
         />
-      </div>
-    </form>
+
+        <div className="relative flex mt-2 flex-col justify-center items-center">
+          <Buttons
+            disabled={isToggled}
+            type="submit"
+            loading={isToggled}
+            label={isToggled ? 'Loading' : 'Set Password'}
+          />
+        </div>
+      </form>
+    </AuthCard>
   );
 };
 

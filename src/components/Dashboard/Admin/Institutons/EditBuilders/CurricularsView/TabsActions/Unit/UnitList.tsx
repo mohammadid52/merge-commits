@@ -1,4 +1,3 @@
-import AddButton from 'atoms/Buttons/AddButton';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
@@ -65,11 +64,24 @@ const UnitList = ({
   const [allUnits, setAllUnits] = useState<any>([]);
 
   const [unitInput, setUnitInput] = useState<any>({});
+
   const [assignedUnits, setAssignedUnits] = useState<any>([]);
 
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const [totalNum, setTotalNum] = useState(0);
+
+  const {
+    searchInput,
+    setSearch,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    removeSearchAction,
+    searchAndFilter,
+    setSearchInput
+  } = useSearch([...(units || [])], ['name', 'institutionName']);
+
+  const [filteredList, setFilteredList] = useState([...units]);
 
   const {
     pageCount,
@@ -81,7 +93,7 @@ const UnitList = ({
     setCurrentList,
     getIndex,
     resetPagination
-  } = usePagination(units, loading ? 0 : totalNum);
+  } = usePagination(units, searchInput.isActive ? filteredList.length : totalNum);
 
   useEffect(() => {
     fetchSyllabusList();
@@ -168,18 +180,20 @@ const UnitList = ({
 
           setAssignedUnits(assignedUnits);
 
-          const filtered = items.filter(
-            (unit: any) =>
-              !addedSyllabus.find((_d: {syllabusID: any}) => _d.syllabusID === unit.id)
-          );
+          const filtered = items.map((unit: any) => {
+            return {
+              ...unit,
+              label: unit.name,
+              value: unit.name,
+              disabled: addedSyllabus.find(
+                (_d: {syllabusID: any}) => _d.syllabusID === unit.id
+              )
+            };
+          });
 
           // add label to the unit
 
-          const updatedList = filtered
-            ? filtered?.map((d: {name: any}) => ({...d, label: d.name}))
-            : [];
-
-          setUnits([...updatedList]);
+          setUnits([...filtered]);
         }
       } else {
         const updatedList = getUpdatedList(items);
@@ -253,9 +267,6 @@ const UnitList = ({
 
   // ~~~~~~~~~~~~ FUNCTIONALITY ~~~~~~~~~~~~ //
 
-  const handleAdd = () => {
-    history.push(`${match.url}/add`);
-  };
   const handleView = (unitId: string) => {
     history.push(`${match.url}/${unitId}/edit`);
   };
@@ -284,18 +295,6 @@ const UnitList = ({
         : `${baseUrl}/institution/${institutionId}/lessons/${lessonId}`
     );
   };
-
-  const {
-    searchInput,
-    setSearch,
-    checkSearchQueryFromUrl,
-    filterBySearchQuery,
-    removeSearchAction,
-    searchAndFilter,
-    setSearchInput
-  } = useSearch([...(units || [])], ['name', 'institutionName']);
-
-  const [filteredList, setFilteredList] = useState([...units]);
 
   useEffect(() => {
     if (!loading && units?.length > 0) {
@@ -551,14 +550,14 @@ const UnitList = ({
             <div className="flex items-center w-auto m-auto px-2 gap-x-4">
               <Selector
                 selectedItem={unitInput.name}
-                list={units}
+                list={units.map((d: {name: any}) => ({...d, value: d.name}))}
                 width={300}
                 size="middle"
                 showSearch
                 placeholder="Select Unit"
-                onChange={(name: string, option: any) =>
-                  setUnitInput({name, id: option.id})
-                }
+                onChange={(name: string, option: any) => {
+                  setUnitInput({name, id: option.id});
+                }}
               />
               <Buttons
                 label={BUTTONS[userLanguage]['ADD']}
@@ -582,19 +581,12 @@ const UnitList = ({
               closeAction={removeSearchAction}
             />
           )}
+
           {isFromLesson && !isSuperAdmin && !showAddSection && (
             <Buttons
               label={'Add Lesson to Unit'}
               transparent={Boolean(inner)}
               onClick={() => setShowAddSection(true)}
-            />
-          )}
-
-          {!isSuperAdmin && (
-            <AddButton
-              transparent={Boolean(inner)}
-              label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-              onClick={isFromLesson ? () => setAddModalShow(true) : handleAdd}
             />
           )}
         </div>
@@ -605,16 +597,6 @@ const UnitList = ({
           list={units}
           updateFilter={updateFilter}
           resetPagination={resetPagination}
-          showingCount={
-            isFromLesson
-              ? null
-              : {
-                  currentPage: allAsProps.currentPage,
-                  lastPage: allAsProps.lastPage,
-                  totalResults: allAsProps.totalResults,
-                  pageCount: allAsProps.pageCount
-                }
-          }
           filters={filters}
         />
 
@@ -624,22 +606,17 @@ const UnitList = ({
           open={addModalShow}
           showHeader
           showFooter={false}
+          width={800}
           showHeaderBorder
           title={'Add Lesson to Syllabus'}
           closeOnBackdrop
           closeAction={onAddModalClose}>
-          <div
-            className="min-w-180 lg:min-w-256"
-            style={{
-              height: 'calc(100vh - 150px)'
-            }}>
-            <UnitFormComponent
-              isInModal={true}
-              instId={instId}
-              postAddSyllabus={postAddSyllabus}
-              onCancel={() => setAddModalShow(false)}
-            />
-          </div>
+          <UnitFormComponent
+            isInModal={true}
+            instId={instId}
+            postAddSyllabus={postAddSyllabus}
+            onCancel={() => setAddModalShow(false)}
+          />
         </Modal>
 
         <ModalPopUp

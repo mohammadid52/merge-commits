@@ -987,6 +987,7 @@ const Institute_info: InstitutionInfoInterface = {
     WEBSITE: 'Visit Their Website',
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
+      DASHBOARD: 'Dashboard',
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff Manager',
       USER_REGISTRY: 'User Registry',
@@ -1033,6 +1034,7 @@ const Institute_info: InstitutionInfoInterface = {
     WEBSITE: 'Visitar Su Sitio Web',
     SERVICE_PROVIDER: 'Proveedor de Servicios',
     TABS: {
+      DASHBOARD: 'Tablero',
       SERVICE_PROVIDER: 'Proveedores de Servicios',
       STAFF: 'Administrador de Personal',
       CLASS_MANAGER: 'Constructor de Salones de Clases',
@@ -1372,6 +1374,7 @@ const InstitueCurriculum: InstituteCurriculumInterface = {
     COURSE_TYPE: 'Course Type',
     UNITS: 'Course Units',
     ACTION: 'Actions',
+    ROOMS: 'Rooms',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
@@ -1383,6 +1386,7 @@ const InstitueCurriculum: InstituteCurriculumInterface = {
     BUTTON: {
       ADD: 'Nuevo Curso'
     },
+    ROOMS: 'Rooms',
     NO: 'No.',
     NAME: 'Nombre del Curso',
     INSTITUTION_NAME: 'Nombre de la Institución',

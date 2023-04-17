@@ -1,4 +1,4 @@
-import {MenuOutlined} from '@ant-design/icons';
+import {DragOutlined} from '@ant-design/icons';
 import type {DragEndEvent} from '@dnd-kit/core';
 import {DndContext} from '@dnd-kit/core';
 import {
@@ -29,7 +29,7 @@ const Row = (props: RowProps) => {
     ...props.style,
     transform: CSS.Transform.toString(transform && {...transform, scaleY: 1}),
     transition,
-    cursor: 'move',
+
     ...(isDragging ? {position: 'relative', zIndex: 9999} : {})
   };
 
@@ -44,14 +44,15 @@ const SortTable = (props: SortTableProps) => {
     columns.unshift({
       title: 'Sort',
       dataIndex: '0',
-      key: 'sort'
+      key: 'sort',
+      className: 'w-0'
     });
   }
 
   // add menu icon to the first item in dataSource
   if (dataSource && dataSource.length > 0) {
     dataSource.forEach((item) => {
-      item['0'] = <MenuOutlined />;
+      item['0'] = <DragOutlined />;
     });
   }
 

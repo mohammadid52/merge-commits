@@ -617,8 +617,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           </div>
         }>
         <Filters
-          loading={loading}
           list={classStudents}
+          loading={loading}
           updateFilter={updateFilter}
           filters={filters}
         />

@@ -6,23 +6,28 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import {
-  updateCurriculumSyllabusSequence,
-  deleteCurriculumUnits
+  deleteCurriculumUnits,
+  updateCurriculumSyllabusSequence
 } from 'customGraphql/customMutations';
-import {listUniversalSyllabusOptions} from 'customGraphql/customQueries';
+import {
+  getUniversalSyllabus,
+  listRooms,
+  listUniversalSyllabusOptions
+} from 'customGraphql/customQueries';
 import {createCurriculumUnits} from 'graphql/mutations';
 
 import Buttons from '@components/Atoms/Buttons';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table, {ITableProps} from '@components/Molecules/Table';
 
 import {RoomStatus} from 'API';
 import {message} from 'antd';
-import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import PageLayout from 'layout/PageLayout';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
+import {DragEndEvent} from '@dnd-kit/core';
+import {arrayMove} from '@dnd-kit/sortable';
 
 const UnitManager = ({
   courseId,
@@ -51,6 +56,8 @@ const UnitManager = ({
     value: ''
   });
 
+  const isInactive = courseData?.status === RoomStatus.INACTIVE;
+
   const [unsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -70,20 +77,6 @@ const UnitManager = ({
       updateSyllabusSequence(syllabusSeq);
     }
   }, [savedSyllabusList]);
-
-  // ~~~~~~~~~~~~ FUnCTIONALITY ~~~~~~~~~~~~ //
-  const createNewUnit = () => {
-    if (unsavedChanges) {
-      setWarnModal({
-        ...warnModal,
-        lessonPlan: true,
-        show: !warnModal.show,
-        lessonEdit: false
-      });
-      return;
-    }
-    history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/add`);
-  };
 
   const handleSelectSyllabus = (value: string, option: any) => {
     setSelectedSyllabus({id: option.id, name: value, value: option.value});
@@ -134,9 +127,9 @@ const UnitManager = ({
     }));
 
     filteredList = filteredList
-
       .map((t: any) => {
         let index = syllabusIds?.indexOf(t.unitId);
+
         return {...t, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
@@ -152,13 +145,19 @@ const UnitManager = ({
   }, [savedSyllabusList]);
 
   useEffect(() => {
-    if (Array.isArray(savedSyllabusList) && savedSyllabusList.length) {
+    if (
+      Array.isArray(savedSyllabusList) &&
+      savedSyllabusList.length &&
+      syllabusIds.length
+    ) {
       updateListAndDropdown();
     }
-  }, [savedSyllabusList]);
+  }, [savedSyllabusList, syllabusIds]);
 
   useEffect(() => {
-    fetchSyllabusList();
+    if (!isInactive) {
+      fetchSyllabusList();
+    }
   }, [institutionId]);
 
   const fetchSyllabusList = async () => {
@@ -183,15 +182,19 @@ const UnitManager = ({
   };
 
   const updateSyllabusSequence = async (syllabusIDs: string[]) => {
-    setSyllabusIds(syllabusIDs);
-    await API.graphql(
-      graphqlOperation(updateCurriculumSyllabusSequence, {
-        input: {
-          id: courseId,
-          universalSyllabusSeq: syllabusIDs
-        }
-      })
-    );
+    try {
+      setSyllabusIds(syllabusIDs);
+      await API.graphql(
+        graphqlOperation(updateCurriculumSyllabusSequence, {
+          input: {
+            id: courseId,
+            universalSyllabusSeq: syllabusIDs
+          }
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // ~~~~~ CHECK IF UNIT CAN BE DELETED ~~~~ //
@@ -236,12 +239,12 @@ const UnitManager = ({
       setSavedSyllabusList((prevList: any) =>
         prevList.filter((syllabus: any) => syllabus.id !== item.id)
       );
-      setDeleting(false);
       closeLessonAction();
     } catch (e) {
       console.error('Problem deleting Unit from UnitManager - ', e);
+      messageApi.error('Problem deleting Unit from UnitManager');
     } finally {
-      setDeleteModal({show: false, message: '', action: () => {}});
+      setDeleting(false);
     }
   };
 
@@ -267,32 +270,101 @@ const UnitManager = ({
   //
   const dict = CourseBuilderDict[userLanguage]['TABLE_HEADS'];
 
+  const checkIfDeletable = async (unitId: string) => {
+    try {
+      // check if there are attached lessons
+
+      // list rooms that have this course
+
+      const result: any = await API.graphql(
+        graphqlOperation(listRooms, {
+          filter: {
+            activeSyllabus: {eq: unitId}
+          }
+        })
+      );
+
+      const rooms = result?.data?.listRooms?.items;
+
+      // check if this unit is attached to any of the rooms
+
+      if (rooms && rooms.length > 0) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+
+      return false;
+    }
+  };
+
   const dataList = map(selectedSyllabusList, (item, idx) => ({
     no: idx + 1,
     id: item.id,
     onClick: () => goToUnitBuilder(item.unitId, item.type),
-    unitName: item?.name
-    // actions: (
-    //   <CommonActionsBtns
-    //     button1Label="View"
-    //     isDeletable={checkIfRemovable(item, courseData)}
-    //     button1Action={() => goToUnitBuilder(item.unitId, item.type)}
-    //     button2Action={() => handleToggleDelete(item.name, item)}
-    //   />
-    // )
+    unitName: item?.name,
+
+    actions: (
+      <CommonActionsBtns
+        button2Label="Remove from Course"
+        checkIfDeletable={() => item.unitId && checkIfDeletable(item.unitId)}
+        button2Action={(e) => {
+          handleDelete(item);
+        }}
+      />
+    )
   }));
 
+  const updateSortedListToUI = (updatedIds: string[]) => {
+    let sorted = selectedSyllabusList
+      .map((t: any) => {
+        let index = updatedIds?.indexOf(t.id);
+        return {...t, index};
+      })
+      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+    setSelectedSyllabusList(sorted);
+  };
+
+  const onDragEnd = async ({active, over}: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      const prev = dataList;
+      const activeIndex = prev.findIndex((i) => i.id === active.id);
+      const overIndex = prev.findIndex((i) => i.id === over?.id);
+      const ids = arrayMove(prev, activeIndex, overIndex).map((i) => i.id);
+
+      updateSortedListToUI(ids);
+
+      await updateSyllabusSequence(ids);
+    }
+  };
+
   const tableConfig: ITableProps = {
-    headers: [dict['NUMBER'], dict['UNIT_NAME']],
+    headers: [dict['NUMBER'], dict['UNIT_NAME'], dict.ACTION],
     dataList,
     config: {
       dataList: {
-        loading
+        loading,
+        sortableConfig: {
+          onSort: onDragEnd
+        }
       }
     }
   };
 
-  const isInactive = courseData?.status === RoomStatus.INACTIVE;
+  const getWithDisabledList = () => {
+    if (!isInactive) {
+      return allSyllabusList.map((item: any) => {
+        return {
+          ...item,
+          disabled: syllabusIds.includes(item.id)
+        };
+      });
+    }
+    return [];
+  };
 
   return (
     <PageLayout
@@ -307,7 +379,7 @@ const UnitManager = ({
         <div className=" w-full flex gap-x-4 justify-end items-center">
           <Selector
             selectedItem={isInactive ? 'Course inactive' : selectedSyllabus.value}
-            list={allSyllabusList}
+            list={getWithDisabledList()}
             placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
             onChange={handleSelectSyllabus}
             width={300}
@@ -316,19 +388,10 @@ const UnitManager = ({
             disabled={isInactive}
           />
 
-          <AnimatedContainer className="w-auto" show={Boolean(selectedSyllabus.id)}>
-            {Boolean(selectedSyllabus.id) && (
-              <Buttons
-                label={BUTTONS[userLanguage]['ADD']}
-                onClick={addNewSyllabusToCourse}
-              />
-            )}
-          </AnimatedContainer>
-
-          <AddButton
-            disabled={isInactive}
-            label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
-            onClick={createNewUnit}
+          <Buttons
+            disabled={!Boolean(selectedSyllabus.id)}
+            label={BUTTONS[userLanguage]['ADD']}
+            onClick={addNewSyllabusToCourse}
           />
         </div>
       }>

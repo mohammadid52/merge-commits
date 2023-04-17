@@ -1,7 +1,7 @@
 import Placeholder from '@components/Atoms/Placeholder';
 import {useQuery} from '@tanstack/react-query';
 import {getImageFromS3} from '@utilities/services';
-import {Card, Descriptions} from 'antd';
+import {Card, Descriptions, List, Tooltip} from 'antd';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -13,7 +13,11 @@ import CourseUnits from 'components/MicroComponents/CourseUnits';
 import ModalPopUp from 'components/Molecules/ModalPopUp';
 import Table, {ITableProps} from 'components/Molecules/Table';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import {listCurriculumsForSuperAdmin} from 'customGraphql/customQueries';
+import {
+  listCurriculumsForSuperAdmin,
+  listRoomCurriculaOnlyRoomID,
+  listRoomsOnlyName
+} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
@@ -22,12 +26,103 @@ import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
 import {logError} from 'graphql-functions/functions';
 import {deleteCurriculum} from 'graphql/mutations';
 import PageLayout from 'layout/PageLayout';
-import {isEmpty, map, orderBy} from 'lodash';
+import {map, orderBy} from 'lodash';
 import moment from 'moment';
-import {useEffect, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import InsitutionSelector from '../../InsitutionSelector';
 import {Status} from '../../UserManagement/UserStatus';
+
+export const AttachedRooms = ({
+  curriculumID,
+  header
+}: {
+  header?: ReactNode;
+  curriculumID: string;
+}) => {
+  const [roomList, setRoomList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchAttachedRooms = async () => {
+      setLoading(true);
+
+      // fetch room curriculum list
+      const roomList: any = await API.graphql(
+        graphqlOperation(listRoomCurriculaOnlyRoomID, {
+          filter: {
+            curriculumID: {
+              eq: curriculumID
+            }
+          }
+        })
+      );
+
+      const roomIds = roomList?.data?.listRoomCurricula?.items?.map(
+        (item: {roomID: any}) => item?.roomID
+      );
+
+      // filter unique room ids
+      const uniqueRoomIds = roomIds?.filter((id: any, index: number) => {
+        return roomIds?.indexOf(id) === index;
+      });
+
+      // fetch room list
+      const roomListData: any = await API.graphql(
+        graphqlOperation(listRoomsOnlyName, {
+          filter: {
+            or: uniqueRoomIds?.map((id: any) => {
+              return {
+                id: {
+                  eq: id
+                }
+              };
+            })
+          }
+        })
+      );
+
+      // sort list by a-z
+      const sorted = orderBy(roomListData?.data?.listRooms?.items, ['name'], ['asc']);
+
+      setRoomList(sorted);
+
+      setLoading(false);
+    };
+    fetchAttachedRooms();
+  }, []);
+
+  const history = useHistory();
+  const redirectToRoom = (room: any) => {
+    history.push(
+      `/dashboard/manage-institutions/institution/${room?.institutionID}/room-edit/${room.id}`
+    );
+  };
+
+  return (
+    <List
+      size="small"
+      header={header}
+      loading={loading}
+      className="table-list"
+      dataSource={roomList?.filter(Boolean)}
+      renderItem={(room: any, index: number) => (
+        <Tooltip key={room.id} title={`Go to ${room.name}`} placement="left">
+          <a
+            href="#"
+            onMouseUp={(e) => {
+              e.stopPropagation();
+              redirectToRoom(room);
+            }}>
+            <List.Item className="cursor-pointer hover:underline hover:theme-text:400">
+              {index + 1}. {room.name}
+            </List.Item>
+          </a>
+        </Tooltip>
+      )}
+    />
+  );
+};
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -226,17 +321,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   };
 
   const {
-    pageCount,
-    setFirstPage,
-    setLastPage,
-    setTotalPages,
-    currentList,
-    allAsProps,
-    resetPagination,
-    setCurrentList
-  } = usePagination(courseList, loading ? 0 : totalNum);
-
-  const {
     searchInput,
     setSearch,
     checkSearchQueryFromUrl,
@@ -247,6 +331,17 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   } = useSearch([...(courseList || [])], ['name', 'institutionName']);
 
   const [filteredList, setFilteredList] = useState([...courseList]);
+
+  const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+    currentList,
+    allAsProps,
+    resetPagination,
+    setCurrentList
+  } = usePagination(courseList, searchInput.isActive ? filteredList.length : totalNum);
 
   useEffect(() => {
     if (!loading && currentList?.length > 0) {
@@ -278,6 +373,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
+    if (courseList.length === 0) return;
+
     if (filterName === filters) {
       setSearchInput({...searchInput, isActive: false});
       setFilters(null);
@@ -285,6 +382,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     } else {
       setSearchInput({...searchInput, isActive: true});
       const filtered = courseList.filter((_d: any) => filterName === _d.status);
+
       setFilteredList(filtered);
       setFilters(filterName);
       setSelectedInstitution({});
@@ -338,6 +436,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       </div>
     ),
     courseType: item.type || '-',
+    rooms: <AttachedRooms curriculumID={item.id} />,
     courseUnits: (
       <CourseUnits
         courseName={item.name}
@@ -363,6 +462,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       InstitueCurriculum[userLanguage]['NAME'],
       isSuperAdmin && InstitueCurriculum[userLanguage]['INSTITUTION_NAME'],
       InstitueCurriculum[userLanguage]['COURSE_TYPE'],
+      InstitueCurriculum[userLanguage]['ROOMS'],
       InstitueCurriculum[userLanguage]['UNITS'],
       InstitueRomms[userLanguage]['STATUS']
       // InstitueCurriculum[userLanguage]['ACTION']
@@ -371,13 +471,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     config: {
       dataList: {
         loading,
-        expandable: true,
-        pagination: {
-          showPagination: !searchInput.isActive && totalNum > 0 && isEmpty(filters),
-          config: {
-            allAsProps
-          }
-        }
+        expandable: true
       }
     }
   };
@@ -416,16 +510,10 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         title={InstitueCurriculum[userLanguage]['TITLE']}>
         <Filters
           loading={loading}
-          list={courseList}
           resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
-          showingCount={{
-            currentPage: allAsProps.currentPage,
-            lastPage: allAsProps.lastPage,
-            totalResults: allAsProps.totalResults,
-            pageCount: allAsProps.pageCount
-          }}
+          list={courseList}
         />
 
         <Table {...tableConfig} />

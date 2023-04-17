@@ -1742,6 +1742,12 @@ $translation-fab-width: 50px;
   font-weight: 500 !important;
   color: #eee !important;
 }
+.universal-table {
+  // .ant-table-tbody .dant-table-cell {
+  //   display: flex;
+  //   justify-content: flex-start;
+  // }
+}
 
 .iconoclast .universal-table th,
 .iconoclast .universal-table thead .ant-table-row-expand-icon-cell {
@@ -1775,6 +1781,8 @@ $translation-fab-width: 50px;
 // removing bottom border from list items
 .table-list .ant-list-items li {
   border-block-end: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 // Styles For Dark Modal
@@ -1842,6 +1850,15 @@ $translation-fab-width: 50px;
   }
 }
 
+.ant-steps {
+  // reset the weird color of the arrow
+  & .ant-steps-item {
+    &::after {
+      background-color: transparent !important;
+    }
+  }
+}
+
 .ant-steps-item-title {
   font-weight: 500;
 }
@@ -1863,4 +1880,8 @@ $translation-fab-width: 50px;
       color: white;
     }
   }
+}
+
+.leaflet-popup-content {
+  width: 700px;
 }

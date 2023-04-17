@@ -7,7 +7,7 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {logError} from 'graphql-functions/functions';
-import {Card, Divider, Popconfirm, Radio, Tooltip} from 'antd';
+import {Alert, Card, Divider, Popconfirm, Radio, Tooltip} from 'antd';
 import {
   ErrorLog,
   ErrorStatus,
@@ -356,7 +356,14 @@ const ErrorsPage = () => {
               </Radio.Group>
             </div>
 
-            <div className="overflow-hidden">
+            {/* Show antd alert and message would be that all errors that are not pending will be deleted after 7 days */}
+
+            <Alert
+              message="All errors that are closed will be deleted after 7 days"
+              type="warning"
+              showIcon
+            />
+            <div className="mt-2 overflow-hidden">
               {isLoading ? null : (
                 <h6 className="text-base mb-4 text-darkest   ">
                   {pendingLength} pending errors - total {data.length} errors

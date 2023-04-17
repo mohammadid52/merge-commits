@@ -517,16 +517,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       <div className="">
         <Filters
           loading={dataLoading}
-          list={finalList}
+          list={activeStaffList}
           resetPagination={resetPagination}
           updateFilter={updateFilter}
           filters={filters}
-          showingCount={{
-            currentPage: allAsProps.currentPage,
-            lastPage: allAsProps.lastPage,
-            totalResults: allAsProps.totalResults,
-            pageCount: allAsProps.pageCount
-          }}
         />
 
         <Table {...tableConfig} />

@@ -575,6 +575,7 @@ interface InstitutionInfoCommon {
   WEBSITE: string;
   SERVICE_PROVIDER: string;
   TABS: {
+    DASHBOARD: string;
     SERVICE_PROVIDER: string;
     STAFF: string;
     USER_REGISTRY: string;
@@ -738,6 +739,7 @@ interface InstituteCurriculumCommon {
   NO: string;
   NAME: string;
   INSTITUTION_NAME: string;
+  ROOMS: string;
   COURSE_TYPE: string;
   UNITS: string;
   ACTION: string;

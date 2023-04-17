@@ -112,7 +112,7 @@ export const fallbackUrls = {
 
 export const XLSX_TO_CSV_URL = 'https://cloudconvert.com/xlsx-to-csv';
 
-const general: any = {
+export const general = {
   emoji: {
     awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',
     bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
@@ -149,7 +149,9 @@ const general: any = {
       'https://images.unsplash.com/photo-1623018035782-b269248df916?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
     uploadLogs:
       'https://images.unsplash.com/photo-1600267165477-6d4cc741b379?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80'
-  }
+  },
+  dashboardUrl:
+    'https://images.unsplash.com/photo-1560221328-12fe60f83ab8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2074&q=80'
 };
 
 export const textEdit: any = {
@@ -179,8 +181,16 @@ export function getAsset(clientKey: string, key: string) {
   } else if (clientKey === 'demo') {
     return demo_assets[key];
   } else if (clientKey === 'general') {
+    // @ts-ignore
     return key ? general[key] : general;
   } else {
     return demo_assets[key];
   }
 }
+
+export const graphs = {
+  pie: 'https://gw.alipayobjects.com/mdn/rms_d314dd/afts/img/A*wmldRZZj9lIAAAAAAAAAAABkARQnAQ',
+  line: 'https://gw.alipayobjects.com/zos/antfincdn/aiERL4ey%24U/08d95f7b-46cb-4bfd-89b2-be36343d44a1.png',
+  bar: 'https://gw.alipayobjects.com/zos/antfincdn/rWp4Sq5ofk/10256978-7f35-4a4c-b67c-39aaad269bc2.png',
+  map: 'https://gw.alipayobjects.com/zos/antfincdn/Ths%26mCNgFa/2c4d5660-5946-49e8-8917-cdbeb37be073.png'
+};

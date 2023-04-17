@@ -13,7 +13,8 @@ const Filters = ({
   filters,
   customFilters,
   resetPagination,
-  loading
+  loading,
+  list
 }: {
   loading: boolean;
   updateFilter: any;
@@ -21,12 +22,6 @@ const Filters = ({
   list?: any[];
   customFilters?: string[];
   resetPagination?: () => void;
-  showingCount?: {
-    totalResults: number;
-    currentPage: number;
-    lastPage: boolean;
-    pageCount: number;
-  } | null;
 }) => {
   const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
   const filter = customFilters ? customFilters : defaultFilterMapping;
@@ -37,30 +32,39 @@ const Filters = ({
     const newMode = e.target.value;
     setMode(newMode);
     updateFilter(newMode);
+
     resetPagination?.();
 
-    setQuery('filter', newMode);
-    removeQuery('search');
+    // setQuery('filter', newMode);
+    // removeQuery('search');
   };
 
-  // check filter on load in useEffect
+  // // check filter on load in useEffect
 
-  const filtersFromUrl = getQuery('filter');
+  // const filtersFromUrl = getQuery('filter');
+
+  // useEffect(() => {
+  //   if (filtersFromUrl && !loading) {
+  //     updateFilter(filtersFromUrl.toUpperCase());
+  //     setMode(filtersFromUrl.toString());
+  //   }
+  // }, [loading]);
+
+  // // Remove mode if not filters in url
+  // useEffect(() => {
+  //   if (!filtersFromUrl) {
+  //     updateFilter(filters);
+  //     setMode(null);
+  //   }
+  // }, [filtersFromUrl]);
+
+  // set default filter to ACTIVE on useEffect
 
   useEffect(() => {
-    if (filtersFromUrl && !loading) {
-      updateFilter(filtersFromUrl.toUpperCase());
-      setMode(filtersFromUrl.toString());
+    if (!loading && !customFilters && list && list?.length > 0) {
+      handleModeChange({target: {value: 'ACTIVE'}} as RadioChangeEvent);
     }
-  }, [loading]);
-
-  // Remove mode if not filters in url
-  useEffect(() => {
-    if (!filtersFromUrl) {
-      updateFilter(filters);
-      setMode(null);
-    }
-  }, [filtersFromUrl]);
+  }, [loading, list]);
 
   const onClearFilter = () => {
     updateFilter(filters);

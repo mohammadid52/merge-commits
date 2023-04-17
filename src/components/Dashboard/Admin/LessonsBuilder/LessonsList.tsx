@@ -51,6 +51,18 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const [totalLessonNum, setTotalLessonNum] = useState(0);
 
   const {
+    searchInput,
+    setSearch,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    removeSearchAction,
+    setSearchInput,
+    searchAndFilter
+  } = useSearch([...(lessonsData || [])], ['title']);
+
+  const [filteredList, setFilteredList] = useState([...lessonsData]);
+
+  const {
     pageCount,
     setFirstPage,
     currentPage,
@@ -62,7 +74,10 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setCurrentList,
     resetPagination,
     getIndex
-  } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
+  } = usePagination(
+    getSortedList(lessonsData) || [],
+    searchInput.isActive ? filteredList.length : totalLessonNum || 0
+  );
 
   const currentList = getSortedList(_currentList);
 
@@ -310,18 +325,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const {isSuperAdmin} = useAuth();
 
-  const {
-    searchInput,
-    setSearch,
-    checkSearchQueryFromUrl,
-    filterBySearchQuery,
-    removeSearchAction,
-    setSearchInput,
-    searchAndFilter
-  } = useSearch([...(lessonsData || [])], ['title']);
-
-  const [filteredList, setFilteredList] = useState([...lessonsData]);
-
   useEffect(() => {
     if (status === 'done' && currentList?.length > 0) {
       const query = checkSearchQueryFromUrl();
@@ -491,16 +494,10 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
           <Filters
             loading={status !== 'done'}
-            list={currentList}
             resetPagination={resetPagination}
             updateFilter={updateFilter}
+            list={lessonsData}
             filters={filters}
-            showingCount={{
-              currentPage,
-              lastPage: allAsProps.lastPage,
-              totalResults: allAsProps.totalResults,
-              pageCount: allAsProps.pageCount
-            }}
           />
 
           {/* List / Table */}
