@@ -1,6 +1,6 @@
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
 import useAuth from '@customHooks/useAuth';
-import {Col, Row, theme} from 'antd';
+import {Card, Col, Row, theme} from 'antd';
 import {general, graphs} from 'assets';
 import PageLayout from 'layout/PageLayout';
 import {useState} from 'react';
@@ -86,7 +86,9 @@ const GraphIndex = () => {
               key={graph.title}
               className="gutter-row"
               span={graph.link === '/institutions' ? 24 : 12}>
-              {graph.component}
+              <Card type="inner" title={graph.title}>
+                {graph.component}
+              </Card>
               {/* <NavLink
                 to={`${match.url}${graph.link}`}
                 onClick={() => onSelectGraph(graph.title)}>
