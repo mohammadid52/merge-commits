@@ -19,6 +19,7 @@ import {useCookies} from 'react-cookie';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
 import {useHistory} from 'react-router';
 import {LoginSchema} from 'Schema';
+import AuthCard from './AuthCard';
 
 const LoginInner = ({
   setCreatePassword,
@@ -26,13 +27,17 @@ const LoginInner = ({
   setIsLoginSuccess,
   setEmail,
   setNewUser,
-  setSubtitle
+
+  isLoginSuccess,
+  message
 }: {
   setCreatePassword: any;
-  setSubtitle: any;
+
   setNewUser: any;
   setIsLoginSuccess: any;
   setEmail: any;
+  isLoginSuccess: boolean;
+  message: any;
 
   setMessage: any;
 }) => {
@@ -40,7 +45,7 @@ const LoginInner = ({
   const [cookies, setCookie, removeCookie] = useCookies();
 
   const [isToggled, setIsToggled] = useState<boolean>(false);
-
+  const [subtitle, setSubtitle] = useState('Welcome to our app');
   const toggleLoading = (state: boolean) => {
     setIsToggled(state);
   };
@@ -74,7 +79,11 @@ const LoginInner = ({
     const auth = cookies.cred;
 
     if (auth?.checked) {
-      setSubtitle(`Welcome back, ${auth?.name || ''}!`);
+      if (auth?.name) {
+        setSubtitle(`Welcome Back, ${auth?.name || ''}`);
+      } else {
+        setSubtitle(`Welcome to our app`);
+      }
       setValues({
         email: auth.email,
         password: auth.password,
@@ -92,12 +101,6 @@ const LoginInner = ({
   const getUser = async () => {
     const user = await Auth.signIn(values.email, 'xIconoclast.5x');
     return user;
-  };
-
-  const history = useHistory();
-
-  const onSetPassword = async () => {
-    history.push(`/forgot-password?email=${values.email}`);
   };
 
   const onShowPassword = async (username: string, password: string, checked: boolean) => {
@@ -199,59 +202,72 @@ const LoginInner = ({
     }
   };
 
+  const history = useHistory();
+
+  const onSetPassword = async () => {
+    history.push(`/forgot-password?email=${values.email}`);
+  };
+
   const {email, password, checked} = values;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="h-auto flex-grow flex flex-col justify-center">
-      <div className="gap-2 flex flex-col">
-        <FormInput
-          Icon={AiOutlineUser}
-          label="Email"
-          onChange={(e) => {
-            setSubtitle(`Welcome Back!`);
-            handleChange(e);
-          }}
-          error={errors.email}
-          placeHolder="Enter your email"
-          type="email"
-          value={email}
-          id="email"
-          name="email"
-        />
+    <AuthCard
+      subtitle={subtitle}
+      message={message}
+      isSuccess={isLoginSuccess}
+      setPasswordComponent={
+        <div className="mb-2">
+          <Buttons
+            disabled={isToggled}
+            size="small"
+            onClick={onSetPassword}
+            variant="link"
+            className="mt-2 self-end"
+            label={'set password'}
+          />
+        </div>
+      }>
+      <form
+        onSubmit={handleSubmit}
+        className="h-auto flex-grow flex flex-col justify-center">
+        <div className="gap-2 flex flex-col">
+          <FormInput
+            Icon={AiOutlineUser}
+            label="Email"
+            onChange={(e) => {
+              setSubtitle(`Welcome Back!`);
+              handleChange(e);
+            }}
+            error={errors.email}
+            placeHolder="Enter your email"
+            type="email"
+            value={email}
+            id="email"
+            name="email"
+          />
 
-        <FormInput
-          error={errors.password}
-          label="Password"
-          onChange={handleChange}
-          Icon={AiOutlineLock}
-          placeHolder="Enter your password"
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-        />
-      </div>
+          <FormInput
+            error={errors.password}
+            label="Password"
+            onChange={handleChange}
+            Icon={AiOutlineLock}
+            placeHolder="Enter your password"
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+          />
+        </div>
 
-      <div className="my-4">
-        <Checkbox checked={checked} onChange={() => setFieldValue('checked', !checked)}>
-          Remember me
-        </Checkbox>
-      </div>
+        <div className="my-4">
+          <Checkbox checked={checked} onChange={() => setFieldValue('checked', !checked)}>
+            Remember me
+          </Checkbox>
+        </div>
 
-      <div className="relative flex flex-col justify-center items-center">
         <Buttons type="submit" loading={isToggled} label={'Login'} className="w-full" />
-        <Buttons
-          disabled={isToggled}
-          size="small"
-          onClick={onSetPassword}
-          className="mt-2 self-end"
-          variant="dashed"
-          label={'set password'}
-        />
-      </div>
-    </form>
+      </form>
+    </AuthCard>
   );
 };
 

@@ -15,6 +15,7 @@ interface AuthCardProps {
   message?: any;
   showFooter?: boolean;
   isSuccess?: boolean;
+  setPasswordComponent?: ReactNode;
 }
 
 const AuthCard = ({
@@ -23,7 +24,8 @@ const AuthCard = ({
   title,
   message,
   isSuccess,
-  subtitle
+  subtitle,
+  setPasswordComponent = null
 }: AuthCardProps) => {
   const {browser: detectedBrowser} = useDeviceDetect();
   const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
@@ -80,7 +82,7 @@ const AuthCard = ({
             )}
             {subtitle && (
               <h6
-                className={`px-2 transition-all mb-4 text-sm  ${
+                className={`px-2 capitalize transition-all mb-4 text-sm  ${
                   subtitle.split(' ').length > 10 ? 'text-left' : 'text-center'
                 } text-medium `}>
                 {subtitle}
@@ -103,6 +105,7 @@ const AuthCard = ({
             <AnimatedContainer className="absolute bottom-0" show={showFooter}>
               {showFooter && (
                 <div className={`text-center mb-4 leading-5 text-xs text-medium `}>
+                  {setPasswordComponent}
                   <p>© Copyright {new Date().getFullYear()}</p>
                   <Buttons
                     label={'Privacy Policy'}
