@@ -22,6 +22,7 @@ const useGraphConfig = <T>({
         textAlign: 'center'
       }
     },
+
     interactions: [
       {
         type: 'element-active'

@@ -8,6 +8,7 @@ import {listPeople} from '@graphql/queries';
 import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
 import {Person, PersonStatus, Role} from 'API';
+import {Typography} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 
 const StudentActiveGraph = () => {
@@ -79,6 +80,9 @@ const StudentActiveGraph = () => {
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
+        <Typography.Text type="secondary">
+          Total Students: {students.length}
+        </Typography.Text>
         {/* <Report
           description={
             <>

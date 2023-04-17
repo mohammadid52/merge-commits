@@ -70,7 +70,7 @@ const PageLayout = ({
         className="w-full"
         bordered={type === 'inner' ? true : false}
         type={type}
-        title={<h4 className="text-lg font-medium">{title}</h4>}
+        title={title ? <h4 className="text-lg font-medium">{title}</h4> : undefined}
         extra={extra}>
         {children}
         {!hideInstProfile && type !== 'inner' && institute && (
