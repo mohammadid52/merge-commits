@@ -6,6 +6,7 @@ import {
 } from 'interfaces/UniversalLessonInterfaces';
 import {lessonState as initialLessonState} from 'state/LessonState';
 
+// test
 const LESSON_REDUCER_TYPES = {
   TEST: 'TEST',
   SET_INITIAL_STATE: 'SET_INITIAL_STATE',
