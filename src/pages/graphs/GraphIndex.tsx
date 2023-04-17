@@ -1,9 +1,10 @@
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
+import useAuth from '@customHooks/useAuth';
 import {Card, Col, Row} from 'antd';
 import {general, graphs} from 'assets';
 import PageLayout from 'layout/PageLayout';
 import {useState} from 'react';
-import {NavLink, useRouteMatch} from 'react-router-dom';
+import {NavLink, Redirect, useRouteMatch} from 'react-router-dom';
 import GraphRouter from 'router/GraphRouter';
 
 const listOfGraphs = [
@@ -56,6 +57,10 @@ const GraphIndex = () => {
       }
     }, 500);
   };
+
+  const {isBuilder, isAdmin} = useAuth();
+
+  if (!isBuilder && !isAdmin) return <Redirect to="/dashboard/home" />;
 
   return (
     <DashboardContainer

@@ -166,8 +166,10 @@
 }
 
 .blink-error {
-  border: 2px solid red;
+  border: 1px solid red;
+  border-radius: 8px;
   animation: shake 0.5s;
+  padding: 0.5rem;
   animation-delay: 1s;
   transform: translateX(0px);
 }

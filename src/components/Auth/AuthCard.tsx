@@ -62,7 +62,7 @@ const AuthCard = ({
           )} bg-cover bg-center`}></div>
         {/* Left image ends here */}
         {/* Right image starts here */}
-        <div className=" bg-white   flex items-center justify-center">
+        <div className="min-w-[24rem] bg-white   flex items-center justify-center">
           <div className="relative h-full transition-all  flex flex-col justify-center items-center p-8">
             {showFooter && (
               <div className="h-auto mb-4 transition-all ">
