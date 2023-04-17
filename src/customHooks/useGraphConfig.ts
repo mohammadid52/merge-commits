@@ -11,12 +11,11 @@ const useGraphConfig = <T>({
     data,
     angleField: 'value',
     colorField: 'label',
-    radius: 0.9,
+    radius: 1,
     label: {
       type: 'inner',
       offset: '-30%',
-      //   @ts-ignore
-      content: ({label}) => label,
+      content: ({percent}) => `${(percent * 100).toFixed(0)}%`,
       style: {
         fontSize: 14,
 
@@ -30,11 +29,13 @@ const useGraphConfig = <T>({
     ],
     legend: {
       position: 'right',
+      offsetX: -200,
       title: {
         text: legendTitle,
         spacing: 8,
         style: {
-          fontSize: 16
+          fontWeight: 500,
+          fontSize: 14
         }
       },
 

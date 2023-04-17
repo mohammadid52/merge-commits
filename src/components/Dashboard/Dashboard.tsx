@@ -2,7 +2,7 @@ import Loader from '@components/Atoms/Loader';
 import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
 import {reorderSyllabus, withZoiqFilter} from '@utilities/functions';
-import {UserPageState} from 'API';
+import {Role, UserPageState} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {logError, updatePageState} from 'graphql-functions/functions';
 
@@ -731,133 +731,137 @@ const Dashboard = () => {
           {/*<FloatingSideMenu />*/}
           {/* {!isGameChangers && <Noticebar notifications={notifications} />} */}
 
-          <Suspense>
-            <Switch>
-              <Route
-                path={`${match.url}`}
-                exact
-                render={() => {
-                  if (userData && userData.role !== null) {
-                    if (userData.role === 'FLW' || userData.role === 'TR') {
-                      return <Redirect to={`${match.url}/home`} />;
-                    } else if (userData.role === 'ST') {
-                      return <Redirect to={`${match.url}/home`} />;
-                    } else {
-                      return !stateUser?.associateInstitute?.length ||
-                        stateUser?.associateInstitute?.length > 1 ? (
-                        <Redirect to={`${match.url}/graphs`} />
-                      ) : (
-                        <Redirect to={`${match.url}/home`} />
+          {userData && (
+            <Suspense>
+              <Switch>
+                <Route
+                  path={`${match.url}`}
+                  exact
+                  render={() => {
+                    if (userData && userData.role !== null && userData.role !== '') {
+                      if (userData.role === 'FLW' || userData.role === 'TR') {
+                        return <Redirect to={`${match.url}/home`} />;
+                      } else if (userData.role === 'ST') {
+                        return <Redirect to={`${match.url}/home`} />;
+                      } else if (
+                        userData.role === Role.ADM ||
+                        userData.role === Role.BLD
+                      ) {
+                        return <Redirect to={`${match.url}/graphs`} />;
+                      } else {
+                        return !stateUser?.associateInstitute?.length ||
+                          stateUser?.associateInstitute?.length > 1 ? (
+                          <Redirect to={`${match.url}/graphs`} />
+                        ) : null;
+                      }
+                    } else
+                      return (
+                        <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                          <Loader />
+                        </div>
                       );
-                    }
-                  } else
-                    return (
-                      <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <Loader />
-                      </div>
-                    );
-                }}
-              />
-              <Route
-                exact
-                path={`${match.url}/home`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="HomeSwitch"
-                    fallback={<h1>Oops with the Dashboard</h1>}>
-                    <HomeSwitch />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                // exact
-                path={`${match.url}/community/:action`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="Community"
-                    fallback={<h1>Community Page is not working</h1>}>
-                    <Community />
-                  </ErrorBoundary>
-                )}
-              />
-
-              <Route
-                // exact
-                path={`${match.url}/game-changers`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="GameChangers"
-                    fallback={<h1>Game changers is not working</h1>}>
-                    <GameChangerProvider>
-                      <GameChangers />
-                    </GameChangerProvider>
-                  </ErrorBoundary>
-                )}
-              />
-
-              <Route
-                exact
-                path={`${match.url}/csv`}
-                render={() =>
-                  conditionalRender(
+                  }}
+                />
+                <Route
+                  exact
+                  path={`${match.url}/home`}
+                  render={() => (
                     <ErrorBoundary
-                      componentName="Csv"
-                      fallback={<h1>CSV is not working</h1>}>
-                      <Csv />
-                    </ErrorBoundary>,
-                    userData.role === 'SUP' ||
-                      userData.role === 'ADM' ||
-                      userData.role === 'TR' ||
-                      userData.role === 'FLW' ||
-                      userData.role === 'BLD'
-                  )
-                }
-              />
+                      componentName="HomeSwitch"
+                      fallback={<h1>Oops with the Dashboard</h1>}>
+                      <HomeSwitch />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  // exact
+                  path={`${match.url}/community/:action`}
+                  render={() => (
+                    <ErrorBoundary
+                      componentName="Community"
+                      fallback={<h1>Community Page is not working</h1>}>
+                      <Community />
+                    </ErrorBoundary>
+                  )}
+                />
 
-              <Route
-                exact
-                path={`${match.url}/classroom/:roomId`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="Classroom"
-                    fallback={<h1>Oops with the Classroom</h1>}>
-                    <Classroom
-                      setClassroomCurriculum={setCurriculumObj}
-                      classroomCurriculum={curriculumObj}
-                      isTeacher={isTeacher}
-                      isOnDemandStudent={isOnDemandStudent}
-                      homeData={!isStudent ? homeDataForTeachers : homeData}
-                      loadingRoomInfo={loadingRoomInfo}
-                      currentPage={currentPageLocal}
-                      activeRoomInfo={activeRoomInfo}
-                      setActiveRoomInfo={setActiveRoomInfo}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
-                      visibleLessonGroup={visibleLessonGroup}
-                      setVisibleLessonGroup={setVisibleLessonGroup}
-                      lessonLoading={lessonLoading}
-                      handleRoomSelection={handleRoomSelection}
-                      syllabusLoading={syllabusLoading}
-                    />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/anthology`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="Anthology"
-                    fallback={<h1>Oops with the Anthology</h1>}>
-                    <Anthology
-                      studentAuthID={stateUser?.authId}
-                      studentID={stateUser?.id}
-                      studentEmail={stateUser?.email}
-                      studentName={stateUser?.firstName}
-                    />
-                  </ErrorBoundary>
-                )}
-              />
-              {/* <Route
+                <Route
+                  // exact
+                  path={`${match.url}/game-changers`}
+                  render={() => (
+                    <ErrorBoundary
+                      componentName="GameChangers"
+                      fallback={<h1>Game changers is not working</h1>}>
+                      <GameChangerProvider>
+                        <GameChangers />
+                      </GameChangerProvider>
+                    </ErrorBoundary>
+                  )}
+                />
+
+                <Route
+                  exact
+                  path={`${match.url}/csv`}
+                  render={() =>
+                    conditionalRender(
+                      <ErrorBoundary
+                        componentName="Csv"
+                        fallback={<h1>CSV is not working</h1>}>
+                        <Csv />
+                      </ErrorBoundary>,
+                      userData.role === 'SUP' ||
+                        userData.role === 'ADM' ||
+                        userData.role === 'TR' ||
+                        userData.role === 'FLW' ||
+                        userData.role === 'BLD'
+                    )
+                  }
+                />
+
+                <Route
+                  exact
+                  path={`${match.url}/classroom/:roomId`}
+                  render={() => (
+                    <ErrorBoundary
+                      componentName="Classroom"
+                      fallback={<h1>Oops with the Classroom</h1>}>
+                      <Classroom
+                        setClassroomCurriculum={setCurriculumObj}
+                        classroomCurriculum={curriculumObj}
+                        isTeacher={isTeacher}
+                        isOnDemandStudent={isOnDemandStudent}
+                        homeData={!isStudent ? homeDataForTeachers : homeData}
+                        loadingRoomInfo={loadingRoomInfo}
+                        currentPage={currentPageLocal}
+                        activeRoomInfo={activeRoomInfo}
+                        setActiveRoomInfo={setActiveRoomInfo}
+                        activeRoomName={activeRoomName}
+                        setActiveRoomName={setActiveRoomName}
+                        visibleLessonGroup={visibleLessonGroup}
+                        setVisibleLessonGroup={setVisibleLessonGroup}
+                        lessonLoading={lessonLoading}
+                        handleRoomSelection={handleRoomSelection}
+                        syllabusLoading={syllabusLoading}
+                      />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/anthology`}
+                  render={() => (
+                    <ErrorBoundary
+                      componentName="Anthology"
+                      fallback={<h1>Oops with the Anthology</h1>}>
+                      <Anthology
+                        studentAuthID={stateUser?.authId}
+                        studentID={stateUser?.id}
+                        studentEmail={stateUser?.email}
+                        studentName={stateUser?.firstName}
+                      />
+                    </ErrorBoundary>
+                  )}
+                />
+                {/* <Route
                 path={`${match.url}/noticeboard`}
                 render={() => (
                   <ErrorBoundary
@@ -868,94 +872,94 @@ const Dashboard = () => {
                   </ErrorBoundary>
                 )}
               /> */}
-              <Route
-                path={`${match.url}/registration`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="Registration"
-                    fallback={<h1>Oops with the Registration</h1>}>
-                    <Registration />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/profile`}
-                render={() => (
-                  <ErrorBoundary componentName="Profile">
-                    <Profile />
-                  </ErrorBoundary>
-                )}
-              />
-              {/* <Route path={`${match.url}/test-cases`} render={() => <TestCases />} /> */}
-              <Route
-                path={`${match.url}/errors`}
-                render={() => (
-                  <ErrorBoundary componentName="Errors">
-                    <ErrorsPage />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/dictionary`}
-                render={() => (
-                  <ErrorBoundary componentName="Dictionary">
-                    <DictionaryPage />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/upload-logs`}
-                render={() => (
-                  <ErrorBoundary componentName="UploadLogs">
-                    <UploadLogsPage />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/lesson-planner/:roomId`}
-                render={() => (
-                  <ErrorBoundary
-                    componentName="LessonPlanHome"
-                    fallback={<h1>Oops with the Lesson-Planner</h1>}>
-                    <Classroom
-                      setClassroomCurriculum={setCurriculumObj}
-                      classroomCurriculum={curriculumObj}
-                      isTeacher={isTeacher}
-                      isOnDemandStudent={isOnDemandStudent}
-                      homeData={!isStudent ? homeDataForTeachers : homeData}
-                      loadingRoomInfo={loadingRoomInfo}
-                      currentPage={currentPageLocal}
-                      activeRoomInfo={activeRoomInfo}
-                      setActiveRoomInfo={setActiveRoomInfo}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
-                      visibleLessonGroup={visibleLessonGroup}
-                      setVisibleLessonGroup={setVisibleLessonGroup}
-                      lessonLoading={lessonLoading}
-                      handleRoomSelection={handleRoomSelection}
-                      syllabusLoading={syllabusLoading}
-                    />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/manage-institutions`}
-                render={() => (
-                  <ErrorBoundary componentName="InstitutionsHome">
-                    <InstitutionsHome />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`${match.url}/graphs`}
-                render={() => (
-                  <ErrorBoundary componentName="GraphIndex">
-                    <GraphIndex />
-                  </ErrorBoundary>
-                )}
-              />
+                <Route
+                  path={`${match.url}/registration`}
+                  render={() => (
+                    <ErrorBoundary
+                      componentName="Registration"
+                      fallback={<h1>Oops with the Registration</h1>}>
+                      <Registration />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/profile`}
+                  render={() => (
+                    <ErrorBoundary componentName="Profile">
+                      <Profile />
+                    </ErrorBoundary>
+                  )}
+                />
+                {/* <Route path={`${match.url}/test-cases`} render={() => <TestCases />} /> */}
+                <Route
+                  path={`${match.url}/errors`}
+                  render={() => (
+                    <ErrorBoundary componentName="Errors">
+                      <ErrorsPage />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/dictionary`}
+                  render={() => (
+                    <ErrorBoundary componentName="Dictionary">
+                      <DictionaryPage />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/upload-logs`}
+                  render={() => (
+                    <ErrorBoundary componentName="UploadLogs">
+                      <UploadLogsPage />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/lesson-planner/:roomId`}
+                  render={() => (
+                    <ErrorBoundary
+                      componentName="LessonPlanHome"
+                      fallback={<h1>Oops with the Lesson-Planner</h1>}>
+                      <Classroom
+                        setClassroomCurriculum={setCurriculumObj}
+                        classroomCurriculum={curriculumObj}
+                        isTeacher={isTeacher}
+                        isOnDemandStudent={isOnDemandStudent}
+                        homeData={!isStudent ? homeDataForTeachers : homeData}
+                        loadingRoomInfo={loadingRoomInfo}
+                        currentPage={currentPageLocal}
+                        activeRoomInfo={activeRoomInfo}
+                        setActiveRoomInfo={setActiveRoomInfo}
+                        activeRoomName={activeRoomName}
+                        setActiveRoomName={setActiveRoomName}
+                        visibleLessonGroup={visibleLessonGroup}
+                        setVisibleLessonGroup={setVisibleLessonGroup}
+                        lessonLoading={lessonLoading}
+                        handleRoomSelection={handleRoomSelection}
+                        syllabusLoading={syllabusLoading}
+                      />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/manage-institutions`}
+                  render={() => (
+                    <ErrorBoundary componentName="InstitutionsHome">
+                      <InstitutionsHome />
+                    </ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path={`${match.url}/graphs`}
+                  render={() => (
+                    <ErrorBoundary componentName="GraphIndex">
+                      <GraphIndex />
+                    </ErrorBoundary>
+                  )}
+                />
 
-              {/* <Route
+                {/* <Route
                 path={`${match.url}/question-bank`}
                 render={() => (
                   <ErrorBoundary componentName="QuestionBank">
@@ -963,8 +967,9 @@ const Dashboard = () => {
                   </ErrorBoundary>
                 )}
               /> */}
-            </Switch>
-          </Suspense>
+              </Switch>
+            </Suspense>
+          )}
         </div>
         {/* </ResizablePanels> */}
       </div>

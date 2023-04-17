@@ -6,6 +6,7 @@ import PageLayout from 'layout/PageLayout';
 import {useState} from 'react';
 import {NavLink, Redirect, useRouteMatch} from 'react-router-dom';
 import GraphRouter from 'router/GraphRouter';
+import {theme} from 'antd';
 
 const listOfGraphs = [
   {
@@ -58,9 +59,11 @@ const GraphIndex = () => {
     }, 500);
   };
 
-  const {isBuilder, isAdmin} = useAuth();
+  const {isBuilder, isAdmin, user} = useAuth();
 
-  if (!isBuilder && !isAdmin) return <Redirect to="/dashboard/home" />;
+  if (!isBuilder && !isAdmin && user.id !== '') return <Redirect to="/dashboard/home" />;
+
+  const {token} = theme.useToken();
 
   return (
     <DashboardContainer
@@ -76,6 +79,12 @@ const GraphIndex = () => {
                 onClick={() => onSelectGraph(graph.title)}>
                 <Card
                   hoverable
+                  style={{
+                    borderColor:
+                      selectedGraph === graph.title
+                        ? token.colorPrimary
+                        : token.colorBorder
+                  }}
                   cover={
                     <div className="px-4 pt-1 min-h-[10rem] w-[10rem] flex items-center justify-center">
                       <img height={'100%'} width={'100%'} alt="graph" src={graph.image} />

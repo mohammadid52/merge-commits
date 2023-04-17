@@ -60,7 +60,7 @@ const SurveyCompletedGraph = () => {
 
     const pieGraphConfig = useGraphConfig<PieConfig>({
       data,
-      legendTitle: 'Students'
+      legendTitle: 'Surveys'
     });
 
     // get the highest count with label
