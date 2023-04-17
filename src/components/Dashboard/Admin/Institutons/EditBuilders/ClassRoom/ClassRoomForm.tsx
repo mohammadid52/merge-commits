@@ -43,6 +43,8 @@ import {checkUniqRoomName, listInstitutions, logError} from 'graphql-functions/f
 import PageLayout from 'layout/PageLayout';
 import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
+import Loader from '@components/Atoms/Loader';
+import {Empty} from 'antd';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -438,7 +440,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         isError: true
       });
       return false;
-    } else if (!roomData.curricular.id && roomData.status !== RoomStatus.INACTIVE) {
+    } else if (!roomData.curricular.id && roomData.status === RoomStatus.ACTIVE) {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectCurriculum'],
@@ -990,6 +992,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   label={'Classroom type'}
                   labelTextClass={'text-xs'}
                   list={typeList}
+                  disabled={loadingCurricular || disabled}
                   selectedItem={disabled ? INACTIVE_TEXT : type}
                   isRequired
                   // @ts-ignore
@@ -1003,6 +1006,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
                   disabled={loadingCurricular || disabled}
+                  notFoundContent={
+                    loadingCurricular ? (
+                      <Loader />
+                    ) : (
+                      <Empty description={`There are no ${status} courses found `} />
+                    )
+                  }
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
@@ -1013,6 +1023,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   disabled={unitsLoading || disabled}
                   selectedItem={disabled ? INACTIVE_TEXT : roomData.activeUnit.label}
                   showSearch
+                  notFoundContent={
+                    unitsLoading ? (
+                      <Loader />
+                    ) : (
+                      <Empty description={`There are no units found `} />
+                    )
+                  }
                   width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}

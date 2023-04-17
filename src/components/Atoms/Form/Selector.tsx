@@ -29,6 +29,8 @@ interface SelectorProps {
   dataCy?: string;
   error?: string;
 
+  notFoundContent?: React.ReactNode;
+
   dropdownRender?:
     | ((
         menu: React.ReactElement<any, string | React.JSXElementConstructor<any>>
@@ -58,6 +60,7 @@ const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
     label,
     isRequired,
     dropdownRender,
+    notFoundContent,
     optionFilterProp
   } = selectorProps;
 
@@ -75,6 +78,7 @@ const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
         optionFilterProp={optionFilterProp}
         disabled={loading || disabled}
         showSearch={showSearch}
+        notFoundContent={notFoundContent}
         ref={ref}
         size={size}
         dropdownRender={dropdownRender}
