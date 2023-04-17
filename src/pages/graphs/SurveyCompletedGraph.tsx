@@ -1,32 +1,38 @@
 import {Pie, PieConfig} from '@ant-design/plots';
 import Loader from '@components/Atoms/Loader';
-import Report from '@components/Graphs/Report';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {listPersonLessonsDataForGraph} from '@customGraphql/customQueries';
 import useGraphConfig from '@customHooks/useGraphConfig';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {PersonLessonsData} from 'API';
+import {useQuery} from '@tanstack/react-query';
 import {Empty} from 'antd';
+import {API, graphqlOperation} from 'aws-amplify';
 
 const SurveyCompletedGraph = () => {
+  const listPersonLessonsData = async () => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(listPersonLessonsDataForGraph, {
+          limit: SEARCH_LIMIT,
+          filter: {
+            lessonType: {eq: 'survey'},
+            isCompleted: {eq: true}
+          }
+        })
+      );
+      return res.data.listPersonLessonsData.items;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const {
     data: surveys,
     isLoading,
     isFetched
-  } = useGraphqlQuery<any, PersonLessonsData[]>(
-    'listPersonLessonsData',
-    listPersonLessonsDataForGraph,
-    {
-      limit: SEARCH_LIMIT,
-      filter: {
-        lessonType: {eq: 'survey'},
-        isCompleted: {eq: true}
-      }
-    },
-    {
-      loopOnNextToken: true
-    }
-  );
+  } = useQuery<any[]>({
+    queryKey: ['surveys-list-graph'],
+    queryFn: listPersonLessonsData
+  });
 
   if (isLoading && !isFetched) {
     return (

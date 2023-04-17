@@ -1,16 +1,15 @@
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
 import useAuth from '@customHooks/useAuth';
-import {Card, Col, Row, theme} from 'antd';
+import {Card, Col, Row} from 'antd';
 import {general, graphs} from 'assets';
 import PageLayout from 'layout/PageLayout';
-import {useState} from 'react';
-import {Redirect, useRouteMatch} from 'react-router-dom';
-import GraphRouter from 'router/GraphRouter';
+import {Redirect} from 'react-router-dom';
 import AttachedCoursesGraph from './AttachedCoursesGraph';
 import InstitutionLocationGraph from './InstitutionLocationGraph';
 import StudentActiveGraph from './StudentActiveGraph';
 import SurveyCompletedGraph from './SurveyCompletedGraph';
 import WritingExerciseGraph from './WritingExerciseGraph';
+import CompletedIncompletedSurveysGraph from './CompletedIncompletedSurveysGraph';
 
 const listOfGraphs = [
   {
@@ -47,39 +46,27 @@ const listOfGraphs = [
     image: graphs.map,
     component: <InstitutionLocationGraph />,
     link: '/institutions'
+  },
+  {
+    title: 'Completed vs In Progress Surveys/Lessons',
+    description: 'shows the stacked graph of completed vs in progress surveys/lessons',
+    image: graphs.map,
+    component: <CompletedIncompletedSurveysGraph />,
+    link: '/completed-incompleted-surveys'
   }
 ];
 
 const GraphIndex = () => {
-  const match = useRouteMatch();
-
-  const [selectedGraph, setSelectedGraph] = useState<null | string>(null);
-
-  const onSelectGraph = (title: string) => {
-    // scroll to graph-container id on click
-    setSelectedGraph(title);
-
-    setTimeout(() => {
-      const graphContainer = document.getElementById('graph-container');
-
-      if (graphContainer) {
-        graphContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-    }, 500);
-  };
-
   const {isBuilder, isAdmin, user} = useAuth();
 
   if (!isBuilder && !isAdmin && user.id !== '') return <Redirect to="/dashboard/home" />;
-
-  const {token} = theme.useToken();
 
   return (
     <DashboardContainer
       showTitleBanner={false}
       bannerImg={general.dashboardUrl}
       bannerTitle="Dashboard">
-      <PageLayout title="Graphs" hideInstProfile>
+      <PageLayout title="Graphs" hideInstProfile hideGoBack>
         <Row gutter={[16, 24]}>
           {listOfGraphs.map((graph) => (
             <Col
@@ -112,7 +99,7 @@ const GraphIndex = () => {
           ))}
         </Row>
 
-        {selectedGraph && <GraphRouter />}
+        {/* {selectedGraph && <GraphRouter />} */}
       </PageLayout>
     </DashboardContainer>
   );

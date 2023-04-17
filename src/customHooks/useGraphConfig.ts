@@ -29,7 +29,7 @@ const useGraphConfig = <T>({
     ],
     legend: {
       position: 'right',
-      offsetX: -100,
+      offsetX: -50,
       title: {
         text: legendTitle,
         spacing: 8,
