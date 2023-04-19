@@ -4,16 +4,31 @@ import {Card, Col, Row, Tabs, TabsProps} from 'antd';
 import {general} from 'assets';
 import PageLayout from 'layout/PageLayout';
 import {Redirect} from 'react-router-dom';
-import AttachedCoursesGraph from 'components/graphs/AttachedCoursesGraph';
-import InstitutionLocationGraph from '@components/graphs/institutions/InstitutionLocationGraph';
-import StudentsByStatusGraph from 'components/graphs/students/StudentsByStatusGraph';
-import SurveyCompletedGraph from 'components/graphs/SurveyCompletedGraph';
-import WritingExerciseGraph from 'components/graphs/WritingExerciseGraph';
-import StudentsByInstitutionGraph from 'components/graphs/students/StudentsByInstitutionGraph';
-import StudentsByTypeGraph from 'components/graphs/students/StudentsByTypeGraph';
-import StudentsByDemographicsGraph from 'components/graphs/students/StudentsByDemographicsGraph';
-import CompletedIncompletedGraph from 'components/graphs/CompletedIncompletedGraph';
-import InstitutionStatusGraph from '@components/graphs/institutions/InstitutionStatusGraph';
+import {lazy} from 'react';
+const AttachedCoursesGraph = lazy(() => import('components/graphs/AttachedCoursesGraph'));
+const InstitutionLocationGraph = lazy(
+  () => import('@components/graphs/institutions/InstitutionLocationGraph')
+);
+const StudentsByStatusGraph = lazy(
+  () => import('components/graphs/students/StudentsByStatusGraph')
+);
+const SurveyCompletedGraph = lazy(() => import('components/graphs/SurveyCompletedGraph'));
+const WritingExerciseGraph = lazy(() => import('components/graphs/WritingExerciseGraph'));
+const StudentsByInstitutionGraph = lazy(
+  () => import('components/graphs/students/StudentsByInstitutionGraph')
+);
+const StudentsByTypeGraph = lazy(
+  () => import('components/graphs/students/StudentsByTypeGraph')
+);
+const StudentsByDemographicsGraph = lazy(
+  () => import('components/graphs/students/StudentsByDemographicsGraph')
+);
+const CompletedIncompletedGraph = lazy(
+  () => import('components/graphs/CompletedIncompletedGraph')
+);
+const InstitutionStatusGraph = lazy(
+  () => import('@components/graphs/institutions/InstitutionStatusGraph')
+);
 
 const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}[]}) => {
   return (

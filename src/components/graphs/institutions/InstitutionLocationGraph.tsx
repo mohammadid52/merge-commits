@@ -37,7 +37,7 @@ const CustomMarker = ({
       .then((response) => response.json())
       .then((data) => {
         // Get the latitude and longitude from the response
-        const {lat, lng} = data?.results[0]?.geometry?.location;
+        const {lat, lng} = data?.results[0]?.geometry?.location || {lat: 0, lng: 0};
         setCoord({
           lat,
           lng
