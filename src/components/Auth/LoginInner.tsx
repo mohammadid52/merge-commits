@@ -222,7 +222,7 @@ const LoginInner = ({
             size="small"
             onClick={onSetPassword}
             variant="link"
-            className="mt-2 self-end"
+            className="mt-2 self-end underline"
             label={'set password'}
           />
         </div>

@@ -1880,8 +1880,18 @@ $translation-fab-width: 50px;
       color: white;
     }
   }
+  .ant-tabs-nav-operations {
+    display: none !important;
+  }
 }
 
 .leaflet-popup-content {
   width: 700px;
+}
+
+.ant-tabs-nav-wrap.ant-tabs-nav-wrap-ping-right {
+  &::before,
+  &::after {
+    content: none !important;
+  }
 }

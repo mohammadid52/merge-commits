@@ -409,7 +409,7 @@ const AddContentDialog = ({
 
   return (
     <>
-      {!activeContentItem && <Tabs items={items} />}
+      {!activeContentItem && <Tabs className="dark-tabs" animated items={items} />}
 
       <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
         {!isEmpty(activeContentItem) && (

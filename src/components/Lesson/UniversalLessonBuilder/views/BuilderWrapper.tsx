@@ -453,6 +453,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         title={getComponentTitle(addContentModal.type)}
         onCancel={() => closeAction(false)}
         footer={null}
+        width={700}
         open={addContentModal.show}>
         <div className="">
           <>{modalByType(addContentModal.type)}</>

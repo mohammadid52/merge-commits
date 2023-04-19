@@ -283,14 +283,14 @@ const OverlayHeaderTitle = ({
     <div className={'flex items-center justify-start'} id="page_builder_overlay--header">
       {showBackBtn && (
         <div className="w-auto" onClick={onBack}>
-          <AiOutlineArrowLeft className="text-light  hover:text-medium  transition-all text-lg 2xl:text-xl cursor-pointer" />
+          <AiOutlineArrowLeft className="text-light  hover:text-medium  transition-all text-base 2xl:text-lg cursor-pointer mr-2" />
         </div>
       )}
 
       {title && (
         <h4
           id="page_builder_overlay--header-title"
-          className=" text-white font-medium tracking-wide text-lg 2xl:text-xl text-center">
+          className=" text-white font-medium tracking-wide text-base 2xl:text-lg text-center">
           {title}
         </h4>
       )}

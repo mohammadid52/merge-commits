@@ -48,19 +48,19 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
 
   return (
     <div
-      className={`relative ${bgClass} w-full md:h-96 flex flex-grow items-center rounded text-light`}
+      className={`relative ${bgClass} w-full md:h-96 flex flex-grow items-center rounded text-white`}
       onMouseEnter={toggleHeroDescription}
       onMouseLeave={toggleHeroDescription}>
       {/* READ ICON */}
       {description ? (
         <div
           id="read-icon"
-          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-lightest z-50">
+          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-white z-50">
           <AiOutlineRead className="w-auto cursor-pointer" size={'2rem'} />
         </div>
       ) : null}
 
-      <div className="h-full text-left flex flex-col rounded-lg items-start">
+      <div className="h-full w-full text-left flex flex-col rounded-lg items-start">
         {/* HOVER OVERLAY */}
         <div
           className={`
@@ -86,13 +86,13 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
             heroIsActive ? 'opacity-0' : `opacity-100`
           } absolute bottom-0 opacity-100 h-full w-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
           <div
-            className={`${textClass} absolute w-full bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
+            className={`${textClass} absolute w-full bottom-0 left-0 p-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
             <div
               dangerouslySetInnerHTML={{__html: title || ''}}
-              className="text-4.5xl header-font font-light"></div>
+              className=" text-base sm:text-lg lg:text-xl xl:text-2xl  font-medium"></div>
             <div
               dangerouslySetInnerHTML={{__html: subtitle || ''}}
-              className="w-full text-xl leading-none font-light"></div>
+              className="w-full text-lightest text-sm sm:text-base lg:text-lg xl:text-lg font-regular"></div>
           </div>
         </div>
       </div>

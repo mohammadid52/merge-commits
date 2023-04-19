@@ -2,8 +2,7 @@ import {
   EditQuestionModalDict,
   UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
-import {Switch} from '@headlessui/react';
-import {Tabs, TabsProps} from 'antd';
+import {Card, Empty, Segmented, Tabs, TabsProps} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ULBFileUploader from 'atoms/Form/FileUploader';
 import FormInput from 'atoms/Form/FormInput';
@@ -18,45 +17,68 @@ import {blur, tinting} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import {classNames} from '../FormElements/TextInput';
 import ProgressBar from '../ProgressBar';
+import ToggleForModal from '../common/ToggleForModals';
 
-const Toggle = ({
-  checked,
-  onClick,
-  text,
-  disabled
-}: {
-  text?: string;
+const listOfResponsiveSizes = [
+  {label: 'Mobile', value: 'w-1/2'},
+  {label: 'Tablet', value: 'w-2/3'},
+  {label: 'Laptop', value: 'w-8/10'},
+  {label: 'Monitor', value: 'w-full'}
+];
 
-  checked: boolean;
-  onClick: any;
-  disabled?: boolean;
-}) => {
+const PreviewWrapper = ({children}: {children: React.ReactNode}) => {
+  const [selectedSize, setSelectedSize] = useState('Laptop');
+  const size =
+    listOfResponsiveSizes[
+      listOfResponsiveSizes.findIndex((item) => item.label === selectedSize)
+    ];
   return (
-    <Switch.Group as="div" className="flex items-center">
-      <Switch.Label as="span" className="mr-3 w-auto">
-        <span className="text-sm font-medium text-darkest">{text}</span>
-      </Switch.Label>
-      <Switch
-        disabled={disabled}
-        checked={checked}
-        onChange={onClick}
-        className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-light',
-          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-        )}>
-        <span
-          aria-hidden="true"
-          className={classNames(
-            checked ? 'translate-x-5' : 'translate-x-0',
-            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
-          )}
-        />
-      </Switch>
-    </Switch.Group>
+    <>
+      <Segmented
+        className="mb-2"
+        defaultValue={selectedSize}
+        onChange={(value) => setSelectedSize(value.toString())}
+        options={listOfResponsiveSizes.map((d) => d.label)}
+      />
+      <div className={size.value}>{children}</div>
+    </>
   );
 };
+
+const PreviewBlock = ({
+  imageRef,
+  url,
+  bgClass,
+  title,
+  textClass,
+  subtitle,
+  description
+}: {
+  imageRef: React.RefObject<HTMLDivElement>;
+  url: string;
+  bgClass: string;
+  textClass: string;
+  subtitle: string;
+  description: string;
+  title: string;
+}) => {
+  return (
+    <div
+      ref={imageRef}
+      className={`h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover max-w-256 bg-center rounded-lg`}
+      style={{backgroundImage: `url(${url})`}}>
+      <CustomizedQuoteBlock
+        bgClass={bgClass}
+        textClass={textClass}
+        title={title}
+        subtitle={subtitle}
+        description={description}
+      />
+    </div>
+  );
+};
+
 interface IImageInput {
   url: string;
   width: string;
@@ -158,6 +180,10 @@ const JumbotronModalDialog = ({
     }
   }, [inputObj]);
   const [selectedStyles, setSelectedStyles] = useState(initialStyles);
+  console.log(
+    '🚀 ~ file: JumbotronModalDialog.tsx:161 ~ selectedStyles:',
+    selectedStyles
+  );
 
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
@@ -500,98 +526,89 @@ const JumbotronModalDialog = ({
     },
     {
       key: '2',
-      label: `Preview`,
+      label: `Settings`,
       children: (
         <>
           {previewAvailable ? (
             <div className="my-4">
-              <div
-                ref={imageRef}
-                className={`h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover max-w-256 bg-center rounded-lg`}
-                style={{backgroundImage: `url(${url})`}}>
-                <CustomizedQuoteBlock
-                  bgClass={`${generateTinting(selectedStyles.tinting)} ${
-                    selectedStyles.bgColor
-                  }`}
-                  textClass={`backdrop-filter ${generateBlur(selectedStyles.blur)}`}
-                  title={inputFieldsArray[1]?.value || ''}
-                  subtitle={inputFieldsArray[2]?.value || ''}
-                  description={inputFieldsArray[3]?.value || ''}
-                />
-              </div>
-              <p className="italic text-xs text-right text-medium ">
+              <PreviewBlock
+                imageRef={imageRef}
+                url={url}
+                bgClass={`${generateTinting(selectedStyles.tinting)} ${
+                  selectedStyles.bgColor
+                }`}
+                textClass={`backdrop-filter ${generateBlur(selectedStyles.blur)}`}
+                title={inputFieldsArray[1]?.value || ''}
+                subtitle={inputFieldsArray[2]?.value || ''}
+                description={inputFieldsArray[3]?.value || ''}
+              />
+
+              <p className="italic mb-2 text-xs text-right text-medium ">
                 This is how jumbotron will look on page
               </p>
-              <h4 className="font-semibold text-lg">Edit Jumbotron Styles: </h4>
-              <div className="grid grid-cols-3 gap-4 mt-2">
-                <div className="">
-                  <Selector
-                    placeholder="Tinting"
-                    onChange={(name: string) =>
-                      setSelectedStyles({...selectedStyles, tinting: name})
-                    }
-                    label={'Select Background Opacity'}
-                    selectedItem={selectedStyles.tinting}
-                    list={tinting}
-                  />
-                </div>
+              {/* <h4 className="font-semibold text-lg">Edit Jumbotron Styles: </h4> */}
 
-                <div className="relative h-full">
-                  <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
-                    Select Background Color
-                  </label>
-                  <button
-                    onClick={() => setColorPickerActive(!colorPickerActive)}
-                    className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                    <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
-                      {selectedStyles.bgColor.split('-')[1]}
-                    </span>
-
-                    <span
-                      className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-light `}></span>
-                  </button>
-                  {colorPickerActive && (
-                    <ColorPicker
-                      isMainPage
-                      classString={classString}
-                      callbackColor={handleColorPickerSelect}
-                      styleString={{top: '100%'}}
+              <Card type="inner" title="Configuration">
+                <div className="grid grid-cols-3 gap-4 mt-2">
+                  <div className="">
+                    <Selector
+                      placeholder="Tinting"
+                      onChange={(name: string) => {
+                        setSelectedStyles({...selectedStyles, tinting: name});
+                      }}
+                      label={'Select Background Opacity'}
+                      selectedItem={selectedStyles.tinting}
+                      list={tinting}
                     />
-                  )}
+                  </div>
+
+                  <div className="relative h-full">
+                    <label className="block text-xs font-semibold leading-5 text-dark   mb-1">
+                      Select Background Color
+                    </label>
+                    <button
+                      onClick={() => setColorPickerActive(!colorPickerActive)}
+                      className={`border-0 border-lightest  rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                      <span className={'text-dark   w-auto text-sm mr-2 capitalize'}>
+                        {selectedStyles.bgColor.split('-')[1]}
+                      </span>
+
+                      <span
+                        className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-light `}></span>
+                    </button>
+                    {colorPickerActive && (
+                      <ColorPicker
+                        isMainPage
+                        classString={classString}
+                        callbackColor={handleColorPickerSelect}
+                        styleString={{top: '100%'}}
+                      />
+                    )}
+                  </div>
+                  <div className="">
+                    <Selector
+                      label={'Select Blur'}
+                      placeholder="Blur"
+                      onChange={(name: string) => {
+                        setSelectedStyles({...selectedStyles, blur: name});
+                      }}
+                      selectedItem={selectedStyles.blur}
+                      list={blur}
+                    />
+                  </div>
                 </div>
-                <div className="">
-                  <Selector
-                    label={'Select Blur'}
-                    placeholder="Blur"
-                    onChange={(name: string) =>
-                      setSelectedStyles({...selectedStyles, blur: name})
-                    }
-                    selectedItem={selectedStyles.blur}
-                    list={blur}
+                <div className="col-span-1 my-4 flex items-center w-auto">
+                  <ToggleForModal
+                    checked={isAnimationOn}
+                    label="Animated Jumbotron"
+                    // disabled={NO_BORDER_SELECTED}
+                    onClick={onAnimationToggle}
                   />
                 </div>
-              </div>
-              <div className="col-span-1 my-4 flex items-center w-auto">
-                <Toggle
-                  checked={isAnimationOn}
-                  text="Animated Jumbotron"
-                  // disabled={NO_BORDER_SELECTED}
-                  onClick={onAnimationToggle}
-                />
-              </div>
+              </Card>
             </div>
           ) : (
-            <div className="text-center text-medium  my-4">
-              <div className="text-lg">Preview not available yet.</div>
-              {/* <div className="text-sm mt-2">
-              <span
-                onClick={() => setCurTab(toSetupTab)}
-                className="w-auto cursor-pointer underline text-blue-400">
-                Add image
-              </span>{' '}
-              to see preview.
-            </div> */}
-            </div>
+            <Empty description="Preview not available yet. Please upload an image first." />
           )}
 
           {loading && uploadProgress !== 'done' && (
@@ -601,6 +618,27 @@ const JumbotronModalDialog = ({
             />
           )}
         </>
+      )
+    },
+    {
+      key: '3',
+      label: `Preview`,
+      children: (
+        <div>
+          <PreviewWrapper>
+            <PreviewBlock
+              imageRef={imageRef}
+              url={url}
+              bgClass={`${generateTinting(selectedStyles.tinting)} ${
+                selectedStyles.bgColor
+              }`}
+              textClass={`backdrop-filter ${generateBlur(selectedStyles.blur)}`}
+              title={inputFieldsArray[1]?.value || ''}
+              subtitle={inputFieldsArray[2]?.value || ''}
+              description={inputFieldsArray[3]?.value || ''}
+            />
+          </PreviewWrapper>
+        </div>
       )
     }
   ];
