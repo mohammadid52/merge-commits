@@ -4,17 +4,20 @@ import useTheme from './useTheme';
 const useGraphConfig = <T>({
   data,
   legendTitle,
-  statisticsTitle
+  statisticsTitle,
+  colors
 }: {
   data: {label: string; value: number}[];
   legendTitle: string;
   statisticsTitle?: string;
+  colors?: string[];
 }) => {
   const theme = useTheme();
   const config: PieConfig = {
     data,
     angleField: 'value',
     colorField: 'label',
+    color: colors,
     radius: 0.6,
     label: {
       type: 'outer',

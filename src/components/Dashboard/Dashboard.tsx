@@ -24,7 +24,7 @@ import {
   listRooms
 } from 'customGraphql/customQueries';
 
-import GraphIndex from 'pages/graphs/GraphIndex';
+import GraphIndex from 'pages/GraphIndex';
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';

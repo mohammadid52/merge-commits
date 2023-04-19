@@ -3950,6 +3950,7 @@ export const listInstitutionsForGraphs = /* GraphQL */ `
       items {
         id
         image
+        status
         phone
         website
         name

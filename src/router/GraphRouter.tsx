@@ -1,10 +1,10 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import PageLayout from 'layout/PageLayout';
-import AttachedCoursesGraph from 'pages/graphs/AttachedCoursesGraph';
-import InstitutionLocationGraph from 'pages/graphs/InstitutionLocationGraph';
-import StudentsByStatusGraphs from 'pages/graphs/students/StudentsByStatusGraph';
-import SurveyCompletedGraph from 'pages/graphs/SurveyCompletedGraph';
-import WritingExerciseGraph from 'pages/graphs/WritingExerciseGraph';
+import AttachedCoursesGraph from '@components/graphs/AttachedCoursesGraph';
+import InstitutionLocationGraph from '@components/graphs/institutions/InstitutionLocationGraph';
+import StudentsByStatusGraphs from '@components/graphs/students/StudentsByStatusGraph';
+import SurveyCompletedGraph from '@components/graphs/SurveyCompletedGraph';
+import WritingExerciseGraph from '@components/graphs/WritingExerciseGraph';
 import {Suspense} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 

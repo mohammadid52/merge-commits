@@ -1,7 +1,10 @@
+import {getClientKey} from '@utilities/strings';
 import {standardTheme} from 'state/GlobalState';
 
 const useTheme = () => {
   const theme = standardTheme;
+
+  const clientKey = getClientKey();
 
   // Add jsDocs for each color
 
@@ -45,7 +48,9 @@ const useTheme = () => {
     darkest: '#222625'
   };
 
-  return {...theme, light, dark};
+  const colors = theme?.colors?.[clientKey] || theme.colors.iconoclast;
+
+  return {...theme, light, dark, colors};
 };
 
 export default useTheme;

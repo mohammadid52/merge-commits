@@ -109,6 +109,36 @@ export const standardTheme = {
   iconoclast: '#667eea',
   curate: '#0081cb',
   bg: 'bg-dark-blue',
+  colors: {
+    iconoclast: {
+      50: '#eef2ff',
+      100: '#e0e7ff',
+      200: '#c7d2fe',
+      300: '#a5b4fc',
+      400: '#818cf8',
+      500: '#6366f1',
+      600: '#4f46e5',
+      700: '#4338ca',
+      800: '#3730a3',
+      900: '#312e81',
+      primary: '#667eea',
+      secondary: '#a5b4fc'
+    },
+    curate: {
+      50: '#dbeafe',
+      100: '#bfdbfe',
+      200: '#93c5fd',
+      300: '#60a5fa',
+      400: '#3b82f6',
+      500: '#2563eb',
+      600: '#1d4ed8',
+      700: '#1e40af',
+      800: '#1e3a8a',
+      900: '#1c366b',
+      primary: '#0081cb',
+      secondary: '#60a5fa'
+    }
+  },
   underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
   gradient: {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue'

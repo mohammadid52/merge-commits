@@ -4,15 +4,16 @@ import {Card, Col, Row, Tabs, TabsProps} from 'antd';
 import {general} from 'assets';
 import PageLayout from 'layout/PageLayout';
 import {Redirect} from 'react-router-dom';
-import AttachedCoursesGraph from './AttachedCoursesGraph';
-import InstitutionLocationGraph from './InstitutionLocationGraph';
-import StudentsByStatusGraph from './students/StudentsByStatusGraph';
-import SurveyCompletedGraph from './SurveyCompletedGraph';
-import WritingExerciseGraph from './WritingExerciseGraph';
-import StudentsByInstitutionGraph from './students/StudentsByInstitutionGraph';
-import StudentsByTypeGraph from './students/StudentsByTypeGraph';
-import StudentsByDemographicsGraph from './students/StudentsByDemographicsGraph';
-import CompletedIncompletedGraph from './CompletedIncompletedGraph';
+import AttachedCoursesGraph from 'components/graphs/AttachedCoursesGraph';
+import InstitutionLocationGraph from '@components/graphs/institutions/InstitutionLocationGraph';
+import StudentsByStatusGraph from 'components/graphs/students/StudentsByStatusGraph';
+import SurveyCompletedGraph from 'components/graphs/SurveyCompletedGraph';
+import WritingExerciseGraph from 'components/graphs/WritingExerciseGraph';
+import StudentsByInstitutionGraph from 'components/graphs/students/StudentsByInstitutionGraph';
+import StudentsByTypeGraph from 'components/graphs/students/StudentsByTypeGraph';
+import StudentsByDemographicsGraph from 'components/graphs/students/StudentsByDemographicsGraph';
+import CompletedIncompletedGraph from 'components/graphs/CompletedIncompletedGraph';
+import InstitutionStatusGraph from '@components/graphs/institutions/InstitutionStatusGraph';
 
 const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}[]}) => {
   return (
@@ -36,19 +37,19 @@ const listOfGraphs = [
     component: <StudentsByStatusGraph />
   },
   {
-    title: 'Active Students by Institution',
+    title: 'Students by Institution',
     key: 'students',
 
     component: <StudentsByInstitutionGraph />
   },
   {
-    title: 'Active Students by Type',
+    title: 'Students by Type',
     key: 'students',
 
     component: <StudentsByTypeGraph />
   },
   {
-    title: 'Active Students by Demographics',
+    title: 'Students by Demographics',
     key: 'students',
 
     component: <StudentsByDemographicsGraph />
@@ -78,10 +79,16 @@ const listOfGraphs = [
     component: <WritingExerciseGraph />
   },
   {
-    title: 'Institutions',
+    title: 'Institution Locations',
     key: 'institutions',
 
     component: <InstitutionLocationGraph />
+  },
+  {
+    title: 'Institution Status',
+    key: 'institutions',
+
+    component: <InstitutionStatusGraph />
   }
 ];
 

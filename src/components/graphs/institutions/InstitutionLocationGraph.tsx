@@ -10,7 +10,7 @@ import {Card, Descriptions, Empty} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {Marker, Popup} from 'react-leaflet';
-import GraphMap from './map/GraphMap';
+import GraphMap from '../map/GraphMap';
 
 const CustomMarker = ({
   zipCode,
@@ -108,7 +108,13 @@ const InstitutionLocationGraph = () => {
     //  then pass the marker component to the map component
 
     const markers = insitutionList.map((institution) => {
-      return <CustomMarker zipCode={institution.zip} institution={institution} />;
+      return (
+        <CustomMarker
+          key={institution.zip}
+          zipCode={institution.zip}
+          institution={institution}
+        />
+      );
     });
 
     return (
