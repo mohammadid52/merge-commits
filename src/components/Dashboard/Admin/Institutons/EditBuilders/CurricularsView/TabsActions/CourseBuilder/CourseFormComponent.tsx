@@ -13,7 +13,7 @@ import Selector from 'atoms/Form/Selector';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {createCurriculum} from 'customGraphql/customMutations';
-import {listPersons, listRoomCurriculums, listUnits} from 'customGraphql/customQueries';
+import {listPersons, listRoomCurriculums} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useFormik} from 'formik';
 import {

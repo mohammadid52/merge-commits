@@ -16,6 +16,9 @@ import Selector from 'atoms/Form/Selector';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {getImageFromS3} from 'utilities/services';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import {RoomStatus} from 'API';
+import {RoomStatusList} from '../../EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
+import {listInstitutions} from '@graphql/queries';
 
 const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const history = useHistory();
@@ -27,6 +30,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     isServiceProvider: false,
     isZoiq: false,
     address: '',
+    status: RoomStatus.ACTIVE,
     addressLine2: '',
     city: '',
     state: '',
@@ -242,7 +246,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     state,
     zip,
     phone,
-    isServiceProvider
+    isServiceProvider,
+    status
   } = instituteData;
 
   const formDict = InstitutionBuilderDict[userLanguage]['FORM'];
@@ -253,8 +258,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     <div className="">
       {/* Section Header */}
       {/* Body */}
-      <div className="h-9/10 flex flex-col md:flex-row">
-        <div className={`h-full w-full pt-2`}>
+      <div className="flex flex-col md:flex-row">
+        <div className={`h-full w-full`}>
           {/* FORM submit tag */}
           <form>
             <div className={`h-full bg-white mb-4`}>
@@ -333,6 +338,21 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                   width="100%"
                   label={formDict['STATE_LABEL']}
                   onChange={onStateSelect}
+                />
+
+                <Selector
+                  selectedItem={status}
+                  placeholder={formDict['STATUS']}
+                  list={RoomStatusList}
+                  width="100%"
+                  label={formDict['STATE_LABEL']}
+                  // @ts-ignore
+                  onChange={(name: RoomStatus) => {
+                    setInstituteData({
+                      ...instituteData,
+                      status: name
+                    });
+                  }}
                 />
 
                 <FormInput

@@ -1860,6 +1860,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
       city
       state
       zip
+      status
 
       website
       image

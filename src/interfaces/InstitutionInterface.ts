@@ -1,3 +1,5 @@
+import {RoomStatus} from 'API';
+
 export interface InstitutionInfoProps {
   institute?: InstInfo;
   loading: boolean;
@@ -15,7 +17,7 @@ export interface InstInfo {
   addressLine2: string;
   city: string;
   state: string;
-
+  status: RoomStatus;
   zip: string;
   image: string;
   phone: string;

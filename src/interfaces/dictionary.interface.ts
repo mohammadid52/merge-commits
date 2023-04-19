@@ -679,6 +679,7 @@ interface InstitutionBuilderDictCommon {
     NAME_INPUT_PLACEHOLDER: string;
     WEBSITE_INPUT_LABEL: string;
     WEBSITE_INPUT_PLACEHOLDER: string;
+    STATUS: string;
     ADDRESS_INPUT_LABEL: string;
     ADDRESS2_INPUT_LABEL: string;
     CITY_LABEL: string;

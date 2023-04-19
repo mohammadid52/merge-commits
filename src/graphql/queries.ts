@@ -151,6 +151,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -258,6 +259,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -463,6 +465,7 @@ export const getInstitution = /* GraphQL */ `
       city
       state
       zip
+      status
       phone
       website
       image
@@ -606,6 +609,7 @@ export const listInstitutions = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -693,6 +697,7 @@ export const getStaff = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -780,6 +785,7 @@ export const listStaff = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -843,6 +849,7 @@ export const getRoom = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -923,6 +930,7 @@ export const getRoom = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1070,6 +1078,7 @@ export const listRooms = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1443,6 +1452,7 @@ export const getClassroomGroups = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1718,6 +1728,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1964,6 +1975,7 @@ export const getClass = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2025,6 +2037,7 @@ export const getClass = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -2152,6 +2165,7 @@ export const listClasses = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -2233,6 +2247,7 @@ export const getClassStudent = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -2408,6 +2423,7 @@ export const getCurriculum = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2502,6 +2518,7 @@ export const listCurricula = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -2556,6 +2573,7 @@ export const getTopic = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -2850,6 +2868,7 @@ export const getRoomCurriculum = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3403,6 +3422,7 @@ export const getPersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3504,6 +3524,7 @@ export const getPersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3749,6 +3770,7 @@ export const getAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3788,6 +3810,7 @@ export const getAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3833,6 +3856,7 @@ export const getAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3940,6 +3964,7 @@ export const getAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4182,6 +4207,7 @@ export const getUniversalLesson = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -4321,6 +4347,7 @@ export const listUniversalLessons = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4421,6 +4448,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4633,6 +4661,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5307,6 +5336,7 @@ export const getUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5414,6 +5444,7 @@ export const getUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5514,6 +5545,7 @@ export const getUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5766,6 +5798,7 @@ export const getUniversalJournalData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5942,6 +5975,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -6036,6 +6070,7 @@ export const listUniversalSyllabi = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6089,6 +6124,7 @@ export const getCurriculumUnits = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6191,6 +6227,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6583,6 +6620,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6685,6 +6723,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6983,6 +7022,7 @@ export const getCommunity = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -7110,6 +7150,7 @@ export const listCommunities = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image

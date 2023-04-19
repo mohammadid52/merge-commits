@@ -242,6 +242,7 @@ type Institution @model @auth(rules: [{allow: private}]) {
   city: String!
   state: String
   zip: String!
+  status: RoomStatus @default(value: "ACTIVE")
   phone: String
   website: String
   image: String

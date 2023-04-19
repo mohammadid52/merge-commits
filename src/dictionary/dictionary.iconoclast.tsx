@@ -1258,6 +1258,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     FORM: {
       TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Institution Type',
+      STATUS: 'Status',
       NAME_INPUT_LABEL: 'Institution Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
       WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
@@ -1300,6 +1301,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     SUBTITLE: 'Añadir nueva institución a la lista',
     FORM: {
       TITLE: 'Información general y gestión de proveedores',
+      STATUS: 'Estado',
       INSTITUTION_TYPE: 'Tipo de institución',
       NAME_INPUT_LABEL: 'Nombre de la institución',
       NAME_INPUT_PLACEHOLDER: 'por ejemplo, Artista Iconoclasta',

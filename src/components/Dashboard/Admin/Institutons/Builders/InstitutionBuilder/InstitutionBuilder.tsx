@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import {RoomStatus} from 'API';
 import {Empty} from 'antd';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
@@ -9,7 +10,6 @@ import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
 import StaffBuilder from '../../Listing/StaffBuilder';
 import InstitutionFormComponent from './InstitutionFormComponent';
-import ServiceVendors from './ServiceVendors';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -75,6 +75,7 @@ const InstitutionBuilder = ({
     contact: {name: '', email: '', phone: ''},
     website: '',
     type: null,
+    status: RoomStatus.ACTIVE,
     image: '',
     createdAt: '',
     updatedAt: '',
@@ -93,12 +94,7 @@ const InstitutionBuilder = ({
       subTitle: 'Capture core details of your institution',
       stepValue: 'overview'
     },
-    {
-      title: 'Service Vendors (Optional)',
-      description: '',
-      stepValue: 'service_vendors',
-      disabled: !Boolean(institutionInfo.id)
-    },
+
     {
       title: 'Staff',
       description: '',
@@ -132,15 +128,15 @@ const InstitutionBuilder = ({
     postInfoUpdate?.(data);
   };
 
-  const updateServiceProviders = (item: any) => {
-    setInstitutionInfo((prevData: any) => ({
-      ...prevData,
-      serviceProviders: {
-        ...prevData.serviceProviders,
-        items: [...(prevData.serviceProviders.items || []), item]
-      }
-    }));
-  };
+  // const updateServiceProviders = (item: any) => {
+  //   setInstitutionInfo((prevData: any) => ({
+  //     ...prevData,
+  //     serviceProviders: {
+  //       ...prevData.serviceProviders,
+  //       items: [...(prevData.serviceProviders.items || []), item]
+  //     }
+  //   }));
+  // };
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
@@ -151,15 +147,7 @@ const InstitutionBuilder = ({
             postMutation={postMutation}
           />
         );
-      case 'service_vendors':
-        return (
-          <ServiceVendors
-            serviceProviders={institutionInfo.serviceProviders}
-            instId={institutionInfo.id}
-            updateServiceProviders={updateServiceProviders}
-            instName={'name'}
-          />
-        );
+
       case 'staff':
         return institutionId ? (
           <StaffBuilder inner instituteId={institutionId} />

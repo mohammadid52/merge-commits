@@ -90,6 +90,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -191,6 +192,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -358,6 +360,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -459,6 +462,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -568,6 +572,7 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -722,6 +727,7 @@ export const onChangeRoom = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -802,6 +808,7 @@ export const onChangeRoom = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1131,6 +1138,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1238,6 +1246,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1358,6 +1367,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1465,6 +1475,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1585,6 +1596,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1692,6 +1704,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -1796,6 +1809,7 @@ export const onCreateInstitution = /* GraphQL */ `
       city
       state
       zip
+      status
       phone
       website
       image
@@ -1928,6 +1942,7 @@ export const onUpdateInstitution = /* GraphQL */ `
       city
       state
       zip
+      status
       phone
       website
       image
@@ -2060,6 +2075,7 @@ export const onDeleteInstitution = /* GraphQL */ `
       city
       state
       zip
+      status
       phone
       website
       image
@@ -2197,6 +2213,7 @@ export const onCreateServiceProvider = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2249,6 +2266,7 @@ export const onUpdateServiceProvider = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2301,6 +2319,7 @@ export const onDeleteServiceProvider = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2389,6 +2408,7 @@ export const onCreateStaff = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2477,6 +2497,7 @@ export const onUpdateStaff = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2565,6 +2586,7 @@ export const onDeleteStaff = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2644,6 +2666,7 @@ export const onCreateRoom = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2724,6 +2747,7 @@ export const onCreateRoom = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -2877,6 +2901,7 @@ export const onUpdateRoom = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -2957,6 +2982,7 @@ export const onUpdateRoom = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3110,6 +3136,7 @@ export const onDeleteRoom = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -3190,6 +3217,7 @@ export const onDeleteRoom = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3787,6 +3815,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -3971,6 +4000,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4155,6 +4185,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4342,6 +4373,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4523,6 +4555,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4704,6 +4737,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -4860,6 +4894,7 @@ export const onCreateClass = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -4921,6 +4956,7 @@ export const onCreateClass = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5043,6 +5079,7 @@ export const onUpdateClass = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -5104,6 +5141,7 @@ export const onUpdateClass = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5226,6 +5264,7 @@ export const onDeleteClass = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -5287,6 +5326,7 @@ export const onDeleteClass = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5419,6 +5459,7 @@ export const onCreateClassStudent = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5539,6 +5580,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5659,6 +5701,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -5775,6 +5818,7 @@ export const onCreateCurriculum = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -5858,6 +5902,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -5941,6 +5986,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -6026,6 +6072,7 @@ export const onCreateTopic = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6095,6 +6142,7 @@ export const onUpdateTopic = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6164,6 +6212,7 @@ export const onDeleteTopic = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6469,6 +6518,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6526,6 +6576,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6583,6 +6634,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6749,6 +6801,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6829,6 +6882,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -6909,6 +6963,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -7702,6 +7757,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -7803,6 +7859,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -7964,6 +8021,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8065,6 +8123,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8226,6 +8285,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8327,6 +8387,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8440,6 +8501,7 @@ export const onCreateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8479,6 +8541,7 @@ export const onCreateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8524,6 +8587,7 @@ export const onCreateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8631,6 +8695,7 @@ export const onCreateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8755,6 +8820,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8794,6 +8860,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8839,6 +8906,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -8946,6 +9014,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -9070,6 +9139,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -9109,6 +9179,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -9154,6 +9225,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -9261,6 +9333,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -9371,6 +9444,7 @@ export const onCreateUniversalLesson = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -9499,6 +9573,7 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -9627,6 +9702,7 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -9759,6 +9835,7 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -9891,6 +9968,7 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -10023,6 +10101,7 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -10155,6 +10234,7 @@ export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -10288,6 +10368,7 @@ export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -10421,6 +10502,7 @@ export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11222,6 +11304,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11329,6 +11412,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11429,6 +11513,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11592,6 +11677,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11699,6 +11785,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11799,6 +11886,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -11962,6 +12050,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12069,6 +12158,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12169,6 +12259,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12243,6 +12334,7 @@ export const onCreateUniversalJournalData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12361,6 +12453,7 @@ export const onUpdateUniversalJournalData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12479,6 +12572,7 @@ export const onDeleteUniversalJournalData = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12580,6 +12674,7 @@ export const onCreateUniversalSyllabus = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -12663,6 +12758,7 @@ export const onUpdateUniversalSyllabus = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -12746,6 +12842,7 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -12832,6 +12929,7 @@ export const onCreateCurriculumUnits = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12889,6 +12987,7 @@ export const onUpdateCurriculumUnits = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -12946,6 +13045,7 @@ export const onDeleteCurriculumUnits = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -13011,6 +13111,7 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -13131,6 +13232,7 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -13251,6 +13353,7 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -13625,6 +13728,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -13727,6 +13831,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -13899,6 +14004,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -14001,6 +14107,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -14173,6 +14280,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -14275,6 +14383,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           city
           state
           zip
+          status
           phone
           website
           image
@@ -14453,6 +14562,7 @@ export const onCreateCommunity = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -14569,6 +14679,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image
@@ -14685,6 +14796,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         city
         state
         zip
+        status
         phone
         website
         image

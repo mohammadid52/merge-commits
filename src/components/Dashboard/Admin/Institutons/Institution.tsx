@@ -1,6 +1,7 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import {InstInfo} from '@interfaces/InstitutionInterface';
+import {RoomStatus} from 'API';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -73,6 +74,7 @@ const Institution = (props: InstitutionProps) => {
     institutionTypeId: '',
     institutionType: null,
     address: '',
+    status: RoomStatus.ACTIVE,
     city: '',
     state: '',
     zip: '',
