@@ -1,22 +1,21 @@
 import {Pie, PieConfig} from '@ant-design/plots';
 import Loader from '@components/Atoms/Loader';
-import Report from '@components/Graphs/Report';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import {listPersons} from '@customGraphql/customQueries';
 import useGraphConfig from '@customHooks/useGraphConfig';
-import {listPeople} from '@graphql/queries';
 import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
 import {Person, PersonStatus, Role} from 'API';
 import {Typography} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 
-const StudentActiveGraph = () => {
+const StudentsByStatusGraph = () => {
   const {zoiqFilter} = useGlobalContext();
 
   const fetchAllPerson = async () => {
     let resp: any = await API.graphql(
-      graphqlOperation(listPeople, {
+      graphqlOperation(listPersons, {
         limit: SEARCH_LIMIT,
         filter: withZoiqFilter(
           {
@@ -40,7 +39,7 @@ const StudentActiveGraph = () => {
     isLoading,
     isFetched
   } = useQuery<Person[]>({
-    queryKey: ['students'],
+    queryKey: ['students-by-status'],
     queryFn: fetchAllPerson
   });
 
@@ -74,15 +73,14 @@ const StudentActiveGraph = () => {
 
     const pieGraphConfig = useGraphConfig<PieConfig>({
       data,
-      legendTitle: 'Students'
+      legendTitle: 'Students',
+      statisticsTitle: 'Total Students'
     });
 
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
-        <Typography.Text type="secondary">
-          Total Students: {students.length}
-        </Typography.Text>
+
         {/* <Report
           description={
             <>
@@ -99,4 +97,4 @@ const StudentActiveGraph = () => {
   return null;
 };
 
-export default StudentActiveGraph;
+export default StudentsByStatusGraph;

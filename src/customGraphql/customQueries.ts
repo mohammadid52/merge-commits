@@ -662,12 +662,23 @@ export const getPersonPasscode = /* GraphQL */ `
 `;
 
 export const listPersons = /* GraphQL */ `
-  query ListPeople($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
-    listPeople(filter: $filter, sortDirection: $sortDirection) {
+  query ListPeople(
+    $limit: Int
+    $filter: ModelPersonFilterInput
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPeople(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
         id
         authId
         email
+        onDemand
         role
         type
         firstName
@@ -2527,38 +2538,11 @@ export const listQuestionDatas = /* GraphQL */ `
     listQuestionData(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        syllabusLessonID
-        checkpointID
-        email
         authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          image
-          language
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        componentType
-        scheduleID
-        lessonID
         responseObject {
           qid
           response
-          otherResponse
         }
-
-        createdAt
-        updatedAt
       }
       nextToken
     }
@@ -3555,6 +3539,7 @@ export const listPersonLessonsDataForGraph = /* GraphQL */ `
         lessonType
         lesson {
           title
+          id
         }
         isCompleted
       }
@@ -3968,6 +3953,114 @@ export const listInstitutionsForGraphs = /* GraphQL */ `
         website
         name
         zip
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listPersonWithCheckpointsForGraph = /* GraphQL */ `
+  query ListPeople(
+    $limit: Int
+    $filter: ModelPersonFilterInput
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPeople(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        classes {
+          items {
+            class {
+              room {
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
+                      checkpoints {
+                        items {
+                          checkpoint {
+                            scope
+                            id
+
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
+                                  id
+                                  question
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const listPersonWithRoomsAndInstitutionForGraph = /* GraphQL */ `
+  query ListPeople(
+    $limit: Int
+    $filter: ModelPersonFilterInput
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPeople(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        authId
+        classes {
+          items {
+            class {
+              institution {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const listUniversalLessonsForGraph = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        title
       }
       nextToken
     }

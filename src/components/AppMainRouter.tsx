@@ -84,7 +84,7 @@ const MainRouter: React.FC = () => {
       if (user) {
         const {email, sub} = user.attributes;
 
-        // // SETUP USER
+        // SETUP USER
         setUser({
           email,
           authId: sub

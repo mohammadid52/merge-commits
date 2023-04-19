@@ -30,14 +30,14 @@ const SurveyCompletedGraph = () => {
     isLoading,
     isFetched
   } = useQuery<any[]>({
-    queryKey: ['surveys-list-graph'],
+    queryKey: ['surveys-completed-graph'],
     queryFn: listPersonLessonsData
   });
 
   if (isLoading && !isFetched) {
     return (
       <div className="min-h-56 flex items-center justify-center">
-        <Loader withText="Getting students...." />
+        <Loader withText="Getting surveys and students...." />
       </div>
     );
   }
@@ -71,13 +71,14 @@ const SurveyCompletedGraph = () => {
 
     // get the highest count with label
 
-    const highestCount = data.reduce((acc, survey) => {
-      return acc.value > survey.value ? acc : survey;
-    });
+    // const highestCount = data.reduce((acc, survey) => {
+    //   return acc.value > survey.value ? acc : survey;
+    // });
 
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
+
         {/* <Report
           description={
             <>

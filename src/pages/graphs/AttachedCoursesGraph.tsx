@@ -1,6 +1,5 @@
 import {Pie, PieConfig} from '@ant-design/plots';
 import Loader from '@components/Atoms/Loader';
-import Report from '@components/Graphs/Report';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {listRoomsForGraphs} from '@customGraphql/customQueries';
@@ -88,9 +87,9 @@ const AttachedCoursesGraph = () => {
     });
     // get the highest count with label
 
-    const highestCount = data.reduce((acc, course) => {
-      return acc.value > course.value ? acc : course;
-    });
+    // const highestCount = data.reduce((acc, course) => {
+    //   return acc.value > course.value ? acc : course;
+    // });
 
     return (
       <div className="">

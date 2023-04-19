@@ -1,13 +1,11 @@
 import {Pie, PieConfig} from '@ant-design/plots';
 import Loader from '@components/Atoms/Loader';
-import Report from '@components/Graphs/Report';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {listUniversalLessonWritingExcercises} from '@customGraphql/customQueries';
 import useGraphConfig from '@customHooks/useGraphConfig';
 import {useQuery} from '@tanstack/react-query';
 import {Empty} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
-import React from 'react';
 
 const WritingExerciseGraph = () => {
   const listWritingExercises = async () => {
@@ -67,13 +65,14 @@ const WritingExerciseGraph = () => {
       legendTitle: 'Lessons'
     });
 
-    const highestCount = data.reduce((acc, we) => {
-      return acc.value > we.value ? acc : we;
-    });
+    // const highestCount = data.reduce((acc, we) => {
+    //   return acc.value > we.value ? acc : we;
+    // });
 
     return (
       <div className="">
         <Pie {...pieGraphConfig} />
+
         {/* <Report
           description={
             <>

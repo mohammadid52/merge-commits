@@ -1,34 +1,16 @@
 import Loader from '@components/Atoms/Loader';
 import Placeholder from '@components/Atoms/Placeholder';
-import {GOOGLE_API_KEY, SEARCH_LIMIT} from '@components/Lesson/constants';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {listInstitutionsForGraphs} from '@customGraphql/customQueries';
 
 import {useQuery} from '@tanstack/react-query';
-import {withZoiqFilter} from '@utilities/functions';
+import {fetchZipUrl, withZoiqFilter} from '@utilities/functions';
 import {Card, Descriptions, Empty} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
-import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet';
-
-const linkBlockForMap = `
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-    crossOrigin=""
-  />
-`;
-
-// Build the URL for the Geocoding API request
-const fetchZipUrl = (zipCode: string) =>
-  `https://maps.googleapis.com/maps/api/geocode/json?new_forward_geocoder=true&address=${zipCode}+US&key=${GOOGLE_API_KEY}`;
-
-const addLinkBlock = () => {
-  const range = document.createRange();
-  const fragment = range.createContextualFragment(linkBlockForMap);
-  document.head.appendChild(fragment);
-};
+import {Marker, Popup} from 'react-leaflet';
+import GraphMap from './map/GraphMap';
 
 const CustomMarker = ({
   zipCode,
@@ -86,37 +68,6 @@ const CustomMarker = ({
         </Descriptions>
       </Popup>
     </Marker>
-  );
-};
-
-const GraphMap = ({markers}: {markers: any[]}) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    addLinkBlock();
-    setTimeout(() => {
-      setIsLoaded(true);
-    }, 300);
-  }, []);
-
-  if (!isLoaded) {
-    return (
-      <div className="min-h-56 flex items-center justify-center">
-        <Loader withText="Generating map...." />
-      </div>
-    );
-  }
-
-  return (
-    <MapContainer
-      scrollWheelZoom={false}
-      className="h-[60vh]"
-      center={[29.76, -95.37]}
-      zoom={9}
-      maxZoom={18}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {markers}
-    </MapContainer>
   );
 };
 

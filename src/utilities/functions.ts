@@ -5,6 +5,7 @@ import {allowedAuthIds} from 'state/GlobalState';
 import {getImageFromS3Static} from './services';
 import {getClientKey} from './strings';
 import {gsap} from 'gsap';
+import {GOOGLE_API_KEY} from '@components/Lesson/constants';
 
 export const formatPageName = (pageState: UserPageState) => {
   switch (pageState) {
@@ -324,3 +325,7 @@ export const scrollUp = (type = 'lesson', customId?: string) => {
     }, 100);
   }
 };
+
+// Build the URL for the Geocoding API request
+export const fetchZipUrl = (zipCode: string) =>
+  `https://maps.googleapis.com/maps/api/geocode/json?new_forward_geocoder=true&address=${zipCode}+US&key=${GOOGLE_API_KEY}`;

@@ -6,9 +6,13 @@ import PageLayout from 'layout/PageLayout';
 import {Redirect} from 'react-router-dom';
 import AttachedCoursesGraph from './AttachedCoursesGraph';
 import InstitutionLocationGraph from './InstitutionLocationGraph';
-import StudentActiveGraph from './StudentActiveGraph';
+import StudentsByStatusGraph from './students/StudentsByStatusGraph';
 import SurveyCompletedGraph from './SurveyCompletedGraph';
 import WritingExerciseGraph from './WritingExerciseGraph';
+import StudentsByInstitutionGraph from './students/StudentsByInstitutionGraph';
+import StudentsByTypeGraph from './students/StudentsByTypeGraph';
+import StudentsByDemographicsGraph from './students/StudentsByDemographicsGraph';
+import CompletedIncompletedGraph from './CompletedIncompletedGraph';
 
 const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}[]}) => {
   return (
@@ -26,16 +30,40 @@ const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}
 
 const listOfGraphs = [
   {
-    title: 'Active/Inactive Students',
+    title: 'Students by Status',
     key: 'students',
 
-    component: <StudentActiveGraph />
+    component: <StudentsByStatusGraph />
   },
   {
-    title: 'Surveys',
+    title: 'Active Students by Institution',
+    key: 'students',
+
+    component: <StudentsByInstitutionGraph />
+  },
+  {
+    title: 'Active Students by Type',
+    key: 'students',
+
+    component: <StudentsByTypeGraph />
+  },
+  {
+    title: 'Active Students by Demographics',
+    key: 'students',
+
+    component: <StudentsByDemographicsGraph />
+  },
+  {
+    title: 'Completed Surveys By Students',
     key: 'surveys',
 
     component: <SurveyCompletedGraph />
+  },
+  {
+    title: 'Survey Status',
+    key: 'surveys',
+
+    component: <CompletedIncompletedGraph />
   },
   {
     title: 'Courses',
@@ -71,7 +99,7 @@ const GraphIndex = () => {
       )
     },
     {
-      label: 'Surveys',
+      label: 'Lesson/Surveys',
       key: 'surveys',
       children: (
         <RowWrapper items={listOfGraphs.filter((graph) => graph.key === 'surveys')} />

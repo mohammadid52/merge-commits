@@ -2,7 +2,7 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import PageLayout from 'layout/PageLayout';
 import AttachedCoursesGraph from 'pages/graphs/AttachedCoursesGraph';
 import InstitutionLocationGraph from 'pages/graphs/InstitutionLocationGraph';
-import StudentActiveGraph from 'pages/graphs/StudentActiveGraph';
+import StudentsByStatusGraphs from 'pages/graphs/students/StudentsByStatusGraph';
 import SurveyCompletedGraph from 'pages/graphs/SurveyCompletedGraph';
 import WritingExerciseGraph from 'pages/graphs/WritingExerciseGraph';
 import {Suspense} from 'react';
@@ -37,7 +37,7 @@ const GraphRouter = () => {
               exact
               render={() => (
                 <ErrorBoundary componentName="StudentActiveGraph">
-                  <StudentActiveGraph />
+                  <StudentsByStatusGraphs />
                 </ErrorBoundary>
               )}
             />

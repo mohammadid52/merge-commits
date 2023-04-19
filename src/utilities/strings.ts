@@ -139,9 +139,6 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 export const getClientKey = () => {
   const url = new URL(window.location.href);
   let hostname = url.hostname;
-  if (hostname.indexOf('localhost') >= 0) return 'iconoclast';
-  if (hostname.indexOf('lms') >= 0) return 'demo';
-  if (hostname.indexOf('demo') >= 0) return 'demo';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
   if (hostname.indexOf('curate') >= 0) return 'curate';
   else return 'iconoclast';
@@ -162,6 +159,14 @@ export const getUniqItems = (arr: any[], key: string) => {
     }
   });
   return updatedArray;
+};
+
+export const checkIfId = (str: string): boolean => {
+  if (/-/g.test(str)) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 export const convertArrayIntoObj = (answerArray: any[]) => {
@@ -290,4 +295,26 @@ export const cleanString = (str: string) => {
 
 export const fallbackValue = (value: any, fallback = 'Not Provided') => {
   return value || fallback;
+};
+
+// calcutate age from date of birth
+export const calculateAge = (dob: string) => {
+  if (!dob) return 0;
+
+  const date = new Date(dob);
+  // check if year is valid or not
+
+  // here is example of how to filter date
+  // if date is 200. its invalid
+  // if date is 2000. its valid
+
+  const year = date.getFullYear();
+  if (year < 1000 || year > 3000) return 0;
+
+  if (Number.isNaN(date.getFullYear())) return 0;
+
+  const diff = Date.now() - new Date(dob).getTime();
+
+  const ageDate = new Date(diff);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
 };
