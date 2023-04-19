@@ -332,11 +332,11 @@ const StudentsByDemographicsGraph = () => {
         label: 'Race',
         children: <RaceGraph id={qids.race} data={filtered} />
       },
-      {
-        key: 'age',
-        label: 'Age',
-        children: <AgeGraph id={qids.age} data={filtered} />
-      },
+      // {
+      //   key: 'age',
+      //   label: 'Age',
+      //   children: <AgeGraph id={qids.age} data={filtered} />
+      // },
       {
         key: 'gender',
         label: 'Gender',
