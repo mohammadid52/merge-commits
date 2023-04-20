@@ -87,7 +87,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     name: '',
     status: RoomStatus.ACTIVE,
     id: '',
-    type: {id: '', label: 'Lesson', value: ''},
+    type: {id: '', label: 'Lesson', value: 'lesson'},
     duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',

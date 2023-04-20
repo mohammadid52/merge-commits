@@ -40,7 +40,9 @@ const DemographicsInfo = ({checkpoints, questionData}: DemographicsInfoProps) =>
               <Card>
                 <Descriptions title={checkpoint.title}>
                   {checkpoint.questions?.items.map((item: any) => (
-                    <Descriptions.Item label={item?.question?.question}>
+                    <Descriptions.Item
+                      key={item?.question?.id}
+                      label={item?.question?.question}>
                       {item.question.type !== 'link' ? (
                         getQuestionResponse(checkpoint.id, item.question.id) || '--'
                       ) : (

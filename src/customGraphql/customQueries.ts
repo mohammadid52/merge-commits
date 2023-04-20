@@ -2540,6 +2540,7 @@ export const listQuestionDatas = /* GraphQL */ `
       items {
         id
         authID
+        checkpointID
         responseObject {
           qid
           response

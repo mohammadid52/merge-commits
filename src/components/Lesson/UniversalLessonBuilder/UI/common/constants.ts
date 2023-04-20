@@ -20,7 +20,8 @@ export const FORM_TYPES = {
   REVIEW_SLIDER: 'review-slider-input',
   HIGHLIGHTER: 'highlighter-input',
   WRITING_EXERCISE: 'writing-exercise-input',
-  DOCS: 'docs'
+  DOCS: 'docs',
+  DEMOGRAPHICS: 'demographics'
 };
 export const DIVIDER = 'divider';
 export const INPUT = 'Input';

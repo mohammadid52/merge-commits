@@ -23,6 +23,7 @@ import {CgNotes} from 'react-icons/cg';
 import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
+import {TbFileAnalytics} from 'react-icons/tb';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 
@@ -228,6 +229,14 @@ const AddContentDialog = ({
       icon: BiCheckboxChecked,
       iconForeground: 'text-green-700',
       iconBackground: 'bg-green-100'
+    },
+    isSurvey && {
+      name: 'Demographics',
+      subtitle: 'Add demographic questions',
+      type: FORM_TYPES.DEMOGRAPHICS,
+      icon: TbFileAnalytics,
+      iconForeground: 'text-yellow-700',
+      iconBackground: 'bg-yellow-100'
     }
   ].filter(Boolean);
 
@@ -305,7 +314,7 @@ const AddContentDialog = ({
                   <p className="text-xs mb-0 2xl:text-sm font-medium text-white">
                     {content.name}
                   </p>
-                  <p className="text-xs mb-0 2xl:text-sm text-medium  truncate">
+                  <p className="text-xs mb-0 2xl:text-sm text-medium">
                     {content.subtitle}
                   </p>
                 </div>

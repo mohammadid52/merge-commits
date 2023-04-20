@@ -17,7 +17,6 @@ import {blur, tinting} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import ProgressBar from '../ProgressBar';
 import ToggleForModal from '../common/ToggleForModals';
 
 const listOfResponsiveSizes = [
@@ -180,10 +179,6 @@ const JumbotronModalDialog = ({
     }
   }, [inputObj]);
   const [selectedStyles, setSelectedStyles] = useState(initialStyles);
-  console.log(
-    '🚀 ~ file: JumbotronModalDialog.tsx:161 ~ selectedStyles:',
-    selectedStyles
-  );
 
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
@@ -611,12 +606,12 @@ const JumbotronModalDialog = ({
             <Empty description="Preview not available yet. Please upload an image first." />
           )}
 
-          {loading && uploadProgress !== 'done' && (
+          {/* {loading && uploadProgress !== 'done' && (
             <ProgressBar
               status={uploadProgress < 99 ? 'Uploading Image' : 'Upload Done'}
               progress={uploadProgress}
             />
-          )}
+          )} */}
         </>
       )
     },

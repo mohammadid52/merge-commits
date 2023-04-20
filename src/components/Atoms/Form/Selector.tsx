@@ -39,6 +39,7 @@ interface SelectorProps {
 
   showSearch?: boolean;
   optionFilterProp?: string;
+  className?: string;
 }
 
 // turn this component into a ref component
@@ -61,14 +62,15 @@ const Selector = forwardRef<any, SelectorProps>((selectorProps, ref) => {
     isRequired,
     dropdownRender,
     notFoundContent,
-    optionFilterProp
+    optionFilterProp,
+    className
   } = selectorProps;
 
   const uniqKey = list && list.length > 0 && list[0]?.label ? 'label' : 'name';
   const sortedList = disableSort ? list : orderBy(list, [uniqKey], ['asc']);
 
   return (
-    <div>
+    <div className={className}>
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <Select
         placeholder={placeholder}

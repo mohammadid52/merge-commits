@@ -9,10 +9,11 @@ import {
 import useGraphConfig from '@customHooks/useGraphConfig';
 import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
-import {calculateAge, checkIfId, getUniqItems} from '@utilities/strings';
+import {calculateAge, checkIfId} from '@utilities/strings';
 import {Person, PersonStatus, QuestionData, QuestionResponse, Role} from 'API';
 import {Segmented, TabsProps} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
+import {getUserCheckpoints} from 'graphql-functions/functions';
 import {useState} from 'react';
 import ZipGraph from '../map/DemographicZipGraph';
 
@@ -194,72 +195,6 @@ const StudentsByDemographicsGraph = () => {
     );
     const questionData: any = results.data.listQuestionData?.items;
     return questionData;
-  };
-
-  const getUserCheckpoints = (person: Person) => {
-    let studentClasses: any = person.classes?.items.map((item: any) => item?.class);
-    studentClasses = studentClasses.filter((d: any) => d !== null);
-
-    const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
-      if (item?.room) {
-        return [...roomAcc, item.room];
-      } else {
-        return roomAcc;
-      }
-    }, []);
-
-    const studentCurriculars: any = studentRooms
-      .map((item: any) => item?.curricula?.items)
-      .flat(1);
-
-    const uniqCurriculars: any =
-      studentCurriculars.length > 0
-        ? getUniqItems(
-            studentCurriculars.filter((d: any) => d !== null),
-            'curriculumID'
-          )
-        : [];
-
-    const studCurriCheckp: any =
-      uniqCurriculars.length > 0
-        ? uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1)
-        : [];
-
-    const studentCheckpoints: any =
-      studCurriCheckp.length > 0
-        ? studCurriCheckp.map((item: any) => item?.checkpoint)
-        : [];
-
-    const sCheckpoints: any[] = [];
-
-    studentCheckpoints.forEach((item: any) => {
-      if (item && item.scope !== 'private') sCheckpoints.push(item);
-    });
-
-    const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
-
-    const sortedCheckpointQ = uniqCheckpoints.map((checkpointObj: any) => {
-      return {
-        ...checkpointObj,
-        questions: {
-          items: checkpointObj.questionSeq
-            ? checkpointObj.questionSeq.map((idStr: string) => {
-                return checkpointObj.questions.items.find(
-                  (questionItem: any) => questionItem.question.id === idStr
-                );
-              })
-            : checkpointObj.questions.items
-        }
-      };
-    });
-
-    const uniqCheckpointIDs: any = sortedCheckpointQ.map((item: any) => item?.id);
-
-    // if (uniqCheckpointIDs?.length > 0) {
-    //   getQuestionData(person.email, person.authId, uniqCheckpointIDs);
-    // }
-
-    return {checkpointIds: uniqCheckpointIDs, qids: sortedCheckpointQ};
   };
 
   const [questionData, setQuestionData] = useState<QuestionData[]>([]);

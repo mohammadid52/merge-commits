@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {uploadImageToS3} from 'graphql-functions/functions';
-import {Card} from 'antd';
 import {RoomStatus} from 'API';
+import {Card, message} from 'antd';
 import Buttons from 'atoms/Buttons';
 import RichTextEditor from 'atoms/RichTextEditor';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {updateUniversalLesson} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {createUniversalLesson} from 'graphql/mutations';
 import React, {useState} from 'react';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
@@ -168,6 +168,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     });
   };
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   const validateForm = () => {
     let isValid = true;
     const msgs = validation;
@@ -175,24 +177,28 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     if (!formData.name?.trim().length) {
       isValid = false;
       msgs.name = AddNewLessonFormDict[userLanguage]['VALIDATION']['NAME'];
+      messageApi.error(AddNewLessonFormDict[userLanguage]['VALIDATION']['NAME']);
     } else {
       msgs.name = '';
     }
     if (!formData.type?.value.trim().length) {
       isValid = false;
       msgs.type = AddNewLessonFormDict[userLanguage]['VALIDATION']['TYPE'];
+      messageApi.error(AddNewLessonFormDict[userLanguage]['VALIDATION']['TYPE']);
     } else {
       msgs.type = '';
     }
     if (!formData.institution?.value.trim().length) {
       isValid = false;
       msgs.institution = AddNewLessonFormDict[userLanguage]['VALIDATION']['INSTITUTE'];
+      messageApi.error(AddNewLessonFormDict[userLanguage]['VALIDATION']['INSTITUTE']);
     } else {
       msgs.institution = '';
     }
     if (!formData.languages?.length) {
       isValid = false;
       msgs.languages = AddNewLessonFormDict[userLanguage]['VALIDATION']['LANGUAGE'];
+      messageApi.error(AddNewLessonFormDict[userLanguage]['VALIDATION']['LANGUAGE']);
     } else {
       msgs.languages = '';
     }
@@ -200,6 +206,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       isValid = false;
       msgs.studentSummary =
         AddNewLessonFormDict[userLanguage]['VALIDATION']['STUDENT_SUMMARY'];
+      messageApi.error(
+        AddNewLessonFormDict[userLanguage]['VALIDATION']['STUDENT_SUMMARY']
+      );
     } else {
       msgs.studentSummary = '';
     }
@@ -207,9 +216,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       isValid = false;
       msgs.imageCaption =
         AddNewLessonFormDict[userLanguage]['VALIDATION']['IMAGE_CAPTION'];
+      messageApi.error(AddNewLessonFormDict[userLanguage]['VALIDATION']['IMAGE_CAPTION']);
     } else {
       msgs.imageCaption = '';
     }
+
     // TODO: Add validation for repeating lesson names.
     setValidation({...msgs});
     return isValid;
@@ -219,12 +230,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
 
-  const updateStatus = (_: string, name: RoomStatus) => {
+  const updateStatus = (name: RoomStatus) => {
     setFormData({...formData, status: name});
   };
 
   const createNewLesson = async () => {
     const isValid = validateForm();
+
     if (isValid) {
       setCreatingLessons(true);
       let fileName = formData.imageUrl;
@@ -352,6 +364,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   return (
     <div className="">
+      {contextHolder}
       {/* <div className="px-4 py-5 border-b-0 border-lightest sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-darkest">
           {AddNewLessonFormDict[userLanguage]['TITLE']}

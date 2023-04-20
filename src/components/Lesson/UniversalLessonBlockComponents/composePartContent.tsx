@@ -2,10 +2,10 @@ import {Divider} from 'antd';
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import ActivityBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
-
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import map from 'lodash/map';
+import {lazy} from 'react';
 import {
   DIVIDER,
   FORM_TYPES,
@@ -24,6 +24,8 @@ import KeywordBlock from './Blocks/KeywordBlock';
 import LinksBlock from './Blocks/LinksBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
+
+const DemographicsBlock = lazy(() => import('./Blocks/DemographicsBlock'));
 
 const Spacer = (props: any) => {
   return (
@@ -194,6 +196,8 @@ const composePartContent = (
         </ErrorBoundary>
       </GameChangerProvider>
     );
+  } else if (type === FORM_TYPES.DEMOGRAPHICS) {
+    return <DemographicsBlock id={id} type={type} value={value} mode={mode} />;
   } else {
     return <div className="hidden"></div>;
   }

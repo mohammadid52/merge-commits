@@ -21,6 +21,148 @@ import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from '../Admin/UserManagement/User';
 import DemographicsEdit, {selectedMultiOptions} from '../Demographics/DemographicsEdit';
 
+// Code for Other Field
+const hasOther = (val: string | string[], other: string) => {
+  try {
+    return val ? val.toString().includes(other) : false;
+  } catch (err) {
+    console.log('errrr', err);
+    return false;
+  }
+};
+
+const updateQuestionDataFn = async (
+  responseObj: any,
+  checkpointID: string,
+  checkpointData: any
+) => {
+  const val = responseObj.responseObject.map((resp: any) => {
+    if (hasOther(resp.response, 'Other')) {
+      return {
+        ...resp,
+        response: checkpointData[checkpointID][resp.qid],
+        otherResponse: checkpointData[checkpointID][resp.qid].toString().split(' || ')[1]
+      };
+    } else {
+      return {...resp};
+    }
+  });
+
+  const modifiedResponseObj = {...responseObj, responseObject: val};
+
+  try {
+    await API.graphql(
+      graphqlOperation(updateQuestionData, {
+        input: modifiedResponseObj
+      })
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getQuestionArray = (obj: any) => {
+  const keys: any = Object.keys(obj);
+  return keys.map((item: any) => ({
+    qid: item,
+    response:
+      typeof obj[item] === 'string'
+        ? [obj[item]]
+        : [...obj[item].map((op: any) => op.name)]
+  }));
+};
+
+const updatePersonCheckpointData = async (
+  questionDataId: string,
+  questions: any[],
+  checkpointID: string,
+  checkpointData: any
+) => {
+  let responseObject = {
+    id: questionDataId,
+    responseObject: questions
+  };
+  updateQuestionDataFn(responseObject, checkpointID, checkpointData);
+};
+
+const createQuestionDataFn = async (responseObj: any) => {
+  try {
+    await API.graphql(
+      graphqlOperation(createQuestionData, {
+        input: responseObj
+      })
+    );
+    console.log('Question data updated');
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const savePersonCheckpointData = async (
+  checkpointId: string,
+  questions: any[],
+  auth: {authId: string; email: string}
+) => {
+  let responseObject = {
+    syllabusLessonID: '999999', //Dummy syllabus id since it's required, at least for now.
+    checkpointID: checkpointId,
+    authID: auth.authId,
+    email: auth.email,
+    responseObject: questions
+  };
+  createQuestionDataFn(responseObject);
+};
+
+export const saveAllCheckpointData = async (
+  questionData: any[],
+  checkpointData: any,
+  auth: {authId: string; email: string}
+) => {
+  // setLoading(true);
+  const checkpId = Object.keys(checkpointData);
+  const allCheckpoints = checkpId.map((itemID) => ({
+    checkpointId: itemID,
+    questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
+  }));
+  if (questionData?.length === 0) {
+    Promise.all(
+      allCheckpoints.map(async (item: any) => {
+        return savePersonCheckpointData(item.checkpointId, item.questions, auth);
+      })
+    );
+  } else {
+    Promise.all(
+      allCheckpoints.map(async (item: any) => {
+        const currentItem: any = questionData?.find(
+          (question: any) => question.checkpointID === item.checkpointId
+        );
+        if (currentItem) {
+          return updatePersonCheckpointData(
+            currentItem.id,
+            item.questions,
+            item.checkpointId,
+            checkpointData
+          );
+        } else {
+          return savePersonCheckpointData(item.checkpointId, item.questions, auth);
+        }
+      })
+    );
+  }
+};
+
+export const extractItemFromArray = (responceArray: any[]) => {
+  const answerArray: any = responceArray.map((item: any) => {
+    return {
+      [item['qid']]:
+        item?.response?.length > 1
+          ? [...selectedMultiOptions(item.response)]
+          : item?.response.toString()
+    };
+  });
+  return convertArrayIntoObj(answerArray);
+};
+
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -40,115 +182,8 @@ const ProfileEdit = (props: UserInfoProps) => {
   const [loading, setLoading] = useState(false);
   const [checkpointData, setCheckpointData] = useState<any>({});
 
-  const getQuestionArray = (obj: any) => {
-    const keys: any = Object.keys(obj);
-    return keys.map((item: any) => ({
-      qid: item,
-      response:
-        typeof obj[item] === 'string'
-          ? [obj[item]]
-          : [...obj[item].map((op: any) => op.name)]
-    }));
-  };
   const gobackToPreviousStep = () => {
     history.push('/dashboard/profile');
-  };
-
-  const updateQuestionDataFn = async (responseObj: any, checkpointID: string) => {
-    const val = responseObj.responseObject.map((resp: any) => {
-      if (hasOther(resp.response, 'Other')) {
-        return {
-          ...resp,
-          response: checkpointData[checkpointID][resp.qid],
-          otherResponse: checkpointData[checkpointID][resp.qid]
-            .toString()
-            .split(' || ')[1]
-        };
-      } else {
-        return {...resp};
-      }
-    });
-
-    const modifiedResponseObj = {...responseObj, responseObject: val};
-
-    try {
-      await API.graphql(
-        graphqlOperation(updateQuestionData, {
-          input: modifiedResponseObj
-        })
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const updatePersonCheckpointData = async (
-    questionDataId: string,
-    questions: any[],
-    checkpointID: string
-  ) => {
-    let responseObject = {
-      id: questionDataId,
-      responseObject: questions
-    };
-    updateQuestionDataFn(responseObject, checkpointID);
-  };
-
-  const createQuestionDataFn = async (responseObj: any) => {
-    try {
-      await API.graphql(
-        graphqlOperation(createQuestionData, {
-          input: responseObj
-        })
-      );
-      console.log('Question data updated');
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const savePersonCheckpointData = async (checkpointId: string, questions: any[]) => {
-    let responseObject = {
-      syllabusLessonID: '999999', //Dummy syllabus id since it's required, at least for now.
-      checkpointID: checkpointId,
-      authID: editUser.authId,
-      email: editUser.email,
-      responseObject: questions
-    };
-    createQuestionDataFn(responseObject);
-  };
-
-  const saveAllCheckpointData = async () => {
-    setLoading(true);
-    const checkpId = Object.keys(checkpointData);
-    const allCheckpoints = checkpId.map((itemID) => ({
-      checkpointId: itemID,
-      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
-    }));
-    if (questionData?.length === 0) {
-      Promise.all(
-        allCheckpoints.map(async (item: any) => {
-          return savePersonCheckpointData(item.checkpointId, item.questions);
-        })
-      );
-    } else {
-      Promise.all(
-        allCheckpoints.map(async (item: any) => {
-          const currentItem: any = questionData?.find(
-            (question: any) => question.checkpointID === item.checkpointId
-          );
-          if (currentItem) {
-            return updatePersonCheckpointData(
-              currentItem.id,
-              item.questions,
-              item.checkpointId
-            );
-          } else {
-            return savePersonCheckpointData(item.checkpointId, item.questions);
-          }
-        })
-      );
-    }
   };
 
   const {setUser} = useAuth();
@@ -185,9 +220,14 @@ const ProfileEdit = (props: UserInfoProps) => {
   }
 
   async function saveProfileInformation() {
-    saveAllCheckpointData();
+    setLoading(true);
+    saveAllCheckpointData(questionData, checkpointData, {
+      authId: editUser.authId,
+      email: editUser.email
+    });
     await updatePersonFn();
     getUser();
+    setLoading(false);
   }
 
   const onChange = (e: any) => {
@@ -197,18 +237,6 @@ const ProfileEdit = (props: UserInfoProps) => {
       ...editUser,
       [id]: value
     });
-  };
-
-  const extractItemFromArray = (responceArray: any[]) => {
-    const answerArray: any = responceArray.map((item: any) => {
-      return {
-        [item['qid']]:
-          item?.response?.length > 1
-            ? [...selectedMultiOptions(item.response)]
-            : item?.response.toString()
-      };
-    });
-    return convertArrayIntoObj(answerArray);
   };
 
   useEffect(() => {
@@ -226,16 +254,6 @@ const ProfileEdit = (props: UserInfoProps) => {
   if (status !== 'done') {
     return <LessonLoading />;
   }
-
-  // Code for Other Field
-  const hasOther = (val: string | string[], other: string) => {
-    try {
-      return val ? val.toString().includes(other) : false;
-    } catch (err) {
-      console.log('errrr', err);
-      return false;
-    }
-  };
 
   const dictionary = dashboardProfileDict[userLanguage]['EDIT_PROFILE'];
 
