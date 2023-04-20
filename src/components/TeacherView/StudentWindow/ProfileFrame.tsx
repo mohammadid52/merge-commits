@@ -16,6 +16,7 @@ import ProfileFrameDemographics from './ProfileFrame/ProfileFrameDemographics';
 import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
 import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
 import {updatePerson} from '@graphql/mutations';
+import moment from 'moment';
 
 interface IProfileFrame {
   personAuthID?: string;
@@ -67,8 +68,8 @@ const ProfileFrame = ({
   });
 
   const created = () => {
-    let date = new Date(user && user.createdAt);
-    return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+    if (user.createdAt === undefined) return 'n/a';
+    return moment(user.createdAt).format('MM/DD/YYYY');
   };
 
   const resetPassword = async () => {

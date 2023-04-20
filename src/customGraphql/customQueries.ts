@@ -2382,7 +2382,7 @@ export const getPersonData = /* GraphQL */ `
 
       image
       language
-
+      createdAt
       lastLoggedIn
 
       lastLoggedOut
