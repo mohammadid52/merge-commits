@@ -189,7 +189,7 @@ const InstitutionsHome: React.FC = () => {
         /> */}
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
           <ErrorBoundary componentName="InstitutionProfile">
-            <div className="">
+            <div className="w-full">
               <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
 
               {/* <PageWrapper> */}

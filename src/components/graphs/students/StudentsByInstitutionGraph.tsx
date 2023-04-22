@@ -62,7 +62,10 @@ const StudentsByInstitutionGraph = () => {
             value: inst.name
           };
         }
-        return null;
+        return {
+          authId: student.authId,
+          value: 'Other'
+        };
       })
       .filter(Boolean);
 

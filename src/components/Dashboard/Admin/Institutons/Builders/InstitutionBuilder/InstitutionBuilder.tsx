@@ -10,6 +10,7 @@ import {useQuery} from 'customHooks/urlParam';
 import PageLayout from 'layout/PageLayout';
 import StaffBuilder from '../../Listing/StaffBuilder';
 import InstitutionFormComponent from './InstitutionFormComponent';
+import ServiceProviderList from './ServiceProviderList';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -94,12 +95,17 @@ const InstitutionBuilder = ({
       subTitle: 'Capture core details of your institution',
       stepValue: 'overview'
     },
+    {
+      title: 'Service Providers',
+      subTitle: "institution's service providers",
+      stepValue: 'service_providers'
+    },
 
     {
       title: 'Staff',
-      description: '',
+      description: "institution's staff",
       stepValue: 'staff',
-      disabled: !Boolean(institutionInfo.id)
+      disabled: Boolean(!institutionInfo.id)
     }
   ];
 
@@ -147,6 +153,11 @@ const InstitutionBuilder = ({
             postMutation={postMutation}
           />
         );
+
+      case 'service_providers':
+        if (institute?.serviceProviders?.items?.length === 0)
+          return <Empty description="No service providers found" />;
+        return <ServiceProviderList serviceProviders={institute?.serviceProviders} />;
 
       case 'staff':
         return institutionId ? (
