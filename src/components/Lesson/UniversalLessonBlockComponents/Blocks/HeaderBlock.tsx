@@ -29,6 +29,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
   };
 
   const [showNotesModal, setShowNotesModal] = useState(false);
+  console.log(value);
 
   return (
     <div className="w-auto">

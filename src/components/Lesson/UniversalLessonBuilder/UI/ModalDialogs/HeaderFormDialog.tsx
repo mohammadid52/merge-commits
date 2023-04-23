@@ -104,7 +104,7 @@ const HeaderModalComponent = ({
         instructionsText: inputObj[1]?.value || '',
         instructions: inputObj[1]?.value?.length > 0 || false,
         instructionsHtml: inputObj[1]?.value || '<p></p>',
-        notes: inputObj[2]?.value?.length > 0 || false,
+        notes: inputObj[2]?.value !== '<p></p>' || false,
         notesHtml: inputObj[2]?.value || '<p></p>'
       }));
       // retrieves the result of matching a string against border color
@@ -179,22 +179,24 @@ const HeaderModalComponent = ({
     if (isValid) {
       const value: string = inputFields.title;
 
+      const inputArray = [
+        {id: uuidv4().toString(), value},
+        {
+          id: uuidv4().toString(),
+          value: inputFields.instructionsHtml || ''
+        },
+        {
+          id: uuidv4().toString(),
+          value: inputFields.notes ? inputFields.notesHtml || '<p></p>' : '<p></p>'
+        }
+      ];
+
       if (isEditingMode) {
         const updatedList: any = updateBlockContentULBHandler(
           '',
           '',
           'header',
-          [
-            {id: uuidv4().toString(), value},
-            {
-              id: uuidv4().toString(),
-              value: inputFields.instructionsHtml || ''
-            },
-            {
-              id: uuidv4().toString(),
-              value: inputFields.notesHtml || ''
-            }
-          ],
+          inputArray,
           blockConfig.position,
           classValue
         );
@@ -206,17 +208,7 @@ const HeaderModalComponent = ({
           '',
           'header',
 
-          [
-            {id: uuidv4().toString(), value},
-            {
-              id: uuidv4().toString(),
-              value: inputFields.instructionsHtml || ''
-            },
-            {
-              id: uuidv4().toString(),
-              value: inputFields.notesHtml || ''
-            }
-          ],
+          inputArray,
           blockConfig.position,
 
           classValue
