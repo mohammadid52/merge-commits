@@ -124,7 +124,7 @@ const TextInput = ({
                       label="long answer"
                       valuePropName="checked">
                       <Switch
-                        checked={!Boolean(input.textArea)}
+                        checked={Boolean(!input.textArea)}
                         onClick={() => changeCheckboxValue(idx, input.textArea)}
                       />
                     </Form.Item>

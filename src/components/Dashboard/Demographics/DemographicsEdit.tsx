@@ -161,37 +161,43 @@ const DemographicsEdit = ({
     className: isInLesson ? 'lesson-form-block  !mt-0 !mb-0' : ''
   };
 
-  const DatePickerComponent = ({item, checkpointId}: any) => (
-    <div className={commonProps.className}>
-      <Label label={item?.question?.question} />
-      <DatePicker
-        defaultValue={dayjs(
-          checkpointData[checkpointId]
-            ? checkpointData[checkpointId][item.question.id]
-            : // year 2000 in new Date()
-              new Date(946684800000)
-        )}
-        size="large"
-        disabledDate={(current) => current && current > dayjs().endOf('day')}
-        placeholder={'Birthdate'}
-        id={item.question.id}
-        name=""
-        onChange={(value) =>
-          onInputChange(
-            {
-              target: {
-                // @ts-ignore
-                value: value?.$d
-              }
-            },
-            checkpointId,
-            item.question.id
-          )
-        }
-        {...commonProps}
-      />
-    </div>
-  );
+  const DatePickerComponent = ({item, checkpointId}: any) => {
+    const value = dayjs(
+      checkpointData[checkpointId]
+        ? dayjs(checkpointData[checkpointId][item.question.id])
+        : // year 2000 in new Date()
+          new Date(946684800000)
+    );
+
+    return (
+      <div className={commonProps.className}>
+        <Label label={item?.question?.question} />
+        <DatePicker
+          defaultValue={value}
+          size="large"
+          // us date format
+          format="MM/DD/YYYY"
+          disabledDate={(current) => current && current > dayjs().endOf('day')}
+          placeholder={'Birthdate'}
+          id={item.question.id}
+          name=""
+          onChange={(value) =>
+            onInputChange(
+              {
+                target: {
+                  // @ts-ignore
+                  value: dayjs(value).format('MM/DD/YYYY')
+                }
+              },
+              checkpointId,
+              item.question.id
+            )
+          }
+          {...commonProps}
+        />
+      </div>
+    );
+  };
 
   return (
     <>

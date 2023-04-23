@@ -13,8 +13,9 @@ import {Checkpoint, QuestionData} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {getQuestionData, getUserCheckpoints, logError} from 'graphql-functions/functions';
 import {useState} from 'react';
+import {FormLabel} from './FormBlock';
 
-const DemographicsBlock = ({id}: any) => {
+const DemographicsBlock = ({id, value}: any) => {
   const {isStudent, authId, email} = useAuth();
 
   const fetchDemographicsQuestions = async () => {
@@ -80,12 +81,15 @@ const DemographicsBlock = ({id}: any) => {
 
   return (
     <div>
-      <DemographicsEdit
-        isInLesson
-        stdCheckpoints={checkpoints}
-        checkpointData={checkpointData}
-        setCheckpointData={setCheckpointData}
-      />
+      <FormLabel label={value[0].label} required={Boolean(value[0].isRequired)} />
+      <div className="mt-2">
+        <DemographicsEdit
+          isInLesson
+          stdCheckpoints={checkpoints}
+          checkpointData={checkpointData}
+          setCheckpointData={setCheckpointData}
+        />
+      </div>
       <div className="w-full flex items-center justify-end">
         <Buttons
           className="mt-4"

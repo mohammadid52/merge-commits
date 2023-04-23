@@ -8,6 +8,7 @@ import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {v4 as uuidV4} from 'uuid';
 import useAuth from '@customHooks/useAuth';
 import {logError} from 'graphql-functions/functions';
+import {Checkbox} from 'antd';
 
 const DemographicsModal = (props: IContentTypeComponentProps) => {
   const {EditQuestionModalDict, userLanguage} = useDictionary();
@@ -27,6 +28,10 @@ const DemographicsModal = (props: IContentTypeComponentProps) => {
 
   const {email, authId} = useAuth();
 
+  console.log(props);
+
+  const [isRequired, setIsRequired] = useState(false);
+
   const onCreate = async () => {
     setLoading(true);
     try {
@@ -35,18 +40,30 @@ const DemographicsModal = (props: IContentTypeComponentProps) => {
           label: 'Demographics',
           value: 'Demographics',
           id: uuidV4(),
-          type: FORM_TYPES.DEMOGRAPHICS
+          type: FORM_TYPES.DEMOGRAPHICS,
+          isRequired
         }
       ];
-
-      const updatedList = props.createNewBlockULBHandler(
-        '',
-        '',
-        FORM_TYPES.DEMOGRAPHICS,
-        inputFieldsArray,
-        undefined,
-        undefined
-      );
+      let updatedList = [];
+      if (props.inputObj[0]) {
+        updatedList = props.updateBlockContentULBHandler(
+          '',
+          '',
+          FORM_TYPES.DEMOGRAPHICS,
+          [{...props.inputObj[0], isRequired}],
+          undefined,
+          undefined
+        );
+      } else {
+        updatedList = props.createNewBlockULBHandler(
+          '',
+          '',
+          FORM_TYPES.DEMOGRAPHICS,
+          inputFieldsArray,
+          undefined,
+          undefined
+        );
+      }
 
       await addToDB(updatedList);
     } catch (error) {
@@ -60,6 +77,14 @@ const DemographicsModal = (props: IContentTypeComponentProps) => {
   return (
     <div>
       <div>This will add demographics to your survey</div>
+
+      <Checkbox
+        checked={isRequired}
+        onClick={() => {
+          setIsRequired(!isRequired);
+        }}>
+        Make this required
+      </Checkbox>
       <div className="flex mt-8 justify-end gap-4 items-center px-6 pb-4">
         <Buttons
           label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}

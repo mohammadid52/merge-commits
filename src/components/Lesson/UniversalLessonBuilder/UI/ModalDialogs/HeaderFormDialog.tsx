@@ -31,6 +31,8 @@ interface IInput {
   instructions?: boolean;
   instructionsText?: string;
   instructionsHtml?: string;
+  notes?: boolean;
+  notesHtml?: string;
 }
 
 const HeaderModalComponent = ({
@@ -88,7 +90,9 @@ const HeaderModalComponent = ({
     animated: false,
     instructions: false,
     instructionsText: '',
-    instructionsHtml: '<p></p>'
+    instructionsHtml: '<p></p>',
+    notes: false,
+    notesHtml: '<p></p>'
   });
 
   useEffect(() => {
@@ -99,7 +103,9 @@ const HeaderModalComponent = ({
         animated: classString.includes('animated-border-on'),
         instructionsText: inputObj[1]?.value || '',
         instructions: inputObj[1]?.value?.length > 0 || false,
-        instructionsHtml: inputObj[1]?.value || '<p></p>'
+        instructionsHtml: inputObj[1]?.value || '<p></p>',
+        notes: inputObj[2]?.value?.length > 0 || false,
+        notesHtml: inputObj[2]?.value || '<p></p>'
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
@@ -183,6 +189,10 @@ const HeaderModalComponent = ({
             {
               id: uuidv4().toString(),
               value: inputFields.instructionsHtml || ''
+            },
+            {
+              id: uuidv4().toString(),
+              value: inputFields.notesHtml || ''
             }
           ],
           blockConfig.position,
@@ -201,6 +211,10 @@ const HeaderModalComponent = ({
             {
               id: uuidv4().toString(),
               value: inputFields.instructionsHtml || ''
+            },
+            {
+              id: uuidv4().toString(),
+              value: inputFields.notesHtml || ''
             }
           ],
           blockConfig.position,
@@ -255,6 +269,13 @@ const HeaderModalComponent = ({
       ...inputFields,
       instructionsText: text,
       instructionsHtml: html
+    });
+  };
+  const onNotesChange = (html: string, text: string) => {
+    setUnsavedChanges(true);
+    setInputFields({
+      ...inputFields,
+      notesHtml: html
     });
   };
 
@@ -346,6 +367,25 @@ const HeaderModalComponent = ({
                 initialValue={inputFields?.instructionsText || ''}
                 onChange={(htmlContent, plainText) =>
                   onEditorStateChange(htmlContent, plainText)
+                }
+              />
+            </div>
+          )}
+          <div className="col-span-2 my-4 flex items-center w-auto">
+            <Form.Item label="Teacher Notes" valuePropName="checked">
+              <Switch
+                checked={Boolean(inputFields.notes)}
+                onClick={() => onToggle('notes')}
+              />
+            </Form.Item>
+          </div>
+          {inputFields.notes && (
+            <div className="col-span-2 max-w-256">
+              <RichTextEditor
+                withStyles
+                initialValue={inputFields?.notesHtml || ''}
+                onChange={(htmlContent, plainText) =>
+                  onNotesChange(htmlContent, plainText)
                 }
               />
             </div>
