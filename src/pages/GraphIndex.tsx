@@ -29,6 +29,9 @@ const CompletedIncompletedGraph = lazy(
 const InstitutionStatusGraph = lazy(
   () => import('@components/graphs/institutions/InstitutionStatusGraph')
 );
+const InstitutionCalendar = lazy(
+  () => import('@components/graphs/institutions/InstitutionCalendar')
+);
 
 const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}[]}) => {
   return (
@@ -104,6 +107,12 @@ const listOfGraphs = [
     key: 'institutions',
 
     component: <InstitutionStatusGraph />
+  },
+  {
+    title: 'Calendar',
+    key: 'institutions',
+
+    component: <InstitutionCalendar />
   }
 ];
 
@@ -160,7 +169,7 @@ const GraphIndex = () => {
       bannerImg={general.dashboardUrl}
       bannerTitle="Dashboard">
       <PageLayout title="Graph" hideInstProfile hideGoBack>
-        <Tabs items={listOfCategories} />
+        <Tabs defaultActiveKey="institutions" items={listOfCategories} />
       </PageLayout>
     </DashboardContainer>
   );

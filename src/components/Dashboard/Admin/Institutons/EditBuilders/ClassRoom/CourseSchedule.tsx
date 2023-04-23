@@ -69,36 +69,35 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   });
 
   useEffect(() => {
-    const {
-      startDate,
-      endDate,
-      startTime = '',
-      endTime = '',
-      frequency = 'One Time',
-      location,
-      notes,
-      weekDay,
-      conferenceCallLink,
-      id
-    } = roomData;
-    if (id) {
-      setScheduleData({
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
-        startTime: startTime
-          ? moment(startTime, 'HH:mm:ss').format('h:mm A')
-          : new Date().toISOString(),
-        endTime: endTime
-          ? moment(endTime, 'HH:mm:ss').format('h:mm A')
-          : new Date().toISOString(),
-        frequency: frequency || 'One Time',
+    if (roomData) {
+      const {
+        startDate,
+        endDate,
+        startTime = '',
+        endTime = '',
+        frequency = 'One Time',
         location,
         notes,
         weekDay,
-        conferenceCallLink
-      });
-      if (!(startDate && endDate && startTime && endTime && frequency && weekDay)) {
-        setShowAlert(true);
+        conferenceCallLink,
+        id
+      } = roomData;
+      if (id) {
+        setScheduleData({
+          startDate: startDate ? startDate : null,
+          endDate: endDate ? endDate : null,
+          startTime: new Date(startTime).getTime().toString(),
+          endTime: new Date(endTime).getTime().toString(),
+
+          frequency: frequency || 'One Time',
+          location,
+          notes,
+          weekDay,
+          conferenceCallLink
+        });
+        if (!(startDate && endDate && startTime && endTime && frequency && weekDay)) {
+          setShowAlert(true);
+        }
       }
     }
   }, [roomData]);
@@ -199,6 +198,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const saveRoomDetails = async () => {
     setSaving(true);
     const isValid = await validateForm();
+
     if (isValid) {
       try {
         const input = {
@@ -240,34 +240,25 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     setShowAlert(false);
     setStartDateFocus(true);
   };
+  const dateFormat = 'YYYY/MM/DD';
+  const timeFormat = 'HH:mm';
+  // const datePickerValue =
 
   return (
     <div className="">
       {contextHolder}
       <PageLayout type="inner" title={CourseScheduleDict[userLanguage].HEADING}>
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="">
+          <div className="col-span-2">
             <Label label="Start And End Date" />
             <RangePicker
               className="w-full"
               size="large"
+              format={dateFormat}
               defaultValue={[dayJs(scheduleData.startDate), dayJs(scheduleData.endDate)]}
               onChange={(_, dateString: string[]) => {
                 handleDateChange(dateString[0], 'startDate');
                 handleDateChange(dateString[1], 'endDate');
-              }}
-            />
-          </div>
-          <div className="">
-            <Label label="Start And End Time" />
-            <RangePicker
-              size="large"
-              className="w-full"
-              defaultValue={[dayJs(scheduleData.startTime), dayJs(scheduleData.endTime)]}
-              picker="time"
-              onChange={(_, timeString: string[]) => {
-                handleDateChange(timeString[0], 'startTime');
-                handleDateChange(timeString[1], 'endTime');
               }}
             />
           </div>

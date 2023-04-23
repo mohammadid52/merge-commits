@@ -437,16 +437,16 @@ export const statesList = [
 ];
 
 export const frequencyOptions: any = [
-  {id: 1, label: 'One Time'},
-  {id: 2, label: 'Daily'},
-  {id: 3, label: 'Weekly'},
-  {id: 4, label: 'Bi-weekly'},
-  {id: 9, label: 'M/W/F'},
-  {id: 10, label: 'Tu/Th'},
-  {id: 5, label: 'Monthly'},
-  {id: 6, label: 'Trimestral'},
-  {id: 7, label: 'Quarterly'},
-  {id: 8, label: 'Semestral'}
+  {id: 1, value: 'One Time', label: 'One Time'},
+  {id: 2, value: 'Daily', label: 'Daily'},
+  {id: 3, value: 'Weekly', label: 'Weekly'},
+  {id: 4, value: 'Bi-weekly', label: 'Bi-weekly'},
+  {id: 9, value: 'M/W/F', label: 'M/W/F'},
+  {id: 10, value: 'Tu/Th', label: 'Tu/Th'},
+  {id: 5, value: 'Monthly', label: 'Monthly'},
+  {id: 6, value: 'Trimestral', label: 'Trimestral'},
+  {id: 7, value: 'Quarterly', label: 'Quarterly'},
+  {id: 11, value: 'Semestral', label: 'Semestral'}
 ];
 
 export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
@@ -462,11 +462,11 @@ export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
 };
 
 export const weekdaysOption: any = [
-  {id: 1, label: 'Monday'},
-  {id: 2, label: 'Tuesday'},
-  {id: 3, label: 'Wednesday'},
-  {id: 4, label: 'Thursday'},
-  {id: 5, label: 'Friday'}
+  {id: 1, value: 'Monday', label: 'Monday'},
+  {id: 2, value: 'Tuesday', label: 'Tuesday'},
+  {id: 3, value: 'Wednesday', label: 'Wednesday'},
+  {id: 4, value: 'Thursday', label: 'Thursday'},
+  {id: 5, value: 'Friday', label: 'Friday'}
 ];
 
 export const targetAudienceForIconoclast = [

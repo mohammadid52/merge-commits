@@ -3962,6 +3962,42 @@ export const listInstitutionsForGraphs = /* GraphQL */ `
   }
 `;
 
+export const listInstitutionsForCalendarGraphs = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        image
+        status
+        phone
+        website
+        name
+        zip
+        rooms {
+          items {
+            id
+            startDate
+            endDate
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listPersonWithCheckpointsForGraph = /* GraphQL */ `
   query ListPeople(
     $limit: Int

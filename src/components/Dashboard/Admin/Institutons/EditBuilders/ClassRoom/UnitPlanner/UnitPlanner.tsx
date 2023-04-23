@@ -184,10 +184,6 @@ const UnitPlanner = ({
     setLogsChanged(false);
   };
 
-  const validateAllRequiredFields = (_: () => void) => {
-    // do something
-  };
-
   const tableConfig = (lessons: any[]) => {
     return {
       headers: [
@@ -204,7 +200,7 @@ const UnitPlanner = ({
         startDate: moment(lesson.startDate).format('MM/DD/YYYY'),
         estEndDate: (
           <>
-            {new Date(lesson.estEndDate).toLocaleDateString()}
+            {moment(lesson?.estEndDate).format('MM/DD/YYYY')}
             {lesson === syllabusList.length - 1 &&
             idx === lessons.length - 1 &&
             moment(lesson.estEndDate).isBefore(moment(roomData.endDate))
@@ -264,10 +260,8 @@ const UnitPlanner = ({
           label={'Run calculations and save'}
           size="middle"
           onClick={() => {
-            validateAllRequiredFields(() => {
-              calculateSchedule();
-              saveRoomDetails();
-            });
+            calculateSchedule();
+            saveRoomDetails();
           }}
         />
       </div>
