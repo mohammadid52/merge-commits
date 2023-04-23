@@ -84,7 +84,7 @@ const LessonSurveyAppWrapper = ({
       <div className={`absolute bottom-1 left-0 py-4 px-6 z-100  w-auto `}>
         <div className="flex flex-col">
           <h6 className="text-xs text-shadow text-medium ">{NAME}</h6>
-          {NOTES !== '<p></p>' && (
+          {user.role !== 'ST' && NOTES !== '<p></p>' && (
             <Popover
               trigger={'click'}
               zIndex={10000}
