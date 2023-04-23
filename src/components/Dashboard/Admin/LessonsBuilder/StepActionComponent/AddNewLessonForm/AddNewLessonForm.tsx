@@ -232,32 +232,33 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         fileName = `ULB/lesson_image_${Date.now()}`;
         await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
       }
+      const input: any = {
+        type: formData.type.value,
+        title: formData.name,
+
+        designers: selectedDesigners.map((item) => item.id),
+        lessonPlan: [],
+        summary: formData.studentSummary,
+        cardImage: fileName,
+        cardCaption: formData.imageCaption,
+        purpose: formData.purposeHtml,
+        studentMaterials: formData.studentMaterials,
+        objectives: [formData.objectiveHtml],
+        notes: formData.notesHtml,
+        language: formData.languages.map((item) => item.value),
+        institutionID: formData.institution?.id,
+        targetAudience: formData.targetAudience || null,
+        // adding defaults to prevent errors
+        duration: Number(formData.duration),
+        resources: '',
+        darkMode: true,
+        label: '',
+        status: formData?.status || RoomStatus.ACTIVE
+      };
+
       // Creating New Lesson
       if (!lessonId) {
         try {
-          const input: any = {
-            type: formData.type.value,
-            title: formData.name,
-            designers: selectedDesigners.map((item) => item.id),
-            lessonPlan: [],
-            summary: formData.studentSummary,
-            cardImage: fileName,
-            cardCaption: formData.imageCaption,
-            purpose: formData.purposeHtml,
-            studentMaterials: formData.studentMaterials,
-            objectives: [formData.objectiveHtml],
-            notes: formData.notesHtml,
-            language: formData.languages.map((item) => item.value),
-            institutionID: formData.institution?.id,
-            targetAudience: formData.targetAudience || null,
-            // adding defaults to prevent errors
-            duration: Number(formData.duration),
-            resources: '',
-            darkMode: true,
-            label: '',
-            status: formData?.status || RoomStatus.ACTIVE
-          };
-
           const result: any = await API.graphql(
             graphqlOperation(createUniversalLesson, {input})
           );
@@ -271,27 +272,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       } else {
         // Updating existing Lesson
         try {
-          const input = {
-            id: lessonId,
-            type: formData.type.value,
-            title: formData.name,
-            institutionID: formData?.institution?.id || '',
-            purpose: formData.purposeHtml,
-            objectives: [formData.objectiveHtml],
-            language: formData.languages.map((item) => item.value),
-            designers: selectedDesigners.map((item) => item.id),
-            summary: formData.studentSummary,
-            cardImage: fileName,
-            darkMode: true,
-            studentMaterials: formData.studentMaterials,
-            status: formData?.status || RoomStatus.ACTIVE,
-            cardCaption: formData.imageCaption,
-            duration: Number(formData.duration),
-            targetAudience: formData.targetAudience || null
-          };
+          delete input.lessonPlan;
           const results: any = await API.graphql(
             graphqlOperation(updateUniversalLesson, {
-              input: input
+              input: {
+                id: lessonId,
+                ...input
+              }
             })
           );
           const lessonsData = results?.data?.updateUniversalLesson;

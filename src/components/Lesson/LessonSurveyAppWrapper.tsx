@@ -1,13 +1,15 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonHeaderBar from '@components/Header/LessonHeaderBar';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {notification} from 'antd';
+import {Popover, notification} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import Buttons from '@components/Atoms/Buttons';
+import {GrNotes} from 'react-icons/gr';
 
 interface LessonSurveyAppWrapper extends ILessonSurveyApp {
   type: 'survey' | 'lesson';
@@ -71,14 +73,37 @@ const LessonSurveyAppWrapper = ({
 
   const NAME = lessonState?.lessonData?.title;
 
+  const NOTES = lessonState?.lessonData?.notes;
+
   return (
     <div
       id={type === 'survey' ? 'survey-app-container' : 'lesson-app-container'}
       className={`bg-dark-blue w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
       ref={topLessonRef}>
       {contextHolder}
-      <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-        <h6 className="text-xs text-shadow text-medium ">{NAME}</h6>
+      <div className={`absolute bottom-1 left-0 py-4 px-6 z-100  w-auto `}>
+        <div className="flex flex-col">
+          <h6 className="text-xs text-shadow text-medium ">{NAME}</h6>
+          {NOTES !== '<p></p>' && (
+            <Popover
+              trigger={'click'}
+              zIndex={10000}
+              content={
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: NOTES
+                  }}></span>
+              }>
+              <Buttons
+                className="mt-2"
+                Icon={GrNotes}
+                label={'notes'}
+                variant="dashed"
+                size="small"
+              />
+            </Popover>
+          )}
+        </div>
       </div>
 
       <div className="fixed w-full" style={{zIndex: 5000}}>
