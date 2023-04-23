@@ -15,6 +15,7 @@ import {useRouteMatch} from 'react-router-dom';
 import {requestResetPassword} from 'utilities/urls';
 import {UserInfo} from './User';
 import {Status} from './UserStatus';
+import moment from 'moment';
 
 const fetchQuery = async (authId: string, query: string, filterKey: string) => {
   try {
@@ -55,12 +56,10 @@ const UserInformation = ({user, checkpoints, questionData, isProfile}: UserInfoP
     show: false,
     message: ''
   });
-
-  let created = () => {
-    let date = new Date(user.createdAt);
-    return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+  const created = () => {
+    if (user.createdAt === undefined) return 'n/a';
+    return moment(user.createdAt).format('MM/DD/YYYY');
   };
-
   const resetPassword = async () => {
     try {
       setLoading(true);

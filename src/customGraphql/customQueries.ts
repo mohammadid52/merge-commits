@@ -2382,7 +2382,7 @@ export const getPersonData = /* GraphQL */ `
 
       image
       language
-
+      createdAt
       lastLoggedIn
 
       lastLoggedOut
@@ -2540,6 +2540,7 @@ export const listQuestionDatas = /* GraphQL */ `
       items {
         id
         authID
+        checkpointID
         responseObject {
           qid
           response

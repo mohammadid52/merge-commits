@@ -2,7 +2,7 @@ import {formatPageName} from 'utilities/functions';
 import {API, graphqlOperation, Auth, Storage} from 'aws-amplify';
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
-import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
+import {CreateDicitionaryInput, CreateErrorLogInput, Person, UserPageState} from 'API';
 
 import {createErrorLog, updatePersonLoginTime} from 'customGraphql/customMutations';
 import {
@@ -11,6 +11,7 @@ import {
   getInstitutionsList,
   listCurricula,
   listDicitionaries,
+  listQuestionDatas,
   listRooms
 } from 'customGraphql/customQueries';
 import {createDicitionary, updatePersonLessonsData} from 'graphql/mutations';
@@ -18,6 +19,8 @@ import {getPerson as getPersonAPI} from 'graphql/queries';
 import {isEmpty} from 'lodash';
 import {allowedAuthIds} from 'state/GlobalState';
 import {v4 as uuidV4} from 'uuid';
+import {getUniqItems} from '@utilities/strings';
+import {SEARCH_LIMIT} from '@components/Lesson/constants';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -418,4 +421,105 @@ export const handleLessonMutationRating = async (
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getUserCheckpoints = (person: Person) => {
+  let studentClasses: any = person.classes?.items.map((item: any) => item?.class);
+  studentClasses = studentClasses.filter((d: any) => d !== null);
+
+  const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+    if (item?.room) {
+      return [...roomAcc, item.room];
+    } else {
+      return roomAcc;
+    }
+  }, []);
+
+  const studentCurriculars: any = studentRooms
+    .map((item: any) => item?.curricula?.items)
+    .flat(1);
+
+  const uniqCurriculars: any =
+    studentCurriculars.length > 0
+      ? getUniqItems(
+          studentCurriculars.filter((d: any) => d !== null),
+          'curriculumID'
+        )
+      : [];
+
+  const studCurriCheckp: any =
+    uniqCurriculars.length > 0
+      ? uniqCurriculars
+          .map((item: any) => item?.curriculum?.checkpoints?.items)
+          .flat(1)
+          .filter(Boolean)
+      : [];
+
+  const studentCheckpoints: any =
+    studCurriCheckp.length > 0
+      ? studCurriCheckp.map((item: any) => item?.checkpoint)
+      : [];
+
+  const sCheckpoints: any[] = [];
+
+  studentCheckpoints.forEach((item: any) => {
+    if (item && item.scope !== 'private') sCheckpoints.push(item);
+  });
+
+  const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+
+  const sortedCheckpointQ = uniqCheckpoints.map((checkpointObj: any) => {
+    return {
+      ...checkpointObj,
+      questions: {
+        items: checkpointObj.questionSeq
+          ? checkpointObj.questionSeq.map((idStr: string) => {
+              return checkpointObj.questions.items.find(
+                (questionItem: any) => questionItem.question.id === idStr
+              );
+            })
+          : checkpointObj.questions.items
+      }
+    };
+  });
+
+  const uniqCheckpointIDs: any = sortedCheckpointQ.map((item: any) => item?.id);
+
+  return {
+    checkpoints: uniqCheckpoints,
+    checkpointIds: uniqCheckpointIDs,
+    qids: sortedCheckpointQ
+  };
+};
+
+export const getQuestionData = async (
+  email: string,
+  authId: string,
+  checkpointIDs: any[]
+) => {
+  const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
+    return {
+      checkpointID: {
+        eq: item
+      }
+    };
+  });
+  const filter = {
+    and: [
+      {email: {eq: email}},
+      {authID: {eq: authId}},
+      {syllabusLessonID: {eq: '999999'}},
+      {
+        or: [...checkpointIDFilter]
+      }
+    ]
+  };
+  const results: any = await API.graphql(
+    graphqlOperation(listQuestionDatas, {
+      limit: SEARCH_LIMIT,
+      filter: filter
+    })
+  );
+  const questionData: any = results.data.listQuestionData?.items;
+  return questionData;
 };

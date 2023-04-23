@@ -10,7 +10,11 @@ import Buttons from 'atoms/Buttons';
 import {updatePerson} from 'customGraphql/customMutations';
 import {getPersonData, listQuestionDatas} from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import {updatePageState, uploadImageToS3} from 'graphql-functions/functions';
+import {
+  getQuestionData,
+  updatePageState,
+  uploadImageToS3
+} from 'graphql-functions/functions';
 import PageLayout from 'layout/PageLayout';
 import React, {lazy, useEffect, useState} from 'react';
 import {FaEdit} from 'react-icons/fa';
@@ -150,31 +154,6 @@ const Profile = () => {
     }
   }
 
-  const getQuestionData = async (checkpointIDs: any[]) => {
-    const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
-      return {
-        checkpointID: {
-          eq: item
-        }
-      };
-    });
-    const filter = {
-      and: [
-        {email: {eq: state.user.email}},
-        {authID: {eq: state.user.authId}},
-        {syllabusLessonID: {eq: '999999'}},
-        {
-          or: [...checkpointIDFilter]
-        }
-      ]
-    };
-    const results: any = await API.graphql(
-      graphqlOperation(listQuestionDatas, {filter: filter})
-    );
-    const questionData: any = results.data.listQuestionData?.items;
-    setQuestionData(questionData);
-  };
-
   async function getUser() {
     try {
       const results: any = await API.graphql(
@@ -248,7 +227,12 @@ const Profile = () => {
       const personalInfo: any = {...userData};
       delete personalInfo.classes;
       if (uniqCheckpointIDs?.length > 0) {
-        getQuestionData(uniqCheckpointIDs);
+        const questionData = await getQuestionData(
+          state.user.email,
+          state.user.authId,
+          uniqCheckpointIDs
+        );
+        setQuestionData(questionData);
       }
       setStdCheckpoints([...uniqCheckpoints]);
       setPerson(personalInfo);

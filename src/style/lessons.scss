@@ -198,14 +198,29 @@
     }
   }
 
+  .ant-picker {
+    width: 100%;
+  }
+
   textarea,
-  input {
+  input,
+  .ant-picker,
+  .ant-select .ant-select-selector {
     background-color: $lesson-form-block-bg;
     color: $lesson-form-block-color;
     border-color: $lesson-form-block-border;
     &::placeholder {
       color: $medium;
     }
+  }
+
+  .ant-picker-input input,
+  .ant-select .ant-select-selector input,
+  .ant-select-selection-item {
+    color: $lesson-form-block-color !important;
+  }
+  .ant-select-arrow {
+    color: $lesson-form-block-label;
   }
 
   .ant-space-item {

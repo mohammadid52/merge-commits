@@ -55,6 +55,7 @@ import React, {useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {Accordion} from 'uiComponents/Accordian';
 import {capitalizeFirstLetter, wait} from 'utilities/functions';
+import DemographicsModal from '../UI/ModalDialogs/DemographicsModal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -391,6 +392,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case SINGING_BOWL:
         return <ActivityModal type={type} {...commonProps} />;
 
+      case FORM_TYPES.DEMOGRAPHICS:
+        return <DemographicsModal {...commonProps} />;
+
       default:
         return (
           <div className="flex items-center justify-center">
@@ -434,6 +438,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Writing Exercise Component';
       case EMOTIONS:
         return 'Emotion Component';
+      case FORM_TYPES.DEMOGRAPHICS:
+        return 'Demographic Questions';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }

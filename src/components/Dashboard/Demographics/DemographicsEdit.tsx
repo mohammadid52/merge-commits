@@ -1,7 +1,9 @@
 import FormInput from '@components/Atoms/Form/FormInput';
+import Label from '@components/Atoms/Form/Label';
 import MultipleSelector from '@components/Atoms/Form/MultipleSelector';
 import Selector from '@components/Atoms/Form/Selector';
-import {Empty} from 'antd';
+import {DatePicker, Empty} from 'antd';
+import dayjs from 'dayjs';
 import {Fragment} from 'react';
 
 // Add interface for props
@@ -9,6 +11,7 @@ interface IDemographicsProps {
   stdCheckpoints: any;
   checkpointData: any;
   setCheckpointData: any;
+  isInLesson?: boolean;
 }
 
 export const selectedMultiOptions = (options: any[]) => {
@@ -51,7 +54,8 @@ const convertToMultiSelectList = (options: any) => {
 const DemographicsEdit = ({
   stdCheckpoints,
   checkpointData,
-  setCheckpointData
+  setCheckpointData,
+  isInLesson
 }: IDemographicsProps) => {
   // Code for Other Field
   const hasOther = (val: string | string[], other: string) => {
@@ -153,172 +157,198 @@ const DemographicsEdit = ({
     });
   };
 
+  const commonProps = {
+    className: isInLesson ? 'lesson-form-block  !mt-0 !mb-0' : ''
+  };
+
+  const DatePickerComponent = ({item, checkpointId}: any) => (
+    <div className={commonProps.className}>
+      <Label label={item?.question?.question} />
+      <DatePicker
+        defaultValue={dayjs(
+          checkpointData[checkpointId]
+            ? checkpointData[checkpointId][item.question.id]
+            : // year 2000 in new Date()
+              new Date(946684800000)
+        )}
+        size="large"
+        disabledDate={(current) => current && current > dayjs().endOf('day')}
+        placeholder={'Birthdate'}
+        id={item.question.id}
+        name=""
+        onChange={(value) =>
+          onInputChange(
+            {
+              target: {
+                // @ts-ignore
+                value: value?.$d
+              }
+            },
+            checkpointId,
+            item.question.id
+          )
+        }
+        {...commonProps}
+      />
+    </div>
+  );
+
   return (
     <>
       {stdCheckpoints?.length > 0 ? (
         <div className="">
           {stdCheckpoints.map((checkpoint: any) => (
-            <Fragment key={checkpoint.id}>
-              <div className="">
-                <div className="h-full px-4 py-5 sm:px-6">
-                  <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-darkest">
-                    {checkpoint.questions?.items.map((item: any) => (
-                      <Fragment key={item.question.id}>
-                        <div className="sm:col-span-3 p-2 flex items-end">
-                          <div className="flex flex-col justify-between w-full">
-                            {item.question.type === 'text' ? (
-                              <FormInput
-                                value={
-                                  checkpointData[checkpoint.id]
-                                    ? checkpointData[checkpoint.id][item.question.id]
-                                    : ''
-                                }
-                                id={item.question.id}
-                                name=""
-                                label={item?.question?.question}
-                                onChange={(e) =>
-                                  onInputChange(e, checkpoint.id, item.question.id)
-                                }
-                              />
-                            ) : null}
-                            {/* Will change it to text box if required. */}
-                            {item.question.type === 'input' ? (
-                              <FormInput
-                                value={
-                                  checkpointData[checkpoint.id]
-                                    ? checkpointData[checkpoint.id][item.question.id]
-                                    : ''
-                                }
-                                id={item.question.id}
-                                name=""
-                                label={item?.question?.question}
-                                onChange={(e) =>
-                                  onInputChange(e, checkpoint.id, item.question.id)
-                                }
-                              />
-                            ) : null}
-                            {item.question.type === 'link' ? (
-                              <div className="sm:col-span-3">
-                                <label
-                                  htmlFor="date picker"
-                                  className="block text-m font-medium leading-5 text-dark  ">
-                                  {item?.question?.question}
-                                </label>
-                                <div className="mt-1  border-0 border-lightest  py-2 px-3 rounded-md shadow-sm">
-                                  <input
-                                    id={item.question.id}
-                                    type="url"
-                                    name="url"
-                                    placeholder="https://example.com"
-                                    pattern="https://.*"
-                                    size={30}
-                                    required
-                                    value={
-                                      checkpointData[checkpoint.id]
-                                        ? checkpointData[checkpoint.id][item.question.id]
-                                        : ''
-                                    }
-                                    onChange={(e) =>
-                                      onInputChange(e, checkpoint.id, item.question.id)
-                                    }
-                                    className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-darkest"
-                                  />
-                                </div>
-                              </div>
-                            ) : null}
-                            {item.question.type === 'datePicker' ? (
-                              <FormInput
-                                value={
-                                  checkpointData[checkpoint.id]
-                                    ? checkpointData[checkpoint.id][item.question.id]
-                                    : ''
-                                }
-                                id={item.question.id}
-                                name=""
-                                label={item?.question?.question}
-                                onChange={(e) =>
-                                  onInputChange(e, checkpoint.id, item.question.id)
-                                }
-                              />
-                            ) : null}
-                            {item.question.type === 'selectOne' ? (
-                              <Fragment>
-                                <Selector
-                                  label={item?.question?.question}
-                                  selectedItem={
-                                    checkpointData[checkpoint.id]
-                                      ? isOther(
-                                          checkpointData[checkpoint.id][item.question.id]
-                                        )
-                                        ? 'Other'
-                                        : checkpointData[checkpoint.id][item.question.id]
-                                      : ''
-                                  }
-                                  placeholder=""
-                                  list={convertToSelectorList(item?.question?.options)}
-                                  onChange={(value) =>
-                                    onSingleSelect(
-                                      value,
-
-                                      checkpoint.id,
-                                      item.question.id
-                                    )
-                                  }
-                                />
-                                {checkpointData[checkpoint.id] &&
-                                  isOther(
-                                    checkpointData[checkpoint.id][item.question.id]
-                                  ) && (
-                                    <div className="sm:col-span-3">
-                                      <FormInput
-                                        value={getValue(checkpoint.id, item.question.id)}
-                                        id={item.question.id}
-                                        placeHolder="Mention other"
-                                        name="other"
-                                        onChange={(e) => {
-                                          onOtherInputChange(
-                                            e,
-                                            checkpoint.id,
-                                            item.question.id
-                                          );
-                                        }}
-                                      />
-                                    </div>
-                                  )}
-                              </Fragment>
-                            ) : null}
-                            {item.question.type === 'selectMany' ? (
-                              <div className="sm:col-span-3">
-                                <MultipleSelector
-                                  label={item?.question?.question}
-                                  list={convertToMultiSelectList(item?.question?.options)}
-                                  selectedItems={
-                                    checkpointData[checkpoint.id] &&
-                                    checkpointData[checkpoint.id][item.question.id]
-                                      ? selectedMultiOptions(
-                                          checkpointData[checkpoint.id][item.question.id]
-                                        )
-                                      : []
-                                  }
-                                  placeholder=""
-                                  onChange={(_, option) =>
-                                    onMultipleSelection(
-                                      option,
-                                      checkpoint.id,
-                                      item.question.id
-                                    )
-                                  }
-                                />
-                              </div>
-                            ) : null}
+            <div
+              key={checkpoint.id}
+              className="grid grid-cols-1  gap-4 sm:grid-cols-2 text-darkest">
+              {checkpoint.questions?.items.map((item: any) => (
+                <Fragment key={item.question.id}>
+                  <div className="flex items-end">
+                    <div className="flex flex-col justify-between w-full">
+                      {item.question.type === 'text' ? (
+                        <>
+                          {item.question.question === 'Birthdate (mm/dd/yyyy)' ? (
+                            <DatePickerComponent
+                              item={item}
+                              checkpointId={checkpoint.id}
+                            />
+                          ) : (
+                            <FormInput
+                              value={
+                                checkpointData[checkpoint.id]
+                                  ? checkpointData[checkpoint.id][item.question.id]
+                                  : ''
+                              }
+                              id={item.question.id}
+                              name=""
+                              label={item?.question?.question}
+                              onChange={(e) =>
+                                onInputChange(e, checkpoint.id, item.question.id)
+                              }
+                              {...commonProps}
+                            />
+                          )}
+                        </>
+                      ) : null}
+                      {/* Will change it to text box if required. */}
+                      {item.question.type === 'input' ? (
+                        <FormInput
+                          value={
+                            checkpointData[checkpoint.id]
+                              ? checkpointData[checkpoint.id][item.question.id]
+                              : ''
+                          }
+                          id={item.question.id}
+                          name=""
+                          label={item?.question?.question}
+                          onChange={(e) =>
+                            onInputChange(e, checkpoint.id, item.question.id)
+                          }
+                          {...commonProps}
+                        />
+                      ) : null}
+                      {item.question.type === 'link' ? (
+                        <div className="sm:col-span-3">
+                          <label
+                            htmlFor="date picker"
+                            className="block text-m font-medium leading-5 text-dark  ">
+                            {item?.question?.question}
+                          </label>
+                          <div className="mt-1  border-0 border-lightest  py-2 px-3 rounded-md shadow-sm">
+                            <input
+                              id={item.question.id}
+                              type="url"
+                              name="url"
+                              placeholder="https://example.com"
+                              pattern="https://.*"
+                              size={30}
+                              required
+                              value={
+                                checkpointData[checkpoint.id]
+                                  ? checkpointData[checkpoint.id][item.question.id]
+                                  : ''
+                              }
+                              onChange={(e) =>
+                                onInputChange(e, checkpoint.id, item.question.id)
+                              }
+                              className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-darkest"
+                            />
                           </div>
                         </div>
-                      </Fragment>
-                    ))}
+                      ) : null}
+                      {item.question.type === 'datePicker' ? (
+                        <DatePickerComponent item={item} checkpointId={checkpoint.id} />
+                      ) : null}
+                      {item.question.type === 'selectOne' ? (
+                        <Fragment>
+                          <Selector
+                            label={item?.question?.question}
+                            selectedItem={
+                              checkpointData[checkpoint.id]
+                                ? isOther(checkpointData[checkpoint.id][item.question.id])
+                                  ? 'Other'
+                                  : checkpointData[checkpoint.id][item.question.id]
+                                : ''
+                            }
+                            placeholder=""
+                            list={convertToSelectorList(item?.question?.options)}
+                            onChange={(value) =>
+                              onSingleSelect(
+                                value,
+
+                                checkpoint.id,
+                                item.question.id
+                              )
+                            }
+                            {...commonProps}
+                          />
+                          {checkpointData[checkpoint.id] &&
+                            isOther(checkpointData[checkpoint.id][item.question.id]) && (
+                              <div className="sm:col-span-3">
+                                <FormInput
+                                  value={getValue(checkpoint.id, item.question.id)}
+                                  id={item.question.id}
+                                  placeHolder="Mention other"
+                                  name="other"
+                                  onChange={(e) => {
+                                    onOtherInputChange(
+                                      e,
+                                      checkpoint.id,
+                                      item.question.id
+                                    );
+                                  }}
+                                  {...commonProps}
+                                />
+                              </div>
+                            )}
+                        </Fragment>
+                      ) : null}
+                      {item.question.type === 'selectMany' ? (
+                        <div className="sm:col-span-3">
+                          <MultipleSelector
+                            label={item?.question?.question}
+                            list={convertToMultiSelectList(item?.question?.options)}
+                            selectedItems={
+                              checkpointData[checkpoint.id] &&
+                              checkpointData[checkpoint.id][item.question.id]
+                                ? selectedMultiOptions(
+                                    checkpointData[checkpoint.id][item.question.id]
+                                  )
+                                : []
+                            }
+                            placeholder=""
+                            onChange={(_, option) =>
+                              onMultipleSelection(option, checkpoint.id, item.question.id)
+                            }
+                            {...commonProps}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Fragment>
+                </Fragment>
+              ))}
+            </div>
           ))}
         </div>
       ) : (
