@@ -3952,7 +3952,16 @@ export const listInstitutionsForGraphs = /* GraphQL */ `
         id
         image
         status
+        type
         phone
+        rooms {
+          items {
+            id
+            name
+            status
+            institutionID
+          }
+        }
         website
         name
         zip

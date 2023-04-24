@@ -189,6 +189,7 @@ const NavBarRouter = (instProps: any) => {
             </ErrorBoundary>
           )}
         />
+
         <Route
           path={`${match.url}/edit`}
           exact

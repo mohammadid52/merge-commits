@@ -6,6 +6,7 @@ export interface IStepElementInterface {
   disabled?: boolean;
   subTitle?: string;
   title: string;
+  hide?: boolean;
   stepValue: string;
 }
 

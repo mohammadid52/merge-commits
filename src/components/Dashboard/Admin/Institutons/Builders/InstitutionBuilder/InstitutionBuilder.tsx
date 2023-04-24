@@ -19,6 +19,7 @@ interface InstitutionBuilderProps {
   postInfoUpdate?: (data: any) => void;
   toggleUpdateState?: () => void;
   updateServiceProviders?: Function;
+  inside?: boolean;
 }
 
 export interface InstitutionInfo {
@@ -55,11 +56,13 @@ const InstitutionBuilder = ({
   institutionId,
   institute,
   loading,
-  postInfoUpdate
+  postInfoUpdate,
+  inside
 }: InstitutionBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
+
   const step = params.get('step');
 
   const {InstitutionBuilderDict, userLanguage} = useDictionary();
@@ -99,16 +102,18 @@ const InstitutionBuilder = ({
       title: 'Service Providers',
       subTitle: 'institutions where you provide a service',
       stepValue: 'service_providers',
-      disabled: Boolean(!institutionInfo.isServiceProvider)
+      disabled: Boolean(!institutionInfo.isServiceProvider),
+      hide: Boolean(inside)
     },
 
     {
       title: 'Staff',
       description: "institution's staff",
       stepValue: 'staff',
+      hide: Boolean(inside),
       disabled: Boolean(!institutionInfo.id)
     }
-  ];
+  ].filter((step) => !step.hide);
 
   const handleTabSwitch = (step: string) => {
     const redirectionUrl = `${match.url}?step=${step}&id=${institutionInfo.id}`;
@@ -156,7 +161,7 @@ const InstitutionBuilder = ({
         );
 
       case 'service_providers':
-        return <ServiceProviderList id={institute?.id} />;
+        return <ServiceProviderList postMutation={postInfoUpdate} id={institute?.id} />;
 
       case 'staff':
         return institutionId ? (

@@ -3,22 +3,21 @@ import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {v4 as uuidv4} from 'uuid';
 
-import {updateInstitution, createInstitution} from 'customGraphql/customMutations';
+import {createInstitution, updateInstitution} from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {statesList} from 'utilities/staticData';
 
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
-import {uploadImageToS3} from 'graphql-functions/functions';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {RoomStatus, UpdateInstitutionInput} from 'API';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
+import {uploadImageToS3} from 'graphql-functions/functions';
 import {getImageFromS3} from 'utilities/services';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import {RoomStatus} from 'API';
 import {RoomStatusList} from '../../EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
-import {listInstitutions} from '@graphql/queries';
 
 const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const history = useHistory();
@@ -163,8 +162,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             'image/jpeg'
           );
         }
-        let payload: any = {
-          label: instituteData.name,
+        let payload: Omit<UpdateInstitutionInput, 'id'> = {
+          name: instituteData.name,
           type: instituteData.type,
           website: instituteData.website,
           address: instituteData.address,
@@ -181,7 +180,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           payload = {
             ...payload,
             id: instituteData.id
-          };
+          } as UpdateInstitutionInput;
           const result: any = await API.graphql(
             graphqlOperation(updateInstitution, {
               input: payload

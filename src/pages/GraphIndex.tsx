@@ -174,7 +174,7 @@ const GraphIndex = () => {
       showTitleBanner={false}
       bannerImg={general.dashboardUrl}
       bannerTitle="Dashboard">
-      <PageLayout title="Graph" hideInstProfile hideGoBack>
+      <PageLayout title="Graph & Schedules" hideInstProfile hideGoBack>
         <Tabs items={listOfCategories} />
       </PageLayout>
     </DashboardContainer>
