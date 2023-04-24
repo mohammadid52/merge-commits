@@ -4105,3 +4105,52 @@ export const listUniversalLessonsForGraph = /* GraphQL */ `
     }
   }
 `;
+
+export const listRoomsCalendar = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        isZoiq
+        name
+        startDate
+        endDate
+        frequency
+
+        curricula {
+          items {
+            curriculum {
+              name
+              id
+              universalSyllabus {
+                items {
+                  unit {
+                    id
+                    lessons {
+                      items {
+                        lesson {
+                          id
+                          duration
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+      }
+      nextToken
+    }
+  }
+`;

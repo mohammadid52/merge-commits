@@ -97,8 +97,9 @@ const InstitutionBuilder = ({
     },
     {
       title: 'Service Providers',
-      subTitle: "institution's service providers",
-      stepValue: 'service_providers'
+      subTitle: 'institutions where you provide a service',
+      stepValue: 'service_providers',
+      disabled: Boolean(!institutionInfo.isServiceProvider)
     },
 
     {
@@ -155,9 +156,7 @@ const InstitutionBuilder = ({
         );
 
       case 'service_providers':
-        if (institute?.serviceProviders?.items?.length === 0)
-          return <Empty description="No service providers found" />;
-        return <ServiceProviderList serviceProviders={institute?.serviceProviders} />;
+        return <ServiceProviderList id={institute?.id} />;
 
       case 'staff':
         return institutionId ? (

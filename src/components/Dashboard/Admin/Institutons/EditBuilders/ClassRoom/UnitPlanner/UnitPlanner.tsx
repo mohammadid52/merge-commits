@@ -23,6 +23,109 @@ interface IUnitPlannerProps {
   setLogsChanged: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const calculateAvailableStartDate = (
+  date: Moment,
+  frequency: any,
+  step: number,
+  duration: number,
+  scheduleDates: Date[],
+  frequencyMapping: any
+) => {
+  if (frequency === 'M/W/F' && ![1, 3, 5].includes(moment(date).day())) {
+    date = moment(new Date(moment(date).add(2, frequency).toDate()));
+  }
+  if (frequency === 'Tu/Th' && ![2, 4].includes(moment(date).day())) {
+    date = moment(new Date(moment(date).add(2, frequency).toDate()));
+  }
+  let iteration: number = 1,
+    startDate,
+    estEndDate,
+    i = 0;
+  while (iteration <= Math.ceil(duration)) {
+    const isOccupied = scheduleDates.find(
+      (ele) =>
+        new Date(new Date(ele).toDateString()).getTime() ===
+        new Date(moment(date).add(i, frequency).toDate()).getTime()
+    );
+
+    if (
+      !isOccupied &&
+      (frequencyMapping !== 'M/W/F' ||
+        (frequencyMapping === 'M/W/F' &&
+          [1, 3, 5].includes(moment(date).add(i, frequency).day()))) &&
+      (frequencyMapping !== 'Tu/Th' ||
+        (frequencyMapping === 'Tu/Th' &&
+          [2, 4].includes(moment(date).add(i, frequency).day())))
+    ) {
+      if (iteration === 1) {
+        startDate = new Date(moment(date).add(i, frequency).toDate());
+      }
+      if (iteration === duration) {
+        estEndDate = new Date(moment(date).add(i, frequency).toDate());
+      }
+      iteration++;
+    }
+    i += step;
+  }
+  return {startDate, estEndDate: estEndDate || startDate};
+};
+
+export const calculateSchedule = (
+  syllabusList: any[],
+  startDate: any,
+  frequency: any,
+  lessonImpactLogs: any[]
+) => {
+  let count: number = 0,
+    lastOccupiedDate: any = startDate,
+    scheduleDates = lessonImpactLogs
+      .filter((log: any) => log.adjustment === 'Push')
+      .map((log: any) => log.impactDate);
+
+  return syllabusList.map((syllabus: any) => ({
+    ...syllabus,
+    startDate: lastOccupiedDate,
+    lessons: {
+      ...syllabus.lessons,
+      items: syllabus.lessons.items
+        .filter((item: any) => item.lesson)
+        .map((item: any) => {
+          const freq = frequency || 'One Time';
+          if (count !== 0 && 1 - count < item.lesson.duration) {
+            lastOccupiedDate = moment(lastOccupiedDate).add(
+              frequencyMapping[freq].step,
+              frequencyMapping[freq].unit
+            );
+            count = 0;
+          }
+          count += item.lesson.duration;
+
+          const {startDate, estEndDate}: any = calculateAvailableStartDate(
+            moment(lastOccupiedDate),
+            frequencyMapping[freq].unit,
+            frequencyMapping[freq].step,
+            item.lesson.duration,
+            scheduleDates,
+            frequency
+          );
+
+          item.startDate = startDate;
+          item.estEndDate = estEndDate;
+
+          lastOccupiedDate = Number.isInteger(count)
+            ? moment(item.estEndDate).add(
+                frequencyMapping[freq].step,
+                frequencyMapping[freq].unit
+              )
+            : item.estEndDate;
+          count = count >= 1 ? 0 : count;
+
+          return item;
+        })
+    }
+  }));
+};
+
 const UnitPlanner = ({
   lessonImpactLogs,
   logsChanged,
@@ -41,6 +144,20 @@ const UnitPlanner = ({
     }
   }, [roomData.curricular?.id]);
   const history = useHistory();
+
+  const setImpactLogs = () => {
+    const logs = calculateSchedule(
+      syllabusList,
+      roomData.startDate,
+      roomData.frequency,
+      lessonImpactLogs
+    );
+
+    if (logs.length > 0) {
+      setSyllabusList(logs);
+      setLogsChanged(true);
+    }
+  };
 
   const fetchClassRoomSyllabus = async () => {
     try {
@@ -71,7 +188,7 @@ const UnitPlanner = ({
       );
       setTimeout(() => {
         if (isDetailsComplete) {
-          calculateSchedule();
+          setImpactLogs();
         }
       }, 500);
       setLoading(false);
@@ -82,107 +199,9 @@ const UnitPlanner = ({
 
   useEffect(() => {
     if (isDetailsComplete && syllabusList.length) {
-      calculateSchedule();
+      setImpactLogs();
     }
   }, [isDetailsComplete, syllabusList.length]);
-
-  const calculateAvailableStartDate = (
-    date: Moment,
-    frequency: any,
-    step: number,
-    duration: number,
-    scheduleDates: Date[]
-  ) => {
-    if (frequency === 'M/W/F' && ![1, 3, 5].includes(moment(date).day())) {
-      date = moment(new Date(moment(date).add(2, frequency).toDate()));
-    }
-    if (frequency === 'Tu/Th' && ![2, 4].includes(moment(date).day())) {
-      date = moment(new Date(moment(date).add(2, frequency).toDate()));
-    }
-    let iteration: number = 1,
-      startDate,
-      estEndDate,
-      i = 0;
-    while (iteration <= Math.ceil(duration)) {
-      const isOccupied = scheduleDates.find(
-        (ele) =>
-          new Date(new Date(ele).toDateString()).getTime() ===
-          new Date(moment(date).add(i, frequency).toDate()).getTime()
-      );
-
-      if (
-        !isOccupied &&
-        (roomData.frequency !== 'M/W/F' ||
-          (roomData.frequency === 'M/W/F' &&
-            [1, 3, 5].includes(moment(date).add(i, frequency).day()))) &&
-        (roomData.frequency !== 'Tu/Th' ||
-          (roomData.frequency === 'Tu/Th' &&
-            [2, 4].includes(moment(date).add(i, frequency).day())))
-      ) {
-        if (iteration === 1) {
-          startDate = new Date(moment(date).add(i, frequency).toDate());
-        }
-        if (iteration === duration) {
-          estEndDate = new Date(moment(date).add(i, frequency).toDate());
-        }
-        iteration++;
-      }
-      i += step;
-    }
-    return {startDate, estEndDate: estEndDate || startDate};
-  };
-
-  const calculateSchedule = () => {
-    let count: number = 0,
-      lastOccupiedDate: any = roomData.startDate,
-      scheduleDates = lessonImpactLogs
-        .filter((log: any) => log.adjustment === 'Push')
-        .map((log: any) => log.impactDate);
-
-    setSyllabusList((prevSyllabusList: any) =>
-      prevSyllabusList.map((syllabus: any) => ({
-        ...syllabus,
-        startDate: lastOccupiedDate,
-        lessons: {
-          ...syllabus.lessons,
-          items: syllabus.lessons.items
-            .filter((item: any) => item.lesson)
-            .map((item: any) => {
-              if (count !== 0 && 1 - count < item.lesson.duration) {
-                lastOccupiedDate = moment(lastOccupiedDate).add(
-                  frequencyMapping[roomData.frequency || 'One Time'].step,
-                  frequencyMapping[roomData.frequency || 'One Time'].unit
-                );
-                count = 0;
-              }
-              count += item.lesson.duration;
-
-              const {startDate, estEndDate}: any = calculateAvailableStartDate(
-                moment(lastOccupiedDate),
-                frequencyMapping[roomData.frequency || 'One Time'].unit,
-                frequencyMapping[roomData.frequency || 'One Time'].step,
-                item.lesson.duration,
-                scheduleDates
-              );
-
-              item.startDate = startDate;
-              item.estEndDate = estEndDate;
-
-              lastOccupiedDate = Number.isInteger(count)
-                ? moment(item.estEndDate).add(
-                    frequencyMapping[roomData.frequency].step,
-                    frequencyMapping[roomData.frequency].unit
-                  )
-                : item.estEndDate;
-              count = count >= 1 ? 0 : count;
-              return item;
-            })
-        }
-      }))
-    );
-
-    setLogsChanged(false);
-  };
 
   const tableConfig = (lessons: any[]) => {
     return {
@@ -260,7 +279,7 @@ const UnitPlanner = ({
           label={'Run calculations and save'}
           size="middle"
           onClick={() => {
-            calculateSchedule();
+            setImpactLogs();
             saveRoomDetails();
           }}
         />

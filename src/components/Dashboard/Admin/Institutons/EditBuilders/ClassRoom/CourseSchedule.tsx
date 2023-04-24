@@ -201,6 +201,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
     if (isValid) {
       try {
+        console.log(scheduleData?.startDate, scheduleData?.endDate);
+
         const input = {
           id,
           startDate: awsFormatDate(
@@ -209,8 +211,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           endDate: awsFormatDate(
             dateString('-', 'WORLD', scheduleData?.endDate || new Date())
           ),
-          startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
-          endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
+          // startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
+          // endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
           frequency: scheduleData.frequency,
           // location: scheduleData.location,
           notes: scheduleData.notes,
@@ -241,7 +243,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     setStartDateFocus(true);
   };
   const dateFormat = 'YYYY/MM/DD';
-  const timeFormat = 'HH:mm';
+
   // const datePickerValue =
 
   return (
@@ -338,8 +340,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           isDetailsComplete={Boolean(
             scheduleData.startDate &&
               scheduleData.endDate &&
-              scheduleData.startTime &&
-              scheduleData.endTime &&
+              // scheduleData.startTime &&
+              // scheduleData.endTime &&
               scheduleData.frequency &&
               scheduleData.weekDay
           )}

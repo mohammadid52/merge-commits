@@ -1,30 +1,18 @@
-import {G2, Heatmap} from '@ant-design/plots';
+import {G2, Heatmap, HeatmapConfig} from '@ant-design/plots';
 import Loader from '@components/Atoms/Loader';
+import {calculateSchedule} from '@components/Dashboard/Admin/Institutons/EditBuilders/ClassRoom/UnitPlanner/UnitPlanner';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {listInstitutionsForCalendarGraphs} from '@customGraphql/customQueries';
+import {listRoomsCalendar} from '@customGraphql/customQueries';
 import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
+import {RoomStatus} from 'API';
+import {Card, List} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
+import {get} from 'lodash';
 import moment from 'moment';
-import {useEffect, useState} from 'react';
 
 const InstitutionCalendar = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    asyncFetch();
-  }, []);
-
-  const asyncFetch = () => {
-    fetch('https://gw.alipayobjects.com/os/antvdemo/assets/data/github-commit.json')
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => {
-        console.log('fetch data failed', error);
-      });
-  };
-
   G2.registerShape('polygon', 'boundary-polygon', {
     draw(cfg, container) {
       const group = container.addGroup();
@@ -82,23 +70,30 @@ const InstitutionCalendar = () => {
 
   const {zoiqFilter} = useGlobalContext();
 
-  const fetchInstitutionLocation = async () => {
+  const fetchRooms = async () => {
     const res: any = await API.graphql(
-      graphqlOperation(listInstitutionsForCalendarGraphs, {
+      graphqlOperation(listRoomsCalendar, {
         limit: SEARCH_LIMIT,
-        filter: withZoiqFilter({}, zoiqFilter)
+        filter: withZoiqFilter(
+          {
+            status: {
+              eq: RoomStatus.ACTIVE
+            }
+          },
+          zoiqFilter
+        )
       })
     );
-    return res.data.listInstitutions.items;
+    return res.data.listRooms.items;
   };
 
   const {
-    data: insitutionList,
+    data: rooms,
     isLoading,
     isFetched
   } = useQuery<any[]>({
-    queryKey: ['institution-list-calendar'],
-    queryFn: fetchInstitutionLocation
+    queryKey: ['syllabus-list-calendar'],
+    queryFn: fetchRooms
   });
 
   if (isLoading && !isFetched) {
@@ -109,66 +104,92 @@ const InstitutionCalendar = () => {
     );
   }
 
-  if (insitutionList && insitutionList?.length > 0) {
-    //   filter rooms with null startDate and endDate
-
-    const institutionsWithRooms = insitutionList.filter(
-      (d) => d?.rooms?.items?.length > 0
-    );
-
-    const filteredInstitutionList = institutionsWithRooms
+  if (rooms && rooms.length > 0) {
+    const syllabusList = rooms
       .map((d) => {
+        const syllabus = get(
+          d,
+          `curricula.items[0].curriculum.universalSyllabus.items`,
+          []
+        );
+
+        const lessons = syllabus.map((d: any) => {
+          return {
+            ...d,
+            lessons: get(d, `unit.lessons`, [])
+          };
+        });
+
         return {
           id: d.id,
-          rooms: d?.rooms?.items?.filter(
-            (room: {startDate: any; endDate: any}) => room.startDate && room.endDate
-          )
+          startDate: d.startDate,
+          frequency: d.frequency,
+          syllabusList: lessons,
+          lessonImpactLogs: d?.lessonImpactLog || []
         };
       })
-      .filter((d) => d.rooms.length > 0);
+      .filter((d) => d.syllabusList.length > 0);
 
-    const rooms = filteredInstitutionList.map((d) => d.rooms).flat();
+    const getLogs = () => {
+      const finalLogs = syllabusList.map((syllabus) => {
+        const logs = calculateSchedule(
+          syllabus.syllabusList,
+          syllabus.startDate,
+          syllabus.frequency,
+          syllabus.lessonImpactLogs
+        );
+        return logs;
+      });
 
-    const filterOnlyCurrentYear = rooms.filter(
-      (d) => moment(d.startDate).year() === moment().year()
-    );
-    const sortedDate = filterOnlyCurrentYear.sort(
-      (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-    );
+      return finalLogs;
+    };
+
+    const filtered = getLogs()
+      .flat()
+      .filter(
+        (d) => Boolean(d.startDate) && moment(d.startDate).year() === moment().year()
+      );
 
     let allDates: any[] = [];
 
-    sortedDate.forEach((d) => {
-      const startDate = moment(d.startDate);
-      const endDate = moment(d.endDate);
+    filtered.forEach((d) => {
+      d.lessons.items.forEach(
+        (lesson: {
+          startDate: moment.MomentInput;
+          endDate: moment.MomentInput;
+          date: string;
+          lesson: {title: string};
+        }) => {
+          const startDate = moment(lesson.startDate);
+          const endDate = moment(lesson.endDate);
 
-      const diff = endDate.diff(startDate, 'days');
-      const dates = [];
-      for (let i = 0; i <= diff; i++) {
-        const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
+          const diff = endDate.diff(startDate, 'days');
+          const dates = [];
+          for (let i = 0; i <= diff; i++) {
+            const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
 
-        const existingDate = allDates.find((d) => d.date === date);
+            const existingDate = allDates.find((lesson) => lesson.date === date);
 
-        dates.push({
-          date,
-          holidays: existingDate ? existingDate.holidays + 1 : 1,
-          week: moment(date).week().toString(),
-          day: moment(date).weekday(),
-          month: moment(date).month(),
-          // get last week of the month
-          lastWeek: moment(date).week() === moment(date).endOf('month').week(),
-          // get last day of the week
-          lastDay: moment(date).weekday() === 6
-        });
-      }
-      allDates.push(...dates);
+            dates.push({
+              date,
+              holidays: 1,
+              week: moment(date).week().toString(),
+              day: moment(date).weekday(),
+              month: moment(date).month(),
+              // get last week of the month
+              lastWeek: moment(date).week() === moment(date).endOf('month').week(),
+              // get last day of the week
+              lastDay: moment(date).weekday() === 6,
+              lessonName: lesson.lesson.title
+            });
+          }
+          allDates.push(...dates);
+        }
+      );
     });
+    console.log('🚀 ~ file: InstitutionCalendar.tsx:153 ~ allDates:', allDates);
 
-    console.log(allDates.slice(0, 20));
-
-    let monthNames: string[] = [];
-
-    const config = {
+    const config: HeatmapConfig = {
       data: allDates,
       height: 400,
       autoFit: false,
@@ -177,6 +198,7 @@ const InstitutionCalendar = () => {
       colorField: 'holidays',
       reflect: 'y',
       shape: 'boundary-polygon',
+
       meta: {
         day: {
           type: 'cat',
@@ -190,6 +212,9 @@ const InstitutionCalendar = () => {
         },
         date: {
           type: 'cat'
+        },
+        lessonName: {
+          sync: true
         }
       },
       yAxis: {
@@ -197,13 +222,29 @@ const InstitutionCalendar = () => {
       },
       tooltip: {
         title: 'date',
-        showMarkers: false
+
+        showMarkers: false,
+        customContent(title, data) {
+          if (data && data.length > 0) {
+            const current = allDates.find((d) => d.date === data[0]?.data.date);
+
+            return (
+              <Card>
+                <Card.Meta
+                  // title={current?.lessonName}
+                  description={moment(current?.date).format('DD MMM YYYY')}
+                />
+              </Card>
+            );
+          }
+        }
       },
       interactions: [
         {
           type: 'element-active'
         }
       ],
+
       xAxis: {
         position: 'top',
         tickLine: null,
@@ -234,7 +275,28 @@ const InstitutionCalendar = () => {
 
     return <Heatmap {...config} />;
   }
-  return null;
+
+  // if (insitutionList && insitutionList?.length > 0) {
+  //   //   filter rooms with null startDate and endDate
+
+  //   const institutionsWithRooms = insitutionList.filter(
+  //     (d) => d?.rooms?.items?.length > 0
+  //   );
+
+  //   const filteredInstitutionList = institutionsWithRooms
+  //     .map((d) => {
+  //       return {
+  //         id: d.id,
+  //         rooms: d?.rooms?.items?.filter(
+  //           (room: {startDate: any; endDate: any}) => room.startDate && room.endDate
+  //         )
+  //       };
+  //     })
+  //     .filter((d) => d.rooms.length > 0);
+
+  //   const rooms = filteredInstitutionList.map((d) => d.rooms).flat();
+
+  return <div>progress</div>;
 };
 
 export default InstitutionCalendar;
