@@ -169,14 +169,14 @@ const GraphIndex = () => {
           items={listOfGraphs.filter((graph) => graph.key === 'institutions')}
         />
       )
-    },
-    {
-      label: 'Schedule',
-      key: 'schedule',
-      children: (
-        <RowWrapper items={listOfGraphs.filter((graph) => graph.key === 'schedule')} />
-      )
     }
+    // {
+    //   label: 'Schedule',
+    //   key: 'schedule',
+    //   children: (
+    //     <RowWrapper items={listOfGraphs.filter((graph) => graph.key === 'schedule')} />
+    //   )
+    // }
   ];
 
   return (
