@@ -1,15 +1,13 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonHeaderBar from '@components/Header/LessonHeaderBar';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {Popover, notification} from 'antd';
+import {notification} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import Buttons from '@components/Atoms/Buttons';
-import {GrNotes} from 'react-icons/gr';
 
 interface LessonSurveyAppWrapper extends ILessonSurveyApp {
   type: 'survey' | 'lesson';
