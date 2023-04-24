@@ -1,5 +1,5 @@
 import useDictionary from '@customHooks/dictionary';
-import {theme} from 'antd';
+import {Typography, theme} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
@@ -58,9 +58,11 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
       } ${extraContainerClass} w-full`}>
       <div className={`${textWidth}`}>
         {title && (
-          <h2 style={{color: token.colorTextHeading, fontSize: token.fontSizeLG}}>
+          <Typography.Title
+            level={3}
+            style={{color: token.colorTextHeading, fontSize: token.fontSizeLG}}>
             {title}
-          </h2>
+          </Typography.Title>
         )}
 
         {backButton && (

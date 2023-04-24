@@ -242,7 +242,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     setShowAlert(false);
     setStartDateFocus(true);
   };
-  const dateFormat = 'YYYY/MM/DD';
+  const dateFormat = 'MM/DD/YYYY';
 
   // const datePickerValue =
 
@@ -310,17 +310,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         </div>
         <Divider />
 
-        <div className="mt-3">
-          <ClassRoomHolidays
-            lessonImpactLogs={lessonImpactLogs}
-            logsLoading={logsLoading}
-            setLessonImpactLogs={setLessonImpactLogs}
-            setLogsChanged={setLogsChanged}
-            sortLogsByDate={sortLogsByDate}
-          />
-        </div>
-        <Divider />
-
         <UnitPlanner
           lessonImpactLogs={lessonImpactLogs}
           logsChanged={logsChanged || unsavedChanges}
@@ -346,6 +335,17 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               scheduleData.weekDay
           )}
         />
+        <Divider />
+
+        <div className="mt-3">
+          <ClassRoomHolidays
+            lessonImpactLogs={lessonImpactLogs}
+            logsLoading={logsLoading}
+            setLessonImpactLogs={setLessonImpactLogs}
+            setLogsChanged={setLogsChanged}
+            sortLogsByDate={sortLogsByDate}
+          />
+        </div>
       </PageLayout>
 
       {serverMessage.message && (
