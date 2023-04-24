@@ -1,4 +1,5 @@
 import Loader from '@components/Atoms/Loader';
+import L from 'leaflet';
 
 import {useEffect, useState} from 'react';
 import {MapContainer, TileLayer} from 'react-leaflet';
@@ -25,6 +26,7 @@ const GraphMap = ({markers}: {markers: any[]}) => {
 
   useEffect(() => {
     addLinkBlock();
+
     setTimeout(() => {
       setIsLoaded(true);
     }, 300);
@@ -42,6 +44,7 @@ const GraphMap = ({markers}: {markers: any[]}) => {
     <MapContainer
       scrollWheelZoom={false}
       className="h-[60vh]"
+      id={'map'}
       center={[29.76, -95.37]}
       zoom={9}
       maxZoom={18}>

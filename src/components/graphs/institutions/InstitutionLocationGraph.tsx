@@ -107,15 +107,13 @@ const InstitutionLocationGraph = () => {
     //  then pass the lat and long to the marker component
     //  then pass the marker component to the map component
 
-    const markers = insitutionList.map((institution) => {
-      return (
-        <CustomMarker
-          key={institution.zip}
-          zipCode={institution.zip}
-          institution={institution}
-        />
-      );
-    });
+    const markers = insitutionList.map((institution) => (
+      <CustomMarker
+        key={institution.id}
+        zipCode={institution.zip}
+        institution={institution}
+      />
+    ));
 
     return (
       <div className="w-full overflow-hidden">

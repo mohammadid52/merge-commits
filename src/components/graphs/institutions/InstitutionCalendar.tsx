@@ -187,7 +187,6 @@ const InstitutionCalendar = () => {
         }
       );
     });
-    console.log('🚀 ~ file: InstitutionCalendar.tsx:153 ~ allDates:', allDates);
 
     const config: HeatmapConfig = {
       data: allDates,

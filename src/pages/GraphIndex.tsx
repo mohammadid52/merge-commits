@@ -4,34 +4,40 @@ import {Card, Col, Row, Tabs, TabsProps} from 'antd';
 import {general} from 'assets';
 import PageLayout from 'layout/PageLayout';
 import {Redirect} from 'react-router-dom';
-import {lazy} from 'react';
-const AttachedCoursesGraph = lazy(() => import('components/graphs/AttachedCoursesGraph'));
-const InstitutionLocationGraph = lazy(
-  () => import('@components/graphs/institutions/InstitutionLocationGraph')
-);
-const StudentsByStatusGraph = lazy(
-  () => import('components/graphs/students/StudentsByStatusGraph')
-);
-const SurveyCompletedGraph = lazy(() => import('components/graphs/SurveyCompletedGraph'));
-const WritingExerciseGraph = lazy(() => import('components/graphs/WritingExerciseGraph'));
-const StudentsByInstitutionGraph = lazy(
-  () => import('components/graphs/students/StudentsByInstitutionGraph')
-);
-const StudentsByTypeGraph = lazy(
-  () => import('components/graphs/students/StudentsByTypeGraph')
-);
-const StudentsByDemographicsGraph = lazy(
-  () => import('components/graphs/students/StudentsByDemographicsGraph')
-);
-const CompletedIncompletedGraph = lazy(
-  () => import('components/graphs/CompletedIncompletedGraph')
-);
-const InstitutionStatusGraph = lazy(
-  () => import('@components/graphs/institutions/InstitutionStatusGraph')
-);
-const InstitutionCalendar = lazy(
-  () => import('@components/graphs/institutions/InstitutionCalendar')
-);
+// const AttachedCoursesGraph = lazy(() => import('components/graphs/AttachedCoursesGraph'));
+import AttachedCoursesGraph from 'components/graphs/AttachedCoursesGraph';
+import InstitutionLocationGraph from 'components/graphs/institutions/InstitutionLocationGraph';
+
+// const StudentsByStatusGraph = lazy(
+//   () => import('components/graphs/students/StudentsByStatusGraph')
+// );
+import StudentsByStatusGraph from 'components/graphs/students/StudentsByStatusGraph';
+// const SurveyCompletedGraph = lazy(() => import('components/graphs/SurveyCompletedGraph'));
+import SurveyCompletedGraph from 'components/graphs/SurveyCompletedGraph';
+// const WritingExerciseGraph = lazy(() => import('components/graphs/WritingExerciseGraph'));
+import WritingExerciseGraph from 'components/graphs/WritingExerciseGraph';
+// const StudentsByInstitutionGraph = lazy(
+//   () => import('components/graphs/students/StudentsByInstitutionGraph')
+// );
+import StudentsByInstitutionGraph from 'components/graphs/students/StudentsByInstitutionGraph';
+// const StudentsByTypeGraph = lazy(
+//   () => import('components/graphs/students/StudentsByTypeGraph')
+// );
+import StudentsByDemographicsGraph from '@components/graphs/students/StudentsByDemographicsGraph';
+import StudentsByTypeGraph from 'components/graphs/students/StudentsByTypeGraph';
+// const CompletedIncompletedGraph = lazy(
+//   () => import('components/graphs/CompletedIncompletedGraph')
+// );
+import CompletedIncompletedGraph from 'components/graphs/CompletedIncompletedGraph';
+// const InstitutionStatusGraph = lazy(
+//   () => import('@components/graphs/institutions/InstitutionStatusGraph')
+// );
+import InstitutionStatusGraph from '@components/graphs/institutions/InstitutionStatusGraph';
+// const InstitutionCalendar = lazy(
+//   () => import('@components/graphs/institutions/InstitutionCalendar')
+// );
+
+import InstitutionCalendar from '@components/graphs/institutions/InstitutionCalendar';
 
 const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}[]}) => {
   return (
@@ -169,7 +175,7 @@ const GraphIndex = () => {
       bannerImg={general.dashboardUrl}
       bannerTitle="Dashboard">
       <PageLayout title="Graph" hideInstProfile hideGoBack>
-        <Tabs defaultActiveKey="institutions" items={listOfCategories} />
+        <Tabs items={listOfCategories} />
       </PageLayout>
     </DashboardContainer>
   );
