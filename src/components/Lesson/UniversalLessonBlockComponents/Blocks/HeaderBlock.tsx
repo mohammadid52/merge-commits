@@ -6,6 +6,7 @@ import {GrNotes} from 'react-icons/gr';
 import {Popover, Tooltip} from 'antd';
 import Modal from '@components/Atoms/Modal';
 import {CgNotes} from 'react-icons/cg';
+import useAuth from '@customHooks/useAuth';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
@@ -29,8 +30,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
   };
 
   const [showNotesModal, setShowNotesModal] = useState(false);
-  console.log(value);
-
+  const {isTeacher} = useAuth();
   return (
     <div className="w-auto">
       <Modal
@@ -51,7 +51,8 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
             {composeHeader(id, value[0])}
 
             {/* if lenght is 3. that means it has notes for teacher */}
-            {value.length === 3 &&
+            {isTeacher &&
+              value.length === 3 &&
               value[2]?.value !== '' &&
               value[2]?.value !== '<p></p>' && (
                 <div className="absolute right-0 top-0">
