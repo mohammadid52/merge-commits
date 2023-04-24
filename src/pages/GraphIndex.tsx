@@ -43,7 +43,10 @@ const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}
   return (
     <Row gutter={[16, 24]}>
       {items.map((graph) => (
-        <Col key={graph.title} className="gutter-row" span={12}>
+        <Col
+          key={graph.title}
+          className="gutter-row"
+          span={graph.title === 'Calendar' ? 24 : 12}>
           <Card type="inner" title={graph.title}>
             {graph.component}
           </Card>
@@ -116,7 +119,7 @@ const listOfGraphs = [
   },
   {
     title: 'Calendar',
-    key: 'institutions',
+    key: 'schedule',
 
     component: <InstitutionCalendar />
   }
@@ -165,6 +168,13 @@ const GraphIndex = () => {
         <RowWrapper
           items={listOfGraphs.filter((graph) => graph.key === 'institutions')}
         />
+      )
+    },
+    {
+      label: 'Schedule',
+      key: 'schedule',
+      children: (
+        <RowWrapper items={listOfGraphs.filter((graph) => graph.key === 'schedule')} />
       )
     }
   ];

@@ -7,67 +7,16 @@ import {listRoomsCalendar} from '@customGraphql/customQueries';
 import {useQuery} from '@tanstack/react-query';
 import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
-import {Card, List} from 'antd';
+import {Calendar, Card, List} from 'antd';
+
 import {API, graphqlOperation} from 'aws-amplify';
+
 import {get} from 'lodash';
 import moment from 'moment';
+import type {Dayjs} from 'dayjs';
+import type {CalendarMode} from 'antd/es/calendar/generateCalendar';
 
 const InstitutionCalendar = () => {
-  G2.registerShape('polygon', 'boundary-polygon', {
-    draw(cfg, container) {
-      const group = container.addGroup();
-      const attrs = {
-        stroke: '#fff',
-        lineWidth: 1,
-        fill: cfg.color,
-        paht: []
-      };
-      const points = cfg.points;
-      const path = [
-        ['M', points[0].x, points[0].y],
-        ['L', points[1].x, points[1].y],
-        ['L', points[2].x, points[2].y],
-        ['L', points[3].x, points[3].y],
-        ['Z']
-      ]; // @ts-ignore
-
-      attrs.path = this.parsePath(path);
-      group.addShape('path', {
-        attrs
-      });
-
-      if (cfg.data.lastWeek) {
-        const linePath = [
-          ['M', points[2].x, points[2].y],
-          ['L', points[3].x, points[3].y]
-        ];
-
-        group.addShape('path', {
-          attrs: {
-            path: this.parsePath(linePath),
-            lineWidth: 4,
-            stroke: '#404040'
-          }
-        });
-
-        if (cfg.data.lastDay) {
-          group.addShape('path', {
-            attrs: {
-              path: this.parsePath([
-                ['M', points[1].x, points[1].y],
-                ['L', points[2].x, points[2].y]
-              ]),
-              lineWidth: 4,
-              stroke: '#404040'
-            }
-          });
-        }
-      }
-
-      return group;
-    }
-  });
-
   const {zoiqFilter} = useGlobalContext();
 
   const fetchRooms = async () => {
@@ -188,91 +137,11 @@ const InstitutionCalendar = () => {
       );
     });
 
-    const config: HeatmapConfig = {
-      data: allDates,
-      height: 400,
-      autoFit: false,
-      xField: 'week',
-      yField: 'day',
-      colorField: 'holidays',
-      reflect: 'y',
-      shape: 'boundary-polygon',
-
-      meta: {
-        day: {
-          type: 'cat',
-          values: ['Sun', 'Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat']
-        },
-        week: {
-          type: 'cat'
-        },
-        holidays: {
-          sync: true
-        },
-        date: {
-          type: 'cat'
-        },
-        lessonName: {
-          sync: true
-        }
-      },
-      yAxis: {
-        grid: null
-      },
-      tooltip: {
-        title: 'date',
-
-        showMarkers: false,
-        customContent(title, data) {
-          if (data && data.length > 0) {
-            const current = allDates.find((d) => d.date === data[0]?.data.date);
-
-            return (
-              <Card>
-                <Card.Meta
-                  // title={current?.lessonName}
-                  description={moment(current?.date).format('DD MMM YYYY')}
-                />
-              </Card>
-            );
-          }
-        }
-      },
-      interactions: [
-        {
-          type: 'element-active'
-        }
-      ],
-
-      xAxis: {
-        position: 'top',
-        tickLine: null,
-        line: null,
-        label: {
-          offset: 12,
-          style: {
-            fontSize: 12,
-            fill: '#666',
-            textBaseline: 'top'
-          },
-          formatter: (val) => {
-            // get month name by week number
-            const item = allDates.find((item) => item.week === val);
-            if (item) {
-              const month = item.month;
-              // get month name by month number
-              const monthName = moment().month(month).format('MMM');
-
-              return monthName;
-            }
-
-            return '';
-          }
-        }
-      }
+    const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
+      console.log(value.format('YYYY-MM-DD'), mode);
     };
 
-    return <Heatmap {...config} />;
+    return <Calendar onPanelChange={onPanelChange} />;
   }
 
   // if (insitutionList && insitutionList?.length > 0) {

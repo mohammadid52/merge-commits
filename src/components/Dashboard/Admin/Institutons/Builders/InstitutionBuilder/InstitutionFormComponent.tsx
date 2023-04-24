@@ -19,7 +19,7 @@ import {uploadImageToS3} from 'graphql-functions/functions';
 import {getImageFromS3} from 'utilities/services';
 import {RoomStatusList} from '../../EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
 
-const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
+const InstitutionFormComponent = ({institutionInfo, onCancel, postMutation}: any) => {
   const history = useHistory();
   const initialState: any = {
     id: null,
@@ -406,7 +406,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
               <div className="flex justify-end gap-4 w-auto pb-4">
                 <Buttons
                   label={InstitutionBuilderDict[userLanguage]['BUTTON']['CANCEL']}
-                  onClick={history.goBack}
+                  onClick={typeof onCancel === 'function' ? onCancel : history.goBack}
                   transparent
                 />
                 <Buttons

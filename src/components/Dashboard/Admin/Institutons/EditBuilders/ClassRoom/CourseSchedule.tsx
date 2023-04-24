@@ -310,41 +310,44 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         </div>
         <Divider />
 
-        <UnitPlanner
-          lessonImpactLogs={lessonImpactLogs}
-          logsChanged={logsChanged || unsavedChanges}
-          setLogsChanged={setLogsChanged}
-          roomData={{
-            ...roomData,
-            ...scheduleData,
-            startDate: awsFormatDate(
-              dateString('-', 'WORLD', scheduleData?.startDate || new Date())
-            ),
-            endDate: awsFormatDate(
-              dateString('-', 'WORLD', scheduleData?.endDate || new Date())
-            )
-          }}
-          saveRoomDetails={saveRoomDetails}
-          saving={saving}
-          isDetailsComplete={Boolean(
-            scheduleData.startDate &&
-              scheduleData.endDate &&
-              // scheduleData.startTime &&
-              // scheduleData.endTime &&
-              scheduleData.frequency &&
-              scheduleData.weekDay
-          )}
-        />
-        <Divider />
-
-        <div className="mt-3">
-          <ClassRoomHolidays
+        <div
+          className={`flex flex-col-reverdsse ${lessonImpactLogs.length > 0 ? '' : ''}`}>
+          <UnitPlanner
             lessonImpactLogs={lessonImpactLogs}
-            logsLoading={logsLoading}
-            setLessonImpactLogs={setLessonImpactLogs}
+            logsChanged={logsChanged || unsavedChanges}
             setLogsChanged={setLogsChanged}
-            sortLogsByDate={sortLogsByDate}
+            roomData={{
+              ...roomData,
+              ...scheduleData,
+              startDate: awsFormatDate(
+                dateString('-', 'WORLD', scheduleData?.startDate || new Date())
+              ),
+              endDate: awsFormatDate(
+                dateString('-', 'WORLD', scheduleData?.endDate || new Date())
+              )
+            }}
+            saveRoomDetails={saveRoomDetails}
+            saving={saving}
+            isDetailsComplete={Boolean(
+              scheduleData.startDate &&
+                scheduleData.endDate &&
+                // scheduleData.startTime &&
+                // scheduleData.endTime &&
+                scheduleData.frequency &&
+                scheduleData.weekDay
+            )}
           />
+          <Divider />
+
+          <div className="mt-3">
+            <ClassRoomHolidays
+              lessonImpactLogs={lessonImpactLogs}
+              logsLoading={logsLoading}
+              setLessonImpactLogs={setLessonImpactLogs}
+              setLogsChanged={setLogsChanged}
+              sortLogsByDate={sortLogsByDate}
+            />
+          </div>
         </div>
       </PageLayout>
 
