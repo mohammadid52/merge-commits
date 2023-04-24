@@ -174,6 +174,7 @@ const InstitutionFormComponent = ({institutionInfo, onCancel, postMutation}: any
           image: instituteData.image,
           isZoiq: instituteData.isZoiq,
           phone: instituteData.phone,
+          status: instituteData.status,
           isServiceProvider: instituteData.isServiceProvider
         };
         if (instituteData.id) {
@@ -339,21 +340,6 @@ const InstitutionFormComponent = ({institutionInfo, onCancel, postMutation}: any
                   onChange={onStateSelect}
                 />
 
-                <Selector
-                  selectedItem={status}
-                  placeholder={formDict['STATUS']}
-                  list={RoomStatusList}
-                  width="100%"
-                  label={formDict['STATE_LABEL']}
-                  // @ts-ignore
-                  onChange={(name: RoomStatus) => {
-                    setInstituteData({
-                      ...instituteData,
-                      status: name
-                    });
-                  }}
-                />
-
                 <FormInput
                   value={zip}
                   id="zip"
@@ -369,7 +355,20 @@ const InstitutionFormComponent = ({institutionInfo, onCancel, postMutation}: any
                   name="phone"
                   label={formDict['PHONE_LABEL']}
                 />
-
+                <Selector
+                  selectedItem={status}
+                  placeholder={formDict['STATUS']}
+                  list={RoomStatusList}
+                  width="100%"
+                  label={formDict['STATE_LABEL']}
+                  // @ts-ignore
+                  onChange={(name: RoomStatus) => {
+                    setInstituteData({
+                      ...instituteData,
+                      status: name
+                    });
+                  }}
+                />
                 <div className="col-span-2"></div>
                 <CheckBox
                   value={isServiceProvider}

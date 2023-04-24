@@ -139,7 +139,7 @@ const Institution = (props: InstitutionProps) => {
 
   useEffect(() => {
     getInstitutionData();
-  }, []);
+  }, [institutionId]);
 
   useEffect(() => {
     const {tab} = urlQueryParams;

@@ -207,7 +207,7 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
             setInstitutionModal(false);
           }}
           postMutation={(data: any) => {
-            setInstitutionForModal(data);
+            // setInstitutionForModal(data);
           }}
         />
       </Modal>
