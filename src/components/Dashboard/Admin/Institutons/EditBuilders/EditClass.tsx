@@ -40,6 +40,7 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 interface EditClassProps {
   instId: string;
@@ -557,154 +558,159 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   return (
-    <div className="">
-      <Modal
-        open={addStudentModal}
-        saveAction={addStudentInClass}
-        closeAction={() => {
-          setAddStudentModal(false);
-          setNewMember(defaultNewMember);
-        }}
-        showHeader={false}
-        showFooter={false}>
-        <p>Do you want to add {newMember.label}?</p>
-        <div className="w-full flex items-center justify-end gap-4 mt-2">
-          <Buttons
-            label={'Cancel'}
-            transparent
-            onClick={() => {
-              setAddStudentModal(false);
-              setNewMember(defaultNewMember);
-            }}
-          />
-          <Buttons label={'Add'} onClick={addStudentInClass} />
-        </div>
-      </Modal>
-
-      <PageLayout
-        type="inner"
-        title={roomData.name}
-        extra={
-          <div className={`w-auto flex gap-x-4 justify-end items-center`}>
-            <Selector
-              width={400}
-              dataCy="edit-class"
-              selectedItem={newMember.label}
-              showSearch
-              optionFilterProp="name"
-              disabled={classStudentsLoading || loading}
-              list={addDisablePropertyToAlreadySelectedStudents()}
-              placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
-              onChange={onStudentSelect}
-              size="middle"
-              dropdownRender={(menu) => {
-                return (
-                  <>
-                    {menu}
-                    <Divider style={{margin: '8px 0'}} />
-                    <Buttons
-                      onClick={() => setShowRegistrationForm(true)}
-                      label={'Register a new student to this classroom'}
-                      className="w-full"
-                      size="middle"
-                      Icon={PlusCircleOutlined}
-                      variant="dashed"
-                    />
-                  </>
-                );
+    <ErrorBoundary componentName="EditClass">
+      <div className="">
+        <Modal
+          open={addStudentModal}
+          saveAction={addStudentInClass}
+          closeAction={() => {
+            setAddStudentModal(false);
+            setNewMember(defaultNewMember);
+          }}
+          showHeader={false}
+          showFooter={false}>
+          <p>Do you want to add {newMember.label}?</p>
+          <div className="w-full flex items-center justify-end gap-4 mt-2">
+            <Buttons
+              label={'Cancel'}
+              transparent
+              onClick={() => {
+                setAddStudentModal(false);
+                setNewMember(defaultNewMember);
               }}
             />
+            <Buttons label={'Add'} onClick={addStudentInClass} />
           </div>
-        }>
-        <Filters
-          list={classStudents}
-          loading={loading}
-          updateFilter={updateFilter}
-          filters={filters}
-        />
+        </Modal>
 
-        <div className="">
-          {addMessage?.message && (
-            <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
-              <div className="py-2">
-                <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-                  {addMessage?.message}
-                </p>
-              </div>
+        <PageLayout
+          type="inner"
+          title={roomData.name}
+          extra={
+            <div className={`w-auto flex gap-x-4 justify-end items-center`}>
+              <Selector
+                width={400}
+                dataCy="edit-class"
+                selectedItem={newMember.label}
+                showSearch
+                optionFilterProp="name"
+                disabled={classStudentsLoading || loading}
+                list={addDisablePropertyToAlreadySelectedStudents()}
+                placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
+                onChange={onStudentSelect}
+                size="middle"
+                dropdownRender={(menu) => {
+                  return (
+                    <>
+                      {menu}
+                      <Divider style={{margin: '8px 0'}} />
+                      <Buttons
+                        onClick={() => setShowRegistrationForm(true)}
+                        label={'Register a new student to this classroom'}
+                        className="w-full"
+                        size="middle"
+                        Icon={PlusCircleOutlined}
+                        variant="dashed"
+                      />
+                    </>
+                  );
+                }}
+              />
             </div>
-          )}
-          {finalList ? (
-            <Fragment>
-              <Table {...tableConfig} />
-              {messages.show && (
-                <div className="py-2 m-auto text-center">
+          }>
+          <Filters
+            list={classStudents}
+            loading={loading}
+            updateFilter={updateFilter}
+            filters={filters}
+          />
+
+          <div className="">
+            {addMessage?.message && (
+              <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
+                <div className="py-2">
                   <p
                     className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-                    {messages.message ? messages.message : ''}
+                    {addMessage?.message}
                   </p>
                 </div>
-              )}
+              </div>
+            )}
+            {finalList ? (
+              <Fragment>
+                <Table {...tableConfig} />
+                {messages.show && (
+                  <div className="py-2 m-auto text-center">
+                    <p
+                      className={`${
+                        messages.isError ? 'text-red-600' : 'text-green-600'
+                      }`}>
+                      {messages.message ? messages.message : ''}
+                    </p>
+                  </div>
+                )}
 
-              <ModalPopUp
-                open={warnModal.show}
-                closeAction={discardChanges}
-                saveAction={saveAndMove}
-                saveLabel="SAVE"
-                cancelLabel="DISCARD"
-                message={warnModal.message}
-              />
-
-              <ModalPopUp
-                open={warnModal2.show}
-                dataCy="edit-class-delete-student-modal"
-                closeAction={closeDeleteModal}
-                saveAction={warnModal2.action}
-                saveLabel="Yes"
-                message={warnModal2.message}
-                loading={deleting}
-              />
-
-              <Modal
-                open={showRegistrationForm}
-                showHeader={true}
-                title={RegistrationDict[userLanguage]['title']}
-                showHeaderBorder={true}
-                showFooter={false}
-                closeAction={() => setShowRegistrationForm(false)}>
-                <Registration
-                  classData={{
-                    classId: withbackupClassId,
-                    roomId: roomData.id
-                  }}
-                  isInInstitute
-                  isInModalPopup
-                  postMutation={postMutation}
-                  instId={instId}
+                <ModalPopUp
+                  open={warnModal.show}
+                  closeAction={discardChanges}
+                  saveAction={saveAndMove}
+                  saveLabel="SAVE"
+                  cancelLabel="DISCARD"
+                  message={warnModal.message}
                 />
-              </Modal>
 
-              <Modal
-                open={userModalOpen}
-                title={UserDict[userLanguage]['title']}
-                showHeader={true}
-                showHeaderBorder={false}
-                showFooter={false}
-                scrollHidden={true}
-                width={1000}
-                closeAction={() => setUserModalFormOpen(false)}>
-                <User
-                  shouldNavigate={false}
-                  onSuccessCallback={() => setUserModalFormOpen(false)}
-                  instituteId={instId}
-                  userId={studentProfileID}
-                  insideModalPopUp={true}
+                <ModalPopUp
+                  open={warnModal2.show}
+                  dataCy="edit-class-delete-student-modal"
+                  closeAction={closeDeleteModal}
+                  saveAction={warnModal2.action}
+                  saveLabel="Yes"
+                  message={warnModal2.message}
+                  loading={deleting}
                 />
-              </Modal>
-            </Fragment>
-          ) : null}
-        </div>
-      </PageLayout>
-    </div>
+
+                <Modal
+                  open={showRegistrationForm}
+                  showHeader={true}
+                  title={RegistrationDict[userLanguage]['title']}
+                  showHeaderBorder={true}
+                  showFooter={false}
+                  closeAction={() => setShowRegistrationForm(false)}>
+                  <Registration
+                    classData={{
+                      classId: withbackupClassId,
+                      roomId: roomData.id
+                    }}
+                    isInInstitute
+                    isInModalPopup
+                    postMutation={postMutation}
+                    instId={instId}
+                  />
+                </Modal>
+
+                <Modal
+                  open={userModalOpen}
+                  title={UserDict[userLanguage]['title']}
+                  showHeader={true}
+                  showHeaderBorder={false}
+                  showFooter={false}
+                  scrollHidden={true}
+                  width={1000}
+                  closeAction={() => setUserModalFormOpen(false)}>
+                  <User
+                    shouldNavigate={false}
+                    onSuccessCallback={() => setUserModalFormOpen(false)}
+                    instituteId={instId}
+                    userId={studentProfileID}
+                    insideModalPopUp={true}
+                  />
+                </Modal>
+              </Fragment>
+            ) : null}
+          </div>
+        </PageLayout>
+      </div>
+    </ErrorBoundary>
   );
 };
 

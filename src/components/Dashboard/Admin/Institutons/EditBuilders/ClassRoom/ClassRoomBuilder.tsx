@@ -17,6 +17,7 @@ import EditClass from '../EditClass';
 import ClassRoomForm, {fetchSingleCoTeacher} from './ClassRoomForm';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
 import CourseSchedule from './CourseSchedule';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 interface ClassRoomBuilderProps {
   instId: string;
@@ -308,35 +309,37 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   };
 
   return (
-    <PageLayout title={roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}>
-      <div className="w-full m-auto">
-        <StepComponent
-          steps={steps}
-          activeStep={activeStep}
-          handleTabSwitch={handleTabSwitch}
-        />
-        <div className="grid grid-cols-1 divide-x-0 divide-light">
-          {/* <div className="border-0 lg:border-t-none border-light"> */}
-          {currentStepComp(activeStep)}
-          {/* </div> */}
+    <ErrorBoundary componentName="ClassRoomBuilder">
+      <PageLayout title={roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}>
+        <div className="w-full m-auto">
+          <StepComponent
+            steps={steps}
+            activeStep={activeStep}
+            handleTabSwitch={handleTabSwitch}
+          />
+          <div className="grid grid-cols-1 divide-x-0 divide-light">
+            {/* <div className="border-0 lg:border-t-none border-light"> */}
+            {currentStepComp(activeStep)}
+            {/* </div> */}
+          </div>
         </div>
-      </div>
-      {messages.show ? (
-        <div className="py-2 m-auto text-center">
-          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-            {messages?.message ? messages.message : ''}
-          </p>
-        </div>
-      ) : null}
+        {messages.show ? (
+          <div className="py-2 m-auto text-center">
+            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {messages?.message ? messages.message : ''}
+            </p>
+          </div>
+        ) : null}
 
-      <ModalPopUp
-        open={warnModal.show}
-        closeAction={toggleModal}
-        saveAction={onModalSave}
-        saveLabel="Yes"
-        message={warnModal.message}
-      />
-    </PageLayout>
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={toggleModal}
+          saveAction={onModalSave}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
+      </PageLayout>
+    </ErrorBoundary>
   );
 };
 
