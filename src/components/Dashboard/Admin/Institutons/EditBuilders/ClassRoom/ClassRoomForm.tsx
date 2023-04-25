@@ -45,6 +45,7 @@ import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
 import Loader from '@components/Atoms/Loader';
 import {Empty} from 'antd';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -934,243 +935,245 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const INACTIVE_TEXT = 'Classroom inactive';
 
   return (
-    <div className="">
-      {/* Body section */}
-      <PageLayout
-        type="inner"
-        title={
-          <div className="flex py-2 flex-col">
-            <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
-            <span className="text-medium  w-auto font-normal text-sm">
-              {moment(roomData.createdAt).format('ll')}
-            </span>
-          </div>
-        }>
-        <div className="w-full m-auto">
-          <div className="">
-            <div className="grid grid-cols-3">
-              <div className="px-3 py-4">
-                <Selector
-                  width={'100%'}
-                  showSearch
-                  selectedItem={institute.value}
-                  placeholder={RoomEDITdict[userLanguage]['INSTITUTION_PLACEHOLDER']}
-                  label={RoomEDITdict[userLanguage]['INSTITUTION_LABEL']}
-                  list={allInstitutions}
-                  isRequired
-                  onChange={(_, option: any) => {
-                    selectInstitute(option);
-                  }}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <FormInput
-                  value={name}
-                  id="name"
-                  onChange={editInputField}
-                  name="name"
-                  label={RoomEDITdict[userLanguage]['NAME_LABEL']}
-                  placeHolder={RoomEDITdict[userLanguage]['NAME_PLACEHOLDER']}
-                  isRequired
-                />
-              </div>
-              <div className="px-3 py-4">
-                <Selector
-                  selectedItem={status}
-                  width={'100%'}
-                  placeholder={RoomEDITdict[userLanguage]['STATUS_PLACEHOLDER']}
-                  label={RoomEDITdict[userLanguage]['STATUS_LABEL']}
-                  labelTextClass={'text-xs'}
-                  list={statusList}
-                  isRequired
-                  // @ts-ignore
-                  onChange={beforeUptatingStatus}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <Selector
-                  width={'100%'}
-                  placeholder={'Classroom type'}
-                  label={'Classroom type'}
-                  labelTextClass={'text-xs'}
-                  list={typeList}
-                  disabled={loadingCurricular || disabled}
-                  selectedItem={disabled ? INACTIVE_TEXT : type}
-                  isRequired
-                  // @ts-ignore
-                  onChange={selectClassroomType}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <Selector
-                  selectedItem={disabled ? INACTIVE_TEXT : curricular.value}
-                  showSearch
-                  placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
-                  label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-                  disabled={loadingCurricular || disabled}
-                  notFoundContent={
-                    loadingCurricular ? (
-                      <Loader />
-                    ) : (
-                      <Empty description={`There are no ${status} courses found `} />
-                    )
-                  }
-                  list={curricularList}
-                  isRequired
-                  onChange={selectCurriculum}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <Selector
-                  disabled={unitsLoading || disabled}
-                  selectedItem={disabled ? INACTIVE_TEXT : roomData.activeUnit.label}
-                  showSearch
-                  notFoundContent={
-                    unitsLoading ? (
-                      <Loader />
-                    ) : (
-                      <Empty description={`There are no units found `} />
-                    )
-                  }
-                  width={'100%'}
-                  placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
-                  label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
-                  list={units}
-                  loading={unitsLoading}
-                  onChange={(value, option: any) =>
-                    onSelectActiveUnit({id: option.id, name: value})
-                  }
-                />
-              </div>
+    <ErrorBoundary componentName="ClassRoomForm">
+      <div className="">
+        {/* Body section */}
+        <PageLayout
+          type="inner"
+          title={
+            <div className="flex py-2 flex-col">
+              <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
+              <span className="text-medium  w-auto font-normal text-sm">
+                {moment(roomData.createdAt).format('ll')}
+              </span>
             </div>
-            {/*
-             **
-             * Hide institution drop down since all the things are tied to the
-             * Institute, will add this later if need to add builders separately.
-             */}
-            <div>
+          }>
+          <div className="w-full m-auto">
+            <div className="">
               <div className="grid grid-cols-3">
                 <div className="px-3 py-4">
                   <Selector
-                    label={RoomEDITdict[userLanguage]['TEACHER_LABEL']}
+                    width={'100%'}
                     showSearch
+                    selectedItem={institute.value}
+                    placeholder={RoomEDITdict[userLanguage]['INSTITUTION_PLACEHOLDER']}
+                    label={RoomEDITdict[userLanguage]['INSTITUTION_LABEL']}
+                    list={allInstitutions}
                     isRequired
-                    selectedItem={teacher.label}
-                    list={teachersList}
-                    disabled={disabled}
-                    placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
-                    onChange={selectTeacher}
+                    onChange={(_, option: any) => {
+                      selectInstitute(option);
+                    }}
                   />
                 </div>
                 <div className="px-3 py-4">
-                  <MultipleSelector
-                    label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
-                    withAvatar
-                    disabledText={INACTIVE_TEXT}
-                    disabled={disabled}
-                    // @ts-ignore
-                    selectedItems={selectedCoTeachers}
-                    list={coTeachersList}
-                    placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
-                    onChange={selectCoTeacher}
-                    showSearch
+                  <FormInput
+                    value={name}
+                    id="name"
+                    onChange={editInputField}
+                    name="name"
+                    label={RoomEDITdict[userLanguage]['NAME_LABEL']}
+                    placeHolder={RoomEDITdict[userLanguage]['NAME_PLACEHOLDER']}
+                    isRequired
                   />
                 </div>
                 <div className="px-3 py-4">
                   <Selector
-                    placeholder={RoomEDITdict[userLanguage].METHOD}
-                    label={RoomEDITdict[userLanguage].METHOD}
-                    list={methods}
-                    disabled={disabled}
-                    selectedItem={disabled ? INACTIVE_TEXT : roomData.teachingStyle}
+                    selectedItem={status}
                     width={'100%'}
-                    onChange={(value) =>
-                      setRoomData({...roomData, teachingStyle: value as TeachingStyle})
+                    placeholder={RoomEDITdict[userLanguage]['STATUS_PLACEHOLDER']}
+                    label={RoomEDITdict[userLanguage]['STATUS_LABEL']}
+                    labelTextClass={'text-xs'}
+                    list={statusList}
+                    isRequired
+                    // @ts-ignore
+                    onChange={beforeUptatingStatus}
+                  />
+                </div>
+                <div className="px-3 py-4">
+                  <Selector
+                    width={'100%'}
+                    placeholder={'Classroom type'}
+                    label={'Classroom type'}
+                    labelTextClass={'text-xs'}
+                    list={typeList}
+                    disabled={loadingCurricular || disabled}
+                    selectedItem={disabled ? INACTIVE_TEXT : type}
+                    isRequired
+                    // @ts-ignore
+                    onChange={selectClassroomType}
+                  />
+                </div>
+                <div className="px-3 py-4">
+                  <Selector
+                    selectedItem={disabled ? INACTIVE_TEXT : curricular.value}
+                    showSearch
+                    placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
+                    label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
+                    disabled={loadingCurricular || disabled}
+                    notFoundContent={
+                      loadingCurricular ? (
+                        <Loader />
+                      ) : (
+                        <Empty description={`There are no ${status} courses found `} />
+                      )
+                    }
+                    list={curricularList}
+                    isRequired
+                    onChange={selectCurriculum}
+                  />
+                </div>
+                <div className="px-3 py-4">
+                  <Selector
+                    disabled={unitsLoading || disabled}
+                    selectedItem={disabled ? INACTIVE_TEXT : roomData.activeUnit.label}
+                    showSearch
+                    notFoundContent={
+                      unitsLoading ? (
+                        <Loader />
+                      ) : (
+                        <Empty description={`There are no units found `} />
+                      )
+                    }
+                    width={'100%'}
+                    placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
+                    label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
+                    list={units}
+                    loading={unitsLoading}
+                    onChange={(value, option: any) =>
+                      onSelectActiveUnit({id: option.id, name: value})
                     }
                   />
                 </div>
               </div>
+              {/*
+               **
+               * Hide institution drop down since all the things are tied to the
+               * Institute, will add this later if need to add builders separately.
+               */}
+              <div>
+                <div className="grid grid-cols-3">
+                  <div className="px-3 py-4">
+                    <Selector
+                      label={RoomEDITdict[userLanguage]['TEACHER_LABEL']}
+                      showSearch
+                      isRequired
+                      selectedItem={teacher.label}
+                      list={teachersList}
+                      disabled={disabled}
+                      placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
+                      onChange={selectTeacher}
+                    />
+                  </div>
+                  <div className="px-3 py-4">
+                    <MultipleSelector
+                      label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
+                      withAvatar
+                      disabledText={INACTIVE_TEXT}
+                      disabled={disabled}
+                      // @ts-ignore
+                      selectedItems={selectedCoTeachers}
+                      list={coTeachersList}
+                      placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
+                      onChange={selectCoTeacher}
+                      showSearch
+                    />
+                  </div>
+                  <div className="px-3 py-4">
+                    <Selector
+                      placeholder={RoomEDITdict[userLanguage].METHOD}
+                      label={RoomEDITdict[userLanguage].METHOD}
+                      list={methods}
+                      disabled={disabled}
+                      selectedItem={disabled ? INACTIVE_TEXT : roomData.teachingStyle}
+                      width={'100%'}
+                      onChange={(value) =>
+                        setRoomData({...roomData, teachingStyle: value as TeachingStyle})
+                      }
+                    />
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-2">
-                <div className="px-3 py-4">
-                  <FormInput
-                    label={RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_LABEL}
-                    name="conferenceCallLink"
-                    value={conferenceCallLink}
-                    onChange={editInputField}
-                    disabled={disabled}
-                    placeHolder={
-                      disabled
-                        ? INACTIVE_TEXT
-                        : RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
-                    }
-                  />
+                <div className="grid grid-cols-2">
+                  <div className="px-3 py-4">
+                    <FormInput
+                      label={RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_LABEL}
+                      name="conferenceCallLink"
+                      value={conferenceCallLink}
+                      onChange={editInputField}
+                      disabled={disabled}
+                      placeHolder={
+                        disabled
+                          ? INACTIVE_TEXT
+                          : RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_PLACEHOLDER
+                      }
+                    />
+                  </div>
+                  <div className="px-3 py-4">
+                    <FormInput
+                      label={RoomEDITdict[userLanguage].LOCATION_LABEL}
+                      name="location"
+                      disabled={disabled}
+                      value={roomLocation}
+                      onChange={editInputField}
+                      placeHolder={
+                        disabled
+                          ? INACTIVE_TEXT
+                          : RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="px-3 py-4">
-                  <FormInput
-                    label={RoomEDITdict[userLanguage].LOCATION_LABEL}
-                    name="location"
-                    disabled={disabled}
-                    value={roomLocation}
-                    onChange={editInputField}
-                    placeHolder={
-                      disabled
-                        ? INACTIVE_TEXT
-                        : RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER
-                    }
+                {checkIfAdmin() && (
+                  <CheckBox
+                    dataCy="isZoiq"
+                    label={'ZOIQ'}
+                    className="group:hover:bg-medium "
+                    value={roomData.isZoiq}
+                    onChange={(e) => setRoomData({...roomData, isZoiq: e.target.checked})}
+                    name="isZoiq"
                   />
-                </div>
+                )}
               </div>
-              {checkIfAdmin() && (
-                <CheckBox
-                  dataCy="isZoiq"
-                  label={'ZOIQ'}
-                  className="group:hover:bg-medium "
-                  value={roomData.isZoiq}
-                  onChange={(e) => setRoomData({...roomData, isZoiq: e.target.checked})}
-                  name="isZoiq"
-                />
-              )}
             </div>
           </div>
-        </div>
-        {messages.show ? (
-          <div className="py-2 m-auto text-center">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message || ''}
-            </p>
+          {messages.show ? (
+            <div className="py-2 m-auto text-center">
+              <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+                {messages.message || ''}
+              </p>
+            </div>
+          ) : null}
+          <div className="flex my-8 gap-4 justify-center">
+            <Buttons
+              label={RoomEDITdict[userLanguage]['BUTTON']['CANCEL']}
+              onClick={history.goBack}
+              transparent
+            />
+            <Buttons
+              disabled={loading}
+              label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
+              onClick={saveRoomDetails}
+            />
           </div>
-        ) : null}
-        <div className="flex my-8 gap-4 justify-center">
-          <Buttons
-            label={RoomEDITdict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={history.goBack}
-            transparent
-          />
-          <Buttons
-            disabled={loading}
-            label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
-            onClick={saveRoomDetails}
-          />
-        </div>
 
-        <AnimatedContainer show={status === RoomStatus.INACTIVE}>
-          {status === RoomStatus.INACTIVE && (
-            <p className="text-medium  text-sm text-center">
-              This classroom is inactive and not available in the classroom
-            </p>
-          )}
-        </AnimatedContainer>
+          <AnimatedContainer show={status === RoomStatus.INACTIVE}>
+            {status === RoomStatus.INACTIVE && (
+              <p className="text-medium  text-sm text-center">
+                This classroom is inactive and not available in the classroom
+              </p>
+            )}
+          </AnimatedContainer>
 
-        <ModalPopUp
-          open={warnModal.show}
-          closeAction={toggleModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      </PageLayout>
-    </div>
+          <ModalPopUp
+            open={warnModal.show}
+            closeAction={toggleModal}
+            saveAction={warnModal.onSaveAction}
+            saveLabel="Yes"
+            message={warnModal.message}
+          />
+        </PageLayout>
+      </div>
+    </ErrorBoundary>
   );
 };
 
