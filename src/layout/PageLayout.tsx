@@ -1,4 +1,4 @@
-import {Alert, Card, CardProps} from 'antd';
+import {Alert, Card, CardProps, Typography} from 'antd';
 
 import Buttons from '@components/Atoms/Buttons';
 import React from 'react';
@@ -70,7 +70,13 @@ const PageLayout = ({
         className="w-full"
         bordered={type === 'inner' ? true : false}
         type={type}
-        title={title ? <h4 className="text-lg font-medium">{title}</h4> : undefined}
+        title={
+          title ? (
+            <Typography.Title level={4} className="!mb-0">
+              {title}
+            </Typography.Title>
+          ) : undefined
+        }
         extra={extra}>
         {children}
         {!hideInstProfile && type !== 'inner' && institute && (

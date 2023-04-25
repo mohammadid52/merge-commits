@@ -7,7 +7,7 @@ import {getClassroomSyllabus} from 'customGraphql/customQueries';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import TableComponent from '@components/Molecules/Table';
 import {frequencyMapping} from '@utilities/staticData';
-import {Empty} from 'antd';
+import {Divider, Empty, Typography} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import {useHistory} from 'react-router-dom';
@@ -234,9 +234,12 @@ const UnitPlanner = ({
 
   return (
     <div className="py-0">
-      <div className="flex my-4">
-        <h3 className="text-xl leading-6 font-bold text-darkest">Schedule</h3>
-      </div>
+      <Typography.Title level={4} className="flex-1">
+        Schedule
+      </Typography.Title>
+      <Divider />
+      {/* <h3 className="text-xl leading-6 font-bold text-darkest">Schedule</h3> */}
+
       <div className="my-8">
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">

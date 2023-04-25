@@ -95,7 +95,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           weekDay,
           conferenceCallLink
         });
-        if (!(startDate && endDate && startTime && endTime && frequency && weekDay)) {
+        if (!(startDate && endDate && frequency && weekDay)) {
           setShowAlert(true);
         }
       }
@@ -211,8 +211,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           endDate: awsFormatDate(
             dateString('-', 'WORLD', scheduleData?.endDate || new Date())
           ),
-          // startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
-          // endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
+          startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
+          endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
           frequency: scheduleData.frequency,
           // location: scheduleData.location,
           notes: scheduleData.notes,
@@ -244,7 +244,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   };
   const dateFormat = 'MM/DD/YYYY';
 
-  // const datePickerValue =
+  const timeFormat = 'h:mm A';
 
   return (
     <div className="">
@@ -252,11 +252,12 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       <PageLayout type="inner" title={CourseScheduleDict[userLanguage].HEADING}>
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="col-span-2">
-            <Label label="Start And End Date" />
+            <Label label="Start and End Date/Time" />
             <RangePicker
               className="w-full"
+              showTime
               size="large"
-              format={dateFormat}
+              format={dateFormat + ' ' + timeFormat}
               defaultValue={[dayJs(scheduleData.startDate), dayJs(scheduleData.endDate)]}
               onChange={(_, dateString: string[]) => {
                 handleDateChange(dateString[0], 'startDate');
@@ -264,6 +265,19 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               }}
             />
           </div>
+          {/* <div className="">
+            <Label label="Start and End Time" />
+            <RangePicker
+              className="w-full"
+              size="large"
+              format={timeFormat}
+              defaultValue={[dayJs(scheduleData.startTime), dayJs(scheduleData.endTime)]}
+              onChange={(_, dateString: string[]) => {
+                handleDateChange(dateString[0], 'startTime');
+                handleDateChange(dateString[1], 'endTime');
+              }}
+            />
+          </div> */}
 
           <div className="col-span-2 ">
             <div className="grid grid-cols-2 gap-4">
@@ -287,7 +301,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
                   disabled={
                     scheduleData.frequency === 'M/W/F' ||
-                    scheduleData.frequency === 'Tu/Th'
+                    scheduleData.frequency === 'Tu/Th' ||
+                    scheduleData.frequency === 'Daily'
                   }
                 />
               </div>
@@ -308,7 +323,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
             </div>
           </div>
         </div>
-        <Divider />
 
         <div
           className={`flex flex-col-reverdsse flex-col w-full ${
