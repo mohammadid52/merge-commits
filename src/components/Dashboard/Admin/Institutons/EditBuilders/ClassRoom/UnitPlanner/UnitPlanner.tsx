@@ -5,6 +5,7 @@ import React, {useEffect, useState} from 'react';
 import {getClassroomSyllabus} from 'customGraphql/customQueries';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import TableComponent from '@components/Molecules/Table';
 import {frequencyMapping} from '@utilities/staticData';
 import {DATE_FORMAT} from '__constants';
@@ -108,6 +109,7 @@ export const calculateSchedule = (
             scheduleDates,
             frequency
           );
+          console.log(startDate);
 
           item.startDate = startDate;
           item.estEndDate = estEndDate;
@@ -135,6 +137,7 @@ const UnitPlanner = ({
   setLogsChanged,
   isDetailsComplete
 }: IUnitPlannerProps) => {
+  console.log('🚀 ~ file: UnitPlanner.tsx:140 ~ isDetailsComplete:', isDetailsComplete);
   const [loading, setLoading] = useState(roomData.curricular?.id);
   const [syllabusList, setSyllabusList] = useState<any[]>([]);
 
@@ -145,16 +148,18 @@ const UnitPlanner = ({
   }, [roomData.curricular?.id]);
 
   const setImpactLogs = () => {
-    const logs = calculateSchedule(
-      syllabusList,
-      roomData.startDate,
-      roomData.frequency,
-      lessonImpactLogs
-    );
+    if (roomData && syllabusList && syllabusList.length > 0) {
+      const logs = calculateSchedule(
+        syllabusList,
+        roomData.startDate,
+        roomData.frequency,
+        lessonImpactLogs
+      );
 
-    if (logs.length > 0) {
-      setSyllabusList(logs);
-      setLogsChanged(true);
+      if (logs.length > 0) {
+        setSyllabusList(logs);
+        setLogsChanged(true);
+      }
     }
   };
 
@@ -185,11 +190,8 @@ const UnitPlanner = ({
           }))
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)) || []
       );
-      setTimeout(() => {
-        if (isDetailsComplete) {
-          setImpactLogs();
-        }
-      }, 500);
+
+      setImpactLogs();
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -200,7 +202,7 @@ const UnitPlanner = ({
     if (isDetailsComplete && syllabusList.length) {
       setImpactLogs();
     }
-  }, [isDetailsComplete, syllabusList.length]);
+  }, [isDetailsComplete, roomData, syllabusList.length]);
 
   const tableConfig = (lessons: any[]) => {
     return {
@@ -243,60 +245,66 @@ const UnitPlanner = ({
   };
 
   return (
-    <div className="py-0">
-      <Typography.Title level={4} className="flex-1">
-        Schedule
-      </Typography.Title>
-      <Divider />
-      {/* <h3 className="text-xl leading-6 font-bold text-darkest">Schedule</h3> */}
+    <ErrorBoundary componentName="UnitPlanner Schedule">
+      <div className="py-0">
+        <Typography.Title level={4} className="flex-1">
+          Schedule
+        </Typography.Title>
+        <Divider />
+        {/* <h3 className="text-xl leading-6 font-bold text-darkest">Schedule</h3> */}
 
-      <div className="my-8">
-        {loading ? (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader withText="Loading schedule..." />
+        <div className="my-8">
+          {loading ? (
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+              <div className="w-5/10">
+                <Loader withText="Loading schedule..." />
+              </div>
             </div>
-          </div>
-        ) : syllabusList.length ? (
-          <>
-            {syllabusList.map((syllabus: any) => {
-              const tableProps = tableConfig(syllabus?.lessons?.items);
-              return (
-                <div className="border-0 border-light  rounded-md my-2" key={syllabus.id}>
-                  <SectionTitleV3
-                    title={syllabus.name}
-                    subtitle={`Start Date: ${
-                      syllabus.lessons.items?.length &&
-                      syllabus.lessons.items[0].startDate &&
-                      moment(syllabus.lessons.items[0].startDate).isValid()
-                        ? moment(syllabus.lessons.items[0].startDate).format(DATE_FORMAT)
-                        : '--'
-                    }`}
-                  />
+          ) : syllabusList.length ? (
+            <>
+              {syllabusList.map((syllabus: any) => {
+                const tableProps = tableConfig(syllabus?.lessons?.items);
+                return (
+                  <div
+                    className="border-0 border-light  rounded-md my-2"
+                    key={syllabus.id}>
+                    <SectionTitleV3
+                      title={syllabus.name}
+                      subtitle={`Start Date: ${
+                        syllabus.lessons.items?.length &&
+                        syllabus.lessons.items[0].startDate &&
+                        moment(syllabus.lessons.items[0].startDate).isValid()
+                          ? moment(syllabus.lessons.items[0].startDate).format(
+                              DATE_FORMAT
+                            )
+                          : '--'
+                      }`}
+                    />
 
-                  <TableComponent {...tableProps} />
-                </div>
-              );
-            })}
-            <div className="flex text-medium  justify-end">*Past course end date</div>
-          </>
-        ) : (
-          <Empty description="No unit added in the course" />
-        )}
+                    <TableComponent {...tableProps} />
+                  </div>
+                );
+              })}
+              <div className="flex text-medium  justify-end">*Past course end date</div>
+            </>
+          ) : (
+            <Empty description="No unit added in the course" />
+          )}
+        </div>
+        <div className="flex my-8 gap-4 justify-end w-full mr-2 2xl:mr-0">
+          {/* <Buttons label={'Cancel'} onClick={history.goBack} transparent size="middle" /> */}
+          <Buttons
+            disabled={saving || !logsChanged}
+            label={'Run calculations and save'}
+            size="middle"
+            onClick={() => {
+              setImpactLogs();
+              saveRoomDetails();
+            }}
+          />
+        </div>
       </div>
-      <div className="flex my-8 gap-4 justify-end w-full mr-2 2xl:mr-0">
-        {/* <Buttons label={'Cancel'} onClick={history.goBack} transparent size="middle" /> */}
-        <Buttons
-          disabled={saving || !logsChanged}
-          label={'Run calculations and save'}
-          size="middle"
-          onClick={() => {
-            setImpactLogs();
-            saveRoomDetails();
-          }}
-        />
-      </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
