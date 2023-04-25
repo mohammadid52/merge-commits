@@ -44,8 +44,8 @@ const GraphMap = ({markers}: {markers: any[]}) => {
     <MapContainer
       scrollWheelZoom={false}
       className="h-[60vh]"
-      id={'map'}
       center={[29.76, -95.37]}
+      id="map"
       zoom={9}
       maxZoom={18}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

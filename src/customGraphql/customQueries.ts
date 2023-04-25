@@ -3970,6 +3970,40 @@ export const listInstitutionsForGraphs = /* GraphQL */ `
     }
   }
 `;
+export const listInstitutionsForGraphs2 = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        image
+        status
+        type
+        phone
+        address
+        addressLine2
+        district
+        city
+        state
+        website
+        name
+        zip
+      }
+      nextToken
+    }
+  }
+`;
 
 export const listInstitutionsForCalendarGraphs = /* GraphQL */ `
   query ListInstitutions(

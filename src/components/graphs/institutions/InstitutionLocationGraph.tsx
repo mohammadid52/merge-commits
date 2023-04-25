@@ -2,28 +2,18 @@ import Loader from '@components/Atoms/Loader';
 import Placeholder from '@components/Atoms/Placeholder';
 import {SEARCH_LIMIT} from '@components/Lesson/constants';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {listInstitutionsForGraphs} from '@customGraphql/customQueries';
+import {listInstitutionsForGraphs2} from '@customGraphql/customQueries';
 
 import {useQuery} from '@tanstack/react-query';
 import {fetchZipUrl, withZoiqFilter} from '@utilities/functions';
+import {Institution, RoomStatus} from 'API';
 import {Card, Descriptions, Empty} from 'antd';
 import {API, graphqlOperation} from 'aws-amplify';
-import {useEffect, useState} from 'react';
-import {Marker, Popup} from 'react-leaflet';
+import {useEffect, useMemo, useState} from 'react';
+import {CircleMarker, Popup} from 'react-leaflet';
 import GraphMap from '../map/GraphMap';
 
-const CustomMarker = ({
-  zipCode,
-  institution
-}: {
-  zipCode: string;
-  institution: {
-    name: string;
-    image: string;
-    phone: string;
-    website: string;
-  };
-}) => {
+const CustomMarker = ({institution}: {institution: Institution}) => {
   const [coord, setCoord] = useState({
     lat: 0,
     lng: 0
@@ -33,7 +23,11 @@ const CustomMarker = ({
 
   // Make the request
   useEffect(() => {
-    fetch(fetchZipUrl(zipCode))
+    fetch(
+      fetchZipUrl(
+        institution.address + institution.city + institution.state + institution.zip
+      )
+    )
       .then((response) => response.json())
       .then((data) => {
         // Get the latitude and longitude from the response
@@ -42,14 +36,23 @@ const CustomMarker = ({
           lat,
           lng
         });
+
         setAddress(data?.results[0]?.formatted_address);
       })
       .catch((error) => {
         console.error('Error fetching coordinates:', error);
       });
   }, []);
+
+  const markerColor = useMemo(
+    () => (institution.status === RoomStatus.ACTIVE ? 'green' : 'red'),
+    [institution.status]
+  );
+
+  if (coord.lat === 0 || coord.lng === 0) return null;
+
   return (
-    <Marker position={[coord.lat, coord.lng]}>
+    <CircleMarker color={markerColor} center={[coord.lat, coord.lng]}>
       <Popup>
         <Card.Meta
           title={institution.name}
@@ -60,14 +63,16 @@ const CustomMarker = ({
           <Descriptions.Item label="Phone">
             <a href={`tel:${institution.phone}`}>{institution.phone}</a>
           </Descriptions.Item>
-          <Descriptions.Item label="Website">
-            <a href={institution.website} target="_blank" rel="noreferrer">
-              {institution.website}
-            </a>
-          </Descriptions.Item>
+          {institution.website && (
+            <Descriptions.Item label="Website">
+              <a href={institution.website} target="_blank" rel="noreferrer">
+                {institution.website}
+              </a>
+            </Descriptions.Item>
+          )}
         </Descriptions>
       </Popup>
-    </Marker>
+    </CircleMarker>
   );
 };
 
@@ -76,7 +81,7 @@ const InstitutionLocationGraph = () => {
 
   const fetchInstitutionLocation = async () => {
     const res: any = await API.graphql(
-      graphqlOperation(listInstitutionsForGraphs, {
+      graphqlOperation(listInstitutionsForGraphs2, {
         limit: SEARCH_LIMIT,
         filter: withZoiqFilter({}, zoiqFilter)
       })
@@ -108,11 +113,7 @@ const InstitutionLocationGraph = () => {
     //  then pass the marker component to the map component
 
     const markers = insitutionList.map((institution) => (
-      <CustomMarker
-        key={institution.id}
-        zipCode={institution.zip}
-        institution={institution}
-      />
+      <CustomMarker key={institution.id} institution={institution} />
     ));
 
     return (

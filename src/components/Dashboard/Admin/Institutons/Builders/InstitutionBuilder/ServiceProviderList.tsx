@@ -50,6 +50,8 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
     return res.data.listInstitutions.items;
   };
 
+  const [filteredList, setFilteredList] = useState<Institution[]>([]);
+
   const {
     data: institutionList,
 
@@ -76,10 +78,6 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
   );
 
   const [filters, setFilters] = useState<SortType | null>(null);
-
-  const [filteredList, setFilteredList] = useState(
-    institutionList && institutionList?.length > 0 ? [...institutionList] : []
-  );
 
   const finalList = orderBy(
     searchInput.isActive ? filteredList : currentList,
@@ -189,24 +187,31 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
     }
   };
 
+  const closeAction = () => {
+    setInstitutionModal(false);
+    setInstitutionForModal({});
+  };
+
   return (
     <PageLayout type="inner" title={InstitutionDict[userLanguage]['TITLE']}>
       <Modal
         width={1000}
         closeOnBackdrop
-        closeAction={() => {
-          setInstitutionModal(false);
-          setInstitutionForModal({});
-        }}
+        closeAction={closeAction}
         title="Institution Details"
         open={institutionModal}>
         <InstitutionFormComponent
           institutionInfo={institutionForModal}
-          onCancel={() => {
-            setInstitutionForModal({});
-            setInstitutionModal(false);
+          onCancel={closeAction}
+          postMutation={(data: any) => {
+            setFilteredList((prev) => {
+              const index = prev.findIndex((d) => d.id === data?.id);
+              if (index > -1) {
+                prev[index] = data;
+              }
+              return [...prev];
+            });
           }}
-          postMutation={(data: any) => {}}
         />
       </Modal>
       <Filters
