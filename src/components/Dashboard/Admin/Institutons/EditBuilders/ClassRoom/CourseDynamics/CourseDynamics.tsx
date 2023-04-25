@@ -3,6 +3,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import CoursePartner from './CoursePartner';
 import SubjectProficiency from './SubjectProficiency';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 const CourseDynamics = ({roomData}: any) => {
   const {userLanguage} = useGlobalContext();
@@ -22,11 +23,13 @@ const CourseDynamics = ({roomData}: any) => {
   ];
 
   return (
-    <div className="bg-white overflow-hidden">
-      <div className="p-4">
-        <Tabs animated defaultActiveKey="1" items={items} />
+    <ErrorBoundary componentName="CourseDynamics">
+      <div className="bg-white overflow-hidden">
+        <div className="p-4">
+          <Tabs animated defaultActiveKey="1" items={items} />
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
