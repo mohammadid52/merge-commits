@@ -311,7 +311,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         <Divider />
 
         <div
-          className={`flex flex-col-reverdsse ${lessonImpactLogs.length > 0 ? '' : ''}`}>
+          className={`flex flex-col-reverdsse flex-col w-full ${
+            lessonImpactLogs.length > 0 ? '' : ''
+          }`}>
           <UnitPlanner
             lessonImpactLogs={lessonImpactLogs}
             logsChanged={logsChanged || unsavedChanges}
