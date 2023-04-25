@@ -49,8 +49,6 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
     return res.data.listInstitutions.items;
   };
 
-  const [filteredList, setFilteredList] = useState<Institution[]>([]);
-
   const {
     data: institutionList,
 
@@ -64,6 +62,7 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
 
   const [institutionModal, setInstitutionModal] = useState(false);
   const [institutionForModal, setInstitutionForModal] = useState<any>({});
+  const [filteredList, setFilteredList] = useState<Institution[]>([]);
 
   const onInstitutionClick = (institute: any) => {
     setInstitutionModal(true);
@@ -205,6 +204,7 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
           postMutation={(data: any) => {
             setFilteredList((prev) => {
               const index = prev.findIndex((d) => d.id === data?.id);
+
               if (index > -1) {
                 prev[index] = data;
               }

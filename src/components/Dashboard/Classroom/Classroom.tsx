@@ -137,6 +137,7 @@ const range = (from: number, to: number, step: number = 1) => {
 
 interface ClassroomProps extends DashboardProps {
   homeData: any;
+  activeRoomState: 'loading' | 'loaded' | 'error';
 }
 
 const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
@@ -150,6 +151,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     setActiveRoomInfo,
     lessonLoading,
     syllabusLoading,
+    activeRoomState,
     handleRoomSelection,
     loadingRoomInfo,
     homeData
@@ -535,7 +537,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             <>
               <div className={`bg-opacity-10`}>
                 <div className={`pb-4 text-xl m-auto`}>
-                  {!Boolean(activeRoomInfo) ? (
+                  {activeRoomState === 'loading' ? (
                     Array(3)
                       .fill(' ')
                       .map((_: any, index: number) => (
@@ -543,6 +545,8 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                           <Skeleton />
                         </Fragment>
                       ))
+                  ) : activeRoomState === 'error' ? (
+                    <Empty text="No active unit for this room" />
                   ) : Boolean(activeRoomInfo?.activeSyllabus) ? (
                     <ClassroomsList
                       activeRoom={state.activeRoom}
@@ -563,9 +567,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                           : () => {}
                       }
                     />
-                  ) : (
-                    <Empty text="No active unit for this room" />
-                  )}
+                  ) : null}
                 </div>
               </div>
             </>

@@ -263,7 +263,7 @@ const HeaderModalComponent = ({
       instructionsHtml: html
     });
   };
-  const onNotesChange = (html: string, text: string) => {
+  const onNotesChange = (html: string, _: string) => {
     setUnsavedChanges(true);
     setInputFields({
       ...inputFields,

@@ -277,6 +277,7 @@ export const updateInstitution = /* GraphQL */ `
       city
       state
       zip
+      status
 
       website
       image

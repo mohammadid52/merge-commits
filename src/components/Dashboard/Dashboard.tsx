@@ -534,16 +534,24 @@ const Dashboard = () => {
 
   const [loadingRoomInfo, setLoadingRoomInfo] = useState(true);
 
+  const [activeRoomState, setActiveRoomState] = useState<'loading' | 'loaded' | 'error'>(
+    'loading'
+  );
+
   // Save info of selected room to cookie
   useEffect(() => {
     setLoadingRoomInfo(true);
+    setActiveRoomState('loading');
     const getRoomFromState = roomData.rooms.find((room: any) => room.id === activeRoom);
 
-    if (getRoomFromState) {
+    if (Boolean(getRoomFromState)) {
       setLocalStorageData('room_info', getRoomFromState);
 
       setActiveRoomInfo(getRoomFromState);
       setLoadingRoomInfo(false);
+      setActiveRoomState('loaded');
+    } else {
+      setActiveRoomState('error');
     }
   }, [activeRoom]);
 
@@ -690,6 +698,26 @@ const Dashboard = () => {
     }
   };
 
+  const classroomProps = {
+    setClassroomCurriculum: setCurriculumObj,
+    classroomCurriculum: curriculumObj,
+    isTeacher: isTeacher,
+    isOnDemandStudent: isOnDemandStudent,
+    homeData: !isStudent ? homeDataForTeachers : homeData,
+    loadingRoomInfo: loadingRoomInfo,
+    currentPage: currentPageLocal,
+    activeRoomInfo: activeRoomInfo,
+    setActiveRoomInfo: setActiveRoomInfo,
+    activeRoomName: activeRoomName,
+    activeRoomState: activeRoomState,
+    setActiveRoomName: setActiveRoomName,
+    visibleLessonGroup: visibleLessonGroup,
+    setVisibleLessonGroup: setVisibleLessonGroup,
+    lessonLoading: lessonLoading,
+    handleRoomSelection: handleRoomSelection,
+    syllabusLoading: syllabusLoading
+  };
+
   const HomeSwitch = () =>
     !isStudent ? (
       <ErrorBoundary componentName="HomeForTeachers">
@@ -825,24 +853,7 @@ const Dashboard = () => {
                     <ErrorBoundary
                       componentName="Classroom"
                       fallback={<h1>Oops with the Classroom</h1>}>
-                      <Classroom
-                        setClassroomCurriculum={setCurriculumObj}
-                        classroomCurriculum={curriculumObj}
-                        isTeacher={isTeacher}
-                        isOnDemandStudent={isOnDemandStudent}
-                        homeData={!isStudent ? homeDataForTeachers : homeData}
-                        loadingRoomInfo={loadingRoomInfo}
-                        currentPage={currentPageLocal}
-                        activeRoomInfo={activeRoomInfo}
-                        setActiveRoomInfo={setActiveRoomInfo}
-                        activeRoomName={activeRoomName}
-                        setActiveRoomName={setActiveRoomName}
-                        visibleLessonGroup={visibleLessonGroup}
-                        setVisibleLessonGroup={setVisibleLessonGroup}
-                        lessonLoading={lessonLoading}
-                        handleRoomSelection={handleRoomSelection}
-                        syllabusLoading={syllabusLoading}
-                      />
+                      <Classroom {...classroomProps} />
                     </ErrorBoundary>
                   )}
                 />
@@ -921,24 +932,7 @@ const Dashboard = () => {
                     <ErrorBoundary
                       componentName="LessonPlanHome"
                       fallback={<h1>Oops with the Lesson-Planner</h1>}>
-                      <Classroom
-                        setClassroomCurriculum={setCurriculumObj}
-                        classroomCurriculum={curriculumObj}
-                        isTeacher={isTeacher}
-                        isOnDemandStudent={isOnDemandStudent}
-                        homeData={!isStudent ? homeDataForTeachers : homeData}
-                        loadingRoomInfo={loadingRoomInfo}
-                        currentPage={currentPageLocal}
-                        activeRoomInfo={activeRoomInfo}
-                        setActiveRoomInfo={setActiveRoomInfo}
-                        activeRoomName={activeRoomName}
-                        setActiveRoomName={setActiveRoomName}
-                        visibleLessonGroup={visibleLessonGroup}
-                        setVisibleLessonGroup={setVisibleLessonGroup}
-                        lessonLoading={lessonLoading}
-                        handleRoomSelection={handleRoomSelection}
-                        syllabusLoading={syllabusLoading}
-                      />
+                      <Classroom {...classroomProps} />
                     </ErrorBoundary>
                   )}
                 />
