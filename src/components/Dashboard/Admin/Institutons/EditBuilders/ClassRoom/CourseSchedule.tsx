@@ -3,7 +3,7 @@ import {getRoomLessonImpactLogs} from 'customGraphql/customQueries';
 import dayJs from 'dayjs';
 import {updateRoom} from 'graphql/mutations';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
@@ -16,18 +16,27 @@ import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 
 import Label from '@components/Atoms/Form/Label';
-import {DATE_TIME_FORMAT} from '__constants';
+import Loader from '@components/Atoms/Loader';
+import {DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT} from '__constants';
 import {DatePicker, Divider, message} from 'antd';
 import PageLayout from 'layout/PageLayout';
-import Loader from '@components/Atoms/Loader';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+
+const getDate = (date: any, format = DATE_FORMAT) =>
+  dayJs(date).format(format).toString();
+
+const getTime = (time: any, format = TIME_FORMAT) =>
+  dayJs(`${dayJs().format(DATE_FORMAT)} ${time}`)
+    .format(format)
+    .toString();
 
 interface ICourseScheduleProps {
   roomData: any;
 }
 
 interface ICourseScheduleFields {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
   startTime: string;
   endTime: string;
   frequency: string;
@@ -39,6 +48,8 @@ interface ICourseScheduleFields {
 
 const {RangePicker} = DatePicker;
 
+const DEFAULT_TIME = dayJs().format(TIME_FORMAT).toString();
+
 const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {userLanguage} = useGlobalContext();
   const {CourseScheduleDict} = useDictionary();
@@ -49,16 +60,20 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const [lessonImpactLogs, setLessonImpactLogs] = useState<IImpactLog[]>([]);
 
   const [scheduleData, setScheduleData] = useState<ICourseScheduleFields>({
-    startDate: new Date(),
-    endDate: new Date(),
-    startTime: new Date().getTime().toString(),
-    endTime: new Date().getTime().toString(),
+    startDate: new Date().toString(),
+    endDate: new Date().toString(),
+    startTime: DEFAULT_TIME,
+    endTime: DEFAULT_TIME,
     frequency: 'One Time',
     location: '',
     notes: '',
     weekDay: '',
     conferenceCallLink: ''
   });
+  console.log(
+    '🚀 ~ file: CourseSchedule.tsx:73 ~ CourseSchedule ~ scheduleData:',
+    scheduleData
+  );
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [serverMessage, setServerMessage] = useState({
@@ -84,10 +99,12 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       } = roomData;
       if (id) {
         setScheduleData({
-          startDate: startDate ? startDate : null,
-          endDate: endDate ? endDate : null,
-          startTime: new Date(startTime).getTime().toString(),
-          endTime: new Date(endTime).getTime().toString(),
+          startDate: startDate
+            ? getDate(startDate)
+            : dayJs(new Date()).format(DATE_FORMAT).toString(),
+          endDate: endDate ? getDate(endDate) : dayJs().format(DATE_FORMAT).toString(),
+          startTime: startTime ? getTime(startTime) : DEFAULT_TIME,
+          endTime: endTime ? getTime(endTime) : DEFAULT_TIME,
 
           frequency: frequency || 'One Time',
           location,
@@ -157,11 +174,22 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     setUnsavedChanges(true);
   };
 
-  const handleDateChange = (dateString: any, fieldName: string) => {
-    setScheduleData((prevData) => ({
-      ...prevData,
-      [fieldName]: dateString
-    }));
+  const handleDateChange = (dateString: dayJs.Dayjs, start: boolean) => {
+    let [date, time] = dayJs(dateString).format(DATE_TIME_FORMAT).split(' ');
+
+    if (start) {
+      setScheduleData((prevData) => ({
+        ...prevData,
+        startDate: date,
+        startTime: time
+      }));
+    } else {
+      setScheduleData((prevData) => ({
+        ...prevData,
+        endDate: date,
+        endTime: time
+      }));
+    }
     setUnsavedChanges(true);
   };
 
@@ -174,21 +202,25 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       errorMessages.startDate =
         CourseScheduleDict[userLanguage]['MESSAGES']['START_DATE'];
       isValid = false;
+      messageApi.error(errorMessages.startDate);
     }
     if (!scheduleData.endDate) {
       errorMessages.endDate = CourseScheduleDict[userLanguage]['MESSAGES']['END_DATE'];
       isValid = false;
+      messageApi.error(errorMessages.endDate);
     }
     if (!scheduleData.startTime) {
       errorMessages.startTime =
         CourseScheduleDict[userLanguage]['MESSAGES']['START_TIME'];
       isValid = false;
+      messageApi.error(errorMessages.startTime);
     }
     if (!scheduleData.endTime) {
       errorMessages.endTime = CourseScheduleDict[userLanguage]['MESSAGES']['END_TIME'];
       isValid = false;
+      messageApi.error(errorMessages.endTime);
     }
-    messageApi.error(errorMessages);
+
     return isValid;
   };
 
@@ -200,15 +232,17 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
     if (isValid) {
       try {
-        console.log(scheduleData?.startDate, scheduleData?.endDate);
-
         const input = {
           id,
           startDate: awsFormatDate(
-            dateString('-', 'WORLD', scheduleData?.startDate || new Date())
+            dateString(
+              '-',
+              'WORLD',
+              dayJs(scheduleData?.startDate).toDate() || new Date()
+            )
           ),
           endDate: awsFormatDate(
-            dateString('-', 'WORLD', scheduleData?.endDate || new Date())
+            dateString('-', 'WORLD', dayJs(scheduleData?.endDate).toDate() || new Date())
           ),
           startTime: moment(scheduleData.startTime, 'h:mm A').format('HH:mm:ss'),
           endTime: moment(scheduleData.endTime, 'h:mm A').format('HH:mm:ss'),
@@ -237,147 +271,156 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     }
   };
 
-  const startDateTime = dayJs(`${scheduleData.startDate} ${scheduleData.startTime}`);
-  const endDateTime = dayJs(`${scheduleData.endDate} ${scheduleData.endTime}`);
+  const getDateFormatted = useCallback((date: string | null, time: string) => {
+    const [hours, minutes] = time.split(':');
+    if (date) {
+      const updatedDate = dayJs(date)
+        .set('hour', Number(hours))
+        .set('minute', Number(minutes));
+
+      return updatedDate;
+    }
+    return dayJs();
+  }, []);
+
+  const startDateTime = getDateFormatted(scheduleData.startDate, scheduleData.startTime);
+
+  const endDateTime = getDateFormatted(scheduleData.endDate, scheduleData.endTime);
 
   return (
-    <div className="">
-      {contextHolder}
-      <PageLayout type="inner" title={CourseScheduleDict[userLanguage].HEADING}>
-        {isLoading ? (
-          <div className="min-h-56 flex items-center justify-center">
-            <Loader />
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="col-span-2">
-              <Label label="Start and End Date/Time" />
-              <RangePicker
-                className="w-full"
-                showTime
-                size="large"
-                format={DATE_TIME_FORMAT}
-                value={[
-                  startDateTime.isValid() ? startDateTime : null,
-                  endDateTime.isValid() ? endDateTime : null
-                ]}
-                onChange={(_, dateString: string[]) => {
-                  handleDateChange(dateString[0], 'startDate');
-                  handleDateChange(dateString[1], 'endDate');
-                }}
-              />
+    <ErrorBoundary componentName="CourseSchedule">
+      <div className="">
+        {contextHolder}
+        <PageLayout type="inner" title={CourseScheduleDict[userLanguage].HEADING}>
+          {isLoading ? (
+            <div className="min-h-56 flex items-center justify-center">
+              <Loader />
             </div>
-            {/* <div className="">
-          <Label label="Start and End Time" />
-          <RangePicker
-            className="w-full"
-            size="large"
-            format={timeFormat}
-            defaultValue={[dayJs(scheduleData.startTime), dayJs(scheduleData.endTime)]}
-            onChange={(_, dateString: string[]) => {
-              handleDateChange(dateString[0], 'startTime');
-              handleDateChange(dateString[1], 'endTime');
-            }}
-          />
-        </div> */}
+          ) : (
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="col-span-2">
+                <Label label="Start and End Date/Time" />
+                <RangePicker
+                  className="w-full"
+                  showTime
+                  size="large"
+                  format={DATE_TIME_FORMAT}
+                  value={[
+                    startDateTime.isValid() ? startDateTime : null,
+                    endDateTime.isValid() ? endDateTime : null
+                  ]}
+                  onChange={(dateString: any) => {
+                    if (dateString !== null) {
+                      handleDateChange(dateString[0], true);
+                      handleDateChange(dateString[1], false);
+                    }
+                  }}
+                />
+              </div>
 
-            <div className="col-span-2 ">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="">
-                  <Label label="Frequency" />
+              <div className="col-span-2 ">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="">
+                    <Label label="Frequency" />
 
-                  <Selector
-                    onChange={(name: string) => handleSelection(name, 'frequency')}
-                    selectedItem={scheduleData.frequency}
-                    list={frequencyOptions}
-                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY}
-                  />
+                    <Selector
+                      onChange={(name: string) => handleSelection(name, 'frequency')}
+                      selectedItem={scheduleData.frequency}
+                      list={frequencyOptions}
+                      placeholder={
+                        CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY
+                      }
+                    />
+                  </div>
+
+                  <div className="">
+                    <Label label="Weekday" />
+                    <Selector
+                      onChange={(name: string) => handleSelection(name, 'weekDay')}
+                      selectedItem={scheduleData.weekDay}
+                      list={weekdaysOption}
+                      placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
+                      disabled={
+                        scheduleData.frequency === 'M/W/F' ||
+                        scheduleData.frequency === 'Tu/Th' ||
+                        scheduleData.frequency === 'Daily'
+                      }
+                    />
+                  </div>
                 </div>
+              </div>
 
+              <div className="col-span-2">
                 <div className="">
-                  <Label label="Weekday" />
-                  <Selector
-                    onChange={(name: string) => handleSelection(name, 'weekDay')}
-                    selectedItem={scheduleData.weekDay}
-                    list={weekdaysOption}
-                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
-                    disabled={
-                      scheduleData.frequency === 'M/W/F' ||
-                      scheduleData.frequency === 'Tu/Th' ||
-                      scheduleData.frequency === 'Daily'
+                  <Label label="Additional Notes" />
+                  <FormInput
+                    name="notes"
+                    value={scheduleData.notes || ''}
+                    onChange={handleInputChange}
+                    placeHolder={
+                      CourseScheduleDict[userLanguage].PLACEHOLDERS.ADDITIONAL_NOTES
                     }
                   />
                 </div>
               </div>
             </div>
+          )}
 
-            <div className="col-span-2">
-              <div className="">
-                <Label label="Additional Notes" />
-                <FormInput
-                  name="notes"
-                  value={scheduleData.notes || ''}
-                  onChange={handleInputChange}
-                  placeHolder={
-                    CourseScheduleDict[userLanguage].PLACEHOLDERS.ADDITIONAL_NOTES
-                  }
-                />
-              </div>
+          <div
+            className={`flex flex-col-reverdsse flex-col w-full ${
+              lessonImpactLogs.length > 0 ? '' : ''
+            }`}>
+            <UnitPlanner
+              lessonImpactLogs={lessonImpactLogs}
+              logsChanged={logsChanged || unsavedChanges}
+              setLogsChanged={setLogsChanged}
+              roomData={{
+                ...roomData,
+                ...scheduleData,
+                startDate: awsFormatDate(
+                  dateString(
+                    '-',
+                    'WORLD',
+                    dayJs(scheduleData?.startDate).toDate() || new Date()
+                  )
+                ),
+                endDate: awsFormatDate(
+                  dateString(
+                    '-',
+                    'WORLD',
+                    dayJs(scheduleData?.endDate).toDate() || new Date()
+                  )
+                )
+              }}
+              saveRoomDetails={saveRoomDetails}
+              saving={saving}
+              isDetailsComplete={Boolean(
+                scheduleData.startDate && scheduleData.endDate && scheduleData.frequency
+              )}
+            />
+            <Divider />
+
+            <div className="mt-3">
+              <ClassRoomHolidays
+                lessonImpactLogs={lessonImpactLogs}
+                logsLoading={logsLoading}
+                setLessonImpactLogs={setLessonImpactLogs}
+                setLogsChanged={setLogsChanged}
+                sortLogsByDate={sortLogsByDate}
+              />
             </div>
           </div>
-        )}
+        </PageLayout>
 
-        <div
-          className={`flex flex-col-reverdsse flex-col w-full ${
-            lessonImpactLogs.length > 0 ? '' : ''
-          }`}>
-          <UnitPlanner
-            lessonImpactLogs={lessonImpactLogs}
-            logsChanged={logsChanged || unsavedChanges}
-            setLogsChanged={setLogsChanged}
-            roomData={{
-              ...roomData,
-              ...scheduleData,
-              startDate: awsFormatDate(
-                dateString('-', 'WORLD', scheduleData?.startDate || new Date())
-              ),
-              endDate: awsFormatDate(
-                dateString('-', 'WORLD', scheduleData?.endDate || new Date())
-              )
-            }}
-            saveRoomDetails={saveRoomDetails}
-            saving={saving}
-            isDetailsComplete={Boolean(
-              scheduleData.startDate &&
-                scheduleData.endDate &&
-                // scheduleData.startTime &&
-                // scheduleData.endTime &&
-                scheduleData.frequency &&
-                scheduleData.weekDay
-            )}
-          />
-          <Divider />
-
-          <div className="mt-3">
-            <ClassRoomHolidays
-              lessonImpactLogs={lessonImpactLogs}
-              logsLoading={logsLoading}
-              setLessonImpactLogs={setLessonImpactLogs}
-              setLogsChanged={setLogsChanged}
-              sortLogsByDate={sortLogsByDate}
-            />
+        {serverMessage.message && (
+          <div className="py-2 m-auto text-center">
+            <p className={`${serverMessage.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {serverMessage.message}
+            </p>
           </div>
-        </div>
-      </PageLayout>
-
-      {serverMessage.message && (
-        <div className="py-2 m-auto text-center">
-          <p className={`${serverMessage.isError ? 'text-red-600' : 'text-green-600'}`}>
-            {serverMessage.message}
-          </p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 
