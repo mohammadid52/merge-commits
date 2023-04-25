@@ -13,6 +13,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import TableComponent, {ITableProps} from '@components/Molecules/Table';
 import ModalPopUp from 'molecules/ModalPopUp';
 import HolidayFormComponent from './HolidayFormComponent';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 export interface IImpactLog {
   impactDate: Date;
@@ -128,48 +129,50 @@ const ClassRoomHolidays = ({
   };
 
   return (
-    <div>
-      <SectionTitleV3
-        title={'Schedule Impact Log'}
-        withButton={
-          <AddButton
-            className="py-1"
-            label={'Add'}
-            onClick={() => {
-              setFormOpen(true);
-              setActiveIndex(null);
-            }}
-          />
-        }
-      />
-
-      <TableComponent {...tableConfig} />
-
-      <ModalPopUp
-        open={warnModal.show}
-        closeAction={closeDeleteModal}
-        saveAction={warnModal.action}
-        saveLabel="Yes"
-        message={warnModal.message}
-        loading={deleting}
-      />
-
-      <Modal
-        open={formOpen}
-        showHeader={true}
-        title={'Add holiday'}
-        showHeaderBorder={true}
-        showFooter={false}
-        closeAction={handleCancel}>
-        <HolidayFormComponent
-          activeIndex={activeIndex}
-          roomId={roomId}
-          lessonImpactLogs={lessonImpactLogs}
-          postMutation={postMutation}
-          handleCancel={handleCancel}
+    <ErrorBoundary componentName="ClassRoomHolidays">
+      <div>
+        <SectionTitleV3
+          title={'Schedule Impact Log'}
+          withButton={
+            <AddButton
+              className="py-1"
+              label={'Add'}
+              onClick={() => {
+                setFormOpen(true);
+                setActiveIndex(null);
+              }}
+            />
+          }
         />
-      </Modal>
-    </div>
+
+        <TableComponent {...tableConfig} />
+
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={closeDeleteModal}
+          saveAction={warnModal.action}
+          saveLabel="Yes"
+          message={warnModal.message}
+          loading={deleting}
+        />
+
+        <Modal
+          open={formOpen}
+          showHeader={true}
+          title={'Add holiday'}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={handleCancel}>
+          <HolidayFormComponent
+            activeIndex={activeIndex}
+            roomId={roomId}
+            lessonImpactLogs={lessonImpactLogs}
+            postMutation={postMutation}
+            handleCancel={handleCancel}
+          />
+        </Modal>
+      </div>
+    </ErrorBoundary>
   );
 };
 
