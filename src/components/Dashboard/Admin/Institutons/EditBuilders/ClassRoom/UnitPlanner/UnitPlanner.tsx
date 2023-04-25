@@ -7,12 +7,11 @@ import {getClassroomSyllabus} from 'customGraphql/customQueries';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import TableComponent from '@components/Molecules/Table';
 import {frequencyMapping} from '@utilities/staticData';
+import {DATE_FORMAT} from '__constants';
 import {Divider, Empty, Typography} from 'antd';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
-import {useHistory} from 'react-router-dom';
 import {IImpactLog} from '../ClassRoomHolidays';
-import {DATE_FORMAT} from '__constants';
 
 interface IUnitPlannerProps {
   isDetailsComplete: boolean;
@@ -144,7 +143,6 @@ const UnitPlanner = ({
       fetchClassRoomSyllabus();
     }
   }, [roomData.curricular?.id]);
-  const history = useHistory();
 
   const setImpactLogs = () => {
     const logs = calculateSchedule(

@@ -6,6 +6,8 @@ import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {listInstitutionsForGraphs} from '@customGraphql/customQueries';
 
+import Buttons from '@components/Atoms/Buttons';
+import Filters, {SortType} from '@components/Atoms/Filters';
 import useDictionary from '@customHooks/dictionary';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
@@ -19,9 +21,6 @@ import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import {useState} from 'react';
 import InstitutionFormComponent from './InstitutionFormComponent';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import {NavLink} from 'react-router-dom';
-import Buttons from '@components/Atoms/Buttons';
 
 interface ServiceProviderListProps {
   id: string;
