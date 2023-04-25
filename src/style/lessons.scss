@@ -1,0 +1,257 @@
+.now {
+  width: 47%;
+}
+
+.green-btn {
+  background-color: rgba(72, 187, 120) !important;
+  &:hover {
+    background-color: rgba(56, 161, 105) !important;
+  }
+}
+
+.red-btn.transparent:hover {
+  svg {
+    color: white;
+  }
+}
+
+.quote {
+  border-left: 7px solid #ca2222;
+
+  @media screen and (max-width: 767px) {
+    svg {
+      width: 1.5rem;
+      margin-left: 1rem;
+    }
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.picture {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+  box-shadow: none;
+  background-size: contain;
+}
+
+@media screen and (max-width: 767px) {
+  .classroom {
+    height: 90%;
+    padding: 1rem;
+
+    h1 {
+      height: 3rem;
+      font-size: 1.75rem;
+    }
+
+    .block1 {
+      flex-direction: column;
+      width: 100%;
+      text-align: center;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      height: 8rem;
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0;
+      }
+
+      img {
+        height: 7rem;
+        width: 7rem;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+
+    .block2 {
+      height: 10rem;
+      flex-direction: column;
+      width: 100%;
+      margin: 0;
+      margin-top: 1rem;
+
+      p {
+        font-size: 0.85rem;
+        overflow: scroll;
+      }
+    }
+
+    .block3 {
+      height: 12%;
+      flex-direction: row-reverse;
+      width: 100%;
+      font-size: 13px;
+      margin-top: 0;
+
+      .flex_column {
+        display: flex;
+        flex-direction: column-reverse;
+        height: 100%;
+        align-items: center;
+      }
+
+      svg {
+        height: 1rem;
+      }
+
+      button {
+        border-radius: 2rem;
+      }
+    }
+  }
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-right: 16px solid transparent;
+  border-left: 16px solid transparent;
+  border-bottom: 20px solid #cbd5e0;
+}
+
+.lesson-body-container {
+  min-height: calc(100vh - 98px);
+  .lesson-page-container {
+    min-height: calc(100% - 110px);
+  }
+}
+
+.white-text-on-hover {
+  &:hover {
+    color: #fff !important;
+  }
+}
+
+.text-shadow {
+  text-shadow: 0.2rem 0.2rem 3px #352c2cb3;
+}
+
+.roster-row {
+  transition: all 500ms ease-in-out;
+}
+
+.roster-row:hover .roster-actions {
+  transform: translateX(0%);
+  max-height: unset;
+  opacity: 1;
+
+  & button {
+    transition: all 500ms ease-in-out;
+    transform: translateX(0%);
+  }
+}
+.roster-actions {
+  height: 100%;
+  opacity: 0.8;
+  max-height: 0;
+  transition: all 500ms ease-in-out;
+
+  & button {
+    transition: all 500ms ease-in-out;
+    &:nth-child(1) {
+      transform: translateX(-200%);
+    }
+    &:nth-child(2) {
+      transform: translateX(200%);
+    }
+  }
+}
+
+.blink-error {
+  border: 1px solid red;
+  border-radius: 8px;
+  animation: shake 0.5s;
+  padding: 0.5rem;
+  animation-delay: 1s;
+  transform: translateX(0px);
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-5px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(-5px);
+  }
+}
+
+.lesson-form-block {
+  margin-bottom: 2.5rem;
+  margin-top: 2rem;
+
+  &.gray-input {
+    margin: 0 !important;
+    input {
+      background-color: $dark !important;
+      border: 2px solid $medium;
+    }
+  }
+
+  .ant-picker {
+    width: 100%;
+  }
+
+  textarea,
+  input,
+  .ant-picker,
+  .ant-select .ant-select-selector {
+    background-color: $lesson-form-block-bg;
+    color: $lesson-form-block-color;
+    border-color: $lesson-form-block-border;
+    &::placeholder {
+      color: $medium;
+    }
+  }
+
+  .ant-picker-input input,
+  .ant-select .ant-select-selector input,
+  .ant-select-selection-item {
+    color: $lesson-form-block-color !important;
+  }
+  .ant-select-arrow {
+    color: $lesson-form-block-label;
+  }
+
+  .ant-space-item {
+    width: 100%;
+  }
+
+  .ant-radio-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  label {
+    color: $lesson-form-block-label;
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.review-icon-wrapper {
+  background-color: $lesson-form-block-bg;
+  border-radius: 8px;
+  position: relative;
+  padding: 12px 30px;
+}
+
+@keyframes pageAnimate {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

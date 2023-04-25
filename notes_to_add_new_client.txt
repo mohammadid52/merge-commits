@@ -1,0 +1,7 @@
+1. Add new client name in ClientKey type in GlobalContext file
+2. handle url redirection in getClientKey function in strings.ts file
+3. handle new client assets in assets.ts getAsset function 
+4. add brand color in standardTheme in GlobalState file
+5. handle recently add color in AppMainRouter getPrimaryPalette function
+
+--- Done ----

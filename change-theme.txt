@@ -1,0 +1,5 @@
+This is file for updating old colors to new colors
+
+Lets first remove all grays and replace it with new colors
+        800,
+        900,

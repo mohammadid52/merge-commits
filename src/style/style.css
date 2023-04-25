@@ -1,0 +1,411 @@
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+*,
+input,
+button,
+textarea,
+select {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Remove list styles on ul, ol elements */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Set default font size and line height */
+body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Remove default padding */
+body,
+button,
+input,
+select,
+textarea {
+  padding: 0;
+}
+
+/* Remove border on all elements */
+button,
+input,
+select,
+textarea {
+  border: none;
+}
+
+/* Remove focus outline on all elements */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+
+button,
+img {
+  background: transparent;
+  border: transparent;
+}
+
+ul,
+ol,
+dl {
+  margin: 0;
+  padding: 0;
+
+  list-style-type: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+*:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.reg {
+  height: 80vh;
+}
+
+.main {
+  height: 100vh;
+}
+
+.instruction {
+  padding: 2rem;
+}
+
+.icon {
+  width: 16rem;
+}
+
+.custom-editor-description ul,
+.custom-editor-description ol {
+  list-style: inherit;
+  list-style-position: inside;
+}
+
+.backdrop.fade-in {
+  opacity: 0.25;
+  animation-name: backdropFadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.2s;
+}
+
+.toolbarClassName {
+  border: 1.5px solid #f1f1f1;
+}
+
+.toolItemClassName {
+  width: auto;
+}
+
+.toolItemClassName > div {
+  width: auto;
+}
+
+.toolbarClassName > div {
+  width: auto;
+}
+
+.dropdownClassName {
+  width: 50px !important;
+  z-index: unset !important;
+}
+
+.dropdownBlockClassName {
+  width: 100px !important;
+}
+
+.dropdownClassName img {
+  width: unset;
+}
+
+.plainText a {
+  text-decoration: none;
+  color: black;
+}
+
+.wrapperClassName {
+  background-color: white;
+  min-height: 15rem;
+  height: 100%;
+}
+
+.editorClassName {
+  border: 1.5px solid #f1f1f1;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+.lesson .editorClassName {
+  height: 16rem !important;
+}
+
+/* .editorClassName h1 h2 h3 h4 h5 h6 {
+  font-size: initial;
+} */
+
+.editorClassName p,
+.editorClassName span {
+  margin: unset;
+}
+
+@keyframes backdropFadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.25;
+  }
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0);
+  animation-name: modalShow;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.2s;
+}
+
+@keyframes modalShow {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate(0, -20px);
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+/* ----- */
+
+@media screen and (max-width: 767px) {
+  .main {
+    height: auto;
+  }
+
+  .reflection {
+    height: 6rem;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .question {
+    font-size: 12px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    overflow: scroll;
+  }
+
+  .instruction {
+    padding: 1rem;
+  }
+
+  .icon-font {
+    font-size: 0.5rem;
+  }
+
+  .header-font {
+    font-size: 1.5rem;
+  }
+
+  .sidebar {
+    position: absolute;
+    bottom: 0;
+    height: 10%;
+    width: 100vw;
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+  }
+
+  .sidebar a {
+    width: 10rem;
+  }
+
+  .link {
+    display: flex;
+    margin-bottom: 0;
+    font-size: 12px;
+    padding-left: 1rem;
+  }
+
+  #Registration {
+    font-size: 12px;
+  }
+
+  #Classroom {
+    font-size: 12px;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .picture {
+    background-size: 22rem;
+  }
+
+  .column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .banner {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    height: 4rem;
+  }
+
+  .red {
+    color: red;
+    height: 4rem;
+    width: 4rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    padding: 0.5rem;
+    height: 4rem;
+  }
+}
+
+.rating {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: auto;
+}
+.on {
+  color: rgb(255, 204, 0);
+}
+.off {
+  color: #ccc;
+}
+
+.progress-bar {
+  width: 100%;
+  max-width: 200px;
+  height: 14px;
+  background-color: #ccc;
+}
+
+.progress-value {
+  height: 14px;
+  background-color: rgb(255, 204, 0);
+  max-width: 100%;
+  width: 0%;
+  transition: 0.3s all;
+}
+
+.descriptive {
+  /* height: 90px; */
+  padding-right: 15px;
+}
+
+.hover-overflow-auto:hover {
+  overflow: auto;
+}
+
+.descriptive::-webkit-scrollbar {
+  width: 5px;
+}
+.descriptive::-webkit-scrollbar-track {
+  background: #fff;
+}
+.descriptive::-webkit-scrollbar-thumb {
+  background: #babac0;
+  border-radius: 20px;
+}
+.descriptive::-webkit-scrollbar-thumb:hover {
+  background: #babac0;
+}
+
+* .table-custom-responsive thead,
+* .table-custom-responsive tbody,
+* .table-custom-responsive th,
+* .table-custom-responsive td,
+* .table-custom-responsive tr {
+  width: auto !important;
+}
+
+.table-custom-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-custom-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+  position: relative;
+}
+
+.table-custom-responsive table th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.table-custom-responsive .table-striped tbody tr:nth-of-type(even) {
+  background-color: rgb(249 250 251);
+}
+
+.table-custom-responsive table td,
+.table-custom-responsive table th {
+  padding: 0.75rem;
+  vertical-align: middle;
+}

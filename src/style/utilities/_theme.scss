@@ -1,0 +1,361 @@
+// How to use them
+
+// #------ WITHOUT THESE CLASSES ------#
+// first import state then get theme value and then render classes based on theme
+// for eg. theme === iconoclast ? '#000': '#fff'
+
+// #------ WITH THESE CLASSES ------#
+// No need to import anything
+// iconoclast:bg-500 curate:bg-500 OR iconoclast:border-300 curate:border-300
+// classes will automatically render based on theme
+
+/* stylelint-disable at-rule-no-unknown */
+
+// ##--------  EXAMPLE CLASSES  ---------##
+
+// Background
+// iconoclast:bg-400 curate:bg-400
+
+// Background hover
+// hover:iconoclast:bg-400 hover:curate:bg-400
+
+// Border
+// iconoclast:border-500 curate:border-500
+
+// Border hover
+// hover:iconoclast:border-400 hover:curate:border-400
+
+// ---- Same works with text classes
+
+// Curate and Demo uses same theme set
+
+@mixin iconoclast($util: 'bg') {
+  @each $themeName, $themeValue in $iconoclastColors {
+    .iconoclast {
+      @if $util == 'bg' {
+        .theme-bg\:#{$themeName} {
+          background-color: $themeValue !important;
+        }
+
+        .hover\:theme-bg\:#{$themeName}:hover {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        .theme-text\:#{$themeName} {
+          color: $themeValue !important;
+        }
+        .hover\:theme-text\:#{$themeName}:hover {
+          color: $themeValue !important;
+        }
+      }
+      @if $util == 'border' {
+        .theme-border\:#{$themeName} {
+          border-color: $themeValue !important;
+        }
+        .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue !important;
+        }
+        .focus\:theme-border\:#{$themeName}:focus {
+          border-color: $themeValue !important;
+        }
+      }
+    }
+
+    .iconoclast .iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        background-color: $themeValue !important;
+      }
+
+      @if $util == 'border' {
+        border-color: $themeValue !important;
+      }
+
+      @if $util == 'text' {
+        color: $themeValue !important;
+      }
+    }
+    .iconoclast .hover\:iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:hover {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'border' {
+        &:hover {
+          border-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        &:hover {
+          color: $themeValue !important;
+        }
+      }
+    }
+
+    .iconoclast .group:hover .group-hover\:iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        & {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'border' {
+        & {
+          border-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        & {
+          color: $themeValue !important;
+        }
+      }
+    }
+    .iconoclast .focus\:iconoclast\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:focus {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'border' {
+        &:focus {
+          border-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        &:focus {
+          color: $themeValue !important;
+        }
+      }
+    }
+  }
+}
+
+@mixin curate($util: 'bg') {
+  @each $themeName, $themeValue in $curateColors {
+    .curate {
+      @if $util == 'bg' {
+        .theme-bg\:#{$themeName} {
+          background-color: $themeValue !important;
+        }
+
+        .hover\:theme-bg\:#{$themeName}:hover {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        .theme-text\:#{$themeName} {
+          color: $themeValue !important;
+        }
+        .hover\:theme-text\:#{$themeName}:hover {
+          color: $themeValue !important;
+        }
+      }
+      @if $util == 'border' {
+        .theme-border\:#{$themeName} {
+          border-color: $themeValue !important;
+        }
+        .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue !important;
+        }
+        .focus\:theme-border\:#{$themeName}:focus {
+          border-color: $themeValue !important;
+        }
+      }
+    }
+
+    .curate .curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        background-color: $themeValue !important;
+      }
+
+      @if $util == 'border' {
+        border-color: $themeValue !important;
+      }
+
+      @if $util == 'text' {
+        color: $themeValue !important;
+      }
+    }
+    .curate .hover\:curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:hover {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'border' {
+        &:hover {
+          border-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        &:hover {
+          color: $themeValue !important;
+        }
+      }
+    }
+
+    .curate .group:hover .group-hover\:curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        & {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'border' {
+        & {
+          border-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        & {
+          color: $themeValue !important;
+        }
+      }
+    }
+
+    .curate .focus\:curate\:#{$util}-#{$themeName} {
+      @if $util == 'bg' {
+        &:focus {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'border' {
+        &:focus {
+          border-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        &:focus {
+          color: $themeValue !important;
+        }
+      }
+    }
+  }
+}
+
+// -----------BACKGROUND------------- //
+.iconoclast .iconoclast\:bg-main {
+  background-color: $iconoclast !important;
+}
+
+.curate .curate\:bg-main {
+  background-color: $curate !important;
+}
+// -----------BACKGROUND HOVER------------- //
+.iconoclast .hover\:iconoclast\:bg-main {
+  &:hover {
+    background-color: $iconoclast !important;
+  }
+}
+
+.curate .hover\:curate\:bg-main {
+  &:hover {
+    background-color: $curate !important;
+  }
+}
+
+// -----------BORDER------------- //
+
+.iconoclast .iconoclast\:border-main {
+  border-color: $iconoclast !important;
+}
+
+.curate .curate\:border-main {
+  border-color: $curate !important;
+}
+// -----------BORDER HOVER------------- //
+
+.iconoclast .hover\:iconoclast\:border-main {
+  &:hover {
+    border-color: $iconoclast !important;
+  }
+}
+
+.curate .hover\:curate\:border-main {
+  &:hover {
+    border-color: $curate !important;
+  }
+}
+
+// -----------TEXT------------- //
+
+.iconoclast .iconoclast\:text-main {
+  color: $iconoclast !important;
+}
+
+.curate .curate\:text-main {
+  color: $curate !important;
+}
+// -----------TEXT HOVER------------- //
+
+.iconoclast .hover\:iconoclast\:text-main {
+  &:hover {
+    color: $iconoclast !important;
+  }
+}
+
+.curate .hover\:curate\:text-main {
+  &:hover {
+    color: $curate !important;
+  }
+}
+
+@include iconoclast('bg');
+@include iconoclast('border');
+@include iconoclast('text');
+@include curate('bg'); // with demo
+@include curate('border'); // with demo
+@include curate('text'); // with demo
+
+.iconoclast {
+  .theme-text,
+  .hover\:theme-text:hover {
+    color: $iconoclast !important;
+  }
+  .theme-bg,
+  .hover\:theme-bg:hover {
+    background-color: $iconoclast !important;
+  }
+
+  .theme-border,
+  .hover\:theme-border:hover {
+    border-color: $iconoclast !important;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: $iconoclast !important;
+  }
+}
+
+.curate {
+  .theme-text,
+  .hover\:theme-text:hover {
+    color: $curate !important;
+  }
+  .theme-bg,
+  .hover\:theme-bg:hover {
+    background-color: $curate !important;
+  }
+
+  .theme-border,
+  .hover\:theme-border:hover {
+    border-color: $curate !important;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: $curate !important;
+  }
+}

@@ -1,0 +1,58 @@
+/* SCROLLBAR TRANSPARENCY */
+
+/* ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 12px;
+  background: #edf2f7;
+}
+
+/* Handle */
+
+.iconoclast ::-webkit-scrollbar-thumb {
+  background: $iconoclast;
+}
+.curate ::-webkit-scrollbar-thumb {
+  background: $curate;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  border: 0 solid #edf2f7;
+}
+
+/* Handle on hover */
+.iconoclast ::-webkit-scrollbar-thumb:hover {
+  background: $indigo-500;
+}
+.curate ::-webkit-scrollbar-thumb:hover {
+  background: $blue-500;
+}
+
+.dark-scroll {
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    background: $dark;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $medium;
+    -webkit-border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: $dark;
+  }
+}
