@@ -52,7 +52,7 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
 
   const {
     data: institutionList,
-
+    refetch,
     isLoading
   } = useQuery<Institution[]>({
     queryKey: [`institution-list-${id}`],
@@ -204,17 +204,10 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
             institutionInfo={institutionForModal}
             onCancel={closeAction}
             postMutation={(data: any) => {
-              if (data.status !== RoomStatus.ACTIVE) {
-                setFilteredList((prev) => prev.filter((d) => d.status !== data?.status));
-              }
-              setFilteredList((prev) => {
-                const index = prev.findIndex((d) => d.id === data?.id);
-
-                if (index > -1) {
-                  prev[index] = data;
-                }
-                return [...prev];
-              });
+              refetch();
+              setInstitutionForModal({});
+              setFilters(null);
+              setInstitutionModal(false);
             }}
           />
         </Modal>

@@ -207,8 +207,6 @@ const InstitutionFormComponent = ({institutionInfo, onCancel, postMutation}: any
             message: ''
           });
         }, 2000);
-
-        history.goBack();
       } catch {
         setError({
           show: true,
