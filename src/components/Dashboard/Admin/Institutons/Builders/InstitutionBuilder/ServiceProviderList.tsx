@@ -151,8 +151,8 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
       dictionary['TYPE'],
       dictionary['WEBSITE'],
 
-      'Status',
-      'Rooms'
+      'Rooms',
+      'Status'
       // dictionary['ACTION']
     ],
     dataList,

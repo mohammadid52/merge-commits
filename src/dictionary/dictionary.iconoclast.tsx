@@ -4007,7 +4007,7 @@ const UnitLookupDict: UnitLookupDictInterface = {
 
 const LessonBuilderDict: LessonBuilderDictInterface = {
   EN: {
-    TITLE: 'LESSON MANAGER',
+    TITLE: 'Lesson Manager',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     OVEVIEW_TITLE: 'Overview',
     OVERVIEW_DESCRIPTION: 'Capture core details of lessons & surveys',

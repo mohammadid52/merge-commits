@@ -44,6 +44,7 @@
     // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
 
     "paths": {
+      "@constants/*": ["constants/*"],
       "@components/*": ["components/*"],
       "@contexts/*": ["contexts/*"],
       "@customGraphql/*": ["customGraphql/*"],

@@ -52,6 +52,7 @@ const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
 
   const columns = _headers.map((header) => {
     let lowerHeader = camelCase(header.toLowerCase());
+
     return {
       title: header,
       dataIndex: lowerHeader,

@@ -987,6 +987,7 @@ const Institute_info: InstitutionInfoInterface = {
     WEBSITE: 'Visit Their Website',
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
+      DASHBOARD: 'Dashboard',
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff Manager',
       USER_REGISTRY: 'User Registry',
@@ -1033,6 +1034,7 @@ const Institute_info: InstitutionInfoInterface = {
     WEBSITE: 'Visitar Su Sitio Web',
     SERVICE_PROVIDER: 'Proveedor de Servicios',
     TABS: {
+      DASHBOARD: 'Tablero',
       SERVICE_PROVIDER: 'Proveedores de Servicios',
       STAFF: 'Administrador de Personal',
       CLASS_MANAGER: 'Constructor de Salones de Clases',
@@ -1256,6 +1258,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     FORM: {
       TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Institution Type',
+      STATUS: 'Status',
       NAME_INPUT_LABEL: 'Institution Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
       WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
@@ -1298,6 +1301,7 @@ const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
     SUBTITLE: 'Añadir nueva institución a la lista',
     FORM: {
       TITLE: 'Información general y gestión de proveedores',
+      STATUS: 'Estado',
       INSTITUTION_TYPE: 'Tipo de institución',
       NAME_INPUT_LABEL: 'Nombre de la institución',
       NAME_INPUT_PLACEHOLDER: 'por ejemplo, Artista Iconoclasta',
@@ -1372,6 +1376,7 @@ const InstitueCurriculum: InstituteCurriculumInterface = {
     COURSE_TYPE: 'Course Type',
     UNITS: 'Course Units',
     ACTION: 'Actions',
+    ROOMS: 'Rooms',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
     NO_DELETE: '(Course in use)',
@@ -1383,6 +1388,7 @@ const InstitueCurriculum: InstituteCurriculumInterface = {
     BUTTON: {
       ADD: 'Nuevo Curso'
     },
+    ROOMS: 'Rooms',
     NO: 'No.',
     NAME: 'Nombre del Curso',
     INSTITUTION_NAME: 'Nombre de la Institución',
@@ -4001,7 +4007,7 @@ const UnitLookupDict: UnitLookupDictInterface = {
 
 const LessonBuilderDict: LessonBuilderDictInterface = {
   EN: {
-    TITLE: 'LESSON MANAGER',
+    TITLE: 'Lesson Manager',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     OVEVIEW_TITLE: 'Overview',
     OVERVIEW_DESCRIPTION: 'Capture core details of lessons & surveys',
