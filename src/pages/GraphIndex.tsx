@@ -1,20 +1,20 @@
 import DashboardContainer from '@components/Dashboard/DashboardContainer';
+import InstitutionCalendar from '@components/graphs/institutions/InstitutionCalendar';
+import InstitutionStatusGraph from '@components/graphs/institutions/InstitutionStatusGraph';
+import StudentsByDemographicsGraph from '@components/graphs/students/StudentsByDemographicsGraph';
 import useAuth from '@customHooks/useAuth';
-import {Card, Col, Row, Tabs, TabsProps} from 'antd';
+import {Card, Tabs, TabsProps} from 'antd';
 import {general} from 'assets';
-import PageLayout from 'layout/PageLayout';
-import {Redirect} from 'react-router-dom';
 import AttachedCoursesGraph from 'components/graphs/AttachedCoursesGraph';
-import InstitutionLocationGraph from 'components/graphs/institutions/InstitutionLocationGraph';
-import StudentsByStatusGraph from 'components/graphs/students/StudentsByStatusGraph';
+import CompletedIncompletedGraph from 'components/graphs/CompletedIncompletedGraph';
 import SurveyCompletedGraph from 'components/graphs/SurveyCompletedGraph';
 import WritingExerciseGraph from 'components/graphs/WritingExerciseGraph';
+import InstitutionLocationGraph from 'components/graphs/institutions/InstitutionLocationGraph';
 import StudentsByInstitutionGraph from 'components/graphs/students/StudentsByInstitutionGraph';
-import StudentsByDemographicsGraph from '@components/graphs/students/StudentsByDemographicsGraph';
+import StudentsByStatusGraph from 'components/graphs/students/StudentsByStatusGraph';
 import StudentsByTypeGraph from 'components/graphs/students/StudentsByTypeGraph';
-import CompletedIncompletedGraph from 'components/graphs/CompletedIncompletedGraph';
-import InstitutionStatusGraph from '@components/graphs/institutions/InstitutionStatusGraph';
-import InstitutionCalendar from '@components/graphs/institutions/InstitutionCalendar';
+import PageLayout from 'layout/PageLayout';
+import {Redirect} from 'react-router-dom';
 
 const RowWrapper = ({items}: {items: {title: string; component: React.ReactNode}[]}) => {
   return (

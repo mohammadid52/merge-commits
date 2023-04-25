@@ -1,5 +1,4 @@
 import Loader from '@components/Atoms/Loader';
-import L from 'leaflet';
 
 import {useEffect, useState} from 'react';
 import {MapContainer, TileLayer} from 'react-leaflet';
@@ -49,6 +48,7 @@ const GraphMap = ({markers}: {markers: any[]}) => {
       zoom={9}
       maxZoom={18}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
       {markers}
     </MapContainer>
   );
