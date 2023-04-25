@@ -21,6 +21,7 @@ import PageLayout from 'layout/PageLayout';
 import {map, orderBy} from 'lodash';
 import {useState} from 'react';
 import InstitutionFormComponent from './InstitutionFormComponent';
+import useAuth from '@customHooks/useAuth';
 
 interface ServiceProviderListProps {
   id: string;
@@ -29,7 +30,7 @@ interface ServiceProviderListProps {
 
 const ServiceProviderList = ({id}: ServiceProviderListProps) => {
   const {InstitutionDict, userLanguage} = useDictionary();
-
+  const {isAdmin} = useAuth();
   const {zoiqFilter} = useGlobalContext();
 
   const fetchInstitutionLocation = async () => {
@@ -85,7 +86,7 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
 
   const dataList = map(finalList, (institution, idx) => ({
     markRed: Boolean(institution?.isZoiq),
-    onClick: () => institution && onInstitutionClick(institution),
+    onClick: () => isAdmin && institution && onInstitutionClick(institution),
     no: getIndex(idx),
     instituteName: (
       <InstituteName
@@ -192,27 +193,32 @@ const ServiceProviderList = ({id}: ServiceProviderListProps) => {
 
   return (
     <PageLayout type="inner" title={InstitutionDict[userLanguage]['TITLE']}>
-      <Modal
-        width={1000}
-        closeOnBackdrop
-        closeAction={closeAction}
-        title="Institution Details"
-        open={institutionModal}>
-        <InstitutionFormComponent
-          institutionInfo={institutionForModal}
-          onCancel={closeAction}
-          postMutation={(data: any) => {
-            setFilteredList((prev) => {
-              const index = prev.findIndex((d) => d.id === data?.id);
-
-              if (index > -1) {
-                prev[index] = data;
+      {isAdmin && (
+        <Modal
+          width={1000}
+          closeOnBackdrop
+          closeAction={closeAction}
+          title="Institution Details"
+          open={institutionModal}>
+          <InstitutionFormComponent
+            institutionInfo={institutionForModal}
+            onCancel={closeAction}
+            postMutation={(data: any) => {
+              if (data.status !== RoomStatus.ACTIVE) {
+                setFilteredList((prev) => prev.filter((d) => d.status !== data?.status));
               }
-              return [...prev];
-            });
-          }}
-        />
-      </Modal>
+              setFilteredList((prev) => {
+                const index = prev.findIndex((d) => d.id === data?.id);
+
+                if (index > -1) {
+                  prev[index] = data;
+                }
+                return [...prev];
+              });
+            }}
+          />
+        </Modal>
+      )}
       <Filters
         loading={isLoading}
         list={institutionList}
