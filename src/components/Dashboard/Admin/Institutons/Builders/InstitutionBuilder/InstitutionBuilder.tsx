@@ -11,6 +11,7 @@ import PageLayout from 'layout/PageLayout';
 import StaffBuilder from '../../Listing/StaffBuilder';
 import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceProviderList from './ServiceProviderList';
+import useAuth from '@customHooks/useAuth';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -92,6 +93,7 @@ const InstitutionBuilder = ({
     curricula: {items: [{name: '', id: ''}]}
   });
 
+  const {isAdmin, isBuilder} = useAuth();
   const steps: IStepElementInterface[] = [
     {
       title: 'General Information',
@@ -103,7 +105,7 @@ const InstitutionBuilder = ({
       subTitle: 'institutions where you provide a service',
       stepValue: 'service_providers',
       disabled: Boolean(!institutionInfo.isServiceProvider),
-      hide: Boolean(inside)
+      hide: Boolean(!isAdmin || !isBuilder)
     },
 
     {
@@ -161,6 +163,8 @@ const InstitutionBuilder = ({
         );
 
       case 'service_providers':
+        if (!institute?.id)
+          return <Empty description="Please save the institution first" />;
         return <ServiceProviderList postMutation={postInfoUpdate} id={institute?.id} />;
 
       case 'staff':
