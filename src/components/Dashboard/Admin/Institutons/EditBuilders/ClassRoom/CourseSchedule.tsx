@@ -5,7 +5,6 @@ import {updateRoom} from 'graphql/mutations';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 
-import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -17,9 +16,10 @@ import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 
 import Label from '@components/Atoms/Form/Label';
-import {DatePicker, Divider, Result, message} from 'antd';
-import Modal from 'atoms/Modal';
+import {DATE_TIME_FORMAT} from '__constants';
+import {DatePicker, Divider, message} from 'antd';
 import PageLayout from 'layout/PageLayout';
+import Loader from '@components/Atoms/Loader';
 
 interface ICourseScheduleProps {
   roomData: any;
@@ -43,8 +43,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const {userLanguage} = useGlobalContext();
   const {CourseScheduleDict} = useDictionary();
 
-  const [_, setStartDateFocus] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const [logsChanged, setLogsChanged] = useState(false);
   const [saving, setSaving] = useState(false);
   const [logsLoading, setLogsLoading] = useState(false);
@@ -67,6 +65,8 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     message: '',
     isError: false
   });
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (roomData) {
@@ -95,9 +95,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           weekDay,
           conferenceCallLink
         });
-        if (!(startDate && endDate && frequency && weekDay)) {
-          setShowAlert(true);
-        }
+        setIsLoading(false);
       }
     }
   }, [roomData]);
@@ -126,6 +124,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           id: roomData.id
         })
       );
+
       setLessonImpactLogs(sortLogsByDate(result?.data?.getRoom.lessonImpactLog));
       setLogsLoading(false);
     } catch (error) {
@@ -238,91 +237,95 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     }
   };
 
-  const onAlertClose = () => {
-    setShowAlert(false);
-    setStartDateFocus(true);
-  };
-  const dateFormat = 'MM/DD/YYYY';
-
-  const timeFormat = 'h:mm A';
+  const startDateTime = dayJs(`${scheduleData.startDate} ${scheduleData.startTime}`);
+  const endDateTime = dayJs(`${scheduleData.endDate} ${scheduleData.endTime}`);
 
   return (
     <div className="">
       {contextHolder}
       <PageLayout type="inner" title={CourseScheduleDict[userLanguage].HEADING}>
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="col-span-2">
-            <Label label="Start and End Date/Time" />
-            <RangePicker
-              className="w-full"
-              showTime
-              size="large"
-              format={dateFormat + ' ' + timeFormat}
-              defaultValue={[dayJs(scheduleData.startDate), dayJs(scheduleData.endDate)]}
-              onChange={(_, dateString: string[]) => {
-                handleDateChange(dateString[0], 'startDate');
-                handleDateChange(dateString[1], 'endDate');
-              }}
-            />
+        {isLoading ? (
+          <div className="min-h-56 flex items-center justify-center">
+            <Loader />
           </div>
-          {/* <div className="">
-            <Label label="Start and End Time" />
-            <RangePicker
-              className="w-full"
-              size="large"
-              format={timeFormat}
-              defaultValue={[dayJs(scheduleData.startTime), dayJs(scheduleData.endTime)]}
-              onChange={(_, dateString: string[]) => {
-                handleDateChange(dateString[0], 'startTime');
-                handleDateChange(dateString[1], 'endTime');
-              }}
-            />
-          </div> */}
+        ) : (
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="col-span-2">
+              <Label label="Start and End Date/Time" />
+              <RangePicker
+                className="w-full"
+                showTime
+                size="large"
+                format={DATE_TIME_FORMAT}
+                value={[
+                  startDateTime.isValid() ? startDateTime : null,
+                  endDateTime.isValid() ? endDateTime : null
+                ]}
+                onChange={(_, dateString: string[]) => {
+                  handleDateChange(dateString[0], 'startDate');
+                  handleDateChange(dateString[1], 'endDate');
+                }}
+              />
+            </div>
+            {/* <div className="">
+          <Label label="Start and End Time" />
+          <RangePicker
+            className="w-full"
+            size="large"
+            format={timeFormat}
+            defaultValue={[dayJs(scheduleData.startTime), dayJs(scheduleData.endTime)]}
+            onChange={(_, dateString: string[]) => {
+              handleDateChange(dateString[0], 'startTime');
+              handleDateChange(dateString[1], 'endTime');
+            }}
+          />
+        </div> */}
 
-          <div className="col-span-2 ">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="">
-                <Label label="Frequency" />
+            <div className="col-span-2 ">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="">
+                  <Label label="Frequency" />
 
-                <Selector
-                  onChange={(name: string) => handleSelection(name, 'frequency')}
-                  selectedItem={scheduleData.frequency}
-                  list={frequencyOptions}
-                  placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY}
-                />
+                  <Selector
+                    onChange={(name: string) => handleSelection(name, 'frequency')}
+                    selectedItem={scheduleData.frequency}
+                    list={frequencyOptions}
+                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY}
+                  />
+                </div>
+
+                <div className="">
+                  <Label label="Weekday" />
+                  <Selector
+                    onChange={(name: string) => handleSelection(name, 'weekDay')}
+                    selectedItem={scheduleData.weekDay}
+                    list={weekdaysOption}
+                    placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
+                    disabled={
+                      scheduleData.frequency === 'M/W/F' ||
+                      scheduleData.frequency === 'Tu/Th' ||
+                      scheduleData.frequency === 'Daily'
+                    }
+                  />
+                </div>
               </div>
+            </div>
 
+            <div className="col-span-2">
               <div className="">
-                <Label label="Weekday" />
-                <Selector
-                  onChange={(name: string) => handleSelection(name, 'weekDay')}
-                  selectedItem={scheduleData.weekDay}
-                  list={weekdaysOption}
-                  placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}
-                  disabled={
-                    scheduleData.frequency === 'M/W/F' ||
-                    scheduleData.frequency === 'Tu/Th' ||
-                    scheduleData.frequency === 'Daily'
+                <Label label="Additional Notes" />
+                <FormInput
+                  name="notes"
+                  value={scheduleData.notes || ''}
+                  onChange={handleInputChange}
+                  placeHolder={
+                    CourseScheduleDict[userLanguage].PLACEHOLDERS.ADDITIONAL_NOTES
                   }
                 />
               </div>
             </div>
           </div>
-
-          <div className="col-span-2">
-            <div className="">
-              <Label label="Additional Notes" />
-              <FormInput
-                name="notes"
-                value={scheduleData.notes || ''}
-                onChange={handleInputChange}
-                placeHolder={
-                  CourseScheduleDict[userLanguage].PLACEHOLDERS.ADDITIONAL_NOTES
-                }
-              />
-            </div>
-          </div>
-        </div>
+        )}
 
         <div
           className={`flex flex-col-reverdsse flex-col w-full ${
@@ -374,21 +377,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           </p>
         </div>
       )}
-
-      <Modal
-        open={showAlert}
-        showHeader={false}
-        showFooter={false}
-        closeAction={() => setShowAlert(false)}>
-        <Result
-          title="Enter schedule details"
-          extra={
-            <div className="w-full flex items-center justify-center">
-              <Buttons label={'Ok'} onClick={onAlertClose} />
-            </div>
-          }
-        />
-      </Modal>
     </div>
   );
 };

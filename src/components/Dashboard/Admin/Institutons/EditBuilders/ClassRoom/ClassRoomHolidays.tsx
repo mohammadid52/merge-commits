@@ -41,6 +41,7 @@ const ClassRoomHolidays = ({
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: '',
@@ -108,7 +109,7 @@ const ClassRoomHolidays = ({
       onClick: () => {},
       date: new Date(log.impactDate).toLocaleDateString(),
       reason: log.reasonComment,
-      timeImpact: <>{log.lessonImpact * 1000}%</>,
+      timeImpact: <>{log.lessonImpact * 100}%</>,
       lessonAdjustment: log.adjustment || '--',
       action: (
         <div className="w-2/10  px-4 py-3 flex justify-center">
@@ -116,7 +117,7 @@ const ClassRoomHolidays = ({
             <HiPencil className="w-4 h-4" />
           </span>
           <span className="w-auto cursor-pointer" onClick={() => onDelete(index)}>
-            <DeleteActionBtn handleClick={() => console.log()} />
+            <DeleteActionBtn handleClick={() => {}} />
           </span>
         </div>
       )
@@ -131,7 +132,14 @@ const ClassRoomHolidays = ({
       <SectionTitleV3
         title={'Schedule Impact Log'}
         withButton={
-          <AddButton className="py-1" label={'Add'} onClick={() => setFormOpen(true)} />
+          <AddButton
+            className="py-1"
+            label={'Add'}
+            onClick={() => {
+              setFormOpen(true);
+              setActiveIndex(null);
+            }}
+          />
         }
       />
 
@@ -154,7 +162,7 @@ const ClassRoomHolidays = ({
         showFooter={false}
         closeAction={handleCancel}>
         <HolidayFormComponent
-          activeIndex={activeIndex || 0}
+          activeIndex={activeIndex}
           roomId={roomId}
           lessonImpactLogs={lessonImpactLogs}
           postMutation={postMutation}
