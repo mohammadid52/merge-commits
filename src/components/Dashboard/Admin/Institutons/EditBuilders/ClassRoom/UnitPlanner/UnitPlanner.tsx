@@ -12,6 +12,7 @@ import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import {useHistory} from 'react-router-dom';
 import {IImpactLog} from '../ClassRoomHolidays';
+import {DATE_FORMAT} from '__constants';
 
 interface IUnitPlannerProps {
   isDetailsComplete: boolean;
@@ -207,7 +208,7 @@ const UnitPlanner = ({
     return {
       headers: [
         'Lesson Name',
-        `Duration (${roomData.frequency})`,
+        `Duration (Sessions)`,
         'Start Date',
         'Est End Date',
         'Act End Date'
@@ -215,11 +216,11 @@ const UnitPlanner = ({
       dataList: lessons.map((lesson: any, idx) => ({
         lessonName: lesson.lesson?.title,
         onClick: () => {},
-        duration: lesson.lesson?.duration,
-        startDate: moment(lesson.startDate).format('MM/DD/YYYY'),
+        durationSessions: lesson.lesson?.duration,
+        startDate: moment(lesson.startDate).format(DATE_FORMAT),
         estEndDate: (
           <>
-            {moment(lesson?.estEndDate).format('MM/DD/YYYY')}
+            {moment(lesson?.estEndDate).format(DATE_FORMAT)}
             {lesson === syllabusList.length - 1 &&
             idx === lessons.length - 1 &&
             moment(lesson.estEndDate).isBefore(moment(roomData.endDate))
@@ -227,7 +228,18 @@ const UnitPlanner = ({
               : ''}
           </>
         ),
-        actEndDate: '--'
+        actEndDate: lesson.estEndDate ? (
+          <>
+            {moment(lesson?.estEndDate).format(DATE_FORMAT)}
+            {idx === syllabusList.length - 1 &&
+            idx === lessons.length - 1 &&
+            moment(lesson.estEndDate).isBefore(moment(roomData.endDate))
+              ? '*'
+              : ''}
+          </>
+        ) : (
+          '-'
+        )
       }))
     };
   };
@@ -257,11 +269,10 @@ const UnitPlanner = ({
                     title={syllabus.name}
                     subtitle={`Start Date: ${
                       syllabus.lessons.items?.length &&
-                      syllabus.lessons.items[0].startDate
-                        ? new Date(
-                            syllabus.lessons.items[0].startDate
-                          ).toLocaleDateString()
-                        : '-'
+                      syllabus.lessons.items[0].startDate &&
+                      moment(syllabus.lessons.items[0].startDate).isValid()
+                        ? moment(syllabus.lessons.items[0].startDate).format(DATE_FORMAT)
+                        : '--'
                     }`}
                   />
 
@@ -276,7 +287,7 @@ const UnitPlanner = ({
         )}
       </div>
       <div className="flex my-8 gap-4 justify-end w-full mr-2 2xl:mr-0">
-        <Buttons label={'Cancel'} onClick={history.goBack} transparent size="middle" />
+        {/* <Buttons label={'Cancel'} onClick={history.goBack} transparent size="middle" /> */}
         <Buttons
           disabled={saving || !logsChanged}
           label={'Run calculations and save'}

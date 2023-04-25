@@ -8,10 +8,11 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import Label from '@components/Atoms/Form/Label';
+import {AWS_DATE_FORMAT} from '__constants';
 import {DatePicker} from 'antd';
 import dayJs from 'dayjs';
 import {updateRoom} from 'graphql/mutations';
-import {awsFormatDate, dateString} from 'utilities/time';
+import moment from 'moment';
 const durationOptions = [
   {id: 1, label: '.25', value: '.25'},
   {id: 2, label: '.5', value: '.5'},
@@ -32,7 +33,7 @@ interface IImpactLog {
 }
 
 interface IHolidayFormComponentProps {
-  activeIndex: number;
+  activeIndex: number | null;
   handleCancel: () => void;
   lessonImpactLogs: {
     impactDate: Date;
@@ -130,20 +131,25 @@ const HolidayFormComponent = ({
       try {
         setLoading(true);
         const payload = {
-          impactDate: awsFormatDate(
-            dateString('-', 'WORLD', formValues?.impactDate || new Date())
-          ),
+          impactDate: moment(formValues.impactDate).format(AWS_DATE_FORMAT),
           reasonComment: formValues.reasonComment,
           lessonImpact: Number(formValues.lessonImpact),
           adjustment: formValues.adjustment
         };
+
+        const updatedLogs = lessonImpactLogs.map((log: any, index: number) =>
+          activeIndex === index ? payload : log
+        );
+
+        console.log(activeIndex);
+
         const input = {
           id: roomId,
           lessonImpactLog:
             activeIndex !== null
-              ? lessonImpactLogs.map((log: any, index: number) =>
-                  activeIndex === index ? payload : log
-                )
+              ? lessonImpactLogs.length > 0
+                ? updatedLogs
+                : [payload]
               : [...lessonImpactLogs, payload]
         };
         const result: any = await API.graphql(
@@ -167,7 +173,9 @@ const HolidayFormComponent = ({
           <Label isRequired label={'Date'} />
 
           <DatePicker
-            defaultValue={dayJs(formValues.impactDate)}
+            value={
+              dayJs(formValues.impactDate).isValid() ? dayJs(formValues.impactDate) : null
+            }
             placeholder={'Date'}
             // @ts-ignore
             onChange={(value) => handleDateChange(value?.$d)}
@@ -179,6 +187,7 @@ const HolidayFormComponent = ({
             value={formValues.reasonComment}
             onChange={handleInputChange}
             name="reasonComment"
+            placeHolder="Enter reason"
             label={'Reason'}
           />
         </div>
