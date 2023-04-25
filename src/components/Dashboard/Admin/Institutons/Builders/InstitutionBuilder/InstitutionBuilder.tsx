@@ -105,7 +105,7 @@ const InstitutionBuilder = ({
       subTitle: 'institutions where you provide a service',
       stepValue: 'service_providers',
       disabled: Boolean(!institutionInfo.isServiceProvider),
-      hide: Boolean(!isAdmin || !isBuilder)
+      hide: Boolean(!isAdmin && !isBuilder)
     },
 
     {
